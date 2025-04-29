@@ -5,7 +5,7 @@ const getContractABI = async (_recipientAddress) => {
   try {
     const etherScan_Api_Key = process.env.ETHERSCAN_API_KEY;
 
-    const response = await axios.get("https://api.etherscan.io/api", {
+    const response = await axios.get(process.env.ETHERSCAN_API_ENDPOINT, {
       params: {
         module: "contract",
         action: "getabi",
