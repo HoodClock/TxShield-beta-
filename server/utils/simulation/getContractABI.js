@@ -1,4 +1,3 @@
-const { provider } = require("../../config/provider");
 const { axios } = require("axios");
 
 const getContractABI = async (_recipientAddress) => {
