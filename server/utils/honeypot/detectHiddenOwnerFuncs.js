@@ -1,0 +1,51 @@
+const { getAbi } = require("../../services/etherscanService");
+
+// using regEX for broader search
+const suspiciousFunctions = [
+  /set.*Tax/i,
+  /set.*Fee/i,
+  /set.*Limits/i,
+  /withdraw/i,
+  /blacklist/i,
+  /add.*Blacklist/i,
+  /remove.*Blacklist/i,
+  /enableTrading/i,
+  /disableTrading/i,
+  /manual.*Swap/i,
+  /manual.*Send/i,
+  /set.*Router/i,
+  /set.*Pair/i,
+];
+
+const detectHiddenOwnerFuncs = async (_contractAddress) => {
+  const abi = await getAbi(_contractAddress);
+
+  if (!abi) {
+    return { success: false, warning: "ABI not available" };
+  }
+
+  const functionNames = abi
+    .filter((item) => item.type === "function")
+    .map((item) => item.name);
+
+  const matchedFunction = functionNames.filter((func) =>
+    suspiciousFunctions.some((pattern) => pattern.test(func))
+  );
+
+  if (matchedFunction.length > 0) {
+    return {
+      success: true,
+      risk: true,
+      matchedFunctions: matched,
+      message: "Potential owner-only control functions found.",
+    };
+  }
+
+  return {
+    success: false,
+    risk: false,
+    message: "No suspicious owner functions detected.",
+  };
+};
+
+module.exports = detectHiddenOwnerFuncs;
