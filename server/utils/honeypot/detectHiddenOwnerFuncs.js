@@ -42,7 +42,7 @@ const detectHiddenOwnerFuncs = async (_contractAddress) => {
   }
 
   return {
-    success: false,
+    success: true,
     risk: false,
     message: "No suspicious owner functions detected.",
   };
