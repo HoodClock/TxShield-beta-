@@ -19,7 +19,7 @@ const getAbi = async (address) => {
     });
 
     if (response.data.status === "1") {
-      return JSON.parse(response.data);
+      return (response.data.result);
     } else {
       return null;
     }
@@ -42,7 +42,7 @@ const getSourceCode = async (address) => {
     });
 
     if (response.data.status === "1") {
-      return JSON.parse(response.data);
+      return (response.data.result);
     } else {
       return null;
     }
