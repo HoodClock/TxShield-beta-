@@ -1,5 +1,4 @@
-
-
+const honeypotHelper = require("../helpers/honeypot.helper");
 
 // master controllers of all
 const honeypotMasterController = async (req, res) => {
@@ -35,23 +34,15 @@ const honeypotMasterController = async (req, res) => {
       mintAccess,
       tradingControl,
     ] = await Promise.all([
-      honeypotServices.detectBlackListService(address),
-      honeypotServices.detectDisableTransferService(address),
-      honeypotServices.detectFakeBalanceService(tokenAddress),
-      honeypotServices.detecGasTrapService(
-        userAddress,
-        recepientAddress,
-        value
-      ),
-      honeypotServices.detectHiddenOwnerService(contractAddress),
-      honeypotServices.detectHighSellTaxService(address),
-      honeypotServices.detectHoneyPotBuySellService(
-        userAddress,
-        tokenAddress,
-        value
-      ),
-      honeypotServices.detectMintAccessService(contractAddress),
-      honeypotServices.detectTradingControlService(address),
+      honeypotHelper.handleBlacklistCheck(address),
+      honeypotHelper.handleDisableTransferCheck(address),
+      honeypotHelper.handleFakeBalanceCheck(tokenAddress),
+      honeypotHelper.handleGasTrapCheck(userAddress, recepientAddress, value),
+      honeypotHelper.handleHiddenOwnerCheck(contractAddress),
+      honeypotHelper.handleHighSellTaxCheck(address),
+      honeypotHelper.handleBuySellCheck(userAddress, tokenAddress, value),
+      honeypotHelper.handleMintAccessCheck(contractAddress),
+      honeypotHelper.handleTradingControlCheck(address),
     ]);
 
     return res.status(200).json({
@@ -75,6 +66,5 @@ const honeypotMasterController = async (req, res) => {
 };
 
 module.exports = {
-
-  honeypotMasterController
+  honeypotMasterController,
 };
