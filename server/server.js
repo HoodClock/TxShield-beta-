@@ -17,6 +17,8 @@ app.use(express.json());
 // Routes
 app.use("/api/simulate", simulateRouter)
 
+app.use("/api/honeypot", ) // integrate the honeypot routes here.
+
 // Listen Server
 app.listen(PORT, ()=> {
     console.log(`Server is running on port ${PORT}`)

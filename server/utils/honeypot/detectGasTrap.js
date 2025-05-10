@@ -19,14 +19,18 @@ const detectGasTrap = async (_from, _to, _amount)=> {
 
     if (highGasCount >= 2){
         return{
+            success: true,
             risk: true,
             reason: "High gas used in multiple simulations"
         }
     }
 
     return {
+        success: true,
         risk: false,
         message: "No high Gas detect in multiple simulations."
     }
 
 }
+
+module.exports = detectGasTrap;

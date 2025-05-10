@@ -44,4 +44,4 @@ const detectMintAccess = async (_contractAddress) => {
 };
 
 
-module.exports = {detectMintAccess}
+module.exports = detectMintAccess

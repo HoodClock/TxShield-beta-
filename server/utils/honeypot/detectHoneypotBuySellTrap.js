@@ -19,6 +19,7 @@ const detectHoneyPot = async (_userAddress, _tokenAddres, _amount)=> {
             }
         }else if(!buyTxSuccess && sellTxSuccess){
             return {
+                success: true,
                 risk: true,
                 message: "Honeypot detected! Can sell but can’t buy."
             }
@@ -26,6 +27,7 @@ const detectHoneyPot = async (_userAddress, _tokenAddres, _amount)=> {
     
         // no buy/sell honeypot found
         return{
+            success: true,
             risk: false,
             message: "No honeypot detected."
         }
