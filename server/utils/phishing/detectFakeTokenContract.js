@@ -53,3 +53,11 @@ const fakeTokenDetection = async (_tokenAddress) => {
 };
 
 module.exports = fakeTokenDetection;
+
+
+// detectApprovalPhishing.js        
+//   └ detectPermitPhishing.js           
+//   └ detectMaliciousAirdrops.js        
+//   └ detectDustingAttack.js            
+//   └ detectFakeFrontend.js             
+//   └ detectImpersonation.js
