@@ -19,7 +19,7 @@ const getAbi = async (address) => {
     });
 
     if (response.data.status === "1") {
-      return (response.data.result);
+      return response.data.result;
     } else {
       return null;
     }
@@ -42,7 +42,7 @@ const getSourceCode = async (address) => {
     });
 
     if (response.data.status === "1") {
-      return (response.data.result);
+      return response.data.result;
     } else {
       return null;
     }
@@ -52,4 +52,17 @@ const getSourceCode = async (address) => {
   }
 };
 
-module.exports = { getAbi, getSourceCode };
+const getByteCode = async (address) => {
+  const response = await axios.post(etherscanApiEndpoint, {
+    params: {
+      module: "proxy",
+      action: "eth_getCode",
+      address,
+      apikey: etherscanApiKey,
+    },
+  });
+
+  return response.data?.results;
+};
+
+module.exports = { getAbi, getSourceCode, getByteCode };
