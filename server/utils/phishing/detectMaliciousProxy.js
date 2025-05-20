@@ -63,4 +63,4 @@ const maliciousProxy = async (_tokenAddress) => {
 };
 
 
-module.exports = {maliciousProxy};
+module.exports = maliciousProxy;

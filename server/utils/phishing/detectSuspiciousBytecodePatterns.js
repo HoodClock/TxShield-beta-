@@ -17,12 +17,14 @@ const byteCodePattern = async (_tokenAddress) => {
 
   if (suspeciousPattern) {
     return {
+      success: true,
       risk: true,
       reason: "Dangerous op-code found in bytecode.",
     };
   }
 
   return {
+    success: true,
     risk: false,
     reason: "No suspicious patterns detected.",
   };

@@ -45,14 +45,16 @@ const detectImpersonation = async (_tokenAddress) => {
     return {
       success: true,
       risk: false,
-      reason: "Token matches trusted contract details",
+      message: "Token matches trusted contract details",
     };
   } else {
     return {
       success: true,
       risk: true,
-      message:
-        "Possible impersonation — name/symbol matched but contract address differs",
+      message:"Possible impersonation — name/symbol matched but contract address differs",
     };
   }
 };
+
+
+module.exports = detectImpersonation;

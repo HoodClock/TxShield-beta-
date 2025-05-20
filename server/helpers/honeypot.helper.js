@@ -2,7 +2,7 @@ const honeypotServices = require("../services/honeypotServices");
 
 const handleBlacklistCheck = async (address) => {
   if (!address) return { success: false, message: "Address is missing" };
-
+  
   try {
     const response = await honeypotServices.detectBlackListService(address);
     return response.success
