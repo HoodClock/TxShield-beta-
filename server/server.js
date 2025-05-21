@@ -19,7 +19,7 @@ app.use("/api/simulate", simulateRouter);
 
 app.use("/api/honeypot", honeypotRouter);
 
-app.use("api/phishing", phishingRouter);
+app.use("/api/phishing", phishingRouter);
 
 // Listen Server
 app.listen(PORT, () => {

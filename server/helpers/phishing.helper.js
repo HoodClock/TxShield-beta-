@@ -12,7 +12,7 @@ const handleApproveScam = async (_tokenAddress) => {
     const response = await phishingService.approveScamService(_tokenAddress);
     return response.success
       ? { success: true, data: response }
-      : { success: false, message: response.message };
+      : { success: response.success, reason: response.message, risk: response.risk };
   } catch (err) {
     return { success: false, err: err.message };
   }
@@ -30,7 +30,7 @@ const handleFakeToken = async (_tokenAddress) => {
     const response = await phishingService.fakeTokenService(_tokenAddress);
     return response.success
       ? { success: true, data: response }
-      : { success: false, message: response.message };
+      : { success: response.success, reason: response.message, risk: response.risk };
   } catch (err) {
     return { success: false, error: err.message };
   }
@@ -48,7 +48,7 @@ const handleHiddenFunctions = async (_tokenAddress) => {
     const response = await phishingService.hiddenFunctionService(_tokenAddress);
     return response.success
     ? {success: true, data: response}
-    : {success: response.success, message: response.message, reason: response.reason, risk: response.risk}
+    : {success: response.success, reason: response.reason, risk: response.risk}
   } catch (err) {
     return {success: false, error: err.message}
   }
@@ -66,7 +66,7 @@ const handleImpression = async (_tokenAddress) => {
     const response = await phishingService.impressionService(_tokenAddress);
     return response.success
     ? {success: true, data: response}
-    : {success: response.success, message: response.message, risk: response.risk }
+    : {success: response.success, reason: response.message, risk: response.risk }
   } catch (err) {
     return {success: false, error: err.message}
   }
