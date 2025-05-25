@@ -1,8 +1,6 @@
 const axios = require("axios");
-const dotenv = require("dotenv");
+require("dotenv").config();
   
-dotenv.config();
-
 const etherscanApiEndpoint = process.env.ETHERSCAN_API_ENDPOINT;
 const etherscanApiKey = process.env.ETHERSCAN_API_KEY;
 
@@ -47,6 +45,7 @@ const getSourceCode = async (address) => {
       },
     });
 
+
     if (response.data.status === "1") {
       const sourceCode = response.data.result;
       return {
@@ -73,7 +72,7 @@ const getSourceCode = async (address) => {
 
 const getByteCode = async (address) => {
   try {
-    const response = await axios.post(etherscanApiEndpoint, {
+    const response = await axios.get(etherscanApiEndpoint, {
       params: {
         module: "proxy",
         action: "eth_getCode",
@@ -82,18 +81,10 @@ const getByteCode = async (address) => {
       },
     });
 
-    return {
-      success: true,
-      data: response.data?.results || null,
-      error: null,
-    };
+    return response.data?.result || "";
   } catch (err) {
     console.error("Error fetching bytecode:", err.message);
-    return {
-      success: false,
-      data: null,
-      error: err.message,
-    };
+    return "";
   }
 };
 

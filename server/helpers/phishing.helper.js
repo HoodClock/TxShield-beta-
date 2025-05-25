@@ -18,24 +18,6 @@ const handleApproveScam = async (_tokenAddress) => {
   }
 };
 
-const handleFakeToken = async (_tokenAddress) => {
-  if (!_tokenAddress) {
-    return {
-      success: false,
-      message: "Token address is missing.",
-    };
-  }
-
-  try {
-    const response = await phishingService.fakeTokenService(_tokenAddress);
-    return response.success
-      ? { success: true, data: response }
-      : { success: response.success, reason: response.message, risk: response.risk };
-  } catch (err) {
-    return { success: false, error: err.message };
-  }
-};
-
 const handleHiddenFunctions = async (_tokenAddress) => {
   if (!_tokenAddress) {
     return {
@@ -110,7 +92,6 @@ const handleByteCode = async (_tokenAddress)=> {
 
 module.exports = {
   handleApproveScam,
-  handleFakeToken,
   handleHiddenFunctions,
   handleImpression,
   handleMalicious,

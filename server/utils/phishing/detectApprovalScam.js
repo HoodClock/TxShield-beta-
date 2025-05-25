@@ -1,13 +1,11 @@
-const { getSourceCode } = require("../../services/etherscanService");
+const resolveImplementation = require("../resolveImplementation");
 
 const approvalScam = async (_tokenAddress) => {
-  const sourceData = await getSourceCode(_tokenAddress);
+  const { sourceCode} = await resolveImplementation(_tokenAddress);
 
-  if (!sourceData || !sourceData[0] || !sourceData[0].SourceCode) {
+  if (!sourceCode) {
     return { success: false, reason: "No source code found" };
   }
-
-  const sourceCode = sourceData[0].SourceCode;
 
   const riskyPattern = [
     "approve(msg.sender, type(uint256).max)",
@@ -24,19 +22,13 @@ const approvalScam = async (_tokenAddress) => {
 
   const isRisky = riskyPattern.some((item) => sourceCode.includes(item));
 
-  if (isRisky) {
-    return {
-      success: true,
-      risk: true,
-      message: "Approval function allows unlimited or deceptive spending.",
-    };
-  } else {
-    return {
-      success: true,
-      risk: false,
-      message: "no risky approval logic found.",
-    };
-  }
+  return {
+    success: true,
+    risk: isRisky,
+    reason: isRisky
+      ? "Approval function allows unlimited or deceptive spending."
+      : "No risky approval logic found.",
+  };
 };
 
 module.exports = approvalScam;

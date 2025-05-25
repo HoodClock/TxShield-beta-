@@ -1,21 +1,12 @@
-const axios = require("axios");
-require("dotenv").config();
-const { getSourceCode } = require("../../services/etherscanService");
-
-const etherScanEndpoint = process.env.ETHERSCAN_API_ENDPOINT;
-const etherScanApiKey = process.env.ETHERSCAN_API_KEY;
+const resolveImplementation = require("../resolveImplementation");
 
 const maliciousProxy = async (_tokenAddress) => {
   try {
-    const url = `${etherScanEndpoint}?module=proxy&action=eth_getProxyImplementation&address=${_tokenAddress}&apikey=${etherScanApiKey}`;
+    const { implementationAddress, sourceCode } = await resolveImplementation(
+      _tokenAddress
+    );
 
-    const proxyResponse = await axios.post(url);
-    const implementationAddress = proxyResponse.data.result;
-
-    if (
-      !implementationAddress ||
-      implementationAddress === "0x0000000000000000000000000000000000000000"
-    ) {
+    if (!implementationAddress) {
       return {
         success: true,
         risk: false,
@@ -23,17 +14,13 @@ const maliciousProxy = async (_tokenAddress) => {
       };
     }
 
-    const sourceCodeResult = await getSourceCode(implementationAddress);
-
-    if (!sourceCodeResult || sourceCodeResult.length === 0) {
+    if (!sourceCode) {
       return {
         success: true,
         risk: true,
         reason: "Proxy implementation source code not found",
       };
     }
-
-    const sourceCode = sourceCodeResult[0].SourceCode || "";
 
     const suspiciousPatterns = [
       "delegatecall",
@@ -61,6 +48,5 @@ const maliciousProxy = async (_tokenAddress) => {
     };
   }
 };
-
 
 module.exports = maliciousProxy;

@@ -7,19 +7,17 @@ const masterPhishingController = async (req, res) => {
     if (!address) {
       return res
         .status(401)
-        .json({ message: "Missing credentials in Phishing controller" });
+        .json({ message: "Missing credentials" });
     }
 
     const [
       approveScam,
-      fakeToken,
       hiddenFunction,
       impression,
       malacious,
       byteCode,
     ] = await Promise.all([
       phishingHelper.handleApproveScam(address),
-      phishingHelper.handleFakeToken(address),
       phishingHelper.handleHiddenFunctions(address),
       phishingHelper.handleImpression(address),
       phishingHelper.handleMalicious(address),
@@ -30,7 +28,6 @@ const masterPhishingController = async (req, res) => {
       success: true,
       checks: {
         approveScam,
-        fakeToken,
         hiddenFunction,
         impression,
         malacious,

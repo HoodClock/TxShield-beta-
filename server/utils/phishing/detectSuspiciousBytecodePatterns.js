@@ -2,6 +2,13 @@ const { getByteCode } = require("../../services/etherscanService");
 
 const byteCodePattern = async (_tokenAddress) => {
   const byteCode = await getByteCode(_tokenAddress);
+  if (!byteCode) {
+    return {
+      success: false,
+      risk: null,
+      reason: "Failed to fetch bytecode",
+    };
+  }
 
   const riskyPatterns = [
     /selfdestruct/i,

@@ -4,10 +4,6 @@ const approveScamService = async (_address)=> {
     return await phishingUtilities.detctApprovalScam(_address);
 }
 
-const fakeTokenService = async (_address)=> {
-    return await phishingUtilities.detectFakeTokenContract(_address);
-}
-
 const hiddenFunctionService = async (_address)=> {
     return await phishingUtilities.detectHiddenFunctionTraps(_address);
 }
@@ -26,7 +22,6 @@ const byteCodePatternService = async (_address)=> {
 
 module.exports = {
     approveScamService,
-    fakeTokenService,
     hiddenFunctionService,
     impressionService,
     maliciousProxyService,
