@@ -7,7 +7,6 @@ const simulateTranscation = async (
   _amount
 ) => {
   try {
-
     const tx = {
       from: _userAddress,
       to: _recipientAddress,
@@ -15,7 +14,7 @@ const simulateTranscation = async (
     };
 
     const _gasLimit = await provider.estimateGas(tx);
-    tx.gas = _gasLimit.toString();
+    const gasLimitNum = Number(_gasLimit);
 
     const gasBuffers = [1.3, 1.5, 2.0]; // 30, 50, 100 %
     const simulationResults = [];
@@ -23,14 +22,20 @@ const simulateTranscation = async (
     for (const buffer of gasBuffers) {
       const txWithBuffer = {
         ...tx,
-        gas: Math.ceil(_gasLimit.toNumber() * buffer).toString(),
+        gas: Math.ceil(gasLimitNum * buffer).toString(),
+        gasPrice: "0x3b9aca00",
+        data: tx.data || "0x",
       };
 
       const payload = {
         id: 1,
         jsonrpc: "2.0",
         method: "alchemy_simulateExecution",
-        params: [txWithBuffer],
+        params: [
+          "FLAT",
+          txWithBuffer,
+          "latest"
+        ],
       };
 
       const simulationResponse = await axios.post(
@@ -54,7 +59,6 @@ const simulateTranscation = async (
       baseGasLimit: _gasLimit.toString(),
       simulations: simulationResults,
     };
-
   } catch (error) {
     console.error("Simulation Error", error);
     return { success: false, error: error.message };

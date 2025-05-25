@@ -22,7 +22,7 @@ const hiddenFunctionTrap = async (_tokenAddress) => {
   // Create regex pattern
   const pattern = new RegExp(`function\\s+(${suspiciousFunctions.join("|")})\\s*\\(`, "gi");
 
-  const matches = sourceCode.mathc(pattern);
+  const matches = sourceCode.match(pattern);
 
   if (matches && matches.length > 0){
     return{

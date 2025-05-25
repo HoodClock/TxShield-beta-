@@ -1,10 +1,10 @@
 const honeypotServices = require("../services/honeypotServices");
 
-const handleBlacklistCheck = async (address) => {
-  if (!address) return { success: false, message: "Address is missing" };
-  
+const handleBlacklistCheck = async (address, abi) => {
+  if (!address || !abi) return { success: false, message: "Address/ABI is missing" };
+
   try {
-    const response = await honeypotServices.detectBlackListService(address);
+    const response = await honeypotServices.detectBlackListService(address, abi);
     return response.success
       ? { success: true, data: response }
       : { success: false, message: response.message };
@@ -13,11 +13,11 @@ const handleBlacklistCheck = async (address) => {
   }
 };
 
-const handleDisableTransferCheck = async (address) => {
-  if (!address) return { success: false, message: "Address is missing" };
+const handleDisableTransferCheck = async (address, abi) => {
+  if (!address || !abi) return { success: false, message: "Address/ABI is missing" };
 
   try {
-    const response = await honeypotServices.detectDisableTransferService(address);
+    const response = await honeypotServices.detectDisableTransferService(address, abi);
     return response.success
       ? { success: true, data: response }
       : { success: false, message: response.message };
@@ -26,11 +26,11 @@ const handleDisableTransferCheck = async (address) => {
   }
 };
 
-const handleFakeBalanceCheck = async (tokenAddress) => {
-  if (!tokenAddress) return { success: false, message: "Token address is missing" };
+const handleFakeBalanceCheck = async (tokenAddress, abi) => {
+  if (!tokenAddress || !abi) return { success: false, message: "Token address/ABI  is missing" };
 
   try {
-    const response = await honeypotServices.detectFakeBalanceService(tokenAddress);
+    const response = await honeypotServices.detectFakeBalanceService(tokenAddress, abi);
     return response.success
       ? { success: true, data: response }
       : { success: false, message: response.message };
@@ -48,17 +48,17 @@ const handleGasTrapCheck = async (userAddress, recepientAddress, value) => {
     const response = await honeypotServices.detecGasTrapService(userAddress, recepientAddress, value);
     return response.success
       ? { success: true, data: response }
-      : { success: false, message: response.message };
+      : { success: false, risk: response.risk, message: response.message };
   } catch (err) {
     return { success: false, message: err.message };
   }
 };
 
-const handleHiddenOwnerCheck = async (contractAddress) => {
-  if (!contractAddress) return { success: false, message: "Contract address is missing" };
+const handleHiddenOwnerCheck = async (contractAddress, abi) => {
+  if (!contractAddress || !abi) return { success: false, message: "Contract/ABI is missing" };
 
   try {
-    const response = await honeypotServices.detectHiddenOwnerService(contractAddress);
+    const response = await honeypotServices.detectHiddenOwnerService(contractAddress, abi);
     return response.success
       ? { success: true, data: response }
       : { success: false, message: response.message };
@@ -67,11 +67,11 @@ const handleHiddenOwnerCheck = async (contractAddress) => {
   }
 };
 
-const handleHighSellTaxCheck = async (address) => {
-  if (!address) return { success: false, message: "Address is missing" };
+const handleHighSellTaxCheck = async (address, abi) => {
+  if (!address || !abi) return { success: false, message: "Address/ABI is missing" };
 
   try {
-    const response = await honeypotServices.detectHighSellTaxService(address);
+    const response = await honeypotServices.detectHighSellTaxService(address, abi);
     return response.success
       ? { success: true, data: response }
       : { success: false, message: response.message };
@@ -95,11 +95,11 @@ const handleBuySellCheck = async (userAddress, tokenAddress, value) => {
   }
 };
 
-const handleMintAccessCheck = async (contractAddress) => {
-  if (!contractAddress) return { success: false, message: "Contract address is missing" };
+const handleMintAccessCheck = async (contractAddress, abi) => {
+  if (!contractAddress || !abi) return { success: false, message: "Contract address/ABI is missing" };
 
   try {
-    const response = await honeypotServices.detectMintAccessService(contractAddress);
+    const response = await honeypotServices.detectMintAccessService(contractAddress, abi);
     return response.success
       ? { success: true, data: response }
       : { success: false, message: response.message };
@@ -108,11 +108,11 @@ const handleMintAccessCheck = async (contractAddress) => {
   }
 };
 
-const handleTradingControlCheck = async (address) => {
-  if (!address) return { success: false, message: "Address is missing" };
+const handleTradingControlCheck = async (address, abi) => {
+  if (!address || !abi) return { success: false, message: "Address/ABI is missing" };
 
   try {
-    const response = await honeypotServices.detectTradingControlService(address);
+    const response = await honeypotServices.detectTradingControlService(address, abi);
     return response.success
       ? { success: true, data: response }
       : { success: false, message: response.message };

@@ -1,5 +1,3 @@
-const { getAbi } = require("../../services/etherscanService");
-
 const suspiciousMintFunctions = [
   /mint/i,
   /mint.*To/i,
@@ -10,22 +8,22 @@ const suspiciousMintFunctions = [
   /claim.*Token/i,
 ];
 
-const detectMintAccess = async (_contractAddress) => {
-  const abi = await getAbi(_contractAddress);
+const detectMintAccess = async (_contractAddress, _abi) => {
 
-  if (!abi) {
-    return { success: false, warning: "ABI not available" };
-  }
+  if (!_abi) {
+    return {
+      success: false,
+      message: "ABI not available for this address.",
+    };
+  } 
 
-  const mintFunctions = abi
-    .filter(
+  const mintFunctions = _abi.filter(
       (item) =>
         item.type === "function" &&
         suspiciousMintFunctions.some((pattern) => pattern.test(item.name)) &&
         item.stateMutability !== "view" &&
         item.stateMutability !== "pure"
-    )
-    .map((item) => item.name);
+    ).map((item) => item.name);
 
   if (mintFunctions.length > 0) {
     return {

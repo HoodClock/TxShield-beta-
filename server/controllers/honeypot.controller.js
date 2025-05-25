@@ -1,4 +1,5 @@
 const honeypotHelper = require("../helpers/honeypot.helper");
+const { getAbi } = require("../services/etherscanService");
 
 // master controllers of all
 const honeypotMasterController = async (req, res) => {
@@ -23,6 +24,13 @@ const honeypotMasterController = async (req, res) => {
       return res.status(401).json({ message: "Missing required fields." });
     }
 
+    console.log("master controller address credentials ::::::::::::::- ", address)
+
+
+    const abi = await getAbi(address);
+
+    console.log("Master controller ABI ::::::::::::: => ", abi);
+
     const [
       blackList,
       disableTransfer,
@@ -34,15 +42,15 @@ const honeypotMasterController = async (req, res) => {
       mintAccess,
       tradingControl,
     ] = await Promise.all([
-      honeypotHelper.handleBlacklistCheck(address),
-      honeypotHelper.handleDisableTransferCheck(address),
-      honeypotHelper.handleFakeBalanceCheck(tokenAddress),
+      honeypotHelper.handleBlacklistCheck(address, abi),
+      honeypotHelper.handleDisableTransferCheck(address, abi),
+      honeypotHelper.handleFakeBalanceCheck(tokenAddress, abi),
       honeypotHelper.handleGasTrapCheck(userAddress, recepientAddress, value),
-      honeypotHelper.handleHiddenOwnerCheck(contractAddress),
-      honeypotHelper.handleHighSellTaxCheck(address),
+      honeypotHelper.handleHiddenOwnerCheck(contractAddress, abi),
+      honeypotHelper.handleHighSellTaxCheck(address, abi),
       honeypotHelper.handleBuySellCheck(userAddress, tokenAddress, value),
-      honeypotHelper.handleMintAccessCheck(contractAddress),
-      honeypotHelper.handleTradingControlCheck(address),
+      honeypotHelper.handleMintAccessCheck(contractAddress, abi),
+      honeypotHelper.handleTradingControlCheck(address, abi),
     ]);
 
     return res.status(200).json({

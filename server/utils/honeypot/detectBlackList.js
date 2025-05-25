@@ -1,6 +1,3 @@
-const {getAbi} = require("../../services/etherscanService")
-
-
 const blackListFunctionsLists = [
     /blacklist/i,
     /add.*Blacklist/i,
@@ -11,20 +8,18 @@ const blackListFunctionsLists = [
     /restrict.*Address/i
 ]
 
-const detectBlackListContract = async(_address)=> {
-    
-    const abi = await getAbi(_address);
+const detectBlackListContract = async(_address, _abi)=> {
 
-    if (!abi) {
+    // console.log("From honeypot Black List module abi :- ", _abi);
+
+    if (!_abi) {
         return {
           success: false,
           message: "ABI not available for this address.",
         };
       }    
 
-    const functionNames = abi
-    .filter((item)=> item.type === "functions")
-    .map((item)=> item.name);
+    const functionNames = _abi.filter((item)=> item.type === "function").map((item)=> item.name);
 
     const matchedFunctions = functionNames.filter((item)=> blackListFunctionsLists.some((pattern)=> pattern.test(item)));
 

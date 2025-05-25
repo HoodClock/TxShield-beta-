@@ -1,13 +1,18 @@
 const axios = require("axios");
 const dotenv = require("dotenv");
-
+  
 dotenv.config();
 
 const etherscanApiEndpoint = process.env.ETHERSCAN_API_ENDPOINT;
 const etherscanApiKey = process.env.ETHERSCAN_API_KEY;
 
-// getABI
+
+// sleep function 
+const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
+
+// get ABI
 const getAbi = async (address) => {
+  await sleep(300); // throttle to avoid Etherscan rate limit
   try {
     const response = await axios.get(etherscanApiEndpoint, {
       params: {
@@ -19,8 +24,9 @@ const getAbi = async (address) => {
     });
 
     if (response.data.status === "1") {
-      return response.data.result;
+      return JSON.parse(response.data.result);
     } else {
+      console.error("ABI fetch failed:", response.data.result);
       return null;
     }
   } catch (err) {
@@ -42,27 +48,53 @@ const getSourceCode = async (address) => {
     });
 
     if (response.data.status === "1") {
-      return response.data.result;
+      const sourceCode = response.data.result;
+      return {
+        success: true,
+        data: sourceCode,
+        error: null,
+      };
     } else {
-      return null;
+      return {
+        success: false,
+        data: null,
+        error: response.data.result || "Unable to fetch source code",
+      };
     }
   } catch (err) {
     console.error("Error fetching source code:", err.message);
-    return null;
+    return {
+      success: false,
+      data: null,
+      error: err.message,
+    };
   }
 };
 
 const getByteCode = async (address) => {
-  const response = await axios.post(etherscanApiEndpoint, {
-    params: {
-      module: "proxy",
-      action: "eth_getCode",
-      address,
-      apikey: etherscanApiKey,
-    },
-  });
+  try {
+    const response = await axios.post(etherscanApiEndpoint, {
+      params: {
+        module: "proxy",
+        action: "eth_getCode",
+        address,
+        apikey: etherscanApiKey,
+      },
+    });
 
-  return response.data?.results;
+    return {
+      success: true,
+      data: response.data?.results || null,
+      error: null,
+    };
+  } catch (err) {
+    console.error("Error fetching bytecode:", err.message);
+    return {
+      success: false,
+      data: null,
+      error: err.message,
+    };
+  }
 };
 
 module.exports = { getAbi, getSourceCode, getByteCode };

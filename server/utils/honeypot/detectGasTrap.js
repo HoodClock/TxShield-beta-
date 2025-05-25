@@ -7,8 +7,9 @@ const detectGasTrap = async (_from, _to, _amount)=> {
 
     if (!simulattionResult.success){
         return{
+            success: true,
             risk: true,
-            reason: "Simulation failed, Potential gas trap."
+            message: "Simulation failed — potential gas trap due to execution failure."
         }
     }
 
@@ -21,7 +22,7 @@ const detectGasTrap = async (_from, _to, _amount)=> {
         return{
             success: true,
             risk: true,
-            reason: "High gas used in multiple simulations"
+            message: "High gas used in multiple simulations"
         }
     }
 

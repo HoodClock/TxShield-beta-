@@ -1,4 +1,3 @@
-const { getAbi } = require("../../services/etherscanService");
 const { ethers } = require("ethers");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -14,13 +13,16 @@ const taxFunctionPatterns = [
 
 const provider = new ethers.JsonRpcProvider(process.env.ETH_MAINNET_RPC_URL);
 
-const detectHighSellTax = async (address) => {
-  const abi = await getAbi(address);
-  if (!abi) {
-    return { success: false, message: "ABI not available" };
-  }
+const detectHighSellTax = async (address, _abi) => {
 
-  const taxFunctions = abi.filter(
+  if (!_abi) {
+    return {
+      success: false,
+      message: "ABI not available for this address.",
+    };
+  } 
+
+  const taxFunctions = _abi.filter(
     (item) =>
       item.type === "function" &&
       item.inputs.length === 0 &&
@@ -28,7 +30,7 @@ const detectHighSellTax = async (address) => {
       taxFunctionPatterns.some((pattern) => pattern.test(item.name))
   );
 
-  const contract = new ethers.Contract(address, abi, provider);
+  const contract = new ethers.Contract(address, _abi, provider);
 
   for (let func of taxFunctions) {
     try {

@@ -24,10 +24,11 @@ const detectImpersonation = async (_tokenAddress) => {
     (coin) => coin.symbol.toLowerCase() === tokenObj.symbol.toLowerCase()
   )?.id;
 
-  const sepecificCoin = `${process.env.COIN_GECKO_SEPECIFIC_ID(
+  const sepecificCoin = process.env.COIN_GECKO_SEPECIFIC_ID.replace(
     "{id}",
     coinId
-  )}`;
+  );
+  
   const sepeceficCoinRes = await axios.get(sepecificCoin);
   const coinGeckoIdData = sepeceficCoinRes.data;
 
@@ -51,10 +52,10 @@ const detectImpersonation = async (_tokenAddress) => {
     return {
       success: true,
       risk: true,
-      message:"Possible impersonation — name/symbol matched but contract address differs",
+      message:
+        "Possible impersonation — name/symbol matched but contract address differs",
     };
   }
 };
-
 
 module.exports = detectImpersonation;

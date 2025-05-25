@@ -1,16 +1,17 @@
-const {getAbi} = require("../../services/etherscanService")
-
 const suspiciousFunctions = [
     /(set|fake|update|adjust|reflect|mint).*balance/i
 ]
 
-const detectFakeBalance = async (_tokenAddress)=> {
+const detectFakeBalance = async (_tokenAddress, _abi)=> {
 
-    const abi = await getAbi(_tokenAddress);
+    if (!_abi) {
+        return {
+          success: false,
+          message: "ABI not available for this address.",
+        };
+      } 
 
-    const functionNames = abi
-    .filter((items)=> items.type === "function")
-    .map((item)=> item.name);
+    const functionNames = _abi.filter((items)=> items.type === "function").map((item)=> item.name);
 
     const mathcedFunctions = functionNames
     .filter((item)=> suspiciousFunctions.some((pattern)=> pattern.test(item)));

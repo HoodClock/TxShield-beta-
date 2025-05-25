@@ -1,5 +1,3 @@
-const { getAbi } = require("../../services/etherscanService");
-
 // using regEX for broader search
 const suspiciousFunctions = [
   /set.*Tax/i,
@@ -17,16 +15,16 @@ const suspiciousFunctions = [
   /set.*Pair/i,
 ];
 
-const detectHiddenOwnerFuncs = async (_contractAddress) => {
-  const abi = await getAbi(_contractAddress);
+const detectHiddenOwnerFuncs = async (_contractAddress, _abi) => {
 
-  if (!abi) {
-    return { success: false, warning: "ABI not available" };
-  }
+  if (!_abi) {
+    return {
+      success: false,
+      message: "ABI not available for this address.",
+    };
+  } 
 
-  const functionNames = abi
-    .filter((item) => item.type === "function")
-    .map((item) => item.name);
+  const functionNames = _abi.filter((item) => item.type === "function").map((item) => item.name);
 
   const matchedFunction = functionNames.filter((func) =>
     suspiciousFunctions.some((pattern) => pattern.test(func))
@@ -36,7 +34,7 @@ const detectHiddenOwnerFuncs = async (_contractAddress) => {
     return {
       success: true,
       risk: true,
-      matchedFunctions: matched,
+      matchedFunctions: matchedFunction,
       message: "Potential owner-only control functions found.",
     };
   }

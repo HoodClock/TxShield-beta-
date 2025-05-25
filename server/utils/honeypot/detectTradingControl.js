@@ -1,5 +1,3 @@
-const { getAbi } = require("../../services/etherscanService");
-
 const TradingControlFunctionsNames = [
   /add.*WhiteList/i,
   /remove.*WhiteList/i,
@@ -12,17 +10,15 @@ const TradingControlFunctionsNames = [
   /revokeTraderApproval/i,
 ];
 
-const detectTradingControl = async (_address) => {
-  const abi = await getAbi(_address);
-
-  if (!abi) {
+const detectTradingControl = async (_address, _abi) => {
+  if (!_abi) {
     return {
       success: false,
       message: "ABI not available for this address.",
     };
   }
 
-  const functionNames = abi
+  const functionNames = _abi
     .filter((item) => item.type === "function")
     .map((item) => item.name);
 
