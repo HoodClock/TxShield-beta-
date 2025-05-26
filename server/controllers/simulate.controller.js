@@ -15,7 +15,7 @@ const masterSimulationController = async (req, res) => {
       contractABI,
       byteCode,
       transactionHistory
-    ] = await new Promise.all([
+    ] = await Promise.all([
       simulationHelper.simulateTxHelper(userAddress, recepientAddress, amount),
       simulationHelper.contractABIHelper(recepientAddress),
       simulationHelper.byteCodeHelper(recepientAddress),

@@ -21,7 +21,7 @@ const getContractABI = async (_recipientAddress) => {
     } else {
       return { success: false, error: `Etherscan error ${message || result}` };
     }
-  } catch (error) {
+  } catch (err) {
     console.error("ABI Fetch Error:", err.message);
     return { success: false, error: err.message };
   }
