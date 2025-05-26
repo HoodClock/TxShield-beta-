@@ -1,3 +1,5 @@
+const { getRiskScore } = require("./riskAnalysis");
+
 const TradingControlFunctionsNames = [
   /add.*WhiteList/i,
   /remove.*WhiteList/i,
@@ -30,6 +32,7 @@ const detectTradingControl = async (_address, _abi) => {
     return {
       success: true,
       risk: true,
+      score: getRiskScore("tradingControl"),
       matchedFunctions,
       message: "Potential trading control mechanisms detected.",
     };

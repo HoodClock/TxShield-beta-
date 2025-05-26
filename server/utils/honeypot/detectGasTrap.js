@@ -1,4 +1,5 @@
 const {getSimulateTransactionService} = require("../../services/simulationServeice")
+const {getRiskScore} = require("./riskAnalysis")
 
 
 const detectGasTrap = async (_from, _to, _amount)=> {
@@ -22,6 +23,7 @@ const detectGasTrap = async (_from, _to, _amount)=> {
         return{
             success: true,
             risk: true,
+            score: getRiskScore("gasTrap"),
             message: "High gas used in multiple simulations"
         }
     }

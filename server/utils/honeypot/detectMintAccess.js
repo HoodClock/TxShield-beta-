@@ -1,3 +1,5 @@
+const { getRiskScore } = require("./riskAnalysis");
+
 const suspiciousMintFunctions = [
   /mint/i,
   /mint.*To/i,
@@ -29,6 +31,7 @@ const detectMintAccess = async (_contractAddress, _abi) => {
     return {
       success: true,
       risk: true,
+      score: getRiskScore("mintAccess"),
       matchedFunctions: mintFunctions,
       message: "Suspicious public mint-related functions detected.",
     };

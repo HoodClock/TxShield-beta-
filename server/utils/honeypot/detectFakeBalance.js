@@ -1,3 +1,5 @@
+const {getRiskScore} = require("./riskAnalysis")
+
 const suspiciousFunctions = [
     /(set|fake|update|adjust|reflect|mint).*balance/i
 ]
@@ -20,6 +22,7 @@ const detectFakeBalance = async (_tokenAddress, _abi)=> {
         return{
             success: true,
             risk: true,
+            score: getRiskScore("fakeBalance"),
             mathcedFunctions,
             message: "Potential fake balance honeypot alert."
         }

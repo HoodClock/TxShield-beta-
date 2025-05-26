@@ -1,3 +1,5 @@
+const {getRiskScore} = require("./riskAnalysis")
+
 // using regEX for broader search
 const suspiciousFunctions = [
   /set.*Tax/i,
@@ -34,6 +36,7 @@ const detectHiddenOwnerFuncs = async (_contractAddress, _abi) => {
     return {
       success: true,
       risk: true,
+      score: getRiskScore("hiddenOwnerFunctions"),      
       matchedFunctions: matchedFunction,
       message: "Potential owner-only control functions found.",
     };

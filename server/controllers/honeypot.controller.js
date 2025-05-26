@@ -24,12 +24,7 @@ const honeypotMasterController = async (req, res) => {
       return res.status(401).json({ message: "Missing required fields." });
     }
 
-    console.log("master controller address credentials ::::::::::::::- ", address)
-
-
     const abi = await getAbi(address);
-
-    console.log("Master controller ABI ::::::::::::: => ", abi);
 
     const [
       blackList,
@@ -53,8 +48,51 @@ const honeypotMasterController = async (req, res) => {
       honeypotHelper.handleTradingControlCheck(address, abi),
     ]);
 
+    const checkResults = [
+      blackList,
+      disableTransfer,
+      fakeBalance,
+      gasTrap,
+      hiddenOwner,
+      highSellTax,
+      honeypotBuySell,
+      mintAccess,
+      tradingControl,
+    ];
+
+    const maxScore = checkResults.length * 10;
+
+    const totalScore = checkResults.reduce((sum, check) => {
+      return sum + (check?.data?.score || 0);
+    }, 0);
+
+    const totalRiskChecks = checkResults.reduce((sum, check) => {
+      return sum + (check?.data?.risk === false ? 1 : 0);
+    }, 0);
+
+    const getRiskLevel = (score) => {
+      if (score >= 40) return "Red Flag Zone";
+      if (score >= 20 && score <= 39) return "Caution Zone";
+      return "Safe Zone";
+    };
+
+    const riskLevel = getRiskLevel(totalScore);
+
+    const verdict =
+      riskLevel === "Red Flag Zone"
+        ? "❌ High risk — avoid interacting with this contract."
+        : riskLevel === "Caution Zone"
+        ? "⚠️ Risky elements found — proceed carefully."
+        : "✅ Safe to proceed with caution. No major red flags detected.";
+
     return res.status(200).json({
       success: true,
+      totalScore: `${totalScore} `,
+      passRate: `${((totalRiskChecks / checkResults.length) * 100).toFixed(
+        1
+      )}%`,
+      riskLevel,
+      verdict,
       checks: {
         blackList,
         disableTransfer,

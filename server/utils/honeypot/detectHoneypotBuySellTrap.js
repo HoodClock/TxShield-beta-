@@ -1,4 +1,5 @@
-const {getSimulateTransactionService} = require("../../services/simulationServeice")
+const {getSimulateTransactionService} = require("../../services/simulationServeice");
+const { getRiskScore } = require("./riskAnalysis");
 
 const detectHoneyPot = async (_userAddress, _tokenAddres, _amount)=> {
     try {
@@ -29,6 +30,7 @@ const detectHoneyPot = async (_userAddress, _tokenAddres, _amount)=> {
         return{
             success: true,
             risk: false,
+            score: getRiskScore("honeypot"),
             message: "No honeypot detected."
         }
     } catch (error) {

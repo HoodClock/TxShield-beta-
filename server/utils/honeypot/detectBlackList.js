@@ -1,3 +1,5 @@
+const {getRiskScore} = require("./riskAnalysis")
+
 const blackListFunctionsLists = [
     /blacklist/i,
     /add.*Blacklist/i,
@@ -9,8 +11,6 @@ const blackListFunctionsLists = [
 ]
 
 const detectBlackListContract = async(_address, _abi)=> {
-
-    // console.log("From honeypot Black List module abi :- ", _abi);
 
     if (!_abi) {
         return {
@@ -27,6 +27,7 @@ const detectBlackListContract = async(_address, _abi)=> {
         return {
             success: true,
             risk: true,
+            score: getRiskScore("blackList"),
             matchedFunctions,
             message: "Potential blacklist mechanism detected."
         }

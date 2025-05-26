@@ -1,3 +1,5 @@
+const {getRiskScore} = require("./riskAnalysis")
+
 
 const suspiciousFunctions = [/disable.*Transfer/i, /pause/i, /lock/i];
 
@@ -27,6 +29,7 @@ const detectDisbaledTransfer = async (_address, _abi) => {
     return {
       success: true,
       risk: true,
+      score: getRiskScore("disabletransfer"),
       matchedFunctions,
       message: "Potential disbale transfer functions found.",
     };

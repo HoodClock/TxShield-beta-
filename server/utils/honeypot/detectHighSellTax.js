@@ -1,4 +1,5 @@
 const { ethers } = require("ethers");
+const {getRiskScore} = require("./riskAnalysis")
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -40,6 +41,7 @@ const detectHighSellTax = async (address, _abi) => {
         return {
           success: true,
           risk: true,
+          score: getRiskScore("highSellTax"),
           message: `Very high sell tax detected (>50%) in function ${func.name}`,
         };
       }
