@@ -1,4 +1,4 @@
-const resolveImplementation = require("../resolveImplementation");
+const resolveImplementation = require("./resolveImplementation");
 
 const approvalScam = async (_tokenAddress) => {
   const { sourceCode} = await resolveImplementation(_tokenAddress);

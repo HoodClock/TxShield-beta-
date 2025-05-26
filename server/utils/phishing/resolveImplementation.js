@@ -1,4 +1,4 @@
-const { getSourceCode } = require("../services/etherscanService");
+const { getSourceCode } = require("../../services/etherscanService");
 
 const resolveImplementation = async (_contractAddress) => {
   try {

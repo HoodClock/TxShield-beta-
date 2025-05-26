@@ -1,4 +1,4 @@
-const resolveImplementation = require("../resolveImplementation");
+const resolveImplementation = require("./resolveImplementation");
 
 const maliciousProxy = async (_tokenAddress) => {
   try {

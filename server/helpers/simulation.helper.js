@@ -1,14 +1,99 @@
 const simulationServices = require("../services/simulationServeice");
 
-const simulateTx = async (userAddress, recepientAddress, amount) => {
-  if (!userAddress || !recepientAddress || !amount) {
+const simulateTxHelper = async (userAddress, recepientAddress, amount) => {
+  try {
+    if (!userAddress || !recepientAddress || !amount) {
+      return {
+        success: false,
+        message: "User / Recepient address or value is missing",
+      };
+    }
+
+    const response = await simulationServices.getSimulateTransactionService(
+      userAddress,
+      recepientAddress,
+      amount
+    );
+
     return {
-      success: false,
-      message: "User / Recepient address or value is missing",
+      success: true,
+      data: response,
     };
+  } catch (err) {
+    return { success: false, error: err.message };
   }
-
-  const response = await simulationServices.getSimulateTransactionService(userAddress, recepientAddress, amount)
-  
-
 };
+
+const contractABIHelper = async (recepientAddress) => {
+  try {
+    if (!recepientAddress) {
+      return {
+        success: false,
+        message: "Recepient address is missing",
+      };
+    }
+
+    const response = await simulationServices.getContractAbiService(
+      recepientAddress
+    );
+
+    return {
+      success: true,
+      data: response,
+    };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+};
+
+const byteCodeHelper = async (recepientAddress) => {
+  try {
+    if (!recepientAddress) {
+      return {
+        success: false,
+        message: "Recepient address is missing",
+      };
+    }
+
+    const response = await simulationServices.getAnalyzedCodeService(
+      recepientAddress
+    );
+
+    return {
+      success: true,
+      data: response,
+    };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+};
+
+const transactionHistoryHelper = async (recepientAddress) => {
+  try {
+    if (!recepientAddress) {
+      return {
+        success: false,
+        message: "Recepient address is missing",
+      };
+    }
+
+    const response = await simulationServices.getTransactionHistory(
+      recepientAddress
+    );
+
+    return {
+      success: true,
+      data: response,
+    };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+};
+
+
+module.exports = {
+  simulateTxHelper,
+  contractABIHelper,
+  byteCodeHelper,
+  transactionHistoryHelper
+}
