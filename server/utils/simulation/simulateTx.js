@@ -10,7 +10,7 @@ const simulateTranscation = async (
     const tx = {
       from: _userAddress,
       to: _recipientAddress,
-      value: _amount,
+      value: "0x" + BigInt(_amount * 1e18).toString(16),
     };
 
     const _gasLimit = await provider.estimateGas(tx);
