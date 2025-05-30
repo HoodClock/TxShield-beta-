@@ -1,3 +1,5 @@
+"use client";
+
 export default function ResultsDashboard({ isVisible }) {
   if (!isVisible) return null
 
