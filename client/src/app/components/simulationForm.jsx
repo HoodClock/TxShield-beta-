@@ -1,19 +1,34 @@
 "use client";
 
 import { useState } from "react";
+import { useAccount } from "wagmi";
 
 export default function SimulationForm({ onSimulate }) {
+  const { address: userAddress, isConnected } = useAccount();
+
   const [contractAddress, setContractAddress] = useState("");
   const [amount, setAmount] = useState("");
   const [currency, setCurrency] = useState("ETH");
 
   const handleSimulate = () => {
+    // Basic validation:
     if (!contractAddress || !amount) {
       alert("Please enter both contract address and amount");
       return;
     }
 
-    onSimulate({ contractAddress, amount, currency });
+    // Build whatever shape your backend expects:
+    const formData = {
+      address: contractAddress,
+      userAddress,
+      contractAddress,
+      tokenAddress: contractAddress,
+      recepientAddress: contractAddress,
+      value: amount,
+    };
+
+    // Fire the callback for the parent to handle API & loading:
+    onSimulate(formData);
   };
 
   return (
@@ -27,7 +42,7 @@ export default function SimulationForm({ onSimulate }) {
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Address Input */}
+        {/* Contract / Wallet / Token Address Input */}
         <div className="col-span-2">
           <label
             htmlFor="contractAddress"

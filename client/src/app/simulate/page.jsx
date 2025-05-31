@@ -1,40 +1,59 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Head from "next/head"
-import Header from "../components/header"
-import SimulationForm from "../components/simulationForm"
-import LoadingState from "../components/loading"
-import ResultsDashboard from "../components/result"
-import HoneypotChecks from "../components/honeypotChecks"
-import Recommendations from "../components/recomendations"
-import ActionButtons from "../components/actionButton"
-import FeaturesSection from "../components/featureSection"
-import Footer from "../components/footer"
+import { useState } from "react";
+import Head from "next/head";
+import Header from "../components/header";
+import SimulationForm from "../components/simulationForm";
+import LoadingState from "../components/loading";
+import ResultsDashboard from "../components/result";
+import HoneypotChecks from "../components/honeypotChecks";
+import Recommendations from "../components/recomendations";
+import ActionButtons from "../components/actionButton";
+import FeaturesSection from "../components/featureSection";
+import Footer from "../components/footer";
+
+import { honeypotChecks as runHoneypotChecks } from "@/api/api";
 
 export default function App() {
-  const [isLoading, setIsLoading] = useState(false)
-  const [showResults, setShowResults] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [showResults, setShowResults] = useState(false);
 
-  const handleSimulate = (data) => {
-    setIsLoading(true)
-    setShowResults(false)
-  }
+  // NEW: store the API response here
+  const [honeypotData, setHoneypotData] = useState(null);
+
+  // Called by <SimulationForm onSimulate={...} />
+  const handleSimulate = async (formData) => {
+    setIsLoading(true);
+    setShowResults(false);
+
+    try {
+      const response = await runHoneypotChecks(formData);
+      setHoneypotData(response.data);
+      setIsLoading(false);
+      setShowResults(true);
+    } catch (err) {
+      console.error("Honeypot API error:", err);
+      setIsLoading(false);
+    }
+  };
 
   const handleSimulationComplete = () => {
-    setIsLoading(false)
-    setShowResults(true)
-  }
+    setIsLoading(false);
+    setShowResults(true);
+  };
 
   const handleSimulateAgain = () => {
-    setShowResults(false)
-  }
+    setShowResults(false);
+  };
 
   return (
     <div className="min-h-screen bg-dark-900">
       <Head>
         <title>TxShield - Secure Transaction Simulator</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
       </Head>
 
       <Header />
@@ -45,20 +64,30 @@ export default function App() {
             Secure Your Transactions
           </h2>
           <p className="text-xl text-gray-300 mb-8">
-            Simulate and analyze your blockchain transactions before execution with our advanced security checks
+            Simulate and analyze your blockchain transactions before execution
+            with our advanced security checks
           </p>
 
+          {/* Pass handleSimulate down; formData will bubble up */}
           <SimulationForm onSimulate={handleSimulate} />
 
-          <LoadingState isLoading={isLoading} onComplete={handleSimulationComplete} />
+          {/* Show a real loader while isLoading is true */}
+          {isLoading && <LoadingState isLoading={true} onComplete={() => {}} />}
 
-          <ResultsDashboard isVisible={showResults} />
-
+          {/* Once the API returns, show results */}
           {showResults && (
             <>
-              <HoneypotChecks isVisible={showResults} />
+              {/* Pass the honeypotData object to each child */}
+              <ResultsDashboard isVisible={showResults} data={honeypotData} />
+
+              <HoneypotChecks isVisible={showResults} data={honeypotData} />
+
               <Recommendations isVisible={showResults} />
-              <ActionButtons isVisible={showResults} onSimulateAgain={handleSimulateAgain} />
+
+              <ActionButtons
+                isVisible={showResults}
+                onSimulateAgain={handleSimulateAgain}
+              />
             </>
           )}
         </section>
@@ -68,5 +97,5 @@ export default function App() {
 
       <Footer />
     </div>
-  )
+  );
 }

@@ -13,6 +13,8 @@ const honeypotMasterController = async (req, res) => {
       value,
     } = req.body;
 
+    console.log("Received body:", req.body);
+
     if (
       !address ||
       !tokenAddress ||
