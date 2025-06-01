@@ -1,5 +1,7 @@
 "use client";
 
+import { motion } from "framer-motion";
+
 export default function HoneypotChecks({ isVisible, data }) {
   if (!isVisible || !data) return null;
 
@@ -18,11 +20,11 @@ export default function HoneypotChecks({ isVisible, data }) {
   };
 
   return (
-    <div className="bg-[#1e293b] rounded-xl p-6 border border-gray-700 shadow-lg mb-6">
-      <h4 className="text-lg font-semibold text-white mb-6 flex items-center">
+    <div className="bg-[#0f172a] rounded-xl p-6 border border-yellow-500/20 shadow-lg mb-6">
+      <h4 className="text-xl font-bold text-yellow-400 mb-6 flex items-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5 mr-2 text-blue-400"
+          className="h-6 w-6 mr-2 text-yellow-400"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -39,32 +41,32 @@ export default function HoneypotChecks({ isVisible, data }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         {Object.entries(checks).map(([key, result]) => {
-          // result.data.risk is a boolean (true = risky, false = safe)
           const passed = !result.data.risk;
           const message = result.data.message;
 
           return (
-            <div
+            <motion.div
               key={key}
+              whileHover={{ y: -3 }}
               className={
-                "bg-[#0f172a] rounded-lg p-4 border " +
+                "bg-[#1e293b] rounded-lg p-4 border " +
                 (passed
-                  ? "border-green-500 hover:border-green-400"
-                  : "border-red-500 hover:border-red-400")
+                  ? "border-green-500/30 hover:border-green-400/50"
+                  : "border-red-500/30 hover:border-red-400/50")
               }
             >
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center">
                   <div
                     className={
-                      "w-8 h-8 rounded-lg flex items-center justify-center mr-3 " +
+                      "w-9 h-9 rounded-lg flex items-center justify-center mr-3 " +
                       (passed ? "bg-green-500/20" : "bg-red-500/20")
                     }
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className={
-                        "h-4 w-4 " +
+                        "h-5 w-5 " +
                         (passed ? "text-green-400" : "text-red-400")
                       }
                       fill="none"
@@ -75,23 +77,18 @@ export default function HoneypotChecks({ isVisible, data }) {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={3}
-                        d={
-                          passed
-                            ? "M5 13l4 4L19 7" // check mark
-                            : "M6 18L18 6M6 6l12 12" // X
-                        }
+                        d={passed ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}
                       />
                     </svg>
                   </div>
-                  <h5 className="font-medium text-gray-300">
+                  <h5 className="font-medium text-gray-200">
                     {TITLES[key] || key}
                   </h5>
                 </div>
-                {/* optional “toggle” icon if you want expand/collapse */}
-                <button className="text-gray-500 hover:text-blue-400 transition-colors">
+                <button className="text-gray-500 hover:text-yellow-400 transition-colors">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
+                    className="h-5 w-5"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -105,8 +102,8 @@ export default function HoneypotChecks({ isVisible, data }) {
                   </svg>
                 </button>
               </div>
-              <div className="text-sm text-gray-400 pl-11">{message}</div>
-            </div>
+              <div className="text-sm text-gray-400 pl-12">{message}</div>
+            </motion.div>
           );
         })}
       </div>

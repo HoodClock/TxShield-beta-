@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useAccount } from "wagmi";
+import { motion } from "framer-motion";
+
 
 export default function SimulationForm({ onSimulate, onHoneypot }) {
   const { address: userAddress, isConnected } = useAccount();
@@ -38,8 +40,8 @@ export default function SimulationForm({ onSimulate, onHoneypot }) {
   };
 
   return (
-    <div className="bg-[#1e293b] rounded-xl p-6 mb-8 border border-gray-700 shadow-lg max-w-4xl mx-auto">
-      <h2 className="text-xl font-semibold text-white mb-6">
+    <div className="bg-[#0f172a] rounded-xl p-6 mb-8 border border-yellow-500/20 shadow-lg max-w-4xl mx-auto">
+      <h2 className="text-2xl font-bold text-yellow-400 mb-6">
         Secure Your Transactions
       </h2>
       <p className="text-gray-400 mb-6">
@@ -48,7 +50,6 @@ export default function SimulationForm({ onSimulate, onHoneypot }) {
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Contract / Wallet / Token Address Input */}
         <div className="col-span-2">
           <label
             htmlFor="contractAddress"
@@ -61,14 +62,14 @@ export default function SimulationForm({ onSimulate, onHoneypot }) {
               type="text"
               id="contractAddress"
               placeholder="0x..."
-              className="w-full px-4 py-3 bg-[#0f172a] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-3 bg-[#1e293b] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
               value={contractAddress}
               onChange={(e) => setContractAddress(e.target.value)}
             />
             <div className="absolute right-3 top-3 group">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-gray-500 hover:text-blue-400 cursor-pointer"
+                className="h-5 w-5 text-gray-500 hover:text-yellow-400 cursor-pointer transition-colors"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -80,15 +81,14 @@ export default function SimulationForm({ onSimulate, onHoneypot }) {
                   d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <div className="absolute hidden group-hover:block right-0 top-full mt-2 w-64 bg-gray-800 text-gray-300 text-sm p-3 rounded-lg shadow-lg border border-gray-700 z-10">
+              <div className="absolute hidden group-hover:block right-0 top-full mt-2 w-64 bg-gray-800 text-gray-300 text-sm p-3 rounded-lg shadow-lg border border-yellow-500/20 z-10">
                 Enter any Ethereum contract, wallet, or token address to
-                analyze. We'll automatically detect the type.
+                analyze.
               </div>
             </div>
           </div>
         </div>
 
-        {/* Amount Input */}
         <div>
           <label
             htmlFor="amount"
@@ -101,13 +101,13 @@ export default function SimulationForm({ onSimulate, onHoneypot }) {
               type="number"
               id="amount"
               placeholder="0.0"
-              className="w-full px-4 py-3 bg-[#0f172a] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-20"
+              className="w-full px-4 py-3 bg-[#1e293b] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent pr-20"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
             />
             <div className="absolute right-3 top-3">
               <select
-                className="bg-gray-800 text-gray-300 text-sm rounded px-2 py-1 border border-gray-700 focus:ring-blue-500 focus:border-blue-500"
+                className="bg-gray-800 text-gray-300 text-sm rounded px-2 py-1 border border-gray-700 focus:ring-yellow-500 focus:border-yellow-500"
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
               >
@@ -122,9 +122,11 @@ export default function SimulationForm({ onSimulate, onHoneypot }) {
       </div>
 
       <div className="mt-8">
-        <button
+        <motion.button
           onClick={handleSimulate}
-          className="w-full md:w-auto px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-lg hover:from-blue-500 hover:to-indigo-600 transition-all duration-300 shadow-lg shadow-blue-500/20 flex items-center justify-center"
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.98 }}
+          className="w-full md:w-auto px-8 py-3 bg-gradient-to-r from-yellow-600 to-yellow-700 text-black font-bold rounded-lg hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg shadow-yellow-500/20 flex items-center justify-center"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -141,7 +143,7 @@ export default function SimulationForm({ onSimulate, onHoneypot }) {
             />
           </svg>
           Simulate Transaction
-        </button>
+        </motion.button>
       </div>
     </div>
   );

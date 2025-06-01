@@ -83,7 +83,7 @@ const honeypotMasterController = async (req, res) => {
         ? "❌ High risk — avoid interacting with this contract."
         : riskLevel === "Caution Zone"
         ? "⚠️ Risky elements found — proceed carefully."
-        : "✅ Safe to proceed with caution. No major red flags detected.";
+        : "✅ Safe to proceed. No major red flags detected.";
 
     return res.status(200).json({
       success: true,

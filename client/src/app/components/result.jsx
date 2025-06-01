@@ -14,9 +14,24 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
   
   // Risk level colors with brighter variants
   const riskColorMap = {
-    "Safe Zone": { bg: "bg-emerald-500/10", text: "text-emerald-400", border: "border-emerald-500/30", pulse: "bg-emerald-500" },
-    Medium: { bg: "bg-amber-500/10", text: "text-amber-400", border: "border-amber-500/30", pulse: "bg-amber-500" },
-    High: { bg: "bg-rose-500/10", text: "text-rose-400", border: "border-rose-500/30", pulse: "bg-rose-500" }
+    "Safe Zone": { 
+      bg: "bg-emerald-500/10", 
+      text: "text-emerald-400", 
+      border: "border-emerald-500/30", 
+      pulse: "bg-emerald-500" 
+    },
+    Medium: { 
+      bg: "bg-yellow-500/10", 
+      text: "text-yellow-400", 
+      border: "border-yellow-500/30", 
+      pulse: "bg-yellow-500" 
+    },
+    High: { 
+      bg: "bg-red-500/10", 
+      text: "text-red-400", 
+      border: "border-red-500/30", 
+      pulse: "bg-red-500" 
+    }
   };
   const riskStyle = riskColorMap[riskLevel] || { bg: "bg-gray-500/10", text: "text-gray-400", border: "border-gray-500/30", pulse: "bg-gray-500" };
 
