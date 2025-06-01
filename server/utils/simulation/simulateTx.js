@@ -1,11 +1,7 @@
 const { provider } = require("../../config/provider");
 const axios = require("axios");
 
-const simulateTranscation = async (
-  _userAddress,
-  _recipientAddress,
-  _amount
-) => {
+const simulateTranscation = async (_userAddress, _recipientAddress, _amount) => {
   try {
     const tx = {
       from: _userAddress,
@@ -16,7 +12,7 @@ const simulateTranscation = async (
     const _gasLimit = await provider.estimateGas(tx);
     const gasLimitNum = Number(_gasLimit);
 
-    const gasBuffers = [1.3, 1.5, 2.0]; // 30, 50, 100 %
+    const gasBuffers = [1.3, 1.5, 2.0];
     const simulationResults = [];
 
     for (const buffer of gasBuffers) {
@@ -31,11 +27,7 @@ const simulateTranscation = async (
         id: 1,
         jsonrpc: "2.0",
         method: "alchemy_simulateExecution",
-        params: [
-          "FLAT",
-          txWithBuffer,
-          "latest"
-        ],
+        params: ["FLAT", txWithBuffer, "latest"],
       };
 
       const simulationResponse = await axios.post(
@@ -44,7 +36,6 @@ const simulateTranscation = async (
       );
 
       const result = simulationResponse.data.result;
-
       simulationResults.push({
         buffer: `${(buffer - 1) * 100}%`,
         success: result.success,

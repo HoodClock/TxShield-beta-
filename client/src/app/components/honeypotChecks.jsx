@@ -3,10 +3,8 @@
 export default function HoneypotChecks({ isVisible, data }) {
   if (!isVisible || !data) return null;
 
-  // data.checks is an object whose keys are e.g. "blackList", "gasTrap", etc.
   const checks = data.checks;
 
-  // A little map from API‐key → user‐friendly title:
   const TITLES = {
     blackList: "Blacklist Check",
     disableTransfer: "Disable Transfer Check",

@@ -12,17 +12,34 @@ import ActionButtons from "../components/actionButton";
 import FeaturesSection from "../components/featureSection";
 import Footer from "../components/footer";
 
-import { honeypotChecks as runHoneypotChecks } from "@/api/api";
+import {
+  honeypotChecks as runHoneypotChecks,
+  simulateTx as runSimulateTx,
+} from "@/api/api";
+import { assetChain } from "viem/chains";
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
-
-  // NEW: store the API response here
   const [honeypotData, setHoneypotData] = useState(null);
+  const [simualtionData, setSimulationData] = useState(null);
 
-  // Called by <SimulationForm onSimulate={...} />
   const handleSimulate = async (formData) => {
+    setIsLoading(true);
+    setShowResults(false);
+
+    try {
+      const response = await runSimulateTx(formData);
+      setSimulationData(response.data);
+      setIsLoading(false);
+      setShowResults(true);
+    } catch (error) {
+      console.error("Honeypot API error:", err);
+      setIsLoading(false);
+    }
+  };
+
+  const handleHoneypot = async (formData) => {
     setIsLoading(true);
     setShowResults(false);
 
@@ -68,17 +85,16 @@ export default function App() {
             with our advanced security checks
           </p>
 
-          {/* Pass handleSimulate down; formData will bubble up */}
-          <SimulationForm onSimulate={handleSimulate} />
+          <SimulationForm
+            onSimulate={handleSimulate}
+            onHoneypot={handleHoneypot}
+          />
 
-          {/* Show a real loader while isLoading is true */}
           {isLoading && <LoadingState isLoading={true} onComplete={() => {}} />}
 
-          {/* Once the API returns, show results */}
           {showResults && (
             <>
-              {/* Pass the honeypotData object to each child */}
-              <ResultsDashboard isVisible={showResults} data={honeypotData} />
+              <ResultsDashboard isVisible={showResults} simulation={simualtionData} honeypot={honeypotData} />
 
               <HoneypotChecks isVisible={showResults} data={honeypotData} />
 

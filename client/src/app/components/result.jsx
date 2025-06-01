@@ -1,141 +1,455 @@
 "use client";
 
-export default function ResultsDashboard({ isVisible, data }) {
-  if (!isVisible || !data) return null;
-  
-  const { totalScore, passRate, riskLevel, verdict, checks } = data;
+import { motion } from "framer-motion";
+import { FiCheck, FiX, FiAlertTriangle, FiInfo, FiArrowRight, FiExternalLink } from "react-icons/fi";
 
-  // Count how many checks passed vs. total:
+export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
+  if (!isVisible || !simulation || !honeypot) return null;
+
+  // --- Honeypot Data ---
+  const { totalScore, passRate, riskLevel, verdict, checks } = honeypot;
   const totalChecks = Object.keys(checks).length;
-  const passedChecks = Object.values(checks).filter(
-    (chk) => chk.data.risk === false
-  ).length;
+  const passedChecks = Object.values(checks).filter((chk) => chk.data.risk === false).length;
   const ratioText = `${passedChecks}/${totalChecks}`;
-
-  // We can choose a color based on riskLevel (simple example):
+  
+  // Risk level colors with brighter variants
   const riskColorMap = {
-    "Safe Zone": "green-400",
-    "Medium": "yellow-400",
-    "High": "red-400",
-    // add more if needed
+    "Safe Zone": { bg: "bg-emerald-500/10", text: "text-emerald-400", border: "border-emerald-500/30", pulse: "bg-emerald-500" },
+    Medium: { bg: "bg-amber-500/10", text: "text-amber-400", border: "border-amber-500/30", pulse: "bg-amber-500" },
+    High: { bg: "bg-rose-500/10", text: "text-rose-400", border: "border-rose-500/30", pulse: "bg-rose-500" }
   };
-  const badgeColor = riskColorMap[riskLevel] || "gray-400";
+  const riskStyle = riskColorMap[riskLevel] || { bg: "bg-gray-500/10", text: "text-gray-400", border: "border-gray-500/30", pulse: "bg-gray-500" };
+
+  // --- Simulation Data ---
+  const {
+    simulateTx: { data: simulateData },
+    byteCode: { data: byteData },
+    transactionHistory: { data: txHistoryData },
+  } = simulation.checks;
+
+  // Execution status card
+  const executionSuccess = simulateData.success;
+  const executionMessage = simulateData.success
+    ? "Execution simulated successfully"
+    : `Error: ${simulateData.error}`;
+
+  // Bytecode warnings
+  const { isContract, warnings } = byteData;
+
+  // Transaction history summary & recent transfers
+  const { summary, recentTransfers } = txHistoryData;
+  const { totalTransfers, lastTransferDate, totalERC20Volume } = summary;
+
+  // Animation variants
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+  };
 
   return (
-    <div className="bg-[#1e293b] rounded-xl p-6 border border-gray-700 shadow-lg mb-6">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-xl font-semibold text-white">
-          Transaction Analysis
-        </h3>
-        <div className="flex items-center space-x-2">
-          <span className="text-sm text-gray-400">Risk Level:</span>
-          <span
-            className={`px-3 py-1 rounded-full text-sm font-medium bg-${badgeColor}/20 text-${badgeColor}`}
+    <motion.div 
+      initial="hidden"
+      animate="show"
+      variants={container}
+      className="space-y-8 p-4 sm:p-6 max-w-7xl mx-auto"
+    >
+      {/* Honeypot Section - Futuristic Design */}
+      <motion.div 
+        variants={item}
+        className="bg-[#0A0E17] rounded-2xl p-6 border border-gray-800/50 shadow-2xl backdrop-blur-sm"
+        style={{
+          background: 'radial-gradient(circle at 20% 30%, rgba(21, 85, 255, 0.1) 0%, rgba(9, 14, 28, 0.9) 50%)',
+          boxShadow: '0 8px 32px rgba(0, 10, 60, 0.3)'
+        }}
+      >
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+          <div>
+            <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-1">
+              Honeypot Analysis
+            </h3>
+            <p className="text-sm text-gray-400">Smart contract security assessment</p>
+          </div>
+          <motion.div 
+            whileHover={{ scale: 1.03 }}
+            className={`flex items-center space-x-2 ${riskStyle.bg} px-4 py-2 rounded-full border ${riskStyle.border}`}
           >
-            {riskLevel}
-          </span>
-        </div>
-      </div>
-
-      {/* Summary Tiles */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        {/* Total Score */}
-        <div className="bg-[#0f172a] rounded-xl p-5 border border-gray-700">
-          <div className="flex items-center mb-3">
-            <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center mr-3">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-blue-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12l2 2 4-4"
-                />
-              </svg>
-            </div>
-            <h4 className="font-medium text-gray-300">Total Score</h4>
-          </div>
-          <div className="text-2xl font-bold text-white mb-1">
-            {totalScore.trim()}
-          </div>
-          <div className="text-sm text-gray-400 mb-4">/ 10</div>
-        </div>
-
-        {/* Pass Rate */}
-        <div className="bg-[#0f172a] rounded-xl p-5 border border-gray-700">
-          <div className="flex items-center mb-3">
-            <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center mr-3">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-green-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-            </div>
-            <h4 className="font-medium text-gray-300">Pass Rate</h4>
-          </div>
-          <div className="text-2xl font-bold text-white mb-3">
-            {passRate}
-          </div>
-          <div className="w-full bg-gray-700 rounded-full h-2">
-            {/* Convert "88.9%" → 88.9 (number) for styling */}
-            {Number(passRate.replace("%", "")) > 0 && (
-              <div
-                className="bg-green-500 h-2 rounded-full"
-                style={{
-                  width: passRate,
-                }}
+            <span className="text-sm text-gray-300">Risk Level:</span>
+            <div className="flex items-center">
+              <motion.span 
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ repeat: Infinity, duration: 2 }}
+                className={`w-2 h-2 rounded-full mr-2 ${riskStyle.pulse}`}
               />
-            )}
-          </div>
-        </div>
-
-        {/* Passed Checks / Total */}
-        <div className="bg-[#0f172a] rounded-xl p-5 border border-gray-700">
-          <div className="flex items-center mb-3">
-            <div className="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center mr-3">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-yellow-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 9v2m0 4h.01"
-                />
-              </svg>
+              <span className={`px-3 py-1 rounded-full text-sm font-medium ${riskStyle.text}`}>
+                {riskLevel}
+              </span>
             </div>
-            <h4 className="font-medium text-gray-300">Checks Passed</h4>
-          </div>
-          <div className="text-2xl font-bold text-white mb-1">
-            {ratioText}
-          </div>
-          <div className="text-sm text-gray-400">checks passed / total</div>
+          </motion.div>
         </div>
-      </div>
 
-      {/* Verdict Text */}
-      <div className="mt-4">
-        <h4 className="text-lg font-medium text-gray-300 mb-2">Verdict</h4>
-        <p className="text-white">{verdict}</p>
-      </div>
-    </div>
+        {/* Honeypot Summary Tiles - Animated Grid */}
+        <motion.div 
+          variants={container}
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
+        >
+          {/* Total Score Tile */}
+          <motion.div 
+            variants={item}
+            whileHover={{ y: -5 }}
+            className="bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-xl p-6 border border-gray-800 shadow-lg group relative overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="relative z-10">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center mr-3 group-hover:bg-blue-500/30 transition-colors">
+                  <svg className="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+                <h4 className="font-medium text-gray-300 group-hover:text-white transition-colors">Total Score</h4>
+              </div>
+              <div className="flex items-end">
+                <div className="text-4xl font-bold text-white mb-1 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                  {totalScore.trim()}
+                </div>
+                <div className="text-sm text-gray-400 mb-2 ml-1">/ 10</div>
+              </div>
+              <div className="h-1.5 w-full bg-gray-800 mt-4 rounded-full overflow-hidden">
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: `${(parseFloat(totalScore) / 10) * 100}%` }}
+                  transition={{ duration: 1, delay: 0.5 }}
+                  className="h-full bg-gradient-to-r from-blue-500 to-cyan-500"
+                />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Pass Rate Tile */}
+          <motion.div 
+            variants={item}
+            whileHover={{ y: -5 }}
+            className="bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-xl p-6 border border-gray-800 shadow-lg group relative overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="relative z-10">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 rounded-lg bg-emerald-500/20 flex items-center justify-center mr-3 group-hover:bg-emerald-500/30 transition-colors">
+                  <FiCheck className="h-6 w-6 text-emerald-400" />
+                </div>
+                <h4 className="font-medium text-gray-300 group-hover:text-white transition-colors">Pass Rate</h4>
+              </div>
+              <div className="text-4xl font-bold text-white mb-4 bg-gradient-to-r from-emerald-400 to-green-400 bg-clip-text text-transparent">
+                {passRate}
+              </div>
+              <div className="w-full bg-gray-800 rounded-full h-1.5 overflow-hidden">
+                {Number(passRate.replace("%", "")) > 0 && (
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: passRate }}
+                    transition={{ duration: 1, delay: 0.7 }}
+                    className="bg-gradient-to-r from-emerald-500 to-green-500 h-1.5 rounded-full"
+                  />
+                )}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Checks Passed Tile */}
+          <motion.div 
+            variants={item}
+            whileHover={{ y: -5 }}
+            className="bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-xl p-6 border border-gray-800 shadow-lg group relative overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-yellow-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="relative z-10">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 rounded-lg bg-amber-500/20 flex items-center justify-center mr-3 group-hover:bg-amber-500/30 transition-colors">
+                  <svg className="h-6 w-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                </div>
+                <h4 className="font-medium text-gray-300 group-hover:text-white transition-colors">Checks Passed</h4>
+              </div>
+              <div className="text-4xl font-bold text-white mb-1 bg-gradient-to-r from-amber-400 to-yellow-400 bg-clip-text text-transparent">
+                {ratioText}
+              </div>
+              <div className="text-sm text-gray-400">checks passed / total</div>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {Object.entries(checks).map(([name, check]) => (
+                  <span 
+                    key={name} 
+                    className={`text-xs px-2 py-1 rounded-full ${check.data.risk ? 'bg-rose-500/20 text-rose-400' : 'bg-emerald-500/20 text-emerald-400'}`}
+                  >
+                    {name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+
+        {/* Honeypot Verdict - Animated Card */}
+        <motion.div
+          variants={item}
+          className="mt-6 bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-xl p-6 border border-gray-800 shadow-lg"
+        >
+          <h4 className="text-xl font-semibold text-gray-300 mb-4 flex items-center">
+            <FiInfo className="h-5 w-5 mr-2 text-blue-400" />
+            Expert Verdict
+          </h4>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="text-white/90 leading-relaxed text-lg"
+          >
+            {verdict}
+          </motion.p>
+        </motion.div>
+      </motion.div>
+
+      {/* Simulation Section - Futuristic Design */}
+      <motion.div 
+        variants={item}
+        className="bg-[#0A0E17] rounded-2xl p-6 border border-gray-800/50 shadow-2xl backdrop-blur-sm"
+        style={{
+          background: 'radial-gradient(circle at 80% 30%, rgba(168, 85, 247, 0.1) 0%, rgba(9, 14, 28, 0.9) 50%)',
+          boxShadow: '0 8px 32px rgba(80, 10, 120, 0.3)'
+        }}
+      >
+        <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500 mb-2">
+          Simulation Overview
+        </h3>
+        <p className="text-sm text-gray-400 mb-8">Smart contract behavior analysis</p>
+
+        {/* Execution Status - Enhanced with animation */}
+        <motion.div 
+          variants={item}
+          className="mb-8"
+        >
+          <motion.div 
+            whileHover={{ scale: 1.01 }}
+            className="bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-xl p-5 border border-gray-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+          >
+            <div className="flex items-center">
+              <motion.div 
+                animate={{ 
+                  scale: [1, 1.2, 1],
+                  boxShadow: executionSuccess 
+                    ? ['0 0 0 0 rgba(16, 185, 129, 0.7)', '0 0 0 10px rgba(16, 185, 129, 0)', '0 0 0 0 rgba(16, 185, 129, 0)']
+                    : ['0 0 0 0 rgba(239, 68, 68, 0.7)', '0 0 0 10px rgba(239, 68, 68, 0)', '0 0 0 0 rgba(239, 68, 68, 0)']
+                }}
+                transition={{ repeat: Infinity, duration: 2 }}
+                className={`w-4 h-4 rounded-full mr-3 ${executionSuccess ? "bg-emerald-500" : "bg-rose-500"}`}
+              />
+              <h5 className="text-gray-300 font-medium">Execution Status</h5>
+            </div>
+            <motion.p 
+              whileTap={{ scale: 0.95 }}
+              className={`text-sm font-medium px-4 py-2 rounded-full flex items-center ${executionSuccess ? "bg-emerald-500/20 text-emerald-400" : "bg-rose-500/20 text-rose-400"}`}
+            >
+              {executionSuccess ? (
+                <>
+                  <FiCheck className="mr-2" /> {executionMessage}
+                </>
+              ) : (
+                <>
+                  <FiX className="mr-2" /> {executionMessage}
+                </>
+              )}
+            </motion.p>
+          </motion.div>
+        </motion.div>
+
+        {/* Bytecode Warnings - Enhanced with animation */}
+        <motion.div 
+          variants={item}
+          className="mb-8"
+        >
+          <h5 className="text-xl font-semibold text-gray-300 mb-4 flex items-center">
+            <FiAlertTriangle className="h-5 w-5 mr-2 text-amber-400" />
+            Bytecode Analysis
+          </h5>
+          <motion.div 
+            whileHover={{ y: -2 }}
+            className="bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-xl p-5 border border-gray-800"
+          >
+            {isContract ? (
+              warnings.length > 0 ? (
+                <motion.ul className="space-y-3">
+                  {warnings.map((w, idx) => (
+                    <motion.li 
+                      key={idx} 
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: 0.1 * idx }}
+                      className="flex items-start bg-rose-500/10 p-3 rounded-lg border border-rose-500/20"
+                    >
+                      <span className="text-rose-400 mr-2 mt-0.5">⚠</span>
+                      <span className="text-gray-200">{w}</span>
+                    </motion.li>
+                  ))}
+                </motion.ul>
+              ) : (
+                <motion.div 
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="flex items-center bg-emerald-500/10 p-4 rounded-lg border border-emerald-500/20"
+                >
+                  <FiCheck className="h-5 w-5 mr-2 text-emerald-400" />
+                  <span className="text-emerald-400">No dangerous opcodes detected.</span>
+                </motion.div>
+              )
+            ) : (
+              <motion.div 
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="flex items-center bg-amber-500/10 p-4 rounded-lg border border-amber-500/20"
+              >
+                <FiAlertTriangle className="h-5 w-5 mr-2 text-amber-400" />
+                <span className="text-amber-400">Address is not a contract.</span>
+              </motion.div>
+            )}
+          </motion.div>
+        </motion.div>
+
+        {/* Transaction History Summary - Animated Grid */}
+        <motion.div 
+          variants={container}
+          className="mb-8"
+        >
+          <h5 className="text-xl font-semibold text-gray-300 mb-4 flex items-center">
+            <svg className="h-5 w-5 mr-2 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+            </svg>
+            Recent Transfers Summary
+          </h5>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <motion.div 
+              variants={item}
+              whileHover={{ y: -5 }}
+              className="bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-xl p-5 border border-gray-800 group relative overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-violet-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="relative z-10">
+                <p className="text-sm text-gray-400 group-hover:text-purple-300 transition-colors">Total Transfers</p>
+                <p className="text-3xl font-bold text-white mt-2">{totalTransfers}</p>
+              </div>
+            </motion.div>
+
+            <motion.div 
+              variants={item}
+              whileHover={{ y: -5 }}
+              className="bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-xl p-5 border border-gray-800 group relative overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="relative z-10">
+                <p className="text-sm text-gray-400 group-hover:text-blue-300 transition-colors">Last Transfer Date</p>
+                <p className="text-3xl font-bold text-white mt-2">{lastTransferDate}</p>
+              </div>
+            </motion.div>
+
+            <motion.div 
+              variants={item}
+              whileHover={{ y: -5 }}
+              className="bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-xl p-5 border border-gray-800 group relative overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="relative z-10">
+                <p className="text-sm text-gray-400 group-hover:text-emerald-300 transition-colors">Total ERC-20 Volume</p>
+                <p className="text-3xl font-bold text-white mt-2">{totalERC20Volume}</p>
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* Recent Transfers List - Enhanced with animation */}
+        <motion.div variants={item}>
+          <h5 className="text-xl font-semibold text-gray-300 mb-4 flex items-center">
+            <svg className="h-5 w-5 mr-2 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+            </svg>
+            5 Most Recent Transfers
+          </h5>
+          <motion.div 
+            whileHover={{ scale: 1.005 }}
+            className="overflow-x-auto rounded-xl border border-gray-800 shadow-lg"
+          >
+            <table className="min-w-full divide-y divide-gray-800">
+              <thead className="bg-[#0F172A]">
+                <tr>
+                  <th className="px-5 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Hash</th>
+                  <th className="px-5 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">From</th>
+                  <th className="px-5 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">To</th>
+                  <th className="px-5 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Symbol</th>
+                  <th className="px-5 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Amount</th>
+                  <th className="px-5 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Date</th>
+                  <th className="px-5 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"></th>
+                </tr>
+              </thead>
+              <tbody className="bg-[#0F172A]/50 divide-y divide-gray-800">
+                {recentTransfers.map((tx, idx) => (
+                  <motion.tr
+                    key={tx.hash}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 * idx }}
+                    className="hover:bg-[#172033] transition-colors"
+                  >
+                    <td className="px-5 py-4 whitespace-nowrap text-sm font-mono text-blue-400">
+                      <a 
+                        href={`https://etherscan.io/tx/${tx.hash}`} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex items-center hover:text-blue-300 transition-colors"
+                      >
+                        {tx.hash.substring(0, 6)}...{tx.hash.substring(tx.hash.length - 4)}
+                        <FiExternalLink className="ml-1 opacity-0 group-hover:opacity-100" />
+                      </a>
+                    </td>
+                    <td className="px-5 py-4 whitespace-nowrap text-sm font-mono text-gray-300">
+                      {tx.from.substring(0, 6)}...{tx.from.substring(tx.from.length - 4)}
+                    </td>
+                    <td className="px-5 py-4 whitespace-nowrap text-sm font-mono text-gray-300">
+                      {tx.to.substring(0, 6)}...{tx.to.substring(tx.to.length - 4)}
+                    </td>
+                    <td className="px-5 py-4 whitespace-nowrap text-sm font-medium text-white">
+                      {tx.symbol}
+                    </td>
+                    <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-300">
+                      {tx.amount}
+                    </td>
+                    <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-400">
+                      {tx.date}
+                    </td>
+                    <td className="px-5 py-4 whitespace-nowrap text-right text-sm">
+                      <a 
+                        href={`https://etherscan.io/tx/${tx.hash}`} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-blue-400 hover:text-blue-300 transition-colors flex items-center justify-end"
+                      >
+                        <FiArrowRight />
+                      </a>
+                    </td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 }

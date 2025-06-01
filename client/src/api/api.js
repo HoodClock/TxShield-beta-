@@ -1,14 +1,18 @@
 import axios from "axios";
 
-const API = axios.create({
-  baseURL: "http://localhost:5000",
-  withCredentials: true,
-});
 
 const BASE_URL = "http://localhost:5000";
 
-export const simulateTx = (data) =>
-  API.post("/api/simulate/execute-simulation", data);
+export const simulateTx = async (formData) => {
+  return await axios.post(`${BASE_URL}/api/simulate/execute-simulation`, formData, {
+    headers: {
+      "Content-Type": "application/json"
+    },
+    withCredentials: true
+  })
+}
+
+
 
 export const honeypotChecks = async (formData) => {
   return await axios.post(

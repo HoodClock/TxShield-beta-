@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useAccount } from "wagmi";
 
-export default function SimulationForm({ onSimulate }) {
+export default function SimulationForm({ onSimulate, onHoneypot }) {
   const { address: userAddress, isConnected } = useAccount();
 
   const [contractAddress, setContractAddress] = useState("");
@@ -11,13 +11,19 @@ export default function SimulationForm({ onSimulate }) {
   const [currency, setCurrency] = useState("ETH");
 
   const handleSimulate = () => {
-    // Basic validation:
     if (!contractAddress || !amount) {
       alert("Please enter both contract address and amount");
       return;
     }
 
-    // Build whatever shape your backend expects:
+    // credentials for simulation
+    const simulationData = {
+      userAddress,
+      recepientAddress: contractAddress,
+      amount: amount,
+    };
+
+    // credentials for honeypot
     const formData = {
       address: contractAddress,
       userAddress,
@@ -27,8 +33,8 @@ export default function SimulationForm({ onSimulate }) {
       value: amount,
     };
 
-    // Fire the callback for the parent to handle API & loading:
-    onSimulate(formData);
+    onSimulate(simulationData);
+    onHoneypot(formData);
   };
 
   return (
