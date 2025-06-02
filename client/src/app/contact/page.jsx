@@ -1,191 +1,266 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Send } from "lucide-react";
 
-export default function ContactForm() {
+export default function ContactPage() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
+    name: "",
+    email: "",
+    message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null);
+  const [submitStatus, setSubmitStatus] = useState("");
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setSubmitStatus('success');
-      setFormData({ name: '', email: '', message: '' });
-    } catch (error) {
-      setSubmitStatus('error');
-    } finally {
+
+    // Simulate form submission
+    setTimeout(() => {
       setIsSubmitting(false);
-      setTimeout(() => setSubmitStatus(null), 5000);
-    }
+      setSubmitStatus("success");
+      setFormData({ name: "", email: "", subject: "", message: "" });
+
+      setTimeout(() => {
+        setSubmitStatus("");
+      }, 5000);
+    }, 2000);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-gray-900 p-4">
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="w-full max-w-2xl"
-      >
-        <div className="bg-gray-800 bg-opacity-50 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden border border-gray-700">
-          <div className="p-8 sm:p-10">
-            <motion.h2 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="text-4xl font-bold text-center text-white mb-2"
+    <div className="min-h-screen bg-black py-20 px-4 sm:px-6">
+      <div className="max-w-4xl mx-auto">
+        {/* Main Heading */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="text-center mb-16"
+        >
+          <motion.h1
+            className="text-6xl md:text-8xl font-black mb-6 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent"
+            style={{
+              fontFamily: "'Orbitron', monospace",
+              textShadow: "0 0 30px rgba(255, 215, 0, 0.3)",
+            }}
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.8, type: "spring" }}
+          >
+            LET&apos;S CONNECT
+          </motion.h1>
+        </motion.div>
+
+        {/* Contact Form */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="max-w-2xl mx-auto"
+        >
+          <div className="bg-zinc-900 rounded-3xl p-8 border border-yellow-500/30 shadow-2xl">
+            <h2
+              className="text-4xl font-bold text-white mb-2 text-center"
+              style={{ fontFamily: "'Clash Display', sans-serif" }}
             >
-              We'd love to hear from you!
-            </motion.h2>
-            
-            <motion.p 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="text-center text-gray-300 mb-10 text-lg"
+              Send Us a Message
+            </h2>
+            <p
+              className="text-gray-400 mb-8 text-center"
+              style={{ fontFamily: "'Inter', sans-serif" }}
             >
-              Whether you have a project in mind, want to collaborate, or just have a question, 
-              our team is ready to help.
-            </motion.p>
+              Tell us about your project and we&apos;ll get back to you within
+              24 hours.
+            </p>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.6 }}
-              >
-                <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
-                  Your Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-5 py-3 rounded-xl bg-gray-700 border border-gray-600 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 text-white placeholder-gray-400 transition-all duration-300"
-                  placeholder="Enter your name"
-                />
-              </motion.div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-semibold text-white mb-3"
+                    style={{ fontFamily: "'Poppins', sans-serif" }}
+                  >
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-6 py-4 rounded-xl bg-black border border-gray-700 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/30 text-white placeholder-gray-500 transition-all duration-300"
+                    style={{ fontFamily: "'Inter', sans-serif" }}
+                    placeholder="John Doe"
+                  />
+                </div>
 
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.7 }}
-              >
-                <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-                  Your Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-5 py-3 rounded-xl bg-gray-700 border border-gray-600 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 text-white placeholder-gray-400 transition-all duration-300"
-                  placeholder="Enter your email"
-                />
-              </motion.div>
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-semibold text-white mb-3"
+                    style={{ fontFamily: "'Poppins', sans-serif" }}
+                  >
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-6 py-4 rounded-xl bg-black border border-gray-700 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/30 text-white placeholder-gray-500 transition-all duration-300"
+                    style={{ fontFamily: "'Inter', sans-serif" }}
+                    placeholder="john@example.com"
+                  />
+                </div>
+              </div>
 
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.8 }}
-              >
-                <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2">
-                  Your Message
+              <div>
+                <label
+                  htmlFor="message"
+                  className="block text-sm font-semibold text-white mb-3"
+                  style={{ fontFamily: "'Poppins', sans-serif" }}
+                >
+                  Your Message *
                 </label>
                 <textarea
                   id="message"
                   name="message"
-                  rows="5"
+                  rows="6"
                   value={formData.message}
                   onChange={handleChange}
                   required
-                  className="w-full px-5 py-3 rounded-xl bg-gray-700 border border-gray-600 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 text-white placeholder-gray-400 transition-all duration-300"
-                  placeholder="Write your message"
+                  className="w-full px-6 py-4 rounded-xl bg-black border border-gray-700 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/30 text-white placeholder-gray-500 transition-all duration-300 resize-none"
+                  style={{ fontFamily: "'Inter', sans-serif" }}
+                  placeholder="Tell us about your project, goals, and how we can help..."
                 ></textarea>
-              </motion.div>
+              </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.9 }}
-                className="pt-4"
-              >
-                <button
+              <div className="pt-4">
+                <motion.button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`w-full py-4 px-6 rounded-xl font-bold text-white transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-opacity-50 shadow-lg ${
-                    isSubmitting 
-                      ? 'bg-purple-700 cursor-not-allowed' 
-                      : 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700'
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`w-full py-5 px-8 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg relative overflow-hidden ${
+                    isSubmitting
+                      ? "bg-gray-600 cursor-not-allowed text-gray-300"
+                      : "bg-gradient-to-r from-yellow-500 to-yellow-600 text-black hover:from-yellow-400 hover:to-yellow-500 hover:shadow-2xl hover:shadow-yellow-500/25"
                   }`}
+                  style={{ fontFamily: "'Orbitron', monospace" }}
                 >
-                  {isSubmitting ? (
-                    <span className="flex items-center justify-center">
-                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      SENDING...
-                    </span>
-                  ) : (
-                    <span className="flex items-center justify-center">
-                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                      </svg>
-                      SEND MESSAGE
-                    </span>
-                  )}
-                </button>
-              </motion.div>
+                  <div className="relative z-10 flex items-center justify-center">
+                    {isSubmitting ? (
+                      <>
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mr-3"></div>
+                        SENDING MESSAGE...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-5 h-5 mr-3" />
+                        SEND MESSAGE
+                      </>
+                    )}
+                  </div>
+                </motion.button>
+              </div>
             </form>
 
-            {submitStatus === 'success' && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                className="mt-6 p-4 bg-green-500 bg-opacity-20 border border-green-400 rounded-xl text-green-100 text-center"
-              >
-                Message sent successfully! We'll get back to you soon.
-              </motion.div>
-            )}
+            <AnimatePresence>
+              {submitStatus === "success" && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -20, scale: 0.9 }}
+                  className="mt-6 p-6 bg-yellow-500/10 border border-yellow-500/50 rounded-xl text-yellow-100 text-center"
+                >
+                  <div className="flex items-center justify-center mb-2">
+                    <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center mr-3">
+                      <svg
+                        className="w-5 h-5 text-black"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M5 13l4 4L19 7"
+                        ></path>
+                      </svg>
+                    </div>
+                    <span
+                      className="text-lg font-bold text-white"
+                      style={{ fontFamily: "'Poppins', sans-serif" }}
+                    >
+                      Message Sent Successfully!
+                    </span>
+                  </div>
+                  <p
+                    className="text-gray-300"
+                    style={{ fontFamily: "'Inter', sans-serif" }}
+                  >
+                    Thank you for reaching out. We&apos;ll get back to you
+                    within 24 hours.
+                  </p>
+                </motion.div>
+              )}
 
-            {submitStatus === 'error' && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                className="mt-6 p-4 bg-red-500 bg-opacity-20 border border-red-400 rounded-xl text-red-100 text-center"
-              >
-                Oops! Something went wrong. Please try again.
-              </motion.div>
-            )}
+              {submitStatus === "error" && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -20, scale: 0.9 }}
+                  className="mt-6 p-6 bg-red-500/10 border border-red-500/50 rounded-xl text-red-100 text-center"
+                >
+                  <div className="flex items-center justify-center mb-2">
+                    <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center mr-3">
+                      <svg
+                        className="w-5 h-5 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M6 18L18 6M6 6l12 12"
+                        ></path>
+                      </svg>
+                    </div>
+                    <span
+                      className="text-lg font-bold text-white"
+                      style={{ fontFamily: "'Poppins', sans-serif" }}
+                    >
+                      Oops! Something went wrong
+                    </span>
+                  </div>
+                  <p
+                    className="text-gray-300"
+                    style={{ fontFamily: "'Inter', sans-serif" }}
+                  >
+                    Please try again or contact us directly via email.
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </div>
   );
 }
