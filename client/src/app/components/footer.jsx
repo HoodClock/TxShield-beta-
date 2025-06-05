@@ -1,44 +1,77 @@
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 border-t border-gray-800 py-8">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center space-x-3 mb-4 md:mb-0">
-            <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
-              <i className="fas fa-shield-alt text-white text-lg"></i>
-            </div>
-            <h2 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
-              TxShield
-            </h2>
-          </div>
-
-          <div className="flex space-x-6">
-            <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors text-lg">
-              <i className="fab fa-twitter"></i>
-            </a>
-            <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors text-lg">
-              <i className="fab fa-discord"></i>
-            </a>
-            <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors text-lg">
-              <i className="fab fa-github"></i>
-            </a>
-            <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors text-lg">
-              <i className="fab fa-medium"></i>
-            </a>
-          </div>
+    <footer className="bg-[#0A0A0A] border-t border-[#222] py-12 px-6">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h3 className="text-2xl font-bold mb-4">TxShield</h3>
+          <p className="text-gray-400">
+            Protecting your crypto transactions from scams and malicious
+            contracts.
+          </p>
         </div>
-
-        <div className="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400 text-sm">
-          <p className="flex items-center justify-center space-x-1">
-            <i className="fas fa-exclamation-triangle text-yellow-500 mr-1"></i>
-            © 2025 TxShield. All rights reserved. Use at your own risk.
-          </p>
-          <p className="mt-2 flex items-center justify-center">
-            <i className="fas fa-info-circle text-blue-400 mr-1"></i>
-            This is a simulation tool and does not guarantee transaction success.
-          </p>
+        <div>
+          <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+          <ul className="space-y-2">
+            <li>
+              <a href="/" className="footer-link transition">
+                Home
+              </a>
+            </li>
+            <li>
+              <a href="/simulate" className="footer-link transition">
+                Simulate
+              </a>
+            </li>
+            <li>
+              <a href="/about" className="footer-link transition">
+                About
+              </a>
+            </li>
+            <li>
+              <a href="/contact" className="footer-link transition">
+                Contact
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="text-lg font-semibold mb-4">Resources</h4>
+          <ul className="space-y-2">
+            <li>
+              <a href="#" className="footer-link transition">
+                Documentation
+              </a>
+            </li>
+            <li>
+              <a href="#" className="footer-link transition">
+                API
+              </a>
+            </li>
+            <li>
+              <a href="#" className="footer-link transition">
+                Blog
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="text-lg font-semibold mb-4">Connect</h4>
+          <div className="flex space-x-4">
+            <a href="#" className="footer-link transition">
+              Twitter
+            </a>
+            <a href="#" className="footer-link transition">
+              Discord
+            </a>
+            <a href="#" className="footer-link transition">
+              Telegram
+            </a>
+          </div>
         </div>
       </div>
+      <div className="max-w-7xl mx-auto mt-12 pt-6 border-t border-[#222] text-center text-gray-500">
+        <p>© {new Date().getFullYear()} TxShield. All rights reserved.</p>
+      </div>
     </footer>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { useState } from "react";
 import Head from "next/head";
@@ -64,7 +64,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-dark-900">
+    <div className="min-h-screen bg-black">
       <Head>
         <title>TxShield - Secure Transaction Simulator</title>
         <link
@@ -100,10 +100,10 @@ export default function App() {
 
               <Recommendations isVisible={showResults} />
 
-              <ActionButtons
+              {/* <ActionButtons
                 isVisible={showResults}
                 onSimulateAgain={handleSimulateAgain}
-              />
+              /> */}
             </>
           )}
         </section>

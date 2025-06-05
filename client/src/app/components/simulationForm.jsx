@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useAccount } from "wagmi";
 import { motion } from "framer-motion";
 
-
 export default function SimulationForm({ onSimulate, onHoneypot }) {
   const { address: userAddress, isConnected } = useAccount();
 
@@ -25,9 +24,6 @@ export default function SimulationForm({ onSimulate, onHoneypot }) {
       amount: amount,
     };
 
-    console.log("the frontend simulation user Address:: ", simulationData.userAddress);
-    console.log("the frontend simulation recepient Address:: ", simulationData.recepientAddress);
-
     // credentials for honeypot
     const formData = {
       address: contractAddress,
@@ -43,11 +39,11 @@ export default function SimulationForm({ onSimulate, onHoneypot }) {
   };
 
   return (
-    <div className="bg-[#0f172a] rounded-xl p-6 mb-8 border border-yellow-500/20 shadow-lg max-w-4xl mx-auto">
-      <h2 className="text-2xl font-bold text-yellow-400 mb-6">
+    <div className="bg-black rounded-xl p-6 mb-8 border border-white/20 shadow-lg max-w-4xl mx-auto">
+      <h2 className="text-2xl font-bold text-white mb-6">
         Secure Your Transactions
       </h2>
-      <p className="text-gray-400 mb-6">
+      <p className="text-gray-300 mb-6">
         Simulate and analyze your blockchain transactions before execution with
         our advanced security checks
       </p>
@@ -56,7 +52,7 @@ export default function SimulationForm({ onSimulate, onHoneypot }) {
         <div className="col-span-2">
           <label
             htmlFor="contractAddress"
-            className="block text-left text-gray-400 mb-2 text-sm font-medium"
+            className="block text-left text-gray-300 mb-2 text-sm font-medium"
           >
             Contract / Wallet / Token Address
           </label>
@@ -65,14 +61,14 @@ export default function SimulationForm({ onSimulate, onHoneypot }) {
               type="text"
               id="contractAddress"
               placeholder="0x..."
-              className="w-full px-4 py-3 bg-[#1e293b] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
               value={contractAddress}
               onChange={(e) => setContractAddress(e.target.value)}
             />
             <div className="absolute right-3 top-3 group">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-gray-500 hover:text-yellow-400 cursor-pointer transition-colors"
+                className="h-5 w-5 text-gray-400 hover:text-white cursor-pointer transition-colors"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -84,7 +80,7 @@ export default function SimulationForm({ onSimulate, onHoneypot }) {
                   d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <div className="absolute hidden group-hover:block right-0 top-full mt-2 w-64 bg-gray-800 text-gray-300 text-sm p-3 rounded-lg shadow-lg border border-yellow-500/20 z-10">
+              <div className="absolute hidden group-hover:block right-0 top-full mt-2 w-64 bg-gray-800 text-gray-300 text-sm p-3 rounded-lg shadow-lg border border-white/20 z-10">
                 Enter any Ethereum contract, wallet, or token address to
                 analyze.
               </div>
@@ -95,7 +91,7 @@ export default function SimulationForm({ onSimulate, onHoneypot }) {
         <div>
           <label
             htmlFor="amount"
-            className="block text-left text-gray-400 mb-2 text-sm font-medium"
+            className="block text-left text-gray-300 mb-2 text-sm font-medium"
           >
             Amount
           </label>
@@ -104,13 +100,13 @@ export default function SimulationForm({ onSimulate, onHoneypot }) {
               type="number"
               id="amount"
               placeholder="0.0"
-              className="w-full px-4 py-3 bg-[#1e293b] border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent pr-20"
+              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent pr-20"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
             />
             <div className="absolute right-3 top-3">
               <select
-                className="bg-gray-800 text-gray-300 text-sm rounded px-2 py-1 border border-gray-700 focus:ring-yellow-500 focus:border-yellow-500"
+                className="bg-gray-800 text-white text-sm rounded px-2 py-1 border border-gray-700 focus:ring-white focus:border-white"
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
               >
@@ -129,7 +125,7 @@ export default function SimulationForm({ onSimulate, onHoneypot }) {
           onClick={handleSimulate}
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.98 }}
-          className="w-full md:w-auto px-8 py-3 bg-gradient-to-r from-yellow-600 to-yellow-700 text-black font-bold rounded-lg hover:from-yellow-500 hover:to-yellow-600 transition-all duration-300 shadow-lg shadow-yellow-500/20 flex items-center justify-center"
+          className="w-full md:w-auto px-8 py-3 bg-white text-black font-bold rounded-lg hover:bg-gray-100 transition-all duration-300 shadow-lg shadow-white/20 flex items-center justify-center"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

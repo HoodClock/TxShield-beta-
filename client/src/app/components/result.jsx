@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import {
   FiCheck,
-  FiX,
   FiAlertTriangle,
   FiInfo,
   FiArrowRight,
@@ -25,22 +24,22 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
   // Risk level colors with brighter variants
   const riskColorMap = {
     "Safe Zone": {
-      bg: "bg-emerald-500/10",
-      text: "text-emerald-400",
-      border: "border-emerald-500/30",
-      pulse: "bg-emerald-500",
+      bg: "bg-gray-200/10",
+      text: "text-gray-300",
+      border: "border-gray-400/30",
+      pulse: "bg-gray-400",
     },
     Medium: {
-      bg: "bg-yellow-500/10",
-      text: "text-yellow-400",
-      border: "border-yellow-500/30",
-      pulse: "bg-yellow-500",
+      bg: "bg-gray-500/10",
+      text: "text-gray-400",
+      border: "border-gray-500/30",
+      pulse: "bg-gray-500",
     },
     High: {
-      bg: "bg-red-500/10",
-      text: "text-red-400",
-      border: "border-red-500/30",
-      pulse: "bg-red-500",
+      bg: "bg-gray-700/10",
+      text: "text-gray-300",
+      border: "border-gray-700/30",
+      pulse: "bg-gray-700",
     },
   };
   const riskStyle = riskColorMap[riskLevel] || {
@@ -61,7 +60,7 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
   const executionSuccess = simulateData.success;
   const executionMessage = simulateData.success
     ? "Execution simulated successfully"
-    : `Error: ${simulateData.error}`;
+    : `${simulateData.error}`;
 
   // Bytecode warnings
   const { isContract, warnings } = byteData;
@@ -99,22 +98,20 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
       variants={container}
       className="space-y-8 p-4 sm:p-6 max-w-7xl mx-auto"
     >
-      {/* Honeypot Section - Futuristic Design */}
+      {/* Honeypot Section */}
       <motion.div
         variants={item}
-        className="bg-[#0A0E17] rounded-2xl p-6 border border-gray-800/50 shadow-2xl backdrop-blur-sm"
+        className="bg-gray-900 rounded-2xl p-6 border border-gray-700 shadow-2xl backdrop-blur-sm"
         style={{
           background:
-            "radial-gradient(circle at 20% 30%, rgba(21, 85, 255, 0.1) 0%, rgba(9, 14, 28, 0.9) 50%)",
-          boxShadow: "0 8px 32px rgba(0, 10, 60, 0.3)",
+            "radial-gradient(circle at 20% 30%, rgba(100, 100, 100, 0.1) 0%, rgba(30, 30, 30, 0.9) 50%)",
+          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
         }}
       >
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-1">
-              Honeypot Analysis
-            </h3>
-            <p className="text-sm text-gray-400">
+            <h3 className="text-3xl font-bold text-white">Honeypot Analysis</h3>
+            <p className="text-sm text-gray-500">
               Smart contract security assessment
             </p>
           </div>
@@ -122,7 +119,7 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
             whileHover={{ scale: 1.03 }}
             className={`flex items-center space-x-2 ${riskStyle.bg} px-4 py-2 rounded-full border ${riskStyle.border}`}
           >
-            <span className="text-sm text-gray-300">Risk Level:</span>
+            <span className="text-sm text-gray-400">Risk Level:</span>
             <div className="flex items-center">
               <motion.span
                 animate={{ scale: [1, 1.1, 1] }}
@@ -138,7 +135,7 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
           </motion.div>
         </div>
 
-        {/* Honeypot Summary Tiles - Animated Grid */}
+        {/* Honeypot Summary Tiles */}
         <motion.div
           variants={container}
           className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
@@ -147,14 +144,14 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
           <motion.div
             variants={item}
             whileHover={{ y: -5 }}
-            className="bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-xl p-6 border border-gray-800 shadow-lg group relative overflow-hidden"
+            className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 border border-gray-700 shadow-lg group relative overflow-hidden"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute inset-0 bg-gradient-to-r from-gray-500/10 to-gray-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div className="relative z-10">
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center mr-3 group-hover:bg-blue-500/30 transition-colors">
+                <div className="w-12 h-12 rounded-lg bg-gray-700/20 flex items-center justify-center mr-3 group-hover:bg-gray-600/30 transition-colors">
                   <svg
-                    className="h-6 w-6 text-blue-400"
+                    className="h-6 w-6 text-gray-400"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -167,22 +164,22 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
                     />
                   </svg>
                 </div>
-                <h4 className="font-medium text-gray-300 group-hover:text-white transition-colors">
+                <h4 className="font-medium text-gray-400 group-hover:text-white transition-colors">
                   Total Score
                 </h4>
               </div>
               <div className="flex items-end">
-                <div className="text-4xl font-bold text-white mb-1 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                <div className="text-4xl font-bold text-white mb-1">
                   {totalScore.trim()}
                 </div>
-                <div className="text-sm text-gray-400 mb-2 ml-1">/ 60</div>
+                <div className="text-sm text-gray-500 mb-2 ml-1">/ 60</div>
               </div>
-              <div className="h-1.5 w-full bg-gray-800 mt-4 rounded-full overflow-hidden">
+              <div className="h-1.5 w-full bg-gray-700 mt-4 rounded-full overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${(parseFloat(totalScore) / 60) * 100}%` }}
                   transition={{ duration: 1, delay: 0.5 }}
-                  className="h-full bg-gradient-to-r from-blue-500 to-cyan-500"
+                  className="h-full bg-gray-400"
                 />
               </div>
             </div>
@@ -192,28 +189,28 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
           <motion.div
             variants={item}
             whileHover={{ y: -5 }}
-            className="bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-xl p-6 border border-gray-800 shadow-lg group relative overflow-hidden"
+            className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 border border-gray-700 shadow-lg group relative overflow-hidden"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute inset-0 bg-gradient-to-r from-gray-500/10 to-gray-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div className="relative z-10">
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-lg bg-emerald-500/20 flex items-center justify-center mr-3 group-hover:bg-emerald-500/30 transition-colors">
-                  <FiCheck className="h-6 w-6 text-emerald-400" />
+                <div className="w-12 h-12 rounded-lg bg-gray-700/20 flex items-center justify-center mr-3 group-hover:bg-gray-600/30 transition-colors">
+                  <FiCheck className="h-6 w-6 text-gray-400" />
                 </div>
-                <h4 className="font-medium text-gray-300 group-hover:text-white transition-colors">
+                <h4 className="font-medium text-gray-400 group-hover:text-white transition-colors">
                   Pass Rate
                 </h4>
               </div>
-              <div className="text-4xl font-bold text-white mb-4 bg-gradient-to-r from-emerald-400 to-green-400 bg-clip-text text-transparent">
+              <div className="text-4xl font-bold text-white mb-4">
                 {passRate}
               </div>
-              <div className="w-full bg-gray-800 rounded-full h-1.5 overflow-hidden">
+              <div className="w-full bg-gray-700 rounded-full h-1.5 overflow-hidden">
                 {Number(passRate.replace("%", "")) > 0 && (
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: passRate }}
                     transition={{ duration: 1, delay: 0.7 }}
-                    className="bg-gradient-to-r from-emerald-500 to-green-500 h-1.5 rounded-full"
+                    className="bg-gray-400 h-1.5 rounded-full"
                   />
                 )}
               </div>
@@ -224,14 +221,14 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
           <motion.div
             variants={item}
             whileHover={{ y: -5 }}
-            className="bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-xl p-6 border border-gray-800 shadow-lg group relative overflow-hidden"
+            className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 border border-gray-700 shadow-lg group relative overflow-hidden"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 to-yellow-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute inset-0 bg-gradient-to-r from-gray-500/10 to-gray-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <div className="relative z-10">
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-lg bg-amber-500/20 flex items-center justify-center mr-3 group-hover:bg-amber-500/30 transition-colors">
+                <div className="w-12 h-12 rounded-lg bg-gray-700/20 flex items-center justify-center mr-3 group-hover:bg-gray-600/30 transition-colors">
                   <svg
-                    className="h-6 w-6 text-amber-400"
+                    className="h-6 w-6 text-gray-400"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -244,22 +241,22 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
                     />
                   </svg>
                 </div>
-                <h4 className="font-medium text-gray-300 group-hover:text-white transition-colors">
+                <h4 className="font-medium text-gray-400 group-hover:text-white transition-colors">
                   Checks Passed
                 </h4>
               </div>
-              <div className="text-4xl font-bold text-white mb-1 bg-gradient-to-r from-amber-400 to-yellow-400 bg-clip-text text-transparent">
+              <div className="text-4xl font-bold text-white mb-1">
                 {ratioText}
               </div>
-              <div className="text-sm text-gray-400">checks passed / total</div>
+              <div className="text-sm text-gray-500">checks passed / total</div>
               <div className="mt-4 flex flex-wrap gap-2">
                 {Object.entries(checks).map(([name, check]) => (
                   <span
                     key={name}
                     className={`text-xs px-2 py-1 rounded-full ${
                       check?.data?.risk
-                        ? "bg-rose-500/20 text-rose-400"
-                        : "bg-emerald-500/20 text-emerald-400"
+                        ? "bg-gray-700/20 text-gray-300"
+                        : "bg-gray-600/20 text-gray-400"
                     }`}
                   >
                     {name}
@@ -270,48 +267,46 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
           </motion.div>
         </motion.div>
 
-        {/* Honeypot Verdict - Animated Card */}
+        {/* Honeypot Verdict */}
         <motion.div
           variants={item}
-          className="mt-6 bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-xl p-6 border border-gray-800 shadow-lg"
+          className="mt-6 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 border border-gray-700 shadow-lg"
         >
           <h4 className="text-xl font-semibold text-gray-300 mb-4 flex items-center">
-            <FiInfo className="h-5 w-5 mr-2 text-blue-400" />
+            <FiInfo className="h-5 w-5 mr-2 text-gray-400" />
             Expert Verdict
           </h4>
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1 }}
-            className="text-white/90 leading-relaxed text-lg"
+            className="text-gray-200 leading-relaxed text-lg"
           >
             {verdict}
           </motion.p>
         </motion.div>
       </motion.div>
 
-      {/* Simulation Section - Futuristic Design */}
+      {/* Simulation Section */}
       <motion.div
         variants={item}
-        className="bg-[#0A0E17] rounded-2xl p-6 border border-gray-800/50 shadow-2xl backdrop-blur-sm"
+        className="bg-gray-900 rounded-2xl p-6 border border-gray-700 shadow-2xl backdrop-blur-sm"
         style={{
           background:
-            "radial-gradient(circle at 80% 30%, rgba(168, 85, 247, 0.1) 0%, rgba(9, 14, 28, 0.9) 50%)",
-          boxShadow: "0 8px 32px rgba(80, 10, 120, 0.3)",
+            "radial-gradient(circle at 80% 30%, rgba(100, 100, 100, 0.1) 0%, rgba(30, 30, 30, 0.9) 50%)",
+          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
         }}
       >
-        <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500 mb-2">
-          Simulation Overview
-        </h3>
-        <p className="text-sm text-gray-400 mb-8">
+        <h3 className="text-3xl font-bold text-white">Simulation Overview</h3>
+        <p className="text-sm text-gray-500 mb-8">
           Smart contract behavior analysis
         </p>
 
-        {/* Execution Status - Enhanced with animation */}
+        {/* Execution Status */}
         <motion.div variants={item} className="mb-8">
           <motion.div
             whileHover={{ scale: 1.01 }}
-            className="bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-xl p-5 border border-gray-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+            className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-5 border border-gray-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
           >
             <div className="flex items-center">
               <motion.div
@@ -319,19 +314,19 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
                   scale: [1, 1.2, 1],
                   boxShadow: executionSuccess
                     ? [
-                        "0 0 0 0 rgba(16, 185, 129, 0.7)",
-                        "0 0 0 10px rgba(16, 185, 129, 0)",
-                        "0 0 0 0 rgba(16, 185, 129, 0)",
+                        "0 0 0 0 rgba(200, 200, 200, 0.7)",
+                        "0 0 0 10px rgba(200, 200, 200, 0)",
+                        "0 0 0 0 rgba(200, 200, 200, 0)",
                       ]
                     : [
-                        "0 0 0 0 rgba(239, 68, 68, 0.7)",
-                        "0 0 0 10px rgba(239, 68, 68, 0)",
-                        "0 0 0 0 rgba(239, 68, 68, 0)",
+                        "0 0 0 0 rgba(100, 100, 100, 0.7)",
+                        "0 0 0 10px rgba(100, 100, 100, 0)",
+                        "0 0 0 0 rgba(100, 100, 100, 0)",
                       ],
                 }}
                 transition={{ repeat: Infinity, duration: 2 }}
                 className={`w-4 h-4 rounded-full mr-3 ${
-                  executionSuccess ? "bg-emerald-500" : "bg-rose-500"
+                  executionSuccess ? "bg-gray-400" : "bg-gray-600"
                 }`}
               />
               <h5 className="text-gray-300 font-medium">Execution Status</h5>
@@ -340,8 +335,8 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
               whileTap={{ scale: 0.95 }}
               className={`text-sm font-medium px-4 py-2 rounded-full flex items-center ${
                 executionSuccess
-                  ? "bg-emerald-500/20 text-emerald-400"
-                  : "bg-rose-500/20 text-rose-400"
+                  ? "bg-gray-600/20 text-gray-400"
+                  : "bg-gray-700/20 text-gray-300"
               }`}
             >
               {executionSuccess ? (
@@ -349,23 +344,21 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
                   <FiCheck className="mr-2" /> {executionMessage}
                 </>
               ) : (
-                <>
-                  <FiX className="mr-2" /> {executionMessage}
-                </>
+                <>{executionMessage}</>
               )}
             </motion.p>
           </motion.div>
         </motion.div>
 
-        {/* Bytecode Warnings - Enhanced with animation */}
+        {/* Bytecode Warnings */}
         <motion.div variants={item} className="mb-8">
           <h5 className="text-xl font-semibold text-gray-300 mb-4 flex items-center">
-            <FiAlertTriangle className="h-5 w-5 mr-2 text-amber-400" />
+            <FiAlertTriangle className="h-5 w-5 mr-2 text-gray-400" />
             Bytecode Analysis
           </h5>
           <motion.div
             whileHover={{ y: -2 }}
-            className="bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-xl p-5 border border-gray-800"
+            className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-5 border border-gray-700"
           >
             {isContract ? (
               warnings.length > 0 ? (
@@ -376,9 +369,9 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
                       initial={{ x: -20, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
                       transition={{ delay: 0.1 * idx }}
-                      className="flex items-start bg-rose-500/10 p-3 rounded-lg border border-rose-500/20"
+                      className="flex items-start bg-gray-700/10 p-3 rounded-lg border border-gray-600/20"
                     >
-                      <span className="text-rose-400 mr-2 mt-0.5">⚠</span>
+                      <span className="text-gray-300 mr-2 mt-0.5">⚠</span>
                       <span className="text-gray-200">{w}</span>
                     </motion.li>
                   ))}
@@ -387,10 +380,10 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
                 <motion.div
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  className="flex items-center bg-emerald-500/10 p-4 rounded-lg border border-emerald-500/20"
+                  className="flex items-center bg-gray-600/10 p-4 rounded-lg border border-gray-500/20"
                 >
-                  <FiCheck className="h-5 w-5 mr-2 text-emerald-400" />
-                  <span className="text-emerald-400">
+                  <FiCheck className="h-5 w-5 mr-2 text-gray-400" />
+                  <span className="text-gray-400">
                     No dangerous opcodes detected.
                   </span>
                 </motion.div>
@@ -399,10 +392,10 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="flex items-center bg-amber-500/10 p-4 rounded-lg border border-amber-500/20"
+                className="flex items-center bg-gray-600/10 p-4 rounded-lg border border-gray-500/20"
               >
-                <FiAlertTriangle className="h-5 w-5 mr-2 text-amber-400" />
-                <span className="text-amber-400">
+                <FiAlertTriangle className="h-5 w-5 mr-2 text-gray-400" />
+                <span className="text-gray-400">
                   Address is not a contract.
                 </span>
               </motion.div>
@@ -410,12 +403,11 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
           </motion.div>
         </motion.div>
 
-        {/* Transaction History Summary - Animated Grid */}
-
+        {/* Transaction History Summary */}
         <motion.div variants={container} className="mb-8">
           <h5 className="text-xl font-semibold text-gray-300 mb-4 flex items-center">
             <svg
-              className="h-5 w-5 mr-2 text-purple-400"
+              className="h-5 w-5 mr-2 text-gray-400"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -435,11 +427,11 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
               <motion.div
                 variants={item}
                 whileHover={{ y: -5 }}
-                className="bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-xl p-5 border border-gray-800 group relative overflow-hidden"
+                className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-5 border border-gray-700 group relative overflow-hidden"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-violet-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-r from-gray-500/10 to-gray-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="relative z-10">
-                  <p className="text-sm text-gray-400 group-hover:text-purple-300 transition-colors">
+                  <p className="text-sm text-gray-500 group-hover:text-gray-300 transition-colors">
                     Total Transfers
                   </p>
                   <p className="text-3xl font-bold text-white mt-2">
@@ -451,11 +443,11 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
               <motion.div
                 variants={item}
                 whileHover={{ y: -5 }}
-                className="bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-xl p-5 border border-gray-800 group relative overflow-hidden"
+                className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-5 border border-gray-700 group relative overflow-hidden"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-r from-gray-500/10 to-gray-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="relative z-10">
-                  <p className="text-sm text-gray-400 group-hover:text-blue-300 transition-colors">
+                  <p className="text-sm text-gray-500 group-hover:text-gray-300 transition-colors">
                     Last Transfer Date
                   </p>
                   <p className="text-3xl font-bold text-white mt-2">
@@ -467,11 +459,11 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
               <motion.div
                 variants={item}
                 whileHover={{ y: -5 }}
-                className="bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-xl p-5 border border-gray-800 group relative overflow-hidden"
+                className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-5 border border-gray-700 group relative overflow-hidden"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-r from-gray-500/10 to-gray-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="relative z-10">
-                  <p className="text-sm text-gray-400 group-hover:text-emerald-300 transition-colors">
+                  <p className="text-sm text-gray-500 group-hover:text-gray-300 transition-colors">
                     Total ERC-20 Volume
                   </p>
                   <p className="text-3xl font-bold text-white mt-2">
@@ -481,18 +473,18 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
               </motion.div>
             </div>
           ) : (
-            <div className="text-gray-400 italic text-sm mt-2 px-2 py-3 bg-[#0F172A] border border-gray-700 rounded-lg">
+            <div className="text-gray-500 italic text-sm mt-2 px-2 py-3 bg-gray-800 border border-gray-700 rounded-lg">
               ⚠️ {txHistoryData.error || "No transaction history available."}
             </div>
           )}
         </motion.div>
 
-        {/* Recent Transfers List - Enhanced with animation */}
+        {/* Recent Transfers List */}
         {recentTransfers.length > 0 && (
           <motion.div variants={item}>
             <h5 className="text-xl font-semibold text-gray-300 mb-4 flex items-center">
               <svg
-                className="h-5 w-5 mr-2 text-cyan-400"
+                className="h-5 w-5 mr-2 text-gray-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -508,10 +500,10 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
             </h5>
             <motion.div
               whileHover={{ scale: 1.005 }}
-              className="overflow-x-auto rounded-xl border border-gray-800 shadow-lg"
+              className="overflow-x-auto rounded-xl border border-gray-700 shadow-lg"
             >
-              <table className="min-w-full divide-y divide-gray-800">
-                <thead className="bg-[#0F172A]">
+              <table className="min-w-full divide-y divide-gray-700">
+                <thead className="bg-gray-800">
                   <tr>
                     <th className="px-5 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                       Hash
@@ -534,21 +526,21 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
                     <th className="px-5 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"></th>
                   </tr>
                 </thead>
-                <tbody className="bg-[#0F172A]/50 divide-y divide-gray-800">
+                <tbody className="bg-gray-800/50 divide-y divide-gray-700">
                   {recentTransfers.map((tx, idx) => (
                     <motion.tr
                       key={tx.hash}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.1 * idx }}
-                      className="hover:bg-[#172033] transition-colors"
+                      className="hover:bg-gray-700 transition-colors"
                     >
-                      <td className="px-5 py-4 whitespace-nowrap text-sm font-mono text-blue-400">
+                      <td className="px-5 py-4 whitespace-nowrap text-sm font-mono text-gray-400">
                         <a
                           href={`https://etherscan.io/tx/${tx.hash}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center hover:text-blue-300 transition-colors"
+                          className="flex items-center hover:text-gray-300 transition-colors"
                         >
                           {tx.hash.substring(0, 6)}...
                           {tx.hash.substring(tx.hash.length - 4)}
@@ -577,7 +569,7 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
                           href={`https://etherscan.io/tx/${tx.hash}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-blue-400 hover:text-blue-300 transition-colors flex items-center justify-end"
+                          className="text-gray-400 hover:text-gray-300 transition-colors flex items-center justify-end"
                         >
                           <FiArrowRight />
                         </a>

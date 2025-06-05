@@ -4,6 +4,9 @@ import React, { useEffect, useRef } from "react";
 import Header from "../components/header";
 import { motion, useInView, useAnimation } from "framer-motion";
 import CountUp from "react-countup";
+import ContactUs from "../components/contactus";
+import Link from "next/link";
+import Footer from "../components/footer";
 
 function HomePage() {
   const ref1 = useRef(null);
@@ -39,7 +42,7 @@ function HomePage() {
   };
 
   return (
-    <div className="bg-gradient-to-br from-black via-[#111111] to-[#0a0a0a] text-white min-h-screen font-sans scroll-smooth">
+    <div className="bg-black text-white min-h-screen font-sans scroll-smooth">
       <Header />
 
       {/* Hero Section */}
@@ -55,10 +58,32 @@ function HomePage() {
               fontFamily: "'ClashDisplay-Bold', sans-serif",
               fontSize: "clamp(15rem, 15vw, 10rem)",
             }}
-            className="glow-text font-extrabold bg-gradient-to-r from-[#FFD700] via-[#FFC300] to-[#FFB700] bg-clip-text text-transparent mb-6 drop-shadow-lg leading-tight"
+            className="glow-text font-extrabold bg-gradient-to-r from-white via-gray-300 to-gray-400 bg-clip-text text-transparent mb-6 drop-shadow-lg leading-tight"
           >
             Shield Every Transaction.
           </h1>
+
+          <div>
+            <Link
+              href="/simulate"
+              className="inline-flex items-center px-5 py-2.5 font-medium text-white bg-transparent border border-white/30 rounded-lg hover:bg-white/10 hover:border-white/50 transition-all duration-300 group"
+            >
+              Shield Now
+              <svg
+                className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                ></path>
+              </svg>
+            </Link>
+          </div>
         </motion.div>
       </main>
 
@@ -97,18 +122,17 @@ function HomePage() {
             variants={cardVariants}
           >
             <div
-              className="bg-[#e6c200] p-8 rounded-2xl text-black relative overflow-hidden min-h-[300px] flex items-center justify-center"
+              className="stats-card p-8 rounded-2xl relative overflow-hidden min-h-[300px] flex items-center justify-center"
               style={{ borderTopLeftRadius: "80px" }}
             >
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#FFD700] to-[#FFB700]"></div>
               <div className="text-center">
                 <h3 className="text-2xl font-semibold mb-4">
                   Total Losses in 2023
                 </h3>
-                <div className="text-6xl font-bold text-[#D32F2F]">
+                <div className="text-6xl font-bold text-red-500">
                   $<CountUp end={12.7} decimals={1} duration={3} />M
                 </div>
-                <p className="mt-4 text-gray-700">
+                <p className="mt-4 text-gray-400">
                   Across 3,200+ reported cases
                 </p>
               </div>
@@ -148,18 +172,17 @@ function HomePage() {
             variants={cardVariants}
           >
             <div
-              className="bg-[#FFF9C4] p-8 rounded-2xl text-black relative overflow-hidden min-h-[300px] flex items-center justify-center"
+              className="stats-card p-8 rounded-2xl relative overflow-hidden min-h-[300px] flex items-center justify-center"
               style={{ borderTopRightRadius: "80px" }}
             >
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#FFB700] to-[#FFD700]"></div>
               <div className="text-center">
                 <h3 className="text-2xl font-semibold mb-4">
                   Total Losses in 2024
                 </h3>
-                <div className="text-6xl font-bold text-[#D32F2F]">
+                <div className="text-6xl font-bold text-red-500">
                   $<CountUp end={23.4} decimals={1} duration={3} />M
                 </div>
-                <p className="mt-4 text-gray-700">
+                <p className="mt-4 text-gray-400">
                   Across 5,800+ reported cases
                 </p>
               </div>
@@ -200,18 +223,17 @@ function HomePage() {
             variants={cardVariants}
           >
             <div
-              className="bg-[#FFF9C4] p-8 rounded-2xl text-black relative overflow-hidden min-h-[300px] flex items-center justify-center"
+              className="stats-card p-8 rounded-2xl relative overflow-hidden min-h-[300px] flex items-center justify-center"
               style={{ borderTopLeftRadius: "80px" }}
             >
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#FFD700] to-[#FFB700]"></div>
               <div className="text-center">
                 <h3 className="text-2xl font-semibold mb-4">
                   Revert Transaction Losses
                 </h3>
-                <div className="text-6xl font-bold text-[#D32F2F]">
+                <div className="text-6xl font-bold text-red-500">
                   $<CountUp end={8.2} decimals={1} duration={3} />M
                 </div>
-                <p className="mt-4 text-gray-700">Estimated annual losses</p>
+                <p className="mt-4 text-gray-400">Estimated annual losses</p>
               </div>
             </div>
           </motion.div>
@@ -219,7 +241,7 @@ function HomePage() {
       </section>
 
       {/* Analysis Section */}
-      <section className="bg-[#1A1A1A] py-20 px-6">
+      <section className="bg-[#0A0A0A] py-20 px-6">
         <div className="max-w-7xl mx-auto">
           <motion.h2
             className="text-5xl font-bold mb-16 text-center"
@@ -237,22 +259,22 @@ function HomePage() {
               {
                 title: "1. Fake Liquidity",
                 desc: "Scammers create tokens with fake liquidity pools to appear legitimate.",
-                color: "from-[#FF5722] to-[#FF9800]",
+                color: "from-gray-300 to-gray-400",
               },
               {
                 title: "2. Deposit Trap",
                 desc: "Users can deposit funds but withdrawals are blocked by hidden contract code.",
-                color: "from-[#9C27B0] to-[#E91E63]",
+                color: "from-gray-400 to-gray-500",
               },
               {
                 title: "3. Exit Scam",
                 desc: "After collecting enough funds, scammers drain the liquidity and disappear.",
-                color: "from-[#2196F3] to-[#00BCD4]",
+                color: "from-gray-500 to-gray-600",
               },
             ].map((item, index) => (
               <motion.div
                 key={index}
-                className="bg-[#252525] p-8 rounded-xl border border-[#333]"
+                className="solution-item p-8 rounded-xl"
                 initial={{ opacity: 0, y: 60 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.2 }}
@@ -295,7 +317,7 @@ function HomePage() {
         <div className="flex justify-center">
           <motion.a
             href="/simulate"
-            className="inline-block px-8 py-4 bg-gradient-to-r from-[#FFD700] to-[#FFB700] hover:from-[#FFC300] hover:to-[#FFD700] text-black font-bold text-xl rounded-xl shadow-lg transition duration-300 hover:shadow-yellow-400/50"
+            className="primary-btn inline-block px-8 py-4 text-black font-bold text-xl rounded-xl transition duration-300"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -304,110 +326,10 @@ function HomePage() {
         </div>
       </section>
 
+      <ContactUs />
+
       {/* Footer */}
-      <footer className="bg-[#0A0A0A] border-t border-[#222] py-12 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <h3 className="text-2xl font-bold mb-4">TxShield</h3>
-            <p className="text-gray-400">
-              Protecting your crypto transactions from scams and malicious
-              contracts.
-            </p>
-          </div>
-          <div>
-            <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
-            <ul className="space-y-2">
-              <li>
-                <a
-                  href="/"
-                  className="text-gray-400 hover:text-yellow-400 transition"
-                >
-                  Home
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/simulate"
-                  className="text-gray-400 hover:text-yellow-400 transition"
-                >
-                  Simulate
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/about"
-                  className="text-gray-400 hover:text-yellow-400 transition"
-                >
-                  About
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/contact"
-                  className="text-gray-400 hover:text-yellow-400 transition"
-                >
-                  Contact
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-lg font-semibold mb-4">Resources</h4>
-            <ul className="space-y-2">
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-yellow-400 transition"
-                >
-                  Documentation
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-yellow-400 transition"
-                >
-                  API
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-yellow-400 transition"
-                >
-                  Blog
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-lg font-semibold mb-4">Connect</h4>
-            <div className="flex space-x-4">
-              <a
-                href="#"
-                className="text-gray-400 hover:text-yellow-400 transition"
-              >
-                Twitter
-              </a>
-              <a
-                href="#"
-                className="text-gray-400 hover:text-yellow-400 transition"
-              >
-                Discord
-              </a>
-              <a
-                href="#"
-                className="text-gray-400 hover:text-yellow-400 transition"
-              >
-                Telegram
-              </a>
-            </div>
-          </div>
-        </div>
-        <div className="max-w-7xl mx-auto mt-12 pt-6 border-t border-[#222] text-center text-gray-500">
-          <p>© {new Date().getFullYear()} TxShield. All rights reserved.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
