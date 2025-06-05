@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-const phishingControl = require("../../controllers/phishing.controller");
+const {masterPhishingController} = require("../../controllers/phishing.controller");
 
-router.post("/phishing-checks", phishingControl.masterPhishingController);
+router.post("/phishing-checks", masterPhishingController);
 
 module.exports = router;

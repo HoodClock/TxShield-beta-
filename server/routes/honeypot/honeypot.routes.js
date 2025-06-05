@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router();
 
-const honeypotControllers = require("../../controllers/honeypot.controller");
+const {honeypotMasterController} = require("../../controllers/honeypot.controller");
 
-router.post("/honeypot-checks", honeypotControllers.honeypotMasterController);
+router.post("/honeypot-checks", honeypotMasterController);
 
 module.exports = router;

@@ -1,6 +1,6 @@
 const axios = require("axios");
 const { ethers } = require("ethers");
-import { isContract, getAbi } from "../../services/etherscanService";
+const { isContract, getAbi } = require("../../services/etherscanService");
 
 const provider = new ethers.JsonRpcProvider(process.env.ETH_MAINNET_NET_URL);
 
