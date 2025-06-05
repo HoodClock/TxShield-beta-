@@ -1,5 +1,6 @@
 const { ethers } = require("ethers");
 const {getRiskScore} = require("./riskAnalysis")
+const provider = require("../../config/provider")
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -11,8 +12,6 @@ const taxFunctionPatterns = [
   /get.*Tax/i,
   /calculate.*Tax/i,
 ];
-
-const provider = new ethers.JsonRpcProvider(process.env.ETH_MAINNET_RPC_URL);
 
 const detectHighSellTax = async (address, _abi) => {
 

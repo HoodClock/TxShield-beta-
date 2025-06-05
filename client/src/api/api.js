@@ -3,6 +3,7 @@ import axios from "axios";
 const BASE_URL = "http://localhost:5000";
 
 export const simulateTx = async (formData) => {
+  console.log("api.js simulation form data -> ", formData);
   return await axios.post(
     `${BASE_URL}/api/simulate/execute-simulation`,
     formData,

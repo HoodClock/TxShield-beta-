@@ -3,6 +3,7 @@ const { provider } = require("../../config/provider");
 const analyzeBytecode = async (_recipientAddress) => {
   try {
     const byteCode = await provider.getCode(_recipientAddress);
+
     if (!byteCode || byteCode === "0x") {
       return { isContract: false, warnings: [] };
     }
@@ -15,13 +16,14 @@ const analyzeBytecode = async (_recipientAddress) => {
     };
 
     const warnings = [];
+
     for (const [name, hex] of Object.entries(opCode)) {
       if (byteCode.toLowerCase().includes(hex)) {
         warnings.push(`Dangerous opCode detected: ${name}`);
       }
     }
 
-    return { isContract: true, warnings };
+    return { isContract: true, warnings, address: _recipientAddress};
   } catch (error) {
     console.error("Bytecode analysis failed:", error);
     return { isContract: false, warnings: [], error: error.message };

@@ -15,8 +15,8 @@ import Footer from "../components/footer";
 import {
   honeypotChecks as runHoneypotChecks,
   simulateTx as runSimulateTx,
+  contactApi as contactUs
 } from "@/api/api";
-import { assetChain } from "viem/chains";
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(false);

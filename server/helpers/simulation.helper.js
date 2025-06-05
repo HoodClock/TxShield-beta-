@@ -1,6 +1,7 @@
 const simulationServices = require("../services/simulationServeice");
 
 const simulateTxHelper = async (userAddress, recepientAddress, amount) => {
+  
   if (!userAddress || !recepientAddress || !amount) {
     return { success: false, message: "User / Recepient address or value is missing" };
   }
@@ -16,28 +17,6 @@ const simulateTxHelper = async (userAddress, recepientAddress, amount) => {
     return { success: false, error: err.message };
   }
 };
-
-// const contractABIHelper = async (recepientAddress) => {
-//   try {
-//     if (!recepientAddress) {
-//       return {
-//         success: false,
-//         message: "Recepient address is missing",
-//       };
-//     }
-
-//     const response = await simulationServices.getContractAbiService(
-//       recepientAddress
-//     );
-
-//     return {
-//       success: true,
-//       data: response,
-//     };
-//   } catch (err) {
-//     return { success: false, error: err.message };
-//   }
-// };
 
 const byteCodeHelper = async (recepientAddress) => {
   if (!recepientAddress) {
@@ -67,7 +46,6 @@ const transactionHistoryHelper = async (recepientAddress) => {
 
 module.exports = {
   simulateTxHelper,
-  // contractABIHelper,
   byteCodeHelper,
   transactionHistoryHelper
 }

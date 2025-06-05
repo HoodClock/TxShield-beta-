@@ -41,8 +41,11 @@ export default function HoneypotChecks({ isVisible, data }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         {Object.entries(checks).map(([key, result]) => {
-          const passed = !result.data.risk;
-          const message = result.data.message;
+          const hasData = result?.data;
+          const passed = hasData ? !result.data.risk : false;
+          const message = hasData
+            ? result.data.message
+            : result.message || "No additional information.";
 
           return (
             <motion.div
@@ -52,7 +55,7 @@ export default function HoneypotChecks({ isVisible, data }) {
                 "bg-[#1e293b] rounded-lg p-4 border " +
                 (passed
                   ? "border-green-500/30 hover:border-green-400/50"
-                  : "border-red-500/30 hover:border-red-400/50")
+                  : "border-yellow-500/30 hover:border-yellow-400/50")
               }
             >
               <div className="flex items-center justify-between mb-2">
@@ -60,14 +63,14 @@ export default function HoneypotChecks({ isVisible, data }) {
                   <div
                     className={
                       "w-9 h-9 rounded-lg flex items-center justify-center mr-3 " +
-                      (passed ? "bg-green-500/20" : "bg-red-500/20")
+                      (passed ? "bg-green-500/20" : "bg-yellow-500/20")
                     }
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className={
                         "h-5 w-5 " +
-                        (passed ? "text-green-400" : "text-red-400")
+                        (passed ? "text-green-400" : "text-yellow-400")
                       }
                       fill="none"
                       viewBox="0 0 24 24"
@@ -77,7 +80,11 @@ export default function HoneypotChecks({ isVisible, data }) {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={3}
-                        d={passed ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12"}
+                        d={
+                          passed
+                            ? "M5 13l4 4L19 7"
+                            : "M12 9v2m0 4h.01M21 12A9 9 0 113 12a9 9 0 0118 0z"
+                        }
                       />
                     </svg>
                   </div>
@@ -85,22 +92,6 @@ export default function HoneypotChecks({ isVisible, data }) {
                     {TITLES[key] || key}
                   </h5>
                 </div>
-                <button className="text-gray-500 hover:text-yellow-400 transition-colors">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
               </div>
               <div className="text-sm text-gray-400 pl-12">{message}</div>
             </motion.div>

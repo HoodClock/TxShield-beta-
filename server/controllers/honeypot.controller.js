@@ -24,7 +24,7 @@ const honeypotMasterController = async (req, res) => {
       return res.status(401).json({ message: "Missing required fields." });
     }
 
-    const abi = await getAbi(address);
+    const abi = await getAbi(recepientAddress);
 
     const [
       blackList,

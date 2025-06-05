@@ -25,6 +25,9 @@ export default function SimulationForm({ onSimulate, onHoneypot }) {
       amount: amount,
     };
 
+    console.log("the frontend simulation user Address:: ", simulationData.userAddress);
+    console.log("the frontend simulation recepient Address:: ", simulationData.recepientAddress);
+
     // credentials for honeypot
     const formData = {
       address: contractAddress,

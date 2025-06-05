@@ -12,6 +12,8 @@ const blackListFunctionsLists = [
 
 const detectBlackListContract = async(_address, _abi)=> {
 
+    console.log("utils blackList address => ", _address);
+
     if (!_abi) {
         return {
           success: false,

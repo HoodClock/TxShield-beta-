@@ -35,12 +35,12 @@ export default function Header() {
           >
             Simulate
           </Link>
-          <a
-            href="#"
+          <Link
+            href="/about"
             className="text-white hover:text-[#FFD700] transition-colors font-medium"
           >
             About
-          </a>
+          </Link>
         </nav>
 
         <ConnectWallet />
