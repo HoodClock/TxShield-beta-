@@ -1,6 +1,11 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5000";
+// LOCAL DEV
+// const BASE_URL = "http://localhost:5000"; 
+
+// for prod.
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
 
 export const simulateTx = async (formData) => {
   console.log("api.js simulation form data -> ", formData);
