@@ -19,9 +19,12 @@ export default function LoadingState({ isLoading, onComplete }) {
     "Confirming contract verification",
   ];
 
+  const [blocks, setBlocks] = useState(Array(10).fill(false));
+
   useEffect(() => {
     if (!isLoading) {
       setProgress(0);
+      setBlocks(Array(10).fill(false));
       return;
     }
 
@@ -34,6 +37,10 @@ export default function LoadingState({ isLoading, onComplete }) {
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
         const newProgress = prev + Math.random() * 8;
+
+        // Update blocks based on progress
+        const filledBlocks = Math.floor(newProgress / 10);
+        setBlocks(blocks.map((_, i) => i < filledBlocks));
 
         if (newProgress >= 100) {
           clearInterval(progressInterval);
@@ -57,49 +64,68 @@ export default function LoadingState({ isLoading, onComplete }) {
   if (!isLoading) return null;
 
   return (
-    <div className="bg-[#0f172a] rounded-xl p-8 mb-8 border border-yellow-500/20 shadow-lg text-center">
+    <div className="bg-black rounded-xl p-8 mb-8 border border-gray-700 shadow-lg">
       <div className="flex flex-col items-center justify-center">
-        <div className="relative w-24 h-24 mb-6">
-          <div className="absolute inset-0 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
-          <div className="absolute inset-3 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin animation-delay-200"></div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-10 w-10 text-yellow-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 15l8-8m0 0h-8m8 0v8m-8-8l-8-8m0 0h8m-8 0v8"
+        {/* Blockchain block visualization */}
+        <div className="relative w-full max-w-md mb-8">
+          <div className="flex justify-center space-x-1 mb-2">
+            {blocks.map((filled, i) => (
+              <div
+                key={i}
+                className={`h-3 w-3 rounded-sm ${
+                  filled ? "bg-white" : "bg-gray-700"
+                }`}
               />
-            </svg>
+            ))}
+          </div>
+
+          {/* Chain connection lines */}
+          <div className="absolute top-1.5 left-0 right-0 flex justify-between px-1.5">
+            {blocks.slice(0, -1).map((_, i) => (
+              <div
+                key={i}
+                className={`h-0.5 w-3 ${
+                  blocks[i] && blocks[i + 1] ? "bg-white" : "bg-gray-700"
+                }`}
+              />
+            ))}
           </div>
         </div>
 
-        <h3 className="text-2xl font-bold text-yellow-400 mb-2">
-          TxShield Analysis
+        <h3 className="text-2xl font-bold text-white mb-2">
+          Transaction Security Scan
         </h3>
-        <p className="text-gray-400 mb-1">
-          Scanning contract for vulnerabilities...
-        </p>
-        <p className="text-sm text-yellow-400 mb-6 animate-pulse">
+        <p className="text-gray-400 mb-4">Validating blockchain contract...</p>
+
+        {/* Animated blocks */}
+        <div className="grid grid-cols-5 gap-2 mb-6 w-40">
+          {Array(10)
+            .fill(0)
+            .map((_, i) => (
+              <div
+                key={i}
+                className={`h-4 rounded-sm transition-all duration-300 ${
+                  i < Math.floor(progress / 10) ? "bg-white" : "bg-gray-700"
+                }`}
+              />
+            ))}
+        </div>
+
+        <p className="text-sm text-gray-300 mb-6 font-mono animate-pulse">
           {currentCheck}
         </p>
 
+        {/* Minimal progress indicator */}
         <div className="w-full max-w-md">
-          <div className="flex justify-between text-sm text-gray-400 mb-2">
-            <span>Progress</span>
+          <div className="flex justify-between text-xs text-gray-400 mb-1 font-mono">
+            <span>BLOCKS VERIFIED</span>
             <span>{Math.floor(progress)}%</span>
           </div>
-          <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+          <div className="w-full h-1 bg-gray-800 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-full transition-all duration-300"
+              className="h-full bg-white rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
-            ></div>
+            />
           </div>
         </div>
       </div>
