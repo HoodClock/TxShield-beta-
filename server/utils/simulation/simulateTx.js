@@ -25,7 +25,7 @@ const simulateTransaction = async (
     const value = ethers.parseUnits(_amount, "ether");
 
     const userBalance = await provider.getBalance(_userAddress);
-    if (userBalance.lt(value)) {
+    if (userBalance < value) {
       return {
         success: false,
         error: "Insufficient ETH in sender's wallet to simulate this transaction."
