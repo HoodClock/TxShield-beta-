@@ -8,7 +8,6 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 
 export const simulateTx = async (formData) => {
-  console.log("api.js simulation form data -> ", formData);
   return await axios.post(
     `${BASE_URL}/api/simulate/execute-simulation`,
     formData,

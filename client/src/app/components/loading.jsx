@@ -64,70 +64,36 @@ export default function LoadingState({ isLoading, onComplete }) {
   if (!isLoading) return null;
 
   return (
-    <div className="bg-black rounded-xl p-8 mb-8 border border-gray-700 shadow-lg">
-      <div className="flex flex-col items-center justify-center">
-        {/* Blockchain block visualization */}
-        <div className="relative w-full max-w-md mb-8">
-          <div className="flex justify-center space-x-1 mb-2">
-            {blocks.map((filled, i) => (
-              <div
-                key={i}
-                className={`h-3 w-3 rounded-sm ${
-                  filled ? "bg-white" : "bg-gray-700"
-                }`}
-              />
-            ))}
-          </div>
+    <div className="bg-black border border-white/10 rounded-xl p-8">
+      <div className="max-w-md mx-auto text-center">
+        <h3 className="text-xl font-medium mb-4">Analyzing Transaction</h3>
 
-          {/* Chain connection lines */}
-          <div className="absolute top-1.5 left-0 right-0 flex justify-between px-1.5">
-            {blocks.slice(0, -1).map((_, i) => (
-              <div
-                key={i}
-                className={`h-0.5 w-3 ${
-                  blocks[i] && blocks[i + 1] ? "bg-white" : "bg-gray-700"
-                }`}
-              />
-            ))}
+        <div className="relative mb-6">
+          <div className="w-full bg-white/10 h-1 rounded-full">
+            <div
+              className="absolute top-0 left-0 h-1 bg-white rounded-full transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            />
           </div>
+          <div className="text-right text-xs mt-1">{Math.round(progress)}%</div>
         </div>
 
-        <h3 className="text-2xl font-bold text-white mb-2">
-          Transaction Security Scan
-        </h3>
-        <p className="text-gray-400 mb-4">Validating blockchain contract...</p>
-
-        {/* Animated blocks */}
-        <div className="grid grid-cols-5 gap-2 mb-6 w-40">
+        <div className="grid grid-cols-5 gap-2 mb-6">
           {Array(10)
             .fill(0)
             .map((_, i) => (
               <div
                 key={i}
-                className={`h-4 rounded-sm transition-all duration-300 ${
-                  i < Math.floor(progress / 10) ? "bg-white" : "bg-gray-700"
+                className={`h-2 ${
+                  i < progress / 10 ? "bg-white" : "bg-white/10"
                 }`}
               />
             ))}
         </div>
 
-        <p className="text-sm text-gray-300 mb-6 font-mono animate-pulse">
-          {currentCheck}
+        <p className="text-sm text-gray-400">
+          Scanning contract bytecode and transaction patterns...
         </p>
-
-        {/* Minimal progress indicator */}
-        <div className="w-full max-w-md">
-          <div className="flex justify-between text-xs text-gray-400 mb-1 font-mono">
-            <span>BLOCKS VERIFIED</span>
-            <span>{Math.floor(progress)}%</span>
-          </div>
-          <div className="w-full h-1 bg-gray-800 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-white rounded-full transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        </div>
       </div>
     </div>
   );

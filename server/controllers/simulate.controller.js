@@ -1,8 +1,11 @@
 const simulationHelper = require("../helpers/simulation.helper");
+const {getAddress} = require("ethers")
 
 const masterSimulationController = async (req, res) => {
   try {
     const { userAddress, recepientAddress, amount } = req.body;
+
+    const checkSumAddress = getAddress(recepientAddress);
 
     if (!userAddress || !recepientAddress || !amount) {
       return res
@@ -11,9 +14,9 @@ const masterSimulationController = async (req, res) => {
     }
 
     const [simulateTx, byteCode, transactionHistory] = await Promise.all([
-      simulationHelper.simulateTxHelper(userAddress, recepientAddress, amount),
-      simulationHelper.byteCodeHelper(recepientAddress),
-      simulationHelper.transactionHistoryHelper(recepientAddress),
+      simulationHelper.simulateTxHelper(userAddress, checkSumAddress, amount),
+      simulationHelper.byteCodeHelper(checkSumAddress),
+      simulationHelper.transactionHistoryHelper(checkSumAddress),
     ]);
 
     return res.status(200).json({

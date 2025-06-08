@@ -1,6 +1,6 @@
 const axios = require("axios");
 require("dotenv").config();
-const { ethers } = require("ethers");
+const { ethers, getAddress } = require("ethers");
 
 const etherscanApiEndpoint = process.env.ETHERSCAN_API_ENDPOINT;
 const etherscanApiKey = process.env.ETHERSCAN_API_KEY;
@@ -12,12 +12,13 @@ const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 // get ABI
 const getAbi = async (address) => {
   await sleep(300); // throttle to avoid Etherscan rate limit
+  const checkSumAddress = getAddress(address);
   try {
     const response = await axios.get(etherscanApiEndpoint, {
       params: {
         module: "contract",
         action: "getabi",
-        address,
+        address: checkSumAddress,
         apikey: etherscanApiKey,
       },
     });
@@ -36,12 +37,13 @@ const getAbi = async (address) => {
 
 // getSourceCode
 const getSourceCode = async (address) => {
+  const checkSumAddress = getAddress(address);
   try {
     const response = await axios.get(etherscanApiEndpoint, {
       params: {
         module: "contract",
         action: "getsourcecode",
-        address,
+        address: checkSumAddress,
         apikey: etherscanApiKey,
       },
     });
@@ -72,12 +74,14 @@ const getSourceCode = async (address) => {
 
 // getByteCode
 const getByteCode = async (address) => {
+  const checkSumAddress = getAddress(address);
+
   try {
     const response = await axios.get(etherscanApiEndpoint, {
       params: {
         module: "proxy",
         action: "eth_getCode",
-        address,
+        address: checkSumAddress,
         apikey: etherscanApiKey,
       },
     });
@@ -91,10 +95,11 @@ const getByteCode = async (address) => {
 
 // check address -> contract or not
 const isContract = async (address) => {
+  const checkSumAddress = getAddress(address);
   try {
-    const code = await provider.getCode(address);
+    const code = await provider.getCode(checkSumAddress);
     return code && code != "0x";
-  } catch (error) {
+  } catch (err) {
     console.error("Error checking contract:", err.message);
     return false;
   }

@@ -5,11 +5,8 @@ const handleBlacklistCheck = async (address, abi) => {
   
   if (!address) return { success: false, message: "Address is missing" };
 
-  console.log("Helper address", address)
-
   const contractCheck = await isContract(address);
 
-  console.log("Helper address after => ", address)
 
   if (!contractCheck) {
     return {

@@ -1,8 +1,12 @@
 const { provider } = require("../../config/provider");
+const { getAddress } = require("ethers");
 
 const analyzeBytecode = async (_recipientAddress) => {
   try {
-    const byteCode = await provider.getCode(_recipientAddress);
+
+    const checksumAddress = getAddress(_recipientAddress);
+
+    const byteCode = await provider.getCode(checksumAddress);
 
     if (!byteCode || byteCode === "0x") {
       return { isContract: false, warnings: [] };

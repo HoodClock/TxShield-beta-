@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import Head from "next/head";
@@ -15,14 +15,14 @@ import Footer from "../components/footer";
 import {
   honeypotChecks as runHoneypotChecks,
   simulateTx as runSimulateTx,
-  contactApi as contactUs
+  contactApi as contactUs,
 } from "@/api/api";
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [honeypotData, setHoneypotData] = useState(null);
-  const [simualtionData, setSimulationData] = useState(null);
+  const [simulationData, setSimulationData] = useState(null);
 
   const handleSimulate = async (formData) => {
     setIsLoading(true);
@@ -33,7 +33,7 @@ export default function App() {
       setSimulationData(response.data);
       setIsLoading(false);
       setShowResults(true);
-    } catch (error) {
+    } catch (err) {
       console.error("Honeypot API error:", err);
       setIsLoading(false);
     }
@@ -76,6 +76,7 @@ export default function App() {
       <Header />
 
       <main className="container mx-auto px-4 py-8">
+        {/* Centered Section (Form + Loading) */}
         <section className="max-w-4xl mx-auto text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary-400 to-secondary-500 bg-clip-text text-transparent">
             Secure Your Transactions
@@ -91,24 +92,26 @@ export default function App() {
           />
 
           {isLoading && <LoadingState isLoading={true} onComplete={() => {}} />}
-
-          {showResults && (
-            <>
-              <ResultsDashboard isVisible={showResults} simulation={simualtionData} honeypot={honeypotData} />
-
-              <HoneypotChecks isVisible={showResults} data={honeypotData} />
-
-              <Recommendations isVisible={showResults} />
-
-              {/* <ActionButtons
-                isVisible={showResults}
-                onSimulateAgain={handleSimulateAgain}
-              /> */}
-            </>
-          )}
         </section>
 
-        <FeaturesSection />
+        {/* Results Section (Not Centered) */}
+        {showResults && (
+          <div className="space-y-8">
+            {" "}
+            {/* Removed mx-auto and text-center */}
+            <ResultsDashboard
+              isVisible={showResults}
+              simulation={simulationData}
+              honeypot={honeypotData}
+            />
+            <HoneypotChecks isVisible={showResults} data={honeypotData} />
+            {/* <ActionButtons
+        isVisible={showResults}
+        onSimulateAgain={handleSimulateAgain}
+      /> */}
+          </div>
+        )}
+
       </main>
 
       <Footer />

@@ -1,5 +1,6 @@
 const honeypotHelper = require("../helpers/honeypot.helper");
 const { getAbi } = require("../services/etherscanService");
+const { getAddress } = require("ethers");
 
 // master controllers of all
 const honeypotMasterController = async (req, res) => {
@@ -13,13 +14,18 @@ const honeypotMasterController = async (req, res) => {
       value,
     } = req.body;
 
+    const normalAddress = getAddress(address);
+    const normalcontractAddress = getAddress(contractAddress);
+    const normalTokenAddress = getAddress(tokenAddress);
+    const normalRecepientAddress = getAddress(recepientAddress);
+
     if (
-      !address ||
-      !tokenAddress ||
+      !normalAddress ||
+      !normalTokenAddress ||
       !userAddress ||
-      !recepientAddress ||
+      !normalRecepientAddress ||
       !value ||
-      !contractAddress
+      !normalcontractAddress
     ) {
       return res.status(401).json({ message: "Missing required fields." });
     }
@@ -37,15 +43,15 @@ const honeypotMasterController = async (req, res) => {
       mintAccess,
       tradingControl,
     ] = await Promise.all([
-      honeypotHelper.handleBlacklistCheck(address, abi),
-      honeypotHelper.handleDisableTransferCheck(address, abi),
-      honeypotHelper.handleFakeBalanceCheck(tokenAddress, abi),
-      honeypotHelper.handleGasTrapCheck(userAddress, recepientAddress, value),
-      honeypotHelper.handleHiddenOwnerCheck(contractAddress, abi),
-      honeypotHelper.handleHighSellTaxCheck(address, abi),
-      honeypotHelper.handleBuySellCheck(userAddress, tokenAddress, value),
-      honeypotHelper.handleMintAccessCheck(contractAddress, abi),
-      honeypotHelper.handleTradingControlCheck(address, abi),
+      honeypotHelper.handleBlacklistCheck(normalAddress, abi),
+      honeypotHelper.handleDisableTransferCheck(normalAddress, abi),
+      honeypotHelper.handleFakeBalanceCheck(normalTokenAddress, abi),
+      honeypotHelper.handleGasTrapCheck(userAddress, normalRecepientAddress, value),
+      honeypotHelper.handleHiddenOwnerCheck(normalcontractAddress, abi),
+      honeypotHelper.handleHighSellTaxCheck(normalAddress, abi),
+      honeypotHelper.handleBuySellCheck(userAddress, normalTokenAddress, value),
+      honeypotHelper.handleMintAccessCheck(normalcontractAddress, abi),
+      honeypotHelper.handleTradingControlCheck(normalAddress, abi),
     ]);
 
     const checkResults = [

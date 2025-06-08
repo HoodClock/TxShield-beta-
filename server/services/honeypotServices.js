@@ -1,7 +1,6 @@
 const utilsHoneyPot = require("../utils/honeypot/index");
 
 const detectBlackListService = async (_address, _abi) => {
-  console.log("Service Address of BlackListService => ", _address)
   return await utilsHoneyPot.detectBlackList(_address, _abi);
 };
 

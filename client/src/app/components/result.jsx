@@ -1,587 +1,546 @@
-"use client";
+"use client"
 
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"
 import {
   FiCheck,
-  FiAlertTriangle,
   FiInfo,
+  FiAlertTriangle,
   FiArrowRight,
   FiExternalLink,
-} from "react-icons/fi";
+  FiActivity,
+  FiShield,
+  FiTrendingUp,
+  FiClock,
+  FiDollarSign,
+  FiTarget,
+} from "react-icons/fi"
 
 export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
-  if (!isVisible || !simulation || !honeypot) return null;
+  if (!isVisible || !simulation || !honeypot) return null
 
   // --- Honeypot Data ---
-  const { totalScore, passRate, riskLevel, verdict, checks } = honeypot;
-  const totalChecks = Object.keys(checks).length;
-  // const passedChecks = Object.values(checks).filter((chk) => chk.data.risk === false).length;
-  const passedChecks = Object.values(checks).filter(
-    (chk) => chk?.data?.risk === false
-  ).length;
-  const ratioText = `${passedChecks}/${totalChecks}`;
+  const { totalScore = "0", passRate = "0%", riskLevel = "Unknown", checks = {} } = honeypot || {}
 
-  // Risk level colors with brighter variants
-  const riskColorMap = {
-    "Safe Zone": {
-      bg: "bg-gray-200/10",
-      text: "text-gray-300",
-      border: "border-gray-400/30",
-      pulse: "bg-gray-400",
-    },
-    Medium: {
-      bg: "bg-gray-500/10",
-      text: "text-gray-400",
-      border: "border-gray-500/30",
-      pulse: "bg-gray-500",
-    },
-    High: {
-      bg: "bg-gray-700/10",
-      text: "text-gray-300",
-      border: "border-gray-700/30",
-      pulse: "bg-gray-700",
-    },
-  };
-  const riskStyle = riskColorMap[riskLevel] || {
-    bg: "bg-gray-500/10",
-    text: "text-gray-400",
-    border: "border-gray-500/30",
-    pulse: "bg-gray-500",
-  };
+  const totalChecks = Object.keys(checks).length
+  const passedChecks = Object.values(checks).filter((chk) => chk?.data?.risk === false).length
+  const ratioText = `${passedChecks}/${totalChecks}`
+
+  // Risk level styling
+  const getRiskStyle = (level) => {
+    const styles = {
+      "Safe Zone": {
+        bg: "from-emerald-500/10 to-emerald-600/5",
+        text: "text-emerald-400",
+        border: "border-emerald-500/20",
+        accent: "bg-emerald-500",
+      },
+      Medium: {
+        bg: "from-amber-500/10 to-amber-600/5",
+        text: "text-amber-400",
+        border: "border-amber-500/20",
+        accent: "bg-amber-500",
+      },
+      High: {
+        bg: "from-red-500/10 to-red-600/5",
+        text: "text-red-400",
+        border: "border-red-500/20",
+        accent: "bg-red-500",
+      },
+      Unknown: {
+        bg: "from-gray-500/10 to-gray-600/5",
+        text: "text-gray-400",
+        border: "border-gray-500/20",
+        accent: "bg-gray-500",
+      },
+    }
+    return styles[level] || styles.Unknown
+  }
+
+  const riskStyle = getRiskStyle(riskLevel)
 
   // --- Simulation Data ---
-  const {
-    simulateTx: { data: simulateData },
-    byteCode: { data: byteData },
-    transactionHistory: { data: txHistoryData },
-  } = simulation.checks;
+  const simulateTxData = simulation?.checks?.simulateTx || {}
+  const simulateData = simulateTxData.data || {}
+  const byteData = simulation?.checks?.byteCode?.data || {}
+  const txHistoryData = simulation?.checks?.transactionHistory?.data || {}
 
-  // Execution status card
-  const executionSuccess = simulateData.success;
-  const executionMessage = simulateData.success
-    ? "Execution simulated successfully"
-    : `${simulateData.error}`;
+  const executionSuccess = simulateData.success ?? false
+  const executionMessage = executionSuccess
+    ? "Transaction executed successfully"
+    : simulateData.warnings?.join(", ") || "Transaction would fail"
 
-  // Bytecode warnings
-  const { isContract, warnings } = byteData;
+  const isContract = byteData.isContract || false
+  const warnings = [...(byteData.warnings || []), ...(simulateData.warnings || [])]
 
-  // Transaction history summary & recent transfers
-  const summary = txHistoryData?.summary || {};
-  const recentTransfers = txHistoryData?.recentTransfers || [];
-
-  const {
-    totalTransfers = "N/A",
-    lastTransferDate = "N/A",
-    totalERC20Volume = "N/A",
-  } = summary;
+  const summary = txHistoryData.summary || {}
+  const recentTransfers = txHistoryData.recentTransfers || []
 
   // Animation variants
-  const container = {
+  const containerVariants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
       transition: {
         staggerChildren: 0.1,
+        delayChildren: 0.1,
       },
     },
-  };
+  }
 
-  const item = {
+  const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-  };
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut",
+      },
+    },
+  }
 
   return (
-    <motion.div
-      initial="hidden"
-      animate="show"
-      variants={container}
-      className="space-y-8 p-4 sm:p-6 max-w-7xl mx-auto"
-    >
-      {/* Honeypot Section */}
-      <motion.div
-        variants={item}
-        className="bg-gray-900 rounded-2xl p-6 border border-gray-700 shadow-2xl backdrop-blur-sm"
-        style={{
-          background:
-            "radial-gradient(circle at 20% 30%, rgba(100, 100, 100, 0.1) 0%, rgba(30, 30, 30, 0.9) 50%)",
-          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
-        }}
-      >
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-          <div>
-            <h3 className="text-3xl font-bold text-white">Honeypot Analysis</h3>
-            <p className="text-sm text-gray-500">
-              Smart contract security assessment
-            </p>
-          </div>
-          <motion.div
-            whileHover={{ scale: 1.03 }}
-            className={`flex items-center space-x-2 ${riskStyle.bg} px-4 py-2 rounded-full border ${riskStyle.border}`}
-          >
-            <span className="text-sm text-gray-400">Risk Level:</span>
-            <div className="flex items-center">
-              <motion.span
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ repeat: Infinity, duration: 2 }}
-                className={`w-2 h-2 rounded-full mr-2 ${riskStyle.pulse}`}
-              />
-              <span
-                className={`px-3 py-1 rounded-full text-sm font-medium ${riskStyle.text}`}
-              >
-                {riskLevel}
-              </span>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Honeypot Summary Tiles */}
-        <motion.div
-          variants={container}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
-        >
-          {/* Total Score Tile */}
-          <motion.div
-            variants={item}
-            whileHover={{ y: -5 }}
-            className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 border border-gray-700 shadow-lg group relative overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-gray-500/10 to-gray-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <div className="relative z-10">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-lg bg-gray-700/20 flex items-center justify-center mr-3 group-hover:bg-gray-600/30 transition-colors">
-                  <svg
-                    className="h-6 w-6 text-gray-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                    />
-                  </svg>
-                </div>
-                <h4 className="font-medium text-gray-400 group-hover:text-white transition-colors">
-                  Total Score
-                </h4>
-              </div>
-              <div className="flex items-end">
-                <div className="text-4xl font-bold text-white mb-1">
-                  {totalScore.trim()}
-                </div>
-                <div className="text-sm text-gray-500 mb-2 ml-1">/ 60</div>
-              </div>
-              <div className="h-1.5 w-full bg-gray-700 mt-4 rounded-full overflow-hidden">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${(parseFloat(totalScore) / 60) * 100}%` }}
-                  transition={{ duration: 1, delay: 0.5 }}
-                  className="h-full bg-gray-400"
-                />
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Pass Rate Tile */}
-          <motion.div
-            variants={item}
-            whileHover={{ y: -5 }}
-            className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 border border-gray-700 shadow-lg group relative overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-gray-500/10 to-gray-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <div className="relative z-10">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-lg bg-gray-700/20 flex items-center justify-center mr-3 group-hover:bg-gray-600/30 transition-colors">
-                  <FiCheck className="h-6 w-6 text-gray-400" />
-                </div>
-                <h4 className="font-medium text-gray-400 group-hover:text-white transition-colors">
-                  Pass Rate
-                </h4>
-              </div>
-              <div className="text-4xl font-bold text-white mb-4">
-                {passRate}
-              </div>
-              <div className="w-full bg-gray-700 rounded-full h-1.5 overflow-hidden">
-                {Number(passRate.replace("%", "")) > 0 && (
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: passRate }}
-                    transition={{ duration: 1, delay: 0.7 }}
-                    className="bg-gray-400 h-1.5 rounded-full"
-                  />
-                )}
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Checks Passed Tile */}
-          <motion.div
-            variants={item}
-            whileHover={{ y: -5 }}
-            className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 border border-gray-700 shadow-lg group relative overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-gray-500/10 to-gray-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <div className="relative z-10">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-lg bg-gray-700/20 flex items-center justify-center mr-3 group-hover:bg-gray-600/30 transition-colors">
-                  <svg
-                    className="h-6 w-6 text-gray-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                    />
-                  </svg>
-                </div>
-                <h4 className="font-medium text-gray-400 group-hover:text-white transition-colors">
-                  Checks Passed
-                </h4>
-              </div>
-              <div className="text-4xl font-bold text-white mb-1">
-                {ratioText}
-              </div>
-              <div className="text-sm text-gray-500">checks passed / total</div>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {Object.entries(checks).map(([name, check]) => (
-                  <span
-                    key={name}
-                    className={`text-xs px-2 py-1 rounded-full ${
-                      check?.data?.risk
-                        ? "bg-gray-700/20 text-gray-300"
-                        : "bg-gray-600/20 text-gray-400"
-                    }`}
-                  >
-                    {name}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </motion.div>
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8">
+      <motion.div initial="hidden" animate="show" variants={containerVariants} className="max-w-7xl mx-auto space-y-8">
+        {/* Header */}
+        <motion.div variants={itemVariants} className="text-center mb-12">
+          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">Security Analysis Report</h1>
+          <p className="text-xl text-slate-400 max-w-2xl mx-auto">
+            Comprehensive blockchain transaction and contract security assessment
+          </p>
         </motion.div>
 
-        {/* Honeypot Verdict */}
-        <motion.div
-          variants={item}
-          className="mt-6 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 border border-gray-700 shadow-lg"
-        >
-          <h4 className="text-xl font-semibold text-gray-300 mb-4 flex items-center">
-            <FiInfo className="h-5 w-5 mr-2 text-gray-400" />
-            Expert Verdict
-          </h4>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
-            className="text-gray-200 leading-relaxed text-lg"
-          >
-            {verdict}
-          </motion.p>
-        </motion.div>
-      </motion.div>
-
-      {/* Simulation Section */}
-      <motion.div
-        variants={item}
-        className="bg-gray-900 rounded-2xl p-6 border border-gray-700 shadow-2xl backdrop-blur-sm"
-        style={{
-          background:
-            "radial-gradient(circle at 80% 30%, rgba(100, 100, 100, 0.1) 0%, rgba(30, 30, 30, 0.9) 50%)",
-          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
-        }}
-      >
-        <h3 className="text-3xl font-bold text-white">Simulation Overview</h3>
-        <p className="text-sm text-gray-500 mb-8">
-          Smart contract behavior analysis
-        </p>
-
-        {/* Execution Status */}
-        <motion.div variants={item} className="mb-8">
+        {/* Key Metrics Cards */}
+        <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          {/* Risk Level Card */}
           <motion.div
-            whileHover={{ scale: 1.01 }}
-            className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-5 border border-gray-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+            whileHover={{ y: -4, scale: 1.02 }}
+            className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${riskStyle.bg} border ${riskStyle.border} p-6`}
           >
-            <div className="flex items-center">
+            <div className="flex items-center justify-between mb-4">
+              <div className={`p-3 rounded-xl ${riskStyle.accent}/20`}>
+                <FiShield className={`h-6 w-6 ${riskStyle.text}`} />
+              </div>
+              <div className={`h-2 w-2 rounded-full ${riskStyle.accent} animate-pulse`} />
+            </div>
+            <h3 className="text-sm font-medium text-slate-400 mb-1">Risk Level</h3>
+            <p className={`text-2xl font-bold ${riskStyle.text}`}>{riskLevel}</p>
+          </motion.div>
+
+          {/* Total Score Card */}
+          <motion.div
+            whileHover={{ y: -4, scale: 1.02 }}
+            className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500/10 to-blue-600/5 border border-blue-500/20 p-6"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 rounded-xl bg-blue-500/20">
+                <FiTarget className="h-6 w-6 text-blue-400" />
+              </div>
+              <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
+            </div>
+            <h3 className="text-sm font-medium text-slate-400 mb-1">Honeypot checks score</h3>
+            <p className="text-2xl font-bold text-blue-400">{totalScore.trim()}/100</p>
+            <div className="mt-3 h-2 bg-slate-700 rounded-full overflow-hidden">
               <motion.div
-                animate={{
-                  scale: [1, 1.2, 1],
-                  boxShadow: executionSuccess
-                    ? [
-                        "0 0 0 0 rgba(200, 200, 200, 0.7)",
-                        "0 0 0 10px rgba(200, 200, 200, 0)",
-                        "0 0 0 0 rgba(200, 200, 200, 0)",
-                      ]
-                    : [
-                        "0 0 0 0 rgba(100, 100, 100, 0.7)",
-                        "0 0 0 10px rgba(100, 100, 100, 0)",
-                        "0 0 0 0 rgba(100, 100, 100, 0)",
-                      ],
-                }}
-                transition={{ repeat: Infinity, duration: 2 }}
-                className={`w-4 h-4 rounded-full mr-3 ${
-                  executionSuccess ? "bg-gray-400" : "bg-gray-600"
-                }`}
+                className="h-full bg-gradient-to-r from-blue-500 to-blue-400"
+                initial={{ width: 0 }}
+                animate={{ width: `${Number.parseFloat(totalScore) || 0}%` }}
+                transition={{ duration: 1.5, ease: "easeOut" }}
               />
-              <h5 className="text-gray-300 font-medium">Execution Status</h5>
             </div>
-            <motion.p
-              whileTap={{ scale: 0.95 }}
-              className={`text-sm font-medium px-4 py-2 rounded-full flex items-center ${
-                executionSuccess
-                  ? "bg-gray-600/20 text-gray-400"
-                  : "bg-gray-700/20 text-gray-300"
-              }`}
+          </motion.div>
+
+          {/* Pass Rate Card */}
+          <motion.div
+            whileHover={{ y: -4, scale: 1.02 }}
+            className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border border-emerald-500/20 p-6"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 rounded-xl bg-emerald-500/20">
+                <FiCheck className="h-6 w-6 text-emerald-400" />
+              </div>
+              <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            </div>
+            <h3 className="text-sm font-medium text-slate-400 mb-1">Pass Rate</h3>
+            <p className="text-2xl font-bold text-emerald-400">{passRate}</p>
+            <p className="text-sm text-slate-500 mt-1">{ratioText} checks passed</p>
+          </motion.div>
+        </motion.div>
+
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+          {/* Left Column - Simulation Results */}
+          <div className="xl:col-span-2 space-y-8">
+            {/* Execution Status */}
+            <motion.div
+              variants={itemVariants}
+              className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6"
             >
-              {executionSuccess ? (
-                <>
-                  <FiCheck className="mr-2" /> {executionMessage}
-                </>
-              ) : (
-                <>{executionMessage}</>
-              )}
-            </motion.p>
-          </motion.div>
-        </motion.div>
+              <div className="flex items-center mb-6">
+                <FiActivity className="h-6 w-6 text-blue-400 mr-3" />
+                <h2 className="text-xl font-semibold text-white">Transaction Simulation</h2>
+              </div>
 
-        {/* Bytecode Warnings */}
-        <motion.div variants={item} className="mb-8">
-          <h5 className="text-xl font-semibold text-gray-300 mb-4 flex items-center">
-            <FiAlertTriangle className="h-5 w-5 mr-2 text-gray-400" />
-            Bytecode Analysis
-          </h5>
-          <motion.div
-            whileHover={{ y: -2 }}
-            className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-5 border border-gray-700"
-          >
-            {isContract ? (
-              warnings.length > 0 ? (
-                <motion.ul className="space-y-3">
-                  {warnings.map((w, idx) => (
-                    <motion.li
-                      key={idx}
-                      initial={{ x: -20, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ delay: 0.1 * idx }}
-                      className="flex items-start bg-gray-700/10 p-3 rounded-lg border border-gray-600/20"
-                    >
-                      <span className="text-gray-300 mr-2 mt-0.5">⚠</span>
-                      <span className="text-gray-200">{w}</span>
-                    </motion.li>
-                  ))}
-                </motion.ul>
-              ) : (
-                <motion.div
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="flex items-center bg-gray-600/10 p-4 rounded-lg border border-gray-500/20"
-                >
-                  <FiCheck className="h-5 w-5 mr-2 text-gray-400" />
-                  <span className="text-gray-400">
-                    No dangerous opcodes detected.
-                  </span>
-                </motion.div>
-              )
-            ) : (
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="flex items-center bg-gray-600/10 p-4 rounded-lg border border-gray-500/20"
+              <div
+                className={`flex items-center p-4 rounded-xl border ${
+                  executionSuccess ? "bg-emerald-500/10 border-emerald-500/20" : "bg-red-500/10 border-red-500/20"
+                }`}
               >
-                <FiAlertTriangle className="h-5 w-5 mr-2 text-gray-400" />
-                <span className="text-gray-400">
-                  Address is not a contract.
-                </span>
+                <div className={`p-2 rounded-lg mr-4 ${executionSuccess ? "bg-emerald-500/20" : "bg-red-500/20"}`}>
+                  {executionSuccess ? (
+                    <FiCheck className="h-5 w-5 text-emerald-400" />
+                  ) : (
+                    <FiAlertTriangle className="h-5 w-5 text-red-400" />
+                  )}
+                </div>
+                <div>
+                  <p className={`font-medium ${executionSuccess ? "text-emerald-400" : "text-red-400"}`}>
+                    {executionSuccess ? "Success" : "Failed"}
+                  </p>
+                  <p className="text-sm text-slate-400">{executionMessage}</p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Transaction Details */}
+            <motion.div
+              variants={itemVariants}
+              className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6"
+            >
+              <div className="flex items-center mb-6">
+                <FiInfo className="h-6 w-6 text-blue-400 mr-3" />
+                <h2 className="text-xl font-semibold text-white">Transaction Details</h2>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Transaction Info */}
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium text-slate-400">Type</label>
+                    <p className="text-white font-medium">
+                      {simulateData.transferType === "eth" ? "Native ETH Transfer" : "Token Transfer"}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-slate-400">Amount</label>
+                    <p className="text-white font-medium">
+                      {simulateData.amount} {simulateData.symbol}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-slate-400">From</label>
+                    <p className="text-white font-mono text-sm break-all">{simulateData.from}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-slate-400">To</label>
+                    <p className="text-white font-mono text-sm break-all">{simulateData.to}</p>
+                  </div>
+                </div>
+
+                {/* Gas Analysis */}
+                <div className="bg-slate-700/30 rounded-xl p-4">
+                  <h3 className="text-lg font-medium text-white mb-4 flex items-center">
+                    <FiDollarSign className="h-5 w-5 text-yellow-400 mr-2" />
+                    Gas Analysis
+                  </h3>
+                  <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Estimated Gas</span>
+                      <span className="text-white font-medium">{simulateData.gas?.estimated || "N/A"}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Gas Price</span>
+                      <span className="text-white font-medium">
+                        {simulateData.gas?.price ? `${simulateData.gas.price} Gwei` : "N/A"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between pt-2 border-t border-slate-600">
+                      <span className="text-slate-400">Total Cost</span>
+                      <span className="text-yellow-400 font-bold">
+                        {simulateData.gas?.cost ? `${simulateData.gas.cost} ETH` : "N/A"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Balance Changes */}
+            {simulateData.balances && (
+              <motion.div
+                variants={itemVariants}
+                className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6"
+              >
+                <div className="flex items-center mb-6">
+                  <FiTrendingUp className="h-6 w-6 text-blue-400 mr-3" />
+                  <h2 className="text-xl font-semibold text-white">Balance Changes</h2>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Sender */}
+                  <div className="bg-slate-700/30 rounded-xl p-4">
+                    <h3 className="text-lg font-medium text-white mb-4">Sender</h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-400">ETH</span>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-slate-300">{simulateData.balances?.sender?.before?.eth || "0"}</span>
+                          <FiArrowRight className="h-4 w-4 text-slate-500" />
+                          <span className="text-red-400 font-medium">
+                            {simulateData.balances?.sender?.after?.eth || "0"}
+                          </span>
+                        </div>
+                      </div>
+                      {simulateData.transferType === "erc20" && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-400">{simulateData.symbol}</span>
+                          <div className="flex items-center space-x-2">
+                            <span className="text-slate-300">
+                              {simulateData.balances?.sender?.before?.token || "0"}
+                            </span>
+                            <FiArrowRight className="h-4 w-4 text-slate-500" />
+                            <span className="text-red-400 font-medium">
+                              {simulateData.balances?.sender?.after?.token || "0"}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Recipient */}
+                  <div className="bg-slate-700/30 rounded-xl p-4">
+                    <h3 className="text-lg font-medium text-white mb-4">Recipient</h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-400">ETH</span>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-slate-300">{simulateData.balances?.recipient?.before?.eth || "0"}</span>
+                          <FiArrowRight className="h-4 w-4 text-slate-500" />
+                          <span className="text-emerald-400 font-medium">
+                            {simulateData.balances?.recipient?.after?.eth || "0"}
+                          </span>
+                        </div>
+                      </div>
+                      {simulateData.transferType === "erc20" && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-400">{simulateData.symbol}</span>
+                          <div className="flex items-center space-x-2">
+                            <span className="text-slate-300">
+                              {simulateData.balances?.recipient?.before?.token || "0"}
+                            </span>
+                            <FiArrowRight className="h-4 w-4 text-slate-500" />
+                            <span className="text-emerald-400 font-medium">
+                              {simulateData.balances?.recipient?.after?.token || "0"}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </motion.div>
             )}
-          </motion.div>
-        </motion.div>
 
-        {/* Transaction History Summary */}
-        <motion.div variants={container} className="mb-8">
-          <h5 className="text-xl font-semibold text-gray-300 mb-4 flex items-center">
-            <svg
-              className="h-5 w-5 mr-2 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"
-              />
-            </svg>
-            Recent Transfers Summary
-          </h5>
-
-          {txHistoryData.success ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* Recent Transfers Table */}
+            {recentTransfers.length > 0 && (
               <motion.div
-                variants={item}
-                whileHover={{ y: -5 }}
-                className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-5 border border-gray-700 group relative overflow-hidden"
+                variants={itemVariants}
+                className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-gray-500/10 to-gray-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="relative z-10">
-                  <p className="text-sm text-gray-500 group-hover:text-gray-300 transition-colors">
-                    Total Transfers
-                  </p>
-                  <p className="text-3xl font-bold text-white mt-2">
-                    {txHistoryData.summary.totalTransfers}
-                  </p>
+                <div className="flex items-center mb-6">
+                  <FiClock className="h-6 w-6 text-blue-400 mr-3" />
+                  <h2 className="text-xl font-semibold text-white">Recent Transfers</h2>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-slate-700">
+                        <th className="text-left py-3 px-4 text-sm font-medium text-slate-400">Hash</th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-slate-400">From</th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-slate-400">To</th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-slate-400">Amount</th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-slate-400">Date</th>
+                        <th className="text-right py-3 px-4 text-sm font-medium text-slate-400">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {recentTransfers.slice(0, 5).map((tx, idx) => (
+                        <motion.tr
+                          key={tx.hash}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.1 * idx }}
+                          className="border-b border-slate-700/50 hover:bg-slate-700/20 transition-colors"
+                        >
+                          <td className="py-3 px-4">
+                            <span className="font-mono text-sm text-blue-400">
+                              {(tx.hash || "").substring(0, 8)}...
+                            </span>
+                          </td>
+                          <td className="py-3 px-4">
+                            <span className="font-mono text-sm text-slate-300">
+                              {(tx.from || "").substring(0, 6)}...
+                            </span>
+                          </td>
+                          <td className="py-3 px-4">
+                            <span className="font-mono text-sm text-slate-300">{(tx.to || "").substring(0, 6)}...</span>
+                          </td>
+                          <td className="py-3 px-4">
+                            <span className="text-white font-medium">
+                              {tx.amount} {tx.symbol}
+                            </span>
+                          </td>
+                          <td className="py-3 px-4">
+                            <span className="text-slate-400 text-sm">{tx.date}</span>
+                          </td>
+                          <td className="py-3 px-4 text-right">
+                            <a
+                              href={`https://etherscan.io/tx/${tx.hash}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-400 hover:text-blue-300 transition-colors"
+                            >
+                              <FiExternalLink className="h-4 w-4" />
+                            </a>
+                          </td>
+                        </motion.tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </motion.div>
+            )}
+          </div>
 
-              <motion.div
-                variants={item}
-                whileHover={{ y: -5 }}
-                className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-5 border border-gray-700 group relative overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-gray-500/10 to-gray-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="relative z-10">
-                  <p className="text-sm text-gray-500 group-hover:text-gray-300 transition-colors">
-                    Last Transfer Date
-                  </p>
-                  <p className="text-3xl font-bold text-white mt-2">
-                    {txHistoryData.summary.lastTransferDate}
-                  </p>
-                </div>
-              </motion.div>
-
-              <motion.div
-                variants={item}
-                whileHover={{ y: -5 }}
-                className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-5 border border-gray-700 group relative overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-gray-500/10 to-gray-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="relative z-10">
-                  <p className="text-sm text-gray-500 group-hover:text-gray-300 transition-colors">
-                    Total ERC-20 Volume
-                  </p>
-                  <p className="text-3xl font-bold text-white mt-2">
-                    {txHistoryData.summary.totalERC20Volume}
-                  </p>
-                </div>
-              </motion.div>
-            </div>
-          ) : (
-            <div className="text-gray-500 italic text-sm mt-2 px-2 py-3 bg-gray-800 border border-gray-700 rounded-lg">
-              ⚠️ {txHistoryData.error || "No transaction history available."}
-            </div>
-          )}
-        </motion.div>
-
-        {/* Recent Transfers List */}
-        {recentTransfers.length > 0 && (
-          <motion.div variants={item}>
-            <h5 className="text-xl font-semibold text-gray-300 mb-4 flex items-center">
-              <svg
-                className="h-5 w-5 mr-2 text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
-                />
-              </svg>
-              5 Most Recent Transfers
-            </h5>
+          {/* Right Column - Security Analysis */}
+          <div className="space-y-8">
+            {/* Bytecode Analysis */}
             <motion.div
-              whileHover={{ scale: 1.005 }}
-              className="overflow-x-auto rounded-xl border border-gray-700 shadow-lg"
+              variants={itemVariants}
+              className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6"
             >
-              <table className="min-w-full divide-y divide-gray-700">
-                <thead className="bg-gray-800">
-                  <tr>
-                    <th className="px-5 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                      Hash
-                    </th>
-                    <th className="px-5 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                      From
-                    </th>
-                    <th className="px-5 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                      To
-                    </th>
-                    <th className="px-5 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                      Symbol
-                    </th>
-                    <th className="px-5 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                      Amount
-                    </th>
-                    <th className="px-5 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                      Date
-                    </th>
-                    <th className="px-5 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"></th>
-                  </tr>
-                </thead>
-                <tbody className="bg-gray-800/50 divide-y divide-gray-700">
-                  {recentTransfers.map((tx, idx) => (
-                    <motion.tr
-                      key={tx.hash}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.1 * idx }}
-                      className="hover:bg-gray-700 transition-colors"
-                    >
-                      <td className="px-5 py-4 whitespace-nowrap text-sm font-mono text-gray-400">
-                        <a
-                          href={`https://etherscan.io/tx/${tx.hash}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center hover:text-gray-300 transition-colors"
-                        >
-                          {tx.hash.substring(0, 6)}...
-                          {tx.hash.substring(tx.hash.length - 4)}
-                          <FiExternalLink className="ml-1 opacity-0 group-hover:opacity-100" />
-                        </a>
-                      </td>
-                      <td className="px-5 py-4 whitespace-nowrap text-sm font-mono text-gray-300">
-                        {tx.from.substring(0, 6)}...
-                        {tx.from.substring(tx.from.length - 4)}
-                      </td>
-                      <td className="px-5 py-4 whitespace-nowrap text-sm font-mono text-gray-300">
-                        {tx.to.substring(0, 6)}...
-                        {tx.to.substring(tx.to.length - 4)}
-                      </td>
-                      <td className="px-5 py-4 whitespace-nowrap text-sm font-medium text-white">
-                        {tx.symbol}
-                      </td>
-                      <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-300">
-                        {tx.amount}
-                      </td>
-                      <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-400">
-                        {tx.date}
-                      </td>
-                      <td className="px-5 py-4 whitespace-nowrap text-right text-sm">
-                        <a
-                          href={`https://etherscan.io/tx/${tx.hash}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-gray-400 hover:text-gray-300 transition-colors flex items-center justify-end"
-                        >
-                          <FiArrowRight />
-                        </a>
-                      </td>
-                    </motion.tr>
-                  ))}
-                </tbody>
-              </table>
+              <div className="flex items-center mb-6">
+                <FiShield className="h-6 w-6 text-blue-400 mr-3" />
+                <h2 className="text-xl font-semibold text-white">Bytecode Analysis</h2>
+              </div>
+
+              {isContract ? (
+                warnings.length > 0 ? (
+                  <div className="space-y-3">
+                    {warnings.map((warning, idx) => (
+                      <div key={idx} className="flex items-start p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                        <FiAlertTriangle className="h-5 w-5 text-red-400 mr-3 mt-0.5 flex-shrink-0" />
+                        <span className="text-red-300 text-sm">{warning}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex items-center p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
+                    <FiCheck className="h-5 w-5 text-emerald-400 mr-3" />
+                    <span className="text-emerald-300">No dangerous opcodes detected</span>
+                  </div>
+                )
+              ) : (
+                <div className="flex items-center p-4 bg-slate-700/30 border border-slate-600/50 rounded-lg">
+                  <FiInfo className="h-5 w-5 text-slate-400 mr-3" />
+                  <span className="text-slate-300">Address is not a contract</span>
+                </div>
+              )}
             </motion.div>
+
+            {/* Security Checks */}
+            <motion.div
+              variants={itemVariants}
+              className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6"
+            >
+              <div className="flex items-center mb-6">
+                <FiCheck className="h-6 w-6 text-blue-400 mr-3" />
+                <h2 className="text-xl font-semibold text-white">Security Checks</h2>
+              </div>
+
+              <div className="space-y-3">
+                {Object.entries(checks).map(([name, check]) => (
+                  <div
+                    key={name}
+                    className={`flex items-center justify-between p-3 rounded-lg border ${
+                      check?.data?.risk ? "bg-red-500/10 border-red-500/20" : "bg-emerald-500/10 border-emerald-500/20"
+                    }`}
+                  >
+                    <div className="flex items-center">
+                      {check?.data?.risk ? (
+                        <FiAlertTriangle className="h-4 w-4 text-red-400 mr-3" />
+                      ) : (
+                        <FiCheck className="h-4 w-4 text-emerald-400 mr-3" />
+                      )}
+                      <span className="text-white font-medium capitalize">
+                        {name.replace(/([A-Z])/g, " $1").trim()}
+                      </span>
+                    </div>
+                    <span
+                      className={`text-xs px-2 py-1 rounded-full ${
+                        check?.data?.risk ? "bg-red-500/20 text-red-300" : "bg-emerald-500/20 text-emerald-300"
+                      }`}
+                    >
+                      {check?.data?.risk ? "Risk" : "Safe"}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Transaction Summary */}
+            {txHistoryData.success && (
+              <motion.div
+                variants={itemVariants}
+                className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6"
+              >
+                <div className="flex items-center mb-6">
+                  <FiActivity className="h-6 w-6 text-blue-400 mr-3" />
+                  <h2 className="text-xl font-semibold text-white">Transaction Summary</h2>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-400">Total Transfers</span>
+                    <span className="text-white font-medium">{summary.totalTransfers || "N/A"}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-400">Last Transfer</span>
+                    <span className="text-white font-medium">{summary.lastTransferDate || "N/A"}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-400">ERC-20 Volume</span>
+                    <span className="text-white font-medium">{summary.totalERC20Volume || "N/A"}</span>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </div>
+        </div>
+
+        {/* Warnings Section */}
+        {simulateData.warnings?.length > 0 && (
+          <motion.div
+            variants={itemVariants}
+            className="bg-red-500/10 backdrop-blur-sm rounded-2xl border border-red-500/20 p-6"
+          >
+            <div className="flex items-center mb-4">
+              <FiAlertTriangle className="h-6 w-6 text-red-400 mr-3" />
+              <h2 className="text-xl font-semibold text-red-400">Important Warnings</h2>
+            </div>
+            <div className="space-y-3">
+              {simulateData.warnings.map((warning, index) => (
+                <div key={index} className="flex items-start">
+                  <span className="text-red-400 mr-3 mt-1">⚠️</span>
+                  <span className="text-red-300">{warning}</span>
+                </div>
+              ))}
+            </div>
           </motion.div>
         )}
       </motion.div>
-    </motion.div>
-  );
+    </div>
+  )
 }
