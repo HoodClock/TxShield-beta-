@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
 import {
   FiCheck,
   FiInfo,
@@ -13,17 +13,24 @@ import {
   FiClock,
   FiDollarSign,
   FiTarget,
-} from "react-icons/fi"
+} from "react-icons/fi";
 
 export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
-  if (!isVisible || !simulation || !honeypot) return null
+  if (!isVisible || !simulation || !honeypot) return null;
 
   // --- Honeypot Data ---
-  const { totalScore = "0", passRate = "0%", riskLevel = "Unknown", checks = {} } = honeypot || {}
+  const {
+    totalScore = "0",
+    passRate = "0%",
+    riskLevel = "Unknown",
+    checks = {},
+  } = honeypot || {};
 
-  const totalChecks = Object.keys(checks).length
-  const passedChecks = Object.values(checks).filter((chk) => chk?.data?.risk === false).length
-  const ratioText = `${passedChecks}/${totalChecks}`
+  const totalChecks = Object.keys(checks).length;
+  const passedChecks = Object.values(checks).filter(
+    (chk) => chk?.data?.risk === false
+  ).length;
+  const ratioText = `${passedChecks}/${totalChecks}`;
 
   // Risk level styling
   const getRiskStyle = (level) => {
@@ -52,28 +59,31 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
         border: "border-gray-500/20",
         accent: "bg-gray-500",
       },
-    }
-    return styles[level] || styles.Unknown
-  }
+    };
+    return styles[level] || styles.Unknown;
+  };
 
-  const riskStyle = getRiskStyle(riskLevel)
+  const riskStyle = getRiskStyle(riskLevel);
 
   // --- Simulation Data ---
-  const simulateTxData = simulation?.checks?.simulateTx || {}
-  const simulateData = simulateTxData.data || {}
-  const byteData = simulation?.checks?.byteCode?.data || {}
-  const txHistoryData = simulation?.checks?.transactionHistory?.data || {}
+  const simulateTxData = simulation?.checks?.simulateTx || {};
+  const simulateData = simulateTxData.data || {};
+  const byteData = simulation?.checks?.byteCode?.data || {};
+  const txHistoryData = simulation?.checks?.transactionHistory?.data || {};
 
-  const executionSuccess = simulateData.success ?? false
+  const executionSuccess = simulateData.success ?? false;
   const executionMessage = executionSuccess
     ? "Transaction executed successfully"
-    : simulateData.warnings?.join(", ") || "Transaction would fail"
+    : simulateData.warnings?.join(", ") || "Transaction would fail";
 
-  const isContract = byteData.isContract || false
-  const warnings = [...(byteData.warnings || []), ...(simulateData.warnings || [])]
+  const isContract = byteData.isContract || false;
+  const warnings = [
+    ...(byteData.warnings || []),
+    ...(simulateData.warnings || []),
+  ];
 
-  const summary = txHistoryData.summary || {}
-  const recentTransfers = txHistoryData.recentTransfers || []
+  const summary = txHistoryData.summary || {};
+  const recentTransfers = txHistoryData.recentTransfers || [];
 
   // Animation variants
   const containerVariants = {
@@ -85,7 +95,7 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
         delayChildren: 0.1,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -97,74 +107,25 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
         ease: "easeOut",
       },
     },
-  }
+  };
 
   return (
     <div className="min-h-screen p-4 sm:p-6 lg:p-8">
-      <motion.div initial="hidden" animate="show" variants={containerVariants} className="max-w-7xl mx-auto space-y-8">
+      <motion.div
+        initial="hidden"
+        animate="show"
+        variants={containerVariants}
+        className="max-w-7xl mx-auto space-y-8"
+      >
         {/* Header */}
         <motion.div variants={itemVariants} className="text-center mb-12">
-          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">Security Analysis Report</h1>
+          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+            Security Analysis Report
+          </h1>
           <p className="text-xl text-slate-400 max-w-2xl mx-auto">
-            Comprehensive blockchain transaction and contract security assessment
+            Comprehensive blockchain transaction and contract security
+            assessment
           </p>
-        </motion.div>
-
-        {/* Key Metrics Cards */}
-        <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {/* Risk Level Card */}
-          <motion.div
-            whileHover={{ y: -4, scale: 1.02 }}
-            className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${riskStyle.bg} border ${riskStyle.border} p-6`}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div className={`p-3 rounded-xl ${riskStyle.accent}/20`}>
-                <FiShield className={`h-6 w-6 ${riskStyle.text}`} />
-              </div>
-              <div className={`h-2 w-2 rounded-full ${riskStyle.accent} animate-pulse`} />
-            </div>
-            <h3 className="text-sm font-medium text-slate-400 mb-1">Risk Level</h3>
-            <p className={`text-2xl font-bold ${riskStyle.text}`}>{riskLevel}</p>
-          </motion.div>
-
-          {/* Total Score Card */}
-          <motion.div
-            whileHover={{ y: -4, scale: 1.02 }}
-            className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500/10 to-blue-600/5 border border-blue-500/20 p-6"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-xl bg-blue-500/20">
-                <FiTarget className="h-6 w-6 text-blue-400" />
-              </div>
-              <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
-            </div>
-            <h3 className="text-sm font-medium text-slate-400 mb-1">Honeypot checks score</h3>
-            <p className="text-2xl font-bold text-blue-400">{totalScore.trim()}/100</p>
-            <div className="mt-3 h-2 bg-slate-700 rounded-full overflow-hidden">
-              <motion.div
-                className="h-full bg-gradient-to-r from-blue-500 to-blue-400"
-                initial={{ width: 0 }}
-                animate={{ width: `${Number.parseFloat(totalScore) || 0}%` }}
-                transition={{ duration: 1.5, ease: "easeOut" }}
-              />
-            </div>
-          </motion.div>
-
-          {/* Pass Rate Card */}
-          <motion.div
-            whileHover={{ y: -4, scale: 1.02 }}
-            className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border border-emerald-500/20 p-6"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-xl bg-emerald-500/20">
-                <FiCheck className="h-6 w-6 text-emerald-400" />
-              </div>
-              <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            </div>
-            <h3 className="text-sm font-medium text-slate-400 mb-1">Pass Rate</h3>
-            <p className="text-2xl font-bold text-emerald-400">{passRate}</p>
-            <p className="text-sm text-slate-500 mt-1">{ratioText} checks passed</p>
-          </motion.div>
         </motion.div>
 
         {/* Main Content Grid */}
@@ -178,15 +139,23 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
             >
               <div className="flex items-center mb-6">
                 <FiActivity className="h-6 w-6 text-blue-400 mr-3" />
-                <h2 className="text-xl font-semibold text-white">Transaction Simulation</h2>
+                <h2 className="text-xl font-semibold text-white">
+                  Transaction Simulation
+                </h2>
               </div>
 
               <div
                 className={`flex items-center p-4 rounded-xl border ${
-                  executionSuccess ? "bg-emerald-500/10 border-emerald-500/20" : "bg-red-500/10 border-red-500/20"
+                  executionSuccess
+                    ? "bg-emerald-500/10 border-emerald-500/20"
+                    : "bg-red-500/10 border-red-500/20"
                 }`}
               >
-                <div className={`p-2 rounded-lg mr-4 ${executionSuccess ? "bg-emerald-500/20" : "bg-red-500/20"}`}>
+                <div
+                  className={`p-2 rounded-lg mr-4 ${
+                    executionSuccess ? "bg-emerald-500/20" : "bg-red-500/20"
+                  }`}
+                >
                   {executionSuccess ? (
                     <FiCheck className="h-5 w-5 text-emerald-400" />
                   ) : (
@@ -194,7 +163,11 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
                   )}
                 </div>
                 <div>
-                  <p className={`font-medium ${executionSuccess ? "text-emerald-400" : "text-red-400"}`}>
+                  <p
+                    className={`font-medium ${
+                      executionSuccess ? "text-emerald-400" : "text-red-400"
+                    }`}
+                  >
                     {executionSuccess ? "Success" : "Failed"}
                   </p>
                   <p className="text-sm text-slate-400">{executionMessage}</p>
@@ -209,31 +182,47 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
             >
               <div className="flex items-center mb-6">
                 <FiInfo className="h-6 w-6 text-blue-400 mr-3" />
-                <h2 className="text-xl font-semibold text-white">Transaction Details</h2>
+                <h2 className="text-xl font-semibold text-white">
+                  Transaction Details
+                </h2>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Transaction Info */}
                 <div className="space-y-4">
                   <div>
-                    <label className="text-sm font-medium text-slate-400">Type</label>
+                    <label className="text-sm font-medium text-slate-400">
+                      Type
+                    </label>
                     <p className="text-white font-medium">
-                      {simulateData.transferType === "eth" ? "Native ETH Transfer" : "Token Transfer"}
+                      {simulateData.transferType === "eth"
+                        ? "Native ETH Transfer"
+                        : "Token Transfer"}
                     </p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-slate-400">Amount</label>
+                    <label className="text-sm font-medium text-slate-400">
+                      Amount
+                    </label>
                     <p className="text-white font-medium">
                       {simulateData.amount} {simulateData.symbol}
                     </p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-slate-400">From</label>
-                    <p className="text-white font-mono text-sm break-all">{simulateData.from}</p>
+                    <label className="text-sm font-medium text-slate-400">
+                      From
+                    </label>
+                    <p className="text-white font-mono text-sm break-all">
+                      {simulateData.from}
+                    </p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-slate-400">To</label>
-                    <p className="text-white font-mono text-sm break-all">{simulateData.to}</p>
+                    <label className="text-sm font-medium text-slate-400">
+                      To
+                    </label>
+                    <p className="text-white font-mono text-sm break-all">
+                      {simulateData.to}
+                    </p>
                   </div>
                 </div>
 
@@ -246,18 +235,22 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
                   <div className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-slate-400">Estimated Gas</span>
-                      <span className="text-white font-medium">{simulateData.gas?.estimated || "N/A"}</span>
+                      <span className="text-white font-medium">
+                      {simulateData?.gas?.estimated} gas units
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-slate-400">Gas Price</span>
                       <span className="text-white font-medium">
-                        {simulateData.gas?.price ? `${simulateData.gas.price} Gwei` : "N/A"}
+                        {simulateData?.gas?.priceGwei ?? "N/A"} Gwei
                       </span>
                     </div>
                     <div className="flex justify-between pt-2 border-t border-slate-600">
                       <span className="text-slate-400">Total Cost</span>
                       <span className="text-yellow-400 font-bold">
-                        {simulateData.gas?.cost ? `${simulateData.gas.cost} ETH` : "N/A"}
+                        {simulateData?.gas?.costUsd
+                          ? `$${simulateData.gas.costUsd}`
+                          : "N/A"}
                       </span>
                     </div>
                   </div>
@@ -267,40 +260,57 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
 
             {/* Balance Changes */}
             {simulateData.balances && (
-              <motion.div
-                variants={itemVariants}
-                className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6"
-              >
+              <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6">
                 <div className="flex items-center mb-6">
                   <FiTrendingUp className="h-6 w-6 text-blue-400 mr-3" />
-                  <h2 className="text-xl font-semibold text-white">Balance Changes</h2>
+                  <h2 className="text-xl font-semibold text-white">
+                    Balance Changes
+                  </h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Sender */}
                   <div className="bg-slate-700/30 rounded-xl p-4">
-                    <h3 className="text-lg font-medium text-white mb-4">Sender</h3>
+                    <h3 className="text-lg font-medium text-white mb-4">
+                      Sender
+                    </h3>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-slate-400">ETH</span>
+                        <span className="text-slate-400">ETH (USD)</span>
                         <div className="flex items-center space-x-2">
-                          <span className="text-slate-300">{simulateData.balances?.sender?.before?.eth || "0"}</span>
+                          <span className="text-slate-300">
+                            {simulateData.balances.sender?.before?.eth ||
+                              "0 ETH"}
+                          </span>
+                          <span className="text-green-300"> ( $
+                            {simulateData.balances.sender?.before?.ethUsd ||
+                              "0 USD"} )
+                          </span>
                           <FiArrowRight className="h-4 w-4 text-slate-500" />
                           <span className="text-red-400 font-medium">
-                            {simulateData.balances?.sender?.after?.eth || "0"}
+                            {simulateData.balances.sender?.after?.eth ||
+                              "0 ETH"}
+                          </span>
+                          <span className="text-green-300"> ( $
+                            {simulateData.balances.sender?.after?.ethUsd ||
+                              "0 USD"} )
                           </span>
                         </div>
                       </div>
                       {simulateData.transferType === "erc20" && (
                         <div className="flex items-center justify-between">
-                          <span className="text-slate-400">{simulateData.symbol}</span>
+                          <span className="text-slate-400">
+                            {simulateData.symbol}
+                          </span>
                           <div className="flex items-center space-x-2">
                             <span className="text-slate-300">
-                              {simulateData.balances?.sender?.before?.token || "0"}
+                              {simulateData.balances.sender?.before?.token ||
+                                `0 ${simulateData.symbol}`}
                             </span>
                             <FiArrowRight className="h-4 w-4 text-slate-500" />
                             <span className="text-red-400 font-medium">
-                              {simulateData.balances?.sender?.after?.token || "0"}
+                              {simulateData.balances.sender?.after?.token ||
+                                `0 ${simulateData.symbol}`}
                             </span>
                           </div>
                         </div>
@@ -310,28 +320,44 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
 
                   {/* Recipient */}
                   <div className="bg-slate-700/30 rounded-xl p-4">
-                    <h3 className="text-lg font-medium text-white mb-4">Recipient</h3>
+                    <h3 className="text-lg font-medium text-white mb-4">
+                      Recipient
+                    </h3>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-slate-400">ETH</span>
+                        <span className="text-slate-400">ETH (USD)</span>
                         <div className="flex items-center space-x-2">
-                          <span className="text-slate-300">{simulateData.balances?.recipient?.before?.eth || "0"}</span>
+                          <span className="text-slate-300">
+                            {simulateData.balances.recipient?.before?.eth ||
+                              "0 ETH"}
+                          </span>
+                          <span className="text-green-300"> ($ {simulateData.balances.recipient?.before?.ethUsd ||
+                              "0 ETH"})
+                          </span>
                           <FiArrowRight className="h-4 w-4 text-slate-500" />
                           <span className="text-emerald-400 font-medium">
-                            {simulateData.balances?.recipient?.after?.eth || "0"}
+                            {simulateData.balances.recipient?.after?.eth ||
+                              "0 ETH"}
+                          </span>
+                          <span className="text-green-300"> ($ {simulateData.balances.recipient?.after?.ethUsd ||
+                              "0 ETH"})
                           </span>
                         </div>
                       </div>
                       {simulateData.transferType === "erc20" && (
                         <div className="flex items-center justify-between">
-                          <span className="text-slate-400">{simulateData.symbol}</span>
+                          <span className="text-slate-400">
+                            {simulateData.symbol}
+                          </span>
                           <div className="flex items-center space-x-2">
                             <span className="text-slate-300">
-                              {simulateData.balances?.recipient?.before?.token || "0"}
+                              {simulateData.balances.recipient?.before?.token ||
+                                `0 ${simulateData.symbol}`}
                             </span>
                             <FiArrowRight className="h-4 w-4 text-slate-500" />
                             <span className="text-emerald-400 font-medium">
-                              {simulateData.balances?.recipient?.after?.token || "0"}
+                              {simulateData.balances.recipient?.after?.token ||
+                                `0 ${simulateData.symbol}`}
                             </span>
                           </div>
                         </div>
@@ -339,7 +365,7 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             )}
 
             {/* Recent Transfers Table */}
@@ -350,19 +376,33 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
               >
                 <div className="flex items-center mb-6">
                   <FiClock className="h-6 w-6 text-blue-400 mr-3" />
-                  <h2 className="text-xl font-semibold text-white">Recent Transfers</h2>
+                  <h2 className="text-xl font-semibold text-white">
+                    Recent Transfers
+                  </h2>
                 </div>
 
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
                       <tr className="border-b border-slate-700">
-                        <th className="text-left py-3 px-4 text-sm font-medium text-slate-400">Hash</th>
-                        <th className="text-left py-3 px-4 text-sm font-medium text-slate-400">From</th>
-                        <th className="text-left py-3 px-4 text-sm font-medium text-slate-400">To</th>
-                        <th className="text-left py-3 px-4 text-sm font-medium text-slate-400">Amount</th>
-                        <th className="text-left py-3 px-4 text-sm font-medium text-slate-400">Date</th>
-                        <th className="text-right py-3 px-4 text-sm font-medium text-slate-400">Action</th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-slate-400">
+                          Hash
+                        </th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-slate-400">
+                          From
+                        </th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-slate-400">
+                          To
+                        </th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-slate-400">
+                          Amount
+                        </th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-slate-400">
+                          Date
+                        </th>
+                        <th className="text-right py-3 px-4 text-sm font-medium text-slate-400">
+                          Action
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -385,7 +425,9 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
                             </span>
                           </td>
                           <td className="py-3 px-4">
-                            <span className="font-mono text-sm text-slate-300">{(tx.to || "").substring(0, 6)}...</span>
+                            <span className="font-mono text-sm text-slate-300">
+                              {(tx.to || "").substring(0, 6)}...
+                            </span>
                           </td>
                           <td className="py-3 px-4">
                             <span className="text-white font-medium">
@@ -393,7 +435,9 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
                             </span>
                           </td>
                           <td className="py-3 px-4">
-                            <span className="text-slate-400 text-sm">{tx.date}</span>
+                            <span className="text-slate-400 text-sm">
+                              {tx.date}
+                            </span>
                           </td>
                           <td className="py-3 px-4 text-right">
                             <a
@@ -414,6 +458,7 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
             )}
           </div>
 
+
           {/* Right Column - Security Analysis */}
           <div className="space-y-8">
             {/* Bytecode Analysis */}
@@ -423,14 +468,19 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
             >
               <div className="flex items-center mb-6">
                 <FiShield className="h-6 w-6 text-blue-400 mr-3" />
-                <h2 className="text-xl font-semibold text-white">Bytecode Analysis</h2>
+                <h2 className="text-xl font-semibold text-white">
+                  Bytecode Analysis
+                </h2>
               </div>
 
               {isContract ? (
                 warnings.length > 0 ? (
                   <div className="space-y-3">
                     {warnings.map((warning, idx) => (
-                      <div key={idx} className="flex items-start p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                      <div
+                        key={idx}
+                        className="flex items-start p-3 bg-red-500/10 border border-red-500/20 rounded-lg"
+                      >
                         <FiAlertTriangle className="h-5 w-5 text-red-400 mr-3 mt-0.5 flex-shrink-0" />
                         <span className="text-red-300 text-sm">{warning}</span>
                       </div>
@@ -439,13 +489,17 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
                 ) : (
                   <div className="flex items-center p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
                     <FiCheck className="h-5 w-5 text-emerald-400 mr-3" />
-                    <span className="text-emerald-300">No dangerous opcodes detected</span>
+                    <span className="text-emerald-300">
+                      No dangerous opcodes detected
+                    </span>
                   </div>
                 )
               ) : (
                 <div className="flex items-center p-4 bg-slate-700/30 border border-slate-600/50 rounded-lg">
                   <FiInfo className="h-5 w-5 text-slate-400 mr-3" />
-                  <span className="text-slate-300">Address is not a contract</span>
+                  <span className="text-slate-300">
+                    Address is not a contract
+                  </span>
                 </div>
               )}
             </motion.div>
@@ -457,7 +511,9 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
             >
               <div className="flex items-center mb-6">
                 <FiCheck className="h-6 w-6 text-blue-400 mr-3" />
-                <h2 className="text-xl font-semibold text-white">Security Checks</h2>
+                <h2 className="text-xl font-semibold text-white">
+                  Security Checks
+                </h2>
               </div>
 
               <div className="space-y-3">
@@ -465,7 +521,9 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
                   <div
                     key={name}
                     className={`flex items-center justify-between p-3 rounded-lg border ${
-                      check?.data?.risk ? "bg-red-500/10 border-red-500/20" : "bg-emerald-500/10 border-emerald-500/20"
+                      check?.data?.risk
+                        ? "bg-red-500/10 border-red-500/20"
+                        : "bg-emerald-500/10 border-emerald-500/20"
                     }`}
                   >
                     <div className="flex items-center">
@@ -480,7 +538,9 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
                     </div>
                     <span
                       className={`text-xs px-2 py-1 rounded-full ${
-                        check?.data?.risk ? "bg-red-500/20 text-red-300" : "bg-emerald-500/20 text-emerald-300"
+                        check?.data?.risk
+                          ? "bg-red-500/20 text-red-300"
+                          : "bg-emerald-500/20 text-emerald-300"
                       }`}
                     >
                       {check?.data?.risk ? "Risk" : "Safe"}
@@ -498,21 +558,29 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
               >
                 <div className="flex items-center mb-6">
                   <FiActivity className="h-6 w-6 text-blue-400 mr-3" />
-                  <h2 className="text-xl font-semibold text-white">Transaction Summary</h2>
+                  <h2 className="text-xl font-semibold text-white">
+                    Transaction Summary
+                  </h2>
                 </div>
 
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-slate-400">Total Transfers</span>
-                    <span className="text-white font-medium">{summary.totalTransfers || "N/A"}</span>
+                    <span className="text-white font-medium">
+                      {summary.totalTransfers || "N/A"}
+                    </span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-slate-400">Last Transfer</span>
-                    <span className="text-white font-medium">{summary.lastTransferDate || "N/A"}</span>
+                    <span className="text-white font-medium">
+                      {summary.lastTransferDate || "N/A"}
+                    </span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-slate-400">ERC-20 Volume</span>
-                    <span className="text-white font-medium">{summary.totalERC20Volume || "N/A"}</span>
+                    <span className="text-white font-medium">
+                      {summary.totalERC20Volume || "N/A"}
+                    </span>
                   </div>
                 </div>
               </motion.div>
@@ -520,6 +588,80 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
           </div>
         </div>
 
+{/* Key Metrics Cards */}
+<motion.div
+          variants={itemVariants}
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"
+        >
+          {/* Risk Level Card */}
+          <motion.div
+            whileHover={{ y: -4, scale: 1.02 }}
+            className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${riskStyle.bg} border ${riskStyle.border} p-6`}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className={`p-3 rounded-xl ${riskStyle.accent}/20`}>
+                <FiShield className={`h-6 w-6 ${riskStyle.text}`} />
+              </div>
+              <div
+                className={`h-2 w-2 rounded-full ${riskStyle.accent} animate-pulse`}
+              />
+            </div>
+            <h3 className="text-sm font-medium text-slate-400 mb-1">
+              Risk Level
+            </h3>
+            <p className={`text-2xl font-bold ${riskStyle.text}`}>
+              {riskLevel}
+            </p>
+          </motion.div>
+
+          {/* Total Score Card */}
+          <motion.div
+            whileHover={{ y: -4, scale: 1.02 }}
+            className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500/10 to-blue-600/5 border border-blue-500/20 p-6"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 rounded-xl bg-blue-500/20">
+                <FiTarget className="h-6 w-6 text-blue-400" />
+              </div>
+              <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
+            </div>
+            <h3 className="text-sm font-medium text-slate-400 mb-1">
+              Honeypot checks score
+            </h3>
+            <p className="text-2xl font-bold text-blue-400">
+              {totalScore.trim()}/100
+            </p>
+            <div className="mt-3 h-2 bg-slate-700 rounded-full overflow-hidden">
+              <motion.div
+                className="h-full bg-gradient-to-r from-blue-500 to-blue-400"
+                initial={{ width: 0 }}
+                animate={{ width: `${Number.parseFloat(totalScore) || 0}%` }}
+                transition={{ duration: 1.5, ease: "easeOut" }}
+              />
+            </div>
+          </motion.div>
+
+          {/* Pass Rate Card */}
+          <motion.div
+            whileHover={{ y: -4, scale: 1.02 }}
+            className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border border-emerald-500/20 p-6"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 rounded-xl bg-emerald-500/20">
+                <FiCheck className="h-6 w-6 text-emerald-400" />
+              </div>
+              <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            </div>
+            <h3 className="text-sm font-medium text-slate-400 mb-1">
+              Pass Rate
+            </h3>
+            <p className="text-2xl font-bold text-emerald-400">{passRate}</p>
+            <p className="text-sm text-slate-500 mt-1">
+              {ratioText} checks passed
+            </p>
+          </motion.div>
+        </motion.div>
+        
         {/* Warnings Section */}
         {simulateData.warnings?.length > 0 && (
           <motion.div
@@ -528,7 +670,9 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
           >
             <div className="flex items-center mb-4">
               <FiAlertTriangle className="h-6 w-6 text-red-400 mr-3" />
-              <h2 className="text-xl font-semibold text-red-400">Important Warnings</h2>
+              <h2 className="text-xl font-semibold text-red-400">
+                Important Warnings
+              </h2>
             </div>
             <div className="space-y-3">
               {simulateData.warnings.map((warning, index) => (
@@ -542,5 +686,5 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
         )}
       </motion.div>
     </div>
-  )
+  );
 }
