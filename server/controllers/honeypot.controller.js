@@ -17,7 +17,6 @@ const honeypotMasterController = async (req, res) => {
 
     const contract_address = await isContract(contractAddress);
 
-    console.log("master controller honeypot => ", contract_address);
 
     if (!contract_address){
       return res.status(200).json({

@@ -4,7 +4,6 @@ const openAiUrl = process.env.OPEN_AI_URL;
 const openAiKey = process.env.MODEL_API_KEY;
 
 const callAiModel = async (prompt) => {
-  console.log("PROMTP=> ", prompt)
   try {
     const response = await axios.post(
       openAiUrl,
