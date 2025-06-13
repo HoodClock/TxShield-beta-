@@ -8,14 +8,12 @@ import LoadingState from "../components/loading";
 import ResultsDashboard from "../components/result";
 import HoneypotChecks from "../components/honeypotChecks";
 import Recommendations from "../components/recomendations";
-import ActionButtons from "../components/actionButton";
-import FeaturesSection from "../components/featureSection";
 import Footer from "../components/footer";
 
 import {
   honeypotChecks as runHoneypotChecks,
   simulateTx as runSimulateTx,
-  contactApi as contactUs,
+  suggestionApi as recommendations,
 } from "@/api/api";
 
 export default function App() {
@@ -23,6 +21,7 @@ export default function App() {
   const [showResults, setShowResults] = useState(false);
   const [honeypotData, setHoneypotData] = useState(null);
   const [simulationData, setSimulationData] = useState(null);
+  const [recommendation, setRecommendation] = useState(null);
 
   const handleSimulate = async (formData) => {
     setIsLoading(true);
@@ -51,6 +50,22 @@ export default function App() {
     } catch (err) {
       console.error("Honeypot API error:", err);
       setIsLoading(false);
+    }
+  };
+
+  const handleRecommendation = async () => {
+    try {
+      if (!simulationData || !honeypotData) return;
+
+      const promptContent = {
+        simulation: simulationData,
+        honeypot: honeypotData,
+      };
+
+      const response = await recommendations(promptContent);
+      setRecommendation(response.data.recommendation);
+    } catch (err) {
+      console.error("Recommendation error:", err);
     }
   };
 
@@ -105,13 +120,16 @@ export default function App() {
               honeypot={honeypotData}
             />
             <HoneypotChecks isVisible={showResults} data={honeypotData} />
-            {/* <ActionButtons
-        isVisible={showResults}
-        onSimulateAgain={handleSimulateAgain}
-      /> */}
           </div>
         )}
 
+        {/* recommendations */}
+        {/* <Recommendations
+          simulationData={simulationData}
+          honeypotData={honeypotData}
+          onGenerate={handleRecommendation}
+          recommendation={recommendation}
+        /> */}
       </main>
 
       <Footer />

@@ -5,7 +5,44 @@ import { motion } from "framer-motion";
 export default function HoneypotChecks({ isVisible, data }) {
   if (!isVisible || !data) return null;
 
-  const checks = data.checks;
+  const checks = data.checks || {};
+
+  if (Object.keys(checks).length === 0) {
+    return (
+      <div className="bg-gradient-to-br from-white/5 to-white/10 border border-white/10 rounded-xl p-6 mb-6 text-white/80 text-sm shadow-inner shadow-white/5">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="p-2 bg-white/10 rounded-lg">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6 text-amber-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+              />
+            </svg>
+          </div>
+          <div>
+            <h4 className="text-2xl font-bold text-white">Security Analysis</h4>
+            <p className="text-white/60 text-sm">
+              No honeypot checks were detected.
+            </p>
+          </div>
+        </div>
+
+        <p className="text-white/70 text-sm">
+          {data.verdict ||
+            data.message ||
+            "This contract didn’t trigger any honeypot detection scripts."}
+        </p>
+      </div>
+    );
+  }
 
   const TITLES = {
     blackList: "Blacklist Check",

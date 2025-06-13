@@ -1,11 +1,10 @@
 import axios from "axios";
 
 // LOCAL DEV
-// const BASE_URL = "http://localhost:5000"; 
+const BASE_URL = "http://localhost:5000";
 
 // for prod.
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-
+// const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const simulateTx = async (formData) => {
   return await axios.post(
@@ -40,4 +39,17 @@ export const contactApi = async (formData) => {
     },
     withCredentials: true,
   });
+};
+
+export const suggestionApi = async (formData) => {
+  return await axios.post(
+    `${BASE_URL}/api/generations/generate-recommendation`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    }
+  );
 };

@@ -1,10 +1,11 @@
 const honeypotHelper = require("../helpers/honeypot.helper");
-const { getAbi } = require("../services/etherscanService");
+const { getAbi, isContract } = require("../services/etherscanService");
 const { getAddress } = require("ethers");
 
 // master controllers of all
 const honeypotMasterController = async (req, res) => {
   try {
+
     const {
       address,
       contractAddress,
@@ -13,6 +14,18 @@ const honeypotMasterController = async (req, res) => {
       recepientAddress,
       value,
     } = req.body;
+
+    const contract_address = await isContract(contractAddress);
+
+    console.log("master controller honeypot => ", contract_address);
+
+    if (!contract_address){
+      return res.status(200).json({
+        success: true,
+        message: "Recipient is a wallet address. Honeypot checks skipped.",
+        verdict: "ℹ️ This is a wallet address. No contract risks detected.",
+      });
+    }
 
     const normalAddress = getAddress(address);
     const normalcontractAddress = getAddress(contractAddress);

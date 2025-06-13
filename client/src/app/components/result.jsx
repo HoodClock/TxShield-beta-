@@ -14,6 +14,7 @@ import {
   FiDollarSign,
   FiTarget,
 } from "react-icons/fi";
+import keyMatrics from "./keyMatrics";
 
 export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
   if (!isVisible || !simulation || !honeypot) return null;
@@ -236,7 +237,7 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
                     <div className="flex justify-between">
                       <span className="text-slate-400">Estimated Gas</span>
                       <span className="text-white font-medium">
-                      {simulateData?.gas?.estimated} gas units
+                        {simulateData?.gas?.estimated} gas units
                       </span>
                     </div>
                     <div className="flex justify-between">
@@ -282,18 +283,24 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
                             {simulateData.balances.sender?.before?.eth ||
                               "0 ETH"}
                           </span>
-                          <span className="text-green-300"> ( $
+                          <span className="text-green-300">
+                            {" "}
+                            ( $
                             {simulateData.balances.sender?.before?.ethUsd ||
-                              "0 USD"} )
+                              "0 USD"}{" "}
+                            )
                           </span>
                           <FiArrowRight className="h-4 w-4 text-slate-500" />
                           <span className="text-red-400 font-medium">
                             {simulateData.balances.sender?.after?.eth ||
                               "0 ETH"}
                           </span>
-                          <span className="text-green-300"> ( $
+                          <span className="text-green-300">
+                            {" "}
+                            ( $
                             {simulateData.balances.sender?.after?.ethUsd ||
-                              "0 USD"} )
+                              "0 USD"}{" "}
+                            )
                           </span>
                         </div>
                       </div>
@@ -331,16 +338,24 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
                             {simulateData.balances.recipient?.before?.eth ||
                               "0 ETH"}
                           </span>
-                          <span className="text-green-300"> ($ {simulateData.balances.recipient?.before?.ethUsd ||
-                              "0 ETH"})
+                          <span className="text-green-300">
+                            {" "}
+                            (${" "}
+                            {simulateData.balances.recipient?.before?.ethUsd ||
+                              "0 ETH"}
+                            )
                           </span>
                           <FiArrowRight className="h-4 w-4 text-slate-500" />
                           <span className="text-emerald-400 font-medium">
                             {simulateData.balances.recipient?.after?.eth ||
                               "0 ETH"}
                           </span>
-                          <span className="text-green-300"> ($ {simulateData.balances.recipient?.after?.ethUsd ||
-                              "0 ETH"})
+                          <span className="text-green-300">
+                            {" "}
+                            (${" "}
+                            {simulateData.balances.recipient?.after?.ethUsd ||
+                              "0 ETH"}
+                            )
                           </span>
                         </div>
                       </div>
@@ -457,7 +472,6 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
               </motion.div>
             )}
           </div>
-
 
           {/* Right Column - Security Analysis */}
           <div className="space-y-8">
@@ -588,80 +602,18 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
           </div>
         </div>
 
-{/* Key Metrics Cards */}
-<motion.div
-          variants={itemVariants}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"
-        >
-          {/* Risk Level Card */}
-          <motion.div
-            whileHover={{ y: -4, scale: 1.02 }}
-            className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${riskStyle.bg} border ${riskStyle.border} p-6`}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div className={`p-3 rounded-xl ${riskStyle.accent}/20`}>
-                <FiShield className={`h-6 w-6 ${riskStyle.text}`} />
-              </div>
-              <div
-                className={`h-2 w-2 rounded-full ${riskStyle.accent} animate-pulse`}
-              />
-            </div>
-            <h3 className="text-sm font-medium text-slate-400 mb-1">
-              Risk Level
-            </h3>
-            <p className={`text-2xl font-bold ${riskStyle.text}`}>
-              {riskLevel}
-            </p>
-          </motion.div>
+        {/* Key Metrics Cards */}
+        <keyMatrics 
+          itemVariants={itemVariants}
+          riskStyle={riskStyle}
+          totalScore={totalScore}
+          passRate={passRate}
+          riskLevel={riskLevel}
+          ratioText={ratioText}
+          isVisible={isVisible}
+          data={honeypot}
+        />
 
-          {/* Total Score Card */}
-          <motion.div
-            whileHover={{ y: -4, scale: 1.02 }}
-            className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500/10 to-blue-600/5 border border-blue-500/20 p-6"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-xl bg-blue-500/20">
-                <FiTarget className="h-6 w-6 text-blue-400" />
-              </div>
-              <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
-            </div>
-            <h3 className="text-sm font-medium text-slate-400 mb-1">
-              Honeypot checks score
-            </h3>
-            <p className="text-2xl font-bold text-blue-400">
-              {totalScore.trim()}/100
-            </p>
-            <div className="mt-3 h-2 bg-slate-700 rounded-full overflow-hidden">
-              <motion.div
-                className="h-full bg-gradient-to-r from-blue-500 to-blue-400"
-                initial={{ width: 0 }}
-                animate={{ width: `${Number.parseFloat(totalScore) || 0}%` }}
-                transition={{ duration: 1.5, ease: "easeOut" }}
-              />
-            </div>
-          </motion.div>
-
-          {/* Pass Rate Card */}
-          <motion.div
-            whileHover={{ y: -4, scale: 1.02 }}
-            className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border border-emerald-500/20 p-6"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-xl bg-emerald-500/20">
-                <FiCheck className="h-6 w-6 text-emerald-400" />
-              </div>
-              <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            </div>
-            <h3 className="text-sm font-medium text-slate-400 mb-1">
-              Pass Rate
-            </h3>
-            <p className="text-2xl font-bold text-emerald-400">{passRate}</p>
-            <p className="text-sm text-slate-500 mt-1">
-              {ratioText} checks passed
-            </p>
-          </motion.div>
-        </motion.div>
-        
         {/* Warnings Section */}
         {simulateData.warnings?.length > 0 && (
           <motion.div
