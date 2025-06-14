@@ -48,7 +48,7 @@ function HomePage() {
       {/* Hero Section */}
       <main className="flex flex-col md:flex-row justify-center items-center px-6 py-16 max-w-7xl mx-auto gap-12 min-h-[80vh]">
         <motion.div
-          className="flex-1 text-center md:text-left"
+          className="flex-1 text-center w-full"
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -56,21 +56,31 @@ function HomePage() {
           <h1
             style={{
               fontFamily: "'ClashDisplay-Bold', sans-serif",
-              fontSize: "clamp(15rem, 15vw, 10rem)",
+              fontSize: "clamp(10rem, 12vw, 8rem)",
+              lineHeight: "1.1",
             }}
-            className="glow-text font-extrabold bg-gradient-to-r from-white via-gray-300 to-gray-400 bg-clip-text text-transparent mb-6 drop-shadow-lg leading-tight"
+            className="glow-text font-extrabold bg-gradient-to-r from-white via-gray-300 to-gray-400 bg-clip-text text-transparent mb-6 drop-shadow-lg px-4 break-words"
           >
             Shield Every Transaction.
           </h1>
 
-          <div>
+          {/* Public Beta Badge */}
+          <div className="flex justify-center mb-8">
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-500/20 text-green-400 border border-green-500/30">
+              Public Beta
+            </span>
+          </div>
+
+          {/* Shield Now Button - Centered with hover effects */}
+          <div className="flex justify-center">
             <Link
               href="/simulate"
-              className="inline-flex items-center px-5 py-2.5 font-medium text-white bg-transparent border border-white/30 rounded-lg hover:bg-white/10 hover:border-white/50 transition-all duration-300 group"
+              style={{ fontFamily: "'ClashDisplay-Medium', sans-serif" }}
+              className="inline-flex items-center px-6 py-3 font-medium text-white bg-transparent border border-white/30 rounded-lg hover:bg-white hover:text-black transition-all duration-300 group"
             >
               Shield Now
               <svg
-                className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1"
+                className="w-4 h-4 ml-2 transition-all duration-300 group-hover:translate-x-1 group-hover:text-black"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

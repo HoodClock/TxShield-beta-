@@ -13,7 +13,7 @@ exports.sendMessage = async (req, res) => {
 
   const mailOptions = {
     from: email,
-    to: process.env.CONTACT_EMAIL,
+    to: process.env.CONTECT_EMAIL,
     subject: `Contact Message from ${name}`,
     text: message,
   };
