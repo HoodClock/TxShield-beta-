@@ -14,7 +14,18 @@ function keyMatrics({
   isVisible,
   data,
 }) {
-    
+  // Score range to color
+  const getZoneColor = (score) => {
+    if (score >= 40) return "bg-red-500";
+    if (score >= 20) return "bg-yellow-400";
+    return "bg-green-500";
+  };
+
+  const total = Number.parseFloat(totalScore) || 0;
+  const zoneColor = getZoneColor(total);
+  const zoneName =
+    total >= 40 ? "Red Flag Zone" : total >= 20 ? "Caution Zone" : "Safe Zone";
+
   if (!isVisible || !data) return null;
 
   const checks = data.checks || {};
@@ -81,6 +92,7 @@ function keyMatrics({
         </motion.div>
 
         {/* Total Score */}
+        {/* Total Score */}
         <motion.div
           whileHover={{ y: -4, scale: 1.02 }}
           className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500/10 to-blue-600/5 border border-blue-500/20 p-6"
@@ -91,19 +103,36 @@ function keyMatrics({
             </div>
             <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
           </div>
-          <h3 className="text-sm font-medium text-slate-400 mb-1">
+
+          <h3 className="text-sm font-medium text-slate-400 mb-1 flex items-center justify-between">
             Honeypot checks score
+            <span className="text-xs text-slate-500">{zoneName}</span>
           </h3>
-          <p className="text-2xl font-bold text-blue-400">
-            {totalScore.trim()}/100
-          </p>
+
+          <p className="text-2xl font-bold text-blue-400">{total}/60</p>
+
+          {/* Dynamic Progress Bar */}
           <div className="mt-3 h-2 bg-slate-700 rounded-full overflow-hidden">
             <motion.div
-              className="h-full bg-gradient-to-r from-blue-500 to-blue-400"
+              className={`h-full ${zoneColor}`}
               initial={{ width: 0 }}
-              animate={{ width: `${Number.parseFloat(totalScore) || 0}%` }}
+              animate={{ width: `${(total / 60) * 100}%` }}
               transition={{ duration: 1.5, ease: "easeOut" }}
             />
+          </div>
+
+          {/* Zone Color Bar (with legend) */}
+          <div className="mt-2 flex items-center justify-between text-xs text-slate-400">
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-3 rounded-full bg-green-500" /> Safe (0–19)
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-3 rounded-full bg-yellow-400" /> Caution
+              (20–39)
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-3 rounded-full bg-red-500" /> Red Flag (40+)
+            </div>
           </div>
         </motion.div>
 
@@ -118,7 +147,7 @@ function keyMatrics({
             </div>
             <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
           </div>
-          <h3 className="text-sm font-medium text-slate-400 mb-1">Pass Rate</h3>
+          <h3 className="text-sm font-medium text-slate-400 mb-1">Honeypot Pass Rate</h3>
           <p className="text-2xl font-bold text-emerald-400">{passRate}</p>
           <p className="text-sm text-slate-500 mt-1">
             {ratioText} checks passed

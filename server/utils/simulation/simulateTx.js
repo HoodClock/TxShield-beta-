@@ -1,6 +1,7 @@
 const provider = require("../../config/provider");
 const { ethers } = require("ethers");
 const { isContract } = require("../../services/etherscanService");
+const { getTokenMeta } = require("../../services/getTokenMetaService");
 const axios = require("axios");
 
 const coinkGeckoUsd = process.env.COINGECKO_API_USD;
@@ -21,19 +22,52 @@ const fmt = (val, decimals = 6) => {
   return Number(num.toFixed(decimals)).toLocaleString();
 };
 
-const simulateTransfer = async (userAddress, recipientAddress, amount) => {
+const simulateTransfer = async (
+  userAddress,
+  recipientAddress,
+  amount,
+  currency
+) => {
   try {
     if (!ethers.isAddress(userAddress)) throw new Error("Invalid user address");
-    if (!ethers.isAddress(recipientAddress)) throw new Error("Invalid recipient address");
+    if (!ethers.isAddress(recipientAddress))
+      throw new Error("Invalid recipient address");
     if (isNaN(parseFloat(amount))) throw new Error("Invalid amount");
 
-    const recipientIsContract = await isContract(recipientAddress);
     let transferType = "eth";
     let tokenContract = null;
     let decimals = 18;
     let tokenId = null;
 
-    if (recipientIsContract) {
+    // Detect ERC20 token
+    if (currency && currency !== "ETH") {
+      try {
+        tokenContract = new ethers.Contract(
+          currency,
+          [
+            "function balanceOf(address) view returns (uint256)",
+            "function symbol() view returns (string)",
+            "function decimals() view returns (uint8)",
+            "function transfer(address,uint256) returns (bool)",
+          ],
+          provider
+        );
+
+        const meta = await getTokenMeta(currency);
+
+        decimals = meta.decimals;
+        tokenId = meta.symbol.toLowerCase();
+        transferType = "erc20";
+      } catch {
+        throw new Error(
+          "Failed to load token contract from provided currency address"
+        );
+      }
+    }
+
+    // Check recipient contract (fallback detection if not in dropdown)
+    const recipientIsContract = await isContract(recipientAddress);
+    if (!tokenContract && recipientIsContract && currency !== "ETH") {
       try {
         tokenContract = new ethers.Contract(
           recipientAddress,
@@ -46,17 +80,16 @@ const simulateTransfer = async (userAddress, recipientAddress, amount) => {
           provider
         );
 
-        const [symbol, decimalUnits] = await Promise.all([
-          tokenContract.symbol(),
-          tokenContract.decimals(),
-        ]);
-
-        if (symbol && decimalUnits) {
-          transferType = "erc20";
-          decimals = decimalUnits;
-          tokenId = symbol.toLowerCase();
-        }
-      } catch {}
+        const meta = await getTokenMeta(recipientAddress);
+        decimals = meta.decimals;
+        tokenId = meta.symbol.toLowerCase();
+        transferType = "erc20";
+      } catch {
+        // If this also fails, stay in ETH mode
+        transferType = "eth";
+        decimals = 18;
+        tokenId = null;
+      }
     }
 
     const value = ethers.parseUnits(amount, decimals);
@@ -66,28 +99,39 @@ const simulateTransfer = async (userAddress, recipientAddress, amount) => {
       value: transferType === "eth" ? value : 0n,
       data:
         transferType === "erc20"
-          ? tokenContract.interface.encodeFunctionData("transfer", [recipientAddress, value])
+          ? tokenContract.interface.encodeFunctionData("transfer", [
+              recipientAddress,
+              value,
+            ])
           : "0x",
     };
 
-    const [gasEstimate, feeData, senderBalance, recipientBalance] = await Promise.all([
-      provider.estimateGas(tx).catch(() => (transferType === "eth" ? 21000n : 100000n)),
-      provider.getFeeData(),
-      provider.getBalance(userAddress),
-      provider.getBalance(recipientAddress),
-    ]);
+    const [gasEstimate, feeData, senderBalance, recipientBalance] =
+      await Promise.all([
+        provider
+          .estimateGas(tx)
+          .catch(() => (transferType === "eth" ? 21000n : 100000n)),
+        provider.getFeeData(),
+        provider.getBalance(userAddress),
+        provider.getBalance(recipientAddress),
+      ]);
 
     const gasPrice = feeData.gasPrice || feeData.maxFeePerGas || 0n;
     const gasCost = gasEstimate * gasPrice;
 
-    const sufficientEth = senderBalance >= (transferType === "eth" ? value + gasCost : gasCost);
-    const tokenBalance = transferType === "erc20" ? await tokenContract.balanceOf(userAddress) : 0n;
+    const sufficientEth =
+      senderBalance >= (transferType === "eth" ? value + gasCost : gasCost);
+    const tokenBalance =
+      transferType === "erc20"
+        ? await tokenContract.balanceOf(userAddress)
+        : 0n;
     const sufficientTokens = transferType !== "erc20" || tokenBalance >= value;
 
     const ids = ["ethereum"];
-    if (tokenId) ids.push(tokenId);
+    if (tokenId && tokenId !== "unknown") ids.push(tokenId);
     const prices = await fetchPrices(ids, ["usd"]);
-    const ethUsd = prices["ethereum"].usd;
+
+    const ethUsd = prices["ethereum"]?.usd ?? 0;
     const tokenUsd = tokenId ? prices[tokenId]?.usd ?? 0 : 0;
 
     const result = {
@@ -96,7 +140,7 @@ const simulateTransfer = async (userAddress, recipientAddress, amount) => {
       from: userAddress,
       to: recipientAddress,
       amount: `${fmt(ethers.formatUnits(value, decimals))} ${
-        transferType === "erc20" ? await tokenContract.symbol() : "ETH"
+        transferType === "erc20" ? tokenId.toUpperCase() : "ETH"
       }`,
       gas: {
         estimated: fmt(gasEstimate),
@@ -115,16 +159,25 @@ const simulateTransfer = async (userAddress, recipientAddress, amount) => {
                 : null,
             tokenUsd:
               transferType === "erc20"
-                ? fmt(parseFloat(ethers.formatUnits(tokenBalance, decimals)) * tokenUsd)
+                ? fmt(
+                    parseFloat(ethers.formatUnits(tokenBalance, decimals)) *
+                      tokenUsd
+                  )
                 : null,
           },
           after: {
             eth: fmt(
-              ethers.formatEther(senderBalance - (transferType === "eth" ? value + gasCost : gasCost))
+              ethers.formatEther(
+                senderBalance -
+                  (transferType === "eth" ? value + gasCost : gasCost)
+              )
             ),
             ethUsd: fmt(
               parseFloat(
-                ethers.formatEther(senderBalance - (transferType === "eth" ? value + gasCost : gasCost))
+                ethers.formatEther(
+                  senderBalance -
+                    (transferType === "eth" ? value + gasCost : gasCost)
+                )
               ) * ethUsd
             ),
             token:
@@ -134,7 +187,9 @@ const simulateTransfer = async (userAddress, recipientAddress, amount) => {
             tokenUsd:
               transferType === "erc20"
                 ? fmt(
-                    parseFloat(ethers.formatUnits(tokenBalance - value, decimals)) * tokenUsd
+                    parseFloat(
+                      ethers.formatUnits(tokenBalance - value, decimals)
+                    ) * tokenUsd
                   )
                 : null,
           },
@@ -142,27 +197,40 @@ const simulateTransfer = async (userAddress, recipientAddress, amount) => {
         recipient: {
           before: {
             eth: fmt(ethers.formatEther(recipientBalance)),
-            ethUsd: fmt(parseFloat(ethers.formatEther(recipientBalance)) * ethUsd),
+            ethUsd: fmt(
+              parseFloat(ethers.formatEther(recipientBalance)) * ethUsd
+            ),
             token:
               transferType === "erc20"
-                ? fmt(ethers.formatUnits(await tokenContract.balanceOf(recipientAddress), decimals))
+                ? fmt(
+                    await tokenContract
+                      .balanceOf(recipientAddress)
+                      .then((r) => ethers.formatUnits(r, decimals))
+                  )
                 : null,
             tokenUsd:
               transferType === "erc20"
                 ? fmt(
                     parseFloat(
-                      ethers.formatUnits(await tokenContract.balanceOf(recipientAddress), decimals)
+                      ethers.formatUnits(
+                        await tokenContract.balanceOf(recipientAddress),
+                        decimals
+                      )
                     ) * tokenUsd
                   )
                 : null,
           },
           after: {
             eth: fmt(
-              ethers.formatEther(recipientBalance + (transferType === "eth" ? value : 0n))
+              ethers.formatEther(
+                recipientBalance + (transferType === "eth" ? value : 0n)
+              )
             ),
             ethUsd: fmt(
               parseFloat(
-                ethers.formatEther(recipientBalance + (transferType === "eth" ? value : 0n))
+                ethers.formatEther(
+                  recipientBalance + (transferType === "eth" ? value : 0n)
+                )
               ) * ethUsd
             ),
             token:
@@ -179,7 +247,8 @@ const simulateTransfer = async (userAddress, recipientAddress, amount) => {
                 ? fmt(
                     parseFloat(
                       ethers.formatUnits(
-                        (await tokenContract.balanceOf(recipientAddress)) + value,
+                        (await tokenContract.balanceOf(recipientAddress)) +
+                          value,
                         decimals
                       )
                     ) * tokenUsd
@@ -194,7 +263,9 @@ const simulateTransfer = async (userAddress, recipientAddress, amount) => {
     if (!sufficientEth)
       result.warnings.push("Insufficient ETH for gas + transfer");
     if (!sufficientTokens)
-      result.warnings.push("Sender has insufficient token balance for transfer.");
+      result.warnings.push(
+        "Sender has insufficient token balance for transfer."
+      );
     if (recipientAddress === ethers.ZeroAddress)
       result.warnings.push("Transfer to zero address");
 

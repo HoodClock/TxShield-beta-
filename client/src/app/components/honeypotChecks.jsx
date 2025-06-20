@@ -197,29 +197,7 @@ export default function HoneypotChecks({ isVisible, data }) {
             </motion.div>
           );
         })}
-      </div>
-
-      {/* Summary bar */}
-      <div className="mt-6 pt-4 border-t border-white/10">
-        <div className="flex flex-wrap gap-4 justify-between items-center">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-emerald-400"></div>
-            <span className="text-sm text-white/80">Secure checks</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-amber-400"></div>
-            <span className="text-sm text-white/80">Medium risk</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-red-500"></div>
-            <span className="text-sm text-white/80">High risk</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-white/60"></div>
-            <span className="text-sm text-white/80">Low risk</span>
-          </div>
-        </div>
-      </div>
+      </div>   
     </div>
   );
 }

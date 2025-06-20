@@ -14,7 +14,7 @@ import {
   FiDollarSign,
   FiTarget,
 } from "react-icons/fi";
-import keyMatrics from "./keyMatrics";
+import KeyMatrics from "./keyMatrics";
 
 export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
   if (!isVisible || !simulation || !honeypot) return null;
@@ -603,7 +603,7 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
         </div>
 
         {/* Key Metrics Cards */}
-        <keyMatrics 
+        <KeyMatrics 
           itemVariants={itemVariants}
           riskStyle={riskStyle}
           totalScore={totalScore}

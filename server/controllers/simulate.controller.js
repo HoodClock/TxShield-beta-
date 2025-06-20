@@ -3,18 +3,18 @@ const {getAddress} = require("ethers")
 
 const masterSimulationController = async (req, res) => {
   try {
-    const { userAddress, recepientAddress, amount } = req.body;
+    const { userAddress, recepientAddress, amount, currencySymbol } = req.body;
 
     const checkSumAddress = getAddress(recepientAddress);
 
-    if (!userAddress || !recepientAddress || !amount) {
+    if (!userAddress || !recepientAddress || !amount || currencySymbol === undefined) {
       return res
         .status(400)
         .json({ success: false, message: "Missing input fields" });
     }
 
     const [simulateTx, byteCode, transactionHistory] = await Promise.all([
-      simulationHelper.simulateTxHelper(userAddress, checkSumAddress, amount),
+      simulationHelper.simulateTxHelper(userAddress, checkSumAddress, amount, currencySymbol),
       simulationHelper.byteCodeHelper(checkSumAddress),
       simulationHelper.transactionHistoryHelper(checkSumAddress),
     ]);

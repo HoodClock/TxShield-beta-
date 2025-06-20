@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useAccount } from "wagmi";
 import { motion } from "framer-motion";
 
+const USDT_TOKEN_ADDRESS = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
+
 export default function SimulationForm({ onSimulate, onHoneypot }) {
   const { address: userAddress, isConnected } = useAccount();
 
@@ -17,11 +19,14 @@ export default function SimulationForm({ onSimulate, onHoneypot }) {
       return;
     }
 
+  const currencySymbol = currency === "ETH" ? "ETH" : USDT_TOKEN_ADDRESS;
+
     // credentials for simulation
     const simulationData = {
       userAddress,
       recepientAddress: contractAddress,
       amount: amount,
+      currencySymbol,
     };
 
     // credentials for honeypot
@@ -32,6 +37,7 @@ export default function SimulationForm({ onSimulate, onHoneypot }) {
       tokenAddress: contractAddress,
       recepientAddress: contractAddress,
       value: amount,
+      currencySymbol
     };
 
     onSimulate(simulationData);
@@ -104,16 +110,14 @@ export default function SimulationForm({ onSimulate, onHoneypot }) {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
             />
-            <div className="absolute right-3 top-3">
+            <div className="absolute right-2 top-3">
               <select
-                className="bg-gray-800 text-white text-sm rounded px-2 py-1 border border-gray-700 focus:ring-white focus:border-white"
+                className="bg-gray-900 text-white text-sm rounded px-2 py-1 border border-gray-700 focus:ring-white focus:border-white"
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
               >
                 <option>ETH</option>
-                <option>USDC</option>
                 <option>USDT</option>
-                <option>DAI</option>
               </select>
             </div>
           </div>

@@ -13,6 +13,7 @@ const honeypotMasterController = async (req, res) => {
       userAddress,
       recepientAddress,
       value,
+      currencySymbol
     } = req.body;
 
     const contract_address = await isContract(contractAddress);
@@ -37,7 +38,8 @@ const honeypotMasterController = async (req, res) => {
       !userAddress ||
       !normalRecepientAddress ||
       !value ||
-      !normalcontractAddress
+      !normalcontractAddress ||
+      !currencySymbol
     ) {
       return res.status(401).json({ message: "Missing required fields." });
     }
@@ -58,7 +60,7 @@ const honeypotMasterController = async (req, res) => {
       honeypotHelper.handleBlacklistCheck(normalAddress, abi),
       honeypotHelper.handleDisableTransferCheck(normalAddress, abi),
       honeypotHelper.handleFakeBalanceCheck(normalTokenAddress, abi),
-      honeypotHelper.handleGasTrapCheck(userAddress, normalRecepientAddress, value),
+      honeypotHelper.handleGasTrapCheck(userAddress, normalRecepientAddress, value,  currencySymbol),
       honeypotHelper.handleHiddenOwnerCheck(normalcontractAddress, abi),
       honeypotHelper.handleHighSellTaxCheck(normalAddress, abi),
       honeypotHelper.handleBuySellCheck(userAddress, normalTokenAddress, value),

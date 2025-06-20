@@ -12,8 +12,8 @@ const detectFakeBalanceService = async (_tokenAddress, _abi) => {
   return await utilsHoneyPot.detectFakeBalance(_tokenAddress, _abi);
 };
 
-const detecGasTrapService = async (_from, _to, _amount) => {
-  return await utilsHoneyPot.detectGasTrap(_from, _to, _amount);
+const detecGasTrapService = async (_from, _to, _amount, _currency) => {
+  return await utilsHoneyPot.detectGasTrap(_from, _to, _amount, _currency);
 };
 
 const detectHiddenOwnerService = async (_contractAddress, _abi) => {
