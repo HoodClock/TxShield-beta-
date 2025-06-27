@@ -124,12 +124,14 @@ export default function App() {
         )}
 
         {/* recommendations */}
-        {/* <Recommendations
-          simulationData={simulationData}
-          honeypotData={honeypotData}
-          onGenerate={handleRecommendation}
-          recommendation={recommendation}
-        /> */}
+        {showResults && (
+          <Recommendations
+            simulationData={simulationData}
+            honeypotData={honeypotData}
+            onGenerate={handleRecommendation}
+            recommendation={recommendation}
+          />
+        )}
       </main>
 
       <Footer />

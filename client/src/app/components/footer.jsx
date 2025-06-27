@@ -22,16 +22,6 @@ export default function Footer() {
                 Simulate
               </a>
             </li>
-            <li>
-              <a href="/about" className="footer-link transition">
-                About
-              </a>
-            </li>
-            <li>
-              <a href="/contact" className="footer-link transition">
-                Contact
-              </a>
-            </li>
           </ul>
         </div>
         <div>

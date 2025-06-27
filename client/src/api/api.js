@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// LOCAL DEV
+// for local.
 // const BASE_URL = "http://localhost:5000";
 
 // for prod.

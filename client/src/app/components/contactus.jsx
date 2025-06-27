@@ -61,8 +61,12 @@ export default function ContactForm() {
             respond within 24 hours.
           </p>
           <div className="space-y-4">
-            <p className="text-gray-300">hello@yourcompany.com</p>
-            <p className="text-gray-300">+1 (555) 123-4567</p>
+            <p
+              style={{ fontFamily: "'ClashDisplay-Bold', sans-serif" }}
+              className="text-green-500 font-bold text-2xl"
+            >
+              txshield.contact@gmail.com
+            </p>
           </div>
         </motion.div>
 
