@@ -84,9 +84,10 @@ const handleFakeBalanceCheck = async (tokenAddress, abi) => {
 };
 
 const handleGasTrapCheck = async (userAddress, recepientAddress, value, _currency) => {
-  if (!userAddress || !recepientAddress || !value, !_currency) {
+  if (!userAddress || !recepientAddress || !value || !_currency) {
     return { success: false, message: "User / Recepient address or value is missing" };
   }
+
 
   try {
     const response = await honeypotServices.detecGasTrapService(userAddress, recepientAddress, value, _currency);

@@ -5,7 +5,6 @@ const { getAddress } = require("ethers");
 // master controllers of all
 const honeypotMasterController = async (req, res) => {
   try {
-
     const {
       address,
       contractAddress,
@@ -13,13 +12,13 @@ const honeypotMasterController = async (req, res) => {
       userAddress,
       recepientAddress,
       value,
-      currencySymbol
+      currencySymbol,
     } = req.body;
+
 
     const contract_address = await isContract(contractAddress);
 
-
-    if (!contract_address){
+    if (!contract_address) {
       return res.status(200).json({
         success: true,
         message: "Recipient is a wallet address. Honeypot checks skipped.",
@@ -60,7 +59,12 @@ const honeypotMasterController = async (req, res) => {
       honeypotHelper.handleBlacklistCheck(normalAddress, abi),
       honeypotHelper.handleDisableTransferCheck(normalAddress, abi),
       honeypotHelper.handleFakeBalanceCheck(normalTokenAddress, abi),
-      honeypotHelper.handleGasTrapCheck(userAddress, normalRecepientAddress, value,  currencySymbol),
+      honeypotHelper.handleGasTrapCheck(
+        userAddress,
+        normalRecepientAddress,
+        value,
+        currencySymbol
+      ),
       honeypotHelper.handleHiddenOwnerCheck(normalcontractAddress, abi),
       honeypotHelper.handleHighSellTaxCheck(normalAddress, abi),
       honeypotHelper.handleBuySellCheck(userAddress, normalTokenAddress, value),

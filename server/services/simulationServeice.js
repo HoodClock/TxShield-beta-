@@ -1,8 +1,8 @@
 const utilityFunctions = require("../utils/simulation/index");
 
 // for simulation
-const getSimulateTransactionService = async (_from, _to, _amount) => {
-  return await utilityFunctions.simulateTransaction(_from, _to, _amount);
+const getSimulateTransactionService = async (_from, _to, _amount, _currency) => {
+  return await utilityFunctions.simulateTransaction(_from, _to, _amount, _currency);
 };
 
 // for analyze-byte-code
