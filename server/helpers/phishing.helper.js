@@ -1,99 +1,38 @@
-const phishingService = require("../services/phishingServices");
+const phishingService = require("../services/phishingService");
 
-const handleApproveScam = async (_tokenAddress) => {
-  if (!_tokenAddress) {
-    return {
-      success: false,
-      message: "Token address is missing.",
-    };
-  }
-
-  try {
-    const response = await phishingService.approveScamService(_tokenAddress);
-    return response.success
-      ? { success: true, data: response }
-      : { success: response.success, reason: response.message, risk: response.risk };
-  } catch (err) {
-    return { success: false, err: err.message };
-  }
-};
-
-const handleHiddenFunctions = async (_tokenAddress) => {
-  if (!_tokenAddress) {
-    return {
-      success: false,
-      message: "Token address is missing.",
-    };
-  }
-
-  try {
-    const response = await phishingService.hiddenFunctionService(_tokenAddress);
-    return response.success
-    ? {success: true, data: response}
-    : {success: response.success, reason: response.reason, risk: response.risk}
-  } catch (err) {
-    return {success: false, error: err.message}
-  }
-};
-
-const handleImpression = async (_tokenAddress) => {
-  if (!_tokenAddress) {
-    return {
-      success: false,
-      message: "Token address is missing.",
-    };
-  }
-
-  try {
-    const response = await phishingService.impressionService(_tokenAddress);
-    return response.success
-    ? {success: true, data: response}
-    : {success: response.success, reason: response.message, risk: response.risk }
-  } catch (err) {
-    return {success: false, error: err.message}
-  }
+const phishingApproveScam = async (_from, _to, _value, _currencySymbol)=> {
+    
+    if (!_from || !_to || !_value || !_currencySymbol){
+        return {success: false, message: "Some of the credentials is missing or wrong."};
+    }
+    
+    try {
+        const response = await phishingService.ApprovalScamPhishingService(_from, _to, _value, _currencySymbol);
+    
+        return {success: true, data: response}
+    } catch (err) {
+        return {success: false, error: err.message}
+    }
 }
 
-const handleMalicious = async (_tokenAddress)=> {
-  if (!_tokenAddress) {
-    return {
-      success: false,
-      message: "Token address is missing.",
-    };
-  }
+const phishingEtherForwardScam = async (_to)=> {
 
- try {
-   const response = await phishingService.maliciousProxyService(_tokenAddress);
-   return response.success
-   ? {success: true, data: response}
-   : {success: response.success, reason: response.reason, risk: response.risk }
- } catch (err) {
-  return {success: false, error: err.message}
- }
-} 
+    if (!_to){
+        return {success: false, message: "The Recepeint address is missing or incorrect."};
+    }
 
-const handleByteCode = async (_tokenAddress)=> {
-  if (!_tokenAddress) {
-    return {
-      success: false,
-      message: "Token address is missing.",
-    };
-  }
+   try {
+     const response = await phishingService.EtherForwardPhishingService(_to);
+ 
+     return {success: true, data: response}
+   } catch (err) {
+        return {success: false, error: err.message}
+   }
 
-  try {
-    const response = await phishingService.byteCodePatternService(_tokenAddress);
-    return response.success
-    ? {success: true, data: response}
-    : {success: response.success, reason: response.reason, risk: response.risk}
-  } catch (err) {
-    return {success: false, error: err.message}
-  }
 }
+
 
 module.exports = {
-  handleApproveScam,
-  handleHiddenFunctions,
-  handleImpression,
-  handleMalicious,
-  handleByteCode
+    phishingApproveScam,
+    phishingEtherForwardScam
 }

@@ -1,43 +1,35 @@
 const phishingHelper = require("../helpers/phishing.helper");
+const {getAddress} = require("ethers")
 
-const masterPhishingController = async (req, res) => {
+const MasterPhishingController = async (req, res) => {
+  const { userAddress, recepientAddress, amount, currencySymbol } = req.body;
+
   try {
-    const { address } = req.body;
 
-    if (!address) {
-      return res
-        .status(401)
-        .json({ message: "Missing credentials" });
-    }
+    const checkSumRecepientAddress = getAddress(recepientAddress);
 
-    const [
-      approveScam,
-      hiddenFunction,
-      impression,
-      malacious,
-      byteCode,
-    ] = await Promise.all([
-      phishingHelper.handleApproveScam(address),
-      phishingHelper.handleHiddenFunctions(address),
-      phishingHelper.handleImpression(address),
-      phishingHelper.handleMalicious(address),
-      phishingHelper.handleByteCode(address),
+    const [approveScam, etherForwarding] = await Promise.all([
+      phishingHelper.phishingApproveScam(
+        userAddress,
+        recepientAddress,
+        amount,
+        currencySymbol
+      ),
+      phishingHelper.phishingEtherForwardScam(checkSumRecepientAddress)
     ]);
-
+  
     return res.status(200).json({
       success: true,
       checks: {
-        approveScam,
-        hiddenFunction,
-        impression,
-        malacious,
-        byteCode,
-      },
+          approveScam,
+          etherForwarding
+      }
     });
   } catch (err) {
-    console.error("Master Phishing Check Error:", err.message);
-    return res.status(500).json({ success: false, error: err.message });
+    console.error("Internal Server Error, can't resolve phishing checks.")
+    return res.status(500).json({success: false, error: err.message}) 
   }
+
 };
 
-module.exports = { masterPhishingController };
+module.exports = MasterPhishingController;
