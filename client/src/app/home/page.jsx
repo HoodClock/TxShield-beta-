@@ -8,6 +8,25 @@ import ContactUs from "../components/contactus";
 import Link from "next/link";
 import Footer from "../components/footer";
 
+// ScamCard Component
+const ScamCard = ({ title, description, icon, gradient, scamType }) => (
+  <div
+    className={`relative p-5 rounded-xl bg-gradient-to-br ${gradient} border border-white/10 backdrop-blur-sm overflow-hidden group hover:shadow-lg hover:-translate-y-2 transition-all duration-300`}
+  >
+    <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+    <div className="relative z-10">
+      <div className="flex items-center gap-3 mb-3">
+        <span className="text-2xl">{icon}</span>
+        <h3 className="text-lg font-bold text-white">{title}</h3>
+      </div>
+      <p className="text-white/90 text-sm">{description}</p>
+    </div>
+    <div className="absolute bottom-2 right-2 px-2 py-1 rounded-md bg-black/30 text-xs text-white/80 border border-white/10">
+      {scamType === "honeypot" ? "Honeypot" : "Phishing"}
+    </div>
+  </div>
+);
+
 function HomePage() {
   const ref1 = useRef(null);
   const ref2 = useRef(null);
@@ -44,7 +63,6 @@ function HomePage() {
   return (
     <div className="bg-black text-white min-h-screen font-sans scroll-smooth">
       <Header />
-
       {/* Hero Section */}
       <main className="flex flex-col md:flex-row justify-center items-center px-6 py-16 max-w-7xl mx-auto gap-12 min-h-[80vh]">
         <motion.div
@@ -96,7 +114,6 @@ function HomePage() {
           </div>
         </motion.div>
       </main>
-
       {/* Stats Section */}
       <section className="max-w-7xl mx-auto px-6 py-20">
         {/* 2023 Stats */}
@@ -130,19 +147,39 @@ function HomePage() {
             initial="hidden"
             animate={isInView1 ? "visible" : "hidden"}
             variants={cardVariants}
+            whileHover={{ rotate: 2 }}
+            transition={{ type: "spring", stiffness: 300, damping: 10 }}
           >
             <div
-              className="stats-card p-8 rounded-2xl relative overflow-hidden min-h-[300px] flex items-center justify-center"
-              style={{ borderTopLeftRadius: "80px" }}
+              className="p-8 rounded-2xl relative overflow-hidden min-h-[300px] flex items-center justify-center hover:shadow-xl transition-all duration-300"
+              style={{
+                borderTopLeftRadius: "80px",
+                background:
+                  "linear-gradient(135deg, rgba(239,68,68,0.15) 0%, rgba(99,102,241,0.15) 100%)",
+                border: "1px solid rgba(239,68,68,0.3)",
+                boxShadow: "0 10px 30px -10px rgba(239,68,68,0.2)",
+              }}
             >
-              <div className="text-center">
+              <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 to-indigo-500/10 opacity-20"></div>
+              <div className="text-center z-10">
                 <h3 className="text-2xl font-semibold mb-4">
                   Total Losses in 2023
                 </h3>
-                <div className="text-6xl font-bold text-red-500">
+                <div
+                  className="text-7xl font-bold"
+                  style={{
+                    fontFamily: "'Orbitron', sans-serif",
+                    background:
+                      "linear-gradient(90deg, #EF4444 0%, #6366F1 100%)",
+                    WebkitBackgroundClip: "text",
+                    backgroundClip: "text",
+                    color: "transparent",
+                    textShadow: "0 2px 10px rgba(239,68,68,0.3)",
+                  }}
+                >
                   $<CountUp end={12.7} decimals={1} duration={3} />M
                 </div>
-                <p className="mt-4 text-gray-400">
+                <p className="mt-4 text-gray-300">
                   Across 3,200+ reported cases
                 </p>
               </div>
@@ -180,19 +217,39 @@ function HomePage() {
             initial="hidden"
             animate={isInView2 ? "visible" : "hidden"}
             variants={cardVariants}
+            whileHover={{ rotate: -2 }}
+            transition={{ type: "spring", stiffness: 300, damping: 10 }}
           >
             <div
-              className="stats-card p-8 rounded-2xl relative overflow-hidden min-h-[300px] flex items-center justify-center"
-              style={{ borderTopRightRadius: "80px" }}
+              className="p-8 rounded-2xl relative overflow-hidden min-h-[300px] flex items-center justify-center hover:shadow-xl transition-all duration-300"
+              style={{
+                borderTopRightRadius: "80px",
+                background:
+                  "linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(236,72,153,0.15) 100%)",
+                border: "1px solid rgba(99,102,241,0.3)",
+                boxShadow: "0 10px 30px -10px rgba(99,102,241,0.2)",
+              }}
             >
-              <div className="text-center">
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-pink-500/10 opacity-20"></div>
+              <div className="text-center z-10">
                 <h3 className="text-2xl font-semibold mb-4">
                   Total Losses in 2024
                 </h3>
-                <div className="text-6xl font-bold text-red-500">
+                <div
+                  className="text-7xl font-bold"
+                  style={{
+                    fontFamily: "'Orbitron', sans-serif",
+                    background:
+                      "linear-gradient(90deg, #6366F1 0%, #EC4899 100%)",
+                    WebkitBackgroundClip: "text",
+                    backgroundClip: "text",
+                    color: "transparent",
+                    textShadow: "0 2px 10px rgba(99,102,241,0.3)",
+                  }}
+                >
                   $<CountUp end={23.4} decimals={1} duration={3} />M
                 </div>
-                <p className="mt-4 text-gray-400">
+                <p className="mt-4 text-gray-300">
                   Across 5,800+ reported cases
                 </p>
               </div>
@@ -231,113 +288,504 @@ function HomePage() {
             initial="hidden"
             animate={isInView3 ? "visible" : "hidden"}
             variants={cardVariants}
+            whileHover={{ rotate: 1.5 }}
+            transition={{ type: "spring", stiffness: 300, damping: 10 }}
           >
             <div
-              className="stats-card p-8 rounded-2xl relative overflow-hidden min-h-[300px] flex items-center justify-center"
-              style={{ borderTopLeftRadius: "80px" }}
+              className="p-8 rounded-2xl relative overflow-hidden min-h-[300px] flex items-center justify-center hover:shadow-xl transition-all duration-300"
+              style={{
+                borderTopLeftRadius: "80px",
+                background:
+                  "linear-gradient(135deg, rgba(208, 20, 6, 0.7) 0%, rgba(161, 70, 18, 0.33) 100%)",
+                border: "1px solid rgba(197, 59, 0, 0.3)",
+                boxShadow: "0 10px 30px -10px rgba(185, 16, 16, 0.2)",
+              }}
             >
-              <div className="text-center">
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-blue-500/10 opacity-20"></div>
+              <div className="text-center z-10">
                 <h3 className="text-2xl font-semibold mb-4">
                   Revert Transaction Losses
                 </h3>
-                <div className="text-6xl font-bold text-red-500">
+                <div
+                  className="text-7xl font-bold"
+                  style={{
+                    fontFamily: "'Orbitron', sans-serif",
+                    background:
+                      "linear-gradient(90deg, #10B981 0%, #3B82F6 100%)",
+                    WebkitBackgroundClip: "text",
+                    backgroundClip: "text",
+                    color: "transparent",
+                    textShadow: "0 2px 10px rgba(16,185,129,0.3)",
+                  }}
+                >
                   $<CountUp end={8.2} decimals={1} duration={3} />M
                 </div>
-                <p className="mt-4 text-gray-400">Estimated annual losses</p>
+                <p className="mt-4 text-gray-300">Estimated annual losses</p>
               </div>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Analysis Section */}
-      <section className="bg-[#0A0A0A] py-20 px-6">
-        <div className="max-w-7xl mx-auto">
+      {/* Analysis Section - Cyberpunk Style */}
+      <section className="relative bg-black py-28 px-6 overflow-hidden min-h-screen">
+        {/* Animated grid background */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJncmlkIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjM2JmZTUwIiBzdHJva2Utd2lkdGg9IjAuNSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgZmlsbD0idXJsKCNncmlkKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==')]"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto relative z-10">
           <motion.h2
-            className="text-5xl font-bold mb-16 text-center"
+            className="text-6xl font-bold mb-20 text-center bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-600"
             style={{ fontFamily: "'ClashDisplay-Bold', sans-serif" }}
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true }}
           >
-            How Honeypot Scams Work
+            The Scammer's <span className="text-white">Playbook</span>
           </motion.h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                title: "1. Fake Liquidity",
-                desc: "Scammers create tokens with fake liquidity pools to appear legitimate.",
-                color: "from-gray-300 to-gray-400",
-              },
-              {
-                title: "2. Deposit Trap",
-                desc: "Users can deposit funds but withdrawals are blocked by hidden contract code.",
-                color: "from-gray-400 to-gray-500",
-              },
-              {
-                title: "3. Exit Scam",
-                desc: "After collecting enough funds, scammers drain the liquidity and disappear.",
-                color: "from-gray-500 to-gray-600",
-              },
-            ].map((item, index) => (
-              <motion.div
-                key={index}
-                className="solution-item p-8 rounded-xl"
-                initial={{ opacity: 0, y: 60 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.2 }}
-                viewport={{ once: true }}
-              >
-                <h3
-                  className={`text-2xl font-bold mb-4 bg-gradient-to-r ${item.color} bg-clip-text text-transparent`}
+          {/* Interactive Journey Path */}
+          <div className="relative h-[1200px] md:h-[800px]">
+            {/* Path Line */}
+            <svg
+              className="absolute w-full h-full"
+              viewBox="0 0 1000 800"
+              preserveAspectRatio="none"
+            >
+              <path
+                d="M100,100 C300,50 400,200 500,150 C600,100 700,250 800,200 C900,150 950,300 950,500 C950,700 800,650 700,600 C600,550 500,700 400,650 C300,600 200,500 100,550"
+                stroke="url(#pathGradient)"
+                strokeWidth="4"
+                fill="none"
+                strokeDasharray="10 5"
+                className="animate-pulse"
+              />
+              <defs>
+                <linearGradient
+                  id="pathGradient"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="0%"
                 >
-                  {item.title}
-                </h3>
-                <p className="text-gray-300">{item.desc}</p>
+                  <stop offset="0%" stopColor="#3b82f6" />
+                  <stop offset="50%" stopColor="#8b5cf6" />
+                  <stop offset="100%" stopColor="#ec4899" />
+                </linearGradient>
+              </defs>
+            </svg>
+
+            {/* Scam Journey Steps */}
+            <div className="absolute w-full h-full">
+              {/* Honeypot Scam Path */}
+              <motion.div
+                className="absolute w-56 md:w-64 left-[5%] top-[5%] md:top-[10%]"
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                <ScamCard
+                  title="1. Token Creation"
+                  description="Scammers deploy a new token with malicious contract code"
+                  icon="🪙"
+                  gradient="from-blue-500 to-cyan-400"
+                  scamType="honeypot"
+                />
               </motion.div>
-            ))}
+
+              <motion.div
+                className="absolute w-56 md:w-64 left-[25%] top-[20%] md:top-[30%]"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
+                <ScamCard
+                  title="2. Fake Liquidity"
+                  description="Add just enough liquidity to appear legitimate"
+                  icon="💧"
+                  gradient="from-cyan-400 to-purple-500"
+                  scamType="honeypot"
+                />
+              </motion.div>
+
+              <motion.div
+                className="absolute w-56 md:w-64 left-[10%] top-[40%] md:top-[55%]"
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+              >
+                <ScamCard
+                  title="3. Marketing Push"
+                  description="Shill the token on social media with fake hype"
+                  icon="📢"
+                  gradient="from-purple-500 to-pink-500"
+                  scamType="honeypot"
+                />
+              </motion.div>
+
+              <motion.div
+                className="absolute w-56 md:w-64 left-[30%] top-[60%] md:top-[70%]"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.8 }}
+              >
+                <ScamCard
+                  title="4. Deposit Trap"
+                  description="Users can buy but hidden code blocks withdrawals"
+                  icon="🕳️"
+                  gradient="from-pink-500 to-red-500"
+                  scamType="honeypot"
+                />
+              </motion.div>
+
+              {/* Phishing Scam Path */}
+              <motion.div
+                className="absolute w-56 md:w-64 right-[10%] top-[10%] md:top-[15%]"
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
+                <ScamCard
+                  title="1. Fake Site"
+                  description="Create a clone of a legitimate crypto service"
+                  icon="🌐"
+                  gradient="from-green-500 to-emerald-400"
+                  scamType="phishing"
+                />
+              </motion.div>
+
+              <motion.div
+                className="absolute w-56 md:w-64 right-[25%] top-[30%] md:top-[40%]"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+              >
+                <ScamCard
+                  title="2. Bait Setup"
+                  description="Offer fake airdrops or urgent security alerts"
+                  icon="🎣"
+                  gradient="from-emerald-400 to-teal-500"
+                  scamType="phishing"
+                />
+              </motion.div>
+
+              <motion.div
+                className="absolute w-56 md:w-64 right-[5%] top-[50%] md:top-[60%]"
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.7 }}
+              >
+                <ScamCard
+                  title="3. Credential Harvest"
+                  description="Steal wallet connections or private keys"
+                  icon="🔑"
+                  gradient="from-teal-500 to-blue-500"
+                  scamType="phishing"
+                />
+              </motion.div>
+
+              <motion.div
+                className="absolute w-56 md:w-64 right-[20%] top-[70%] md:top-[80%]"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.9 }}
+              >
+                <ScamCard
+                  title="4. Asset Drain"
+                  description="Transfer all funds from compromised wallets"
+                  icon="💸"
+                  gradient="from-blue-500 to-indigo-500"
+                  scamType="phishing"
+                />
+              </motion.div>
+
+              {/* Final Exit Scam - Now properly centered at path end */}
+              <motion.div
+                className="absolute w-64 md:w-72 left-[0%] -translate-x-1/2 bottom-[40%]"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1 }}
+              >
+                <div className="relative p-6 rounded-xl bg-gradient-to-br from-red-600 to-rose-800 border border-rose-400/30 backdrop-blur-sm overflow-hidden group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="text-2xl">💨</span>
+                      <h3 className="text-xl font-bold text-white">
+                        Exit Strategy
+                      </h3>
+                    </div>
+                    <p className="text-rose-100">
+                      Both scams conclude with the attacker disappearing with
+                      all funds, leaving victims with worthless tokens or empty
+                      wallets.
+                    </p>
+                  </div>
+                  <div className="absolute bottom-4 right-4 px-2 py-1 rounded-md bg-black/30 text-xs text-rose-200 border border-rose-400/20">
+                    Both scams
+                  </div>
+                </div>
+              </motion.div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Solution Section */}
-      <section className="py-20 px-6 max-w-7xl mx-auto">
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <h2
-            className="text-5xl font-bold mb-6"
-            style={{ fontFamily: "'ClashDisplay-Bold', sans-serif" }}
-          >
-            Our Solution
-          </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            TxShield provides real-time simulation and analysis to detect
-            honeypot scams and malicious contracts before you interact with
-            them.
-          </p>
-        </motion.div>
+      {/* Solution Section - Holographic Style */}
+      <section className="relative py-32 px-6 bg-gradient-to-b from-black to-[#0A0A0A] overflow-hidden">
+        {/* Floating particles */}
+        <div className="absolute inset-0 overflow-hidden">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute rounded-full bg-cyan-400/30"
+              style={{
+                width: `${Math.random() * 6 + 2}px`,
+                height: `${Math.random() * 6 + 2}px`,
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                animation: `float ${Math.random() * 10 + 10}s linear infinite`,
+                animationDelay: `${Math.random() * 5}s`,
+              }}
+            />
+          ))}
+        </div>
 
-        <div className="flex justify-center">
-          <motion.a
-            href="/simulate"
-            className="primary-btn inline-block px-8 py-4 text-black font-bold text-xl rounded-xl transition duration-300"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+        <div className="max-w-7xl mx-auto relative z-10">
+          <motion.div
+            className="text-center mb-20"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
           >
-            Try Our Simulator Now
-          </motion.a>
+            <h2
+              className="text-6xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-600"
+              style={{ fontFamily: "'ClashDisplay-Bold', sans-serif" }}
+            >
+              Our <span className="text-white">Solution</span>
+            </h2>
+            <motion.p
+              className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              viewport={{ once: true }}
+            >
+              TxShield provides{" "}
+              <span className="text-cyan-400 font-medium">
+                real-time simulation
+              </span>{" "}
+              and{" "}
+              <span className="text-purple-400 font-medium">
+                AI powered advanced analysis
+              </span>{" "}
+              to detect honeypot scams + Phishing scams and malicious contracts{" "}
+              <span className="text-white font-bold">before you interact</span>{" "}
+              with them.
+            </motion.p>
+          </motion.div>
+
+          <div className="flex justify-center">
+            <motion.a
+              href="/simulate"
+              className="relative inline-block px-12 py-5 font-bold text-xl rounded-xl overflow-hidden group"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 15,
+              }}
+              viewport={{ once: true }}
+            >
+              {/* Button gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl group-hover:from-cyan-400 group-hover:to-purple-500 transition-all duration-300"></div>
+
+              {/* Button shine effect */}
+              <div className="absolute inset-0 overflow-hidden rounded-xl">
+                <div
+                  className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-white/20 via-white/0 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  style={{
+                    transform: "translateX(-100%) skewX(-20deg)",
+                    animation: "shine 2s infinite",
+                  }}
+                ></div>
+              </div>
+
+              {/* Button text */}
+              <span className="relative z-10 flex items-center">
+                Try Our Simulator Now
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 ml-2 transition-transform group-hover:translate-x-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
+                </svg>
+              </span>
+            </motion.a>
+          </div>
+
+          {/* Floating 3D elements */}
+          <motion.div
+            className="absolute -bottom-40 -right-40 w-80 h-80 rounded-full bg-cyan-500/10 blur-3xl"
+            animate={{
+              scale: [1, 1.1, 1],
+              opacity: [0.3, 0.4, 0.3],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+          <motion.div
+            className="absolute -top-20 -left-20 w-60 h-60 rounded-full bg-purple-500/10 blur-3xl"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.2, 0.3, 0.2],
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+          />
         </div>
       </section>
+      {/* Testimonial Section */}
+      <section className="relative py-24 px-6 bg-gradient-to-b from-[#0A0A0A] to-black overflow-hidden">
+        {/* Floating tech elements */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-cyan-500/10 blur-3xl"></div>
+          <div className="absolute bottom-1/3 right-1/3 w-40 h-40 rounded-full bg-purple-500/10 blur-3xl"></div>
+        </div>
 
+        <div className="max-w-6xl mx-auto relative z-10">
+          <motion.h2
+            className="text-5xl md:text-6xl font-bold mb-20 text-center"
+            style={{ fontFamily: "'ClashDisplay-Bold', sans-serif" }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">
+              What People Say
+            </span>
+            <br className="md:hidden" /> About Our Platform
+          </motion.h2>
+
+          <div className="flex justify-center">
+            <motion.div
+              className="w-full max-w-3xl"
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              {/* Testimonial Card */}
+              <div className="relative p-0.5 rounded-3xl bg-gradient-to-br from-cyan-500/30 to-purple-600/30 backdrop-blur-sm">
+                <div className="bg-[#0F0F0F] rounded-3xl p-8 md:p-10">
+                  {/* Quote icon */}
+                  <svg
+                    className="w-12 h-12 mb-6 text-cyan-400 opacity-20"
+                    fill="currentColor"
+                    viewBox="0 0 32 32"
+                  >
+                    <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z" />
+                  </svg>
+
+                  {/* Testimonial text */}
+                  <blockquote className="text-xl md:text-2xl leading-relaxed text-gray-300 mb-8">
+                    "Just checked out TxShield — really cool stuff! I can
+                    totally see how something like this can help people feel
+                    safer when interacting with Web3 apps. The interface is
+                    clean, and I love that it's straight to the point without
+                    being overwhelming."
+                    <br />
+                    <br />
+                    "Definitely a solid idea, especially with so many sketchy
+                    contracts out there. Would be awesome to see it evolve
+                    further."
+                  </blockquote>
+
+                  {/* Author */}
+                  <div className="flex items-center">
+                    {/* Profile image placeholder - replace with actual image */}
+                    <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-cyan-400/30 mr-4">
+                      <img
+                        src="/Images/ravisankar.jpeg"
+                        alt="User profile"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src =
+                            "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEyIDJDNi40NzcgMiAyIDYuNDc3IDIgMTJzNC40NzcgMTAgMTAgMTAgMTAtNC40NzcgMTAtMTBTMTcuNTIzIDIgMTIgMnptMCAyYzIuMzkyIDAgNC41MzUuODQzIDYuMTg5IDIuMjUzbC0yLjE0OCAxLjE0OEMxNC42NjkgNi4wNTkgMTMuNDA5IDYgMTIgNmMtMS40MDkgMC0yLjY2OS4wNTktMy44NDEuNDAxTDYuMDExIDQuMjUzQzcuNjY1IDIuODQzIDkuNjA4IDIgMTIgMnptMCAxOEM5LjYxOCAyMCA3LjQzNCAxOS4xNTcgNS43MDkgMTcuNTQ0bDEuNDMxLTEuNDMxQzguMDYzIDE2LjQyOSA5LjkyMyAxNyAxMiAxN3MyLjkzNy0uNTcxIDQuMDYxLTEuODg3bDEuNDMxIDEuNDMxQzE2LjU2NiAxOS4xNTcgMTQuMzgyIDIwIDEyIDIwem0tNi0xMGMwIDEuNjU3IDEuMzQzIDMgMyAzczMtMS4zNDMgMy0zLTEuMzQzLTMtMy0zLTMgMS4zNDMtMyAzem0zLTMuNWMwIC44MjguNjcyIDEuNSAxLjUgMS41cyAxLjUtLjY3MiAxLjUtMS41LS42NzItMS41LTEuNS0xLjUtMS41LjY3Mi0xLjUgMS41eiIgZmlsbD0iI2RkZGRkZCIgLz48L3N2Zz4=";
+                        }}
+                      />
+                      {/* Verification badge */}
+                      <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-cyan-400 flex items-center justify-center">
+                        <svg
+                          className="w-3 h-3 text-black"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="font-bold text-white">Ravi Sankar</div>
+                      <div className="text-sm text-cyan-400">
+                        Web 3 Developer
+                      </div>
+                      {/* LinkedIn link */}
+                      <a
+                        href="https://www.linkedin.com/in/ravi-sankar13/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center text-xs text-gray-400 hover:text-cyan-400 mt-1"
+                      >
+                        <svg
+                          className="w-3 h-3 mr-1"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                        </svg>
+                        View LinkedIn Profile
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Glow effect */}
+                <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-cyan-500/10 blur-3xl -z-10"></div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
       <ContactUs />
-
       {/* Footer */}
       <Footer />
     </div>

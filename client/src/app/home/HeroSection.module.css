@@ -104,3 +104,126 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* Funds loss section */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+
+* Gradient Cards */
+.stats-card-2023 {
+  background: linear-gradient(135deg, rgba(239,68,68,0.15) 0%, rgba(99,102,241,0.15) 100%);
+  border: 1px solid rgba(239,68,68,0.3);
+  box-shadow: 0 10px 30px -10px rgba(239,68,68,0.2);
+}
+
+.stats-card-2024 {
+  background: linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(236,72,153,0.15) 100%);
+  border: 1px solid rgba(99,102,241,0.3);
+  box-shadow: 0 10px 30px -10px rgba(99,102,241,0.2);
+}
+
+.stats-card-revert {
+  background: linear-gradient(135deg, rgba(16,185,129,0.15) 0%, rgba(59,130,246,0.15) 100%);
+  border: 1px solid rgba(16,185,129,0.3);
+  box-shadow: 0 10px 30px -10px rgba(16,185,129,0.2);
+}
+
+/* Gradient Text */
+.gradient-text-2023 {
+  font-family: 'Orbitron', sans-serif;
+  background: linear-gradient(90deg, #EF4444 0%, #6366F1 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 2px 10px rgba(239,68,68,0.3);
+}
+
+.gradient-text-2024 {
+  font-family: 'Orbitron', sans-serif;
+  background: linear-gradient(90deg, #6366F1 0%, #EC4899 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 2px 10px rgba(99,102,241,0.3);
+}
+
+.gradient-text-revert {
+  font-family: 'Orbitron', sans-serif;
+  background: linear-gradient(90deg, #10B981 0%, #3B82F6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 2px 10px rgba(16,185,129,0.3);
+}
+
+/* Hover Effects */
+.stats-card-2023:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px -10px rgba(239,68,68,0.3);
+}
+
+.stats-card-2024:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px -10px rgba(99,102,241,0.3);
+}
+
+.stats-card-revert:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px -10px rgba(16,185,129,0.3);
+}
+
+/* Animation for cards */
+@keyframes swing {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(2deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.stats-card-2023, .stats-card-2024, .stats-card-revert {
+  animation: swing 8s ease-in-out infinite;
+}
+
+.stats-card-2024 {
+  animation-delay: 0.5s;
+}
+
+.stats-card-revert {
+  animation-delay: 1s;
+}
+
+/* analytical section */
+
+/* Cyberpunk grid animation */
+@keyframes gridScroll {
+  0% { background-position: 0 0; }
+  100% { background-position: 40px 40px; }
+}
+
+/* Button shine animation */
+@keyframes shine {
+  100% { transform: translateX(100%) skewX(-20deg); }
+}
+
+/* Floating particles animation */
+@keyframes float {
+  0% { transform: translateY(0) translateX(0); opacity: 1; }
+  50% { transform: translateY(-100px) translateX(20px); opacity: 0.8; }
+  100% { transform: translateY(-200px) translateX(0); opacity: 0; }
+}
+
+/* Glow effect */
+.glow {
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0A0A0A;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #22d3ee, #6366f1);
+  border-radius: 10px;
+}

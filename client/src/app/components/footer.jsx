@@ -47,14 +47,14 @@ export default function Footer() {
         <div>
           <h4 className="text-lg font-semibold mb-4">Connect</h4>
           <div className="flex space-x-4">
-            <a href="#" className="footer-link transition">
+            <a href="https://x.com/Txsheild" className="footer-link transition">
               Twitter
             </a>
             <a href="#" className="footer-link transition">
               Discord
             </a>
             <a href="#" className="footer-link transition">
-              Telegram
+              LinkedIn
             </a>
           </div>
         </div>

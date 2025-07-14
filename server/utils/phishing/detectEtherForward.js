@@ -5,7 +5,6 @@ const { getAddress } = require("ethers");
 const detectEtherForwarding = async (recepientAddress) => {
   try {
 
-    console.log("To address from -> ", recepientAddress);
 
     const checkSumAddress = getAddress(recepientAddress);
 
