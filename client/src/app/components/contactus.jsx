@@ -63,9 +63,9 @@ export default function ContactForm() {
           <div className="space-y-4">
             <p
               style={{ fontFamily: "'ClashDisplay-Bold', sans-serif" }}
-              className="text-green-500 font-bold text-2xl"
+              className="text-2xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-600"
             >
-              txshield.contact@gmail.com
+              <span className="text-white">txshield</span>.contact@gmail.com
             </p>
           </div>
         </motion.div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "../components/header";
 import { motion, useInView, useAnimation } from "framer-motion";
 import CountUp from "react-countup";
@@ -35,6 +35,91 @@ function HomePage() {
   const isInView2 = useInView(ref2, { once: false });
   const isInView3 = useInView(ref3, { once: false });
   const controls = useAnimation();
+
+  // just for simulation (our solution)
+  const [address, setAddress] = useState("");
+  const [isScanning, setIsScanning] = useState(false);
+  const [scanResult, setScanResult] = useState(null);
+  const [activeTab, setActiveTab] = useState("details");
+  // Sample scam data
+  const scamExamples = {
+    Honeypot: {
+      address: "0x1fD...3a4b",
+      riskLevel: "Critical",
+      type: "Honeypot",
+      details:
+        "This contract allows buying but prevents selling tokens. Funds will be trapped.",
+      indicators: [
+        "Sell function always reverts",
+        "Ownership not renounced",
+        "High tax on transfers",
+      ],
+    },
+    Phishing: {
+      address: "0x7a2...9c1d",
+      riskLevel: "High",
+      type: "Phishing",
+      details: "Fake token contract designed to steal wallet approvals.",
+      indicators: [
+        "Fake token name mimicking legitimate project",
+        "Malicious transfer function",
+        "Unauthorized proxy contract",
+      ],
+    },
+    "Rug Pull": {
+      address: "0x3e5...7f2e",
+      riskLevel: "Critical",
+      type: "Rug Pull",
+      details: "Liquidity can be removed by deployer at any time.",
+      indicators: [
+        "High owner privileges",
+        "Liquidity not locked",
+        "Recent creation date",
+      ],
+    },
+    Malicious: {
+      address: "0x9b4...6d3c",
+      riskLevel: "Severe",
+      type: "Malicious",
+      details: "Contains hidden functions that can drain wallets.",
+      indicators: [
+        "Hidden transfer functions",
+        "Proxy upgrade pattern",
+        "Obfuscated code",
+      ],
+    },
+  };
+
+  const handleScan = (exampleType = null) => {
+    setIsScanning(true);
+    setScanResult(null);
+
+    // Simulate API call delay
+    setTimeout(() => {
+      if (exampleType) {
+        setScanResult(scamExamples[exampleType]);
+      } else if (address) {
+        // For demo purposes, randomly pick a result if user enters custom address
+        const types = Object.keys(scamExamples);
+        const randomType = types[Math.floor(Math.random() * types.length)];
+        setScanResult(scamExamples[randomType]);
+      }
+      setIsScanning(false);
+    }, 2000);
+  };
+
+  const getRiskColor = (risk) => {
+    switch (risk) {
+      case "Critical":
+        return "bg-red-500/20 text-red-400 border-red-500/40";
+      case "High":
+        return "bg-orange-500/20 text-orange-400 border-orange-500/40";
+      case "Severe":
+        return "bg-yellow-500/20 text-yellow-400 border-yellow-500/40";
+      default:
+        return "bg-gray-500/20 text-gray-400 border-gray-500/40";
+    }
+  };
 
   useEffect(() => {
     if (isInView1 || isInView2 || isInView3) {
@@ -87,6 +172,58 @@ function HomePage() {
             <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-500/20 text-green-400 border border-green-500/30">
               Public Beta
             </span>
+            {/* FYS Badge - Premium Animated Version */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, type: "spring", damping: 10 }}
+              whileHover={{
+                y: -3,
+                scale: 1.02,
+                transition: { type: "spring", stiffness: 300 },
+              }}
+              className="mt-2"
+            >
+              <a
+                href="https://findyoursaas.com/tool/6873a57d02a7a777326a9d9b/txshield"
+                target="_blank"
+                rel="noopener"
+                className="relative inline-flex items-center px-3 py-1.5 pr-4 rounded-full bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-700 hover:border-gray-600 shadow-lg overflow-hidden group"
+              >
+                {/* Gradient shine animation (horizontal sweep) */}
+                <motion.span
+                  initial={{ x: -100, opacity: 0 }}
+                  animate={{ x: 150, opacity: 0.4 }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 2.5,
+                    ease: "easeInOut",
+                  }}
+                  className="absolute top-0 left-0 w-16 h-full bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                />
+
+                {/* Logo with subtle pulse */}
+                <motion.img
+                  src="https://findyoursaas.com/fys-logo.png"
+                  alt="FYS Logo"
+                  className="w-5 h-5 rounded-full mr-2 z-10"
+                  animate={{
+                    scale: [1, 1.05, 1],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                />
+
+                {/* Text with shimmer */}
+                <span className="text-xs font-medium text-gray-100 z-10">
+                  Featured on{" "}
+                  <span className="font-semibold text-white">FYS</span>
+                </span>
+              </a>
+            </motion.div>
           </div>
 
           {/* Shield Now Button - Centered with hover effects */}
@@ -533,139 +670,308 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Solution Section - Holographic Style */}
+      {/* Interactive Threat Simulator Section */}
       <section className="relative py-32 px-6 bg-gradient-to-b from-black to-[#0A0A0A] overflow-hidden">
-        {/* Floating particles */}
-        <div className="absolute inset-0 overflow-hidden">
-          {[...Array(20)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full bg-cyan-400/30"
-              style={{
-                width: `${Math.random() * 6 + 2}px`,
-                height: `${Math.random() * 6 + 2}px`,
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                animation: `float ${Math.random() * 10 + 10}s linear infinite`,
-                animationDelay: `${Math.random() * 5}s`,
-              }}
-            />
-          ))}
+        {/* Floating holographic grid */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="h-full w-full bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0idHJhbnNwYXJlbnQiLz48cmVjdCB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9InJnYmEoMTU4LDE1OCwxNTgsMC4xKSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==')]"></div>
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
           <motion.div
-            className="text-center mb-20"
+            className="text-center mb-16"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
             <h2
-              className="text-6xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-600"
+              className="text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-600"
               style={{ fontFamily: "'ClashDisplay-Bold', sans-serif" }}
             >
-              Our <span className="text-white">Solution</span>
+              Test Drive <span className="text-white">TxShield</span>
             </h2>
-            <motion.p
-              className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              viewport={{ once: true }}
-            >
-              TxShield provides{" "}
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              Try our{" "}
               <span className="text-cyan-400 font-medium">
-                real-time simulation
+                interactive scam detector demo
               </span>{" "}
-              and{" "}
-              <span className="text-purple-400 font-medium">
-                AI powered advanced analysis
-              </span>{" "}
-              to detect honeypot scams + Phishing scams and malicious contracts{" "}
-              <span className="text-white font-bold">before you interact</span>{" "}
-              with them.
-            </motion.p>
+              with real-world examples
+            </p>
           </motion.div>
 
-          <div className="flex justify-center">
-            <motion.a
-              href="/simulate"
-              className="relative inline-block px-12 py-5 font-bold text-xl rounded-xl overflow-hidden group"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.98 }}
-              transition={{
-                type: "spring",
-                stiffness: 400,
-                damping: 15,
-              }}
-              viewport={{ once: true }}
-            >
-              {/* Button gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl group-hover:from-cyan-400 group-hover:to-purple-500 transition-all duration-300"></div>
-
-              {/* Button shine effect */}
-              <div className="absolute inset-0 overflow-hidden rounded-xl">
-                <div
-                  className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-white/20 via-white/0 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  style={{
-                    transform: "translateX(-100%) skewX(-20deg)",
-                    animation: "shine 2s infinite",
-                  }}
-                ></div>
+          {/* Interactive Simulator Card */}
+          <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-8 backdrop-blur-sm max-w-4xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              {/* Transaction Input */}
+              <div>
+                <h3 className="text-2xl font-bold text-white mb-4">
+                  Enter a suspicious transaction:
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-gray-400 mb-2">
+                      Contract Address
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="0x..."
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-400 mb-2">
+                      Or try a sample:
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {Object.keys(scamExamples).map((type) => (
+                        <button
+                          key={type}
+                          onClick={() => {
+                            setAddress(scamExamples[type].address);
+                            handleScan(type);
+                          }}
+                          className="px-3 py-1.5 text-sm rounded-lg bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 transition-colors"
+                        >
+                          {type} Example
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleScan()}
+                    disabled={!address || isScanning}
+                    className={`w-full py-3 rounded-lg font-medium transition-all ${
+                      !address || isScanning
+                        ? "bg-gray-800 text-gray-500 cursor-not-allowed"
+                        : "bg-cyan-600 hover:bg-cyan-700 text-white"
+                    }`}
+                  >
+                    {isScanning ? "Scanning..." : "Analyze Contract"}
+                  </button>
+                </div>
               </div>
 
-              {/* Button text */}
-              <span className="relative z-10 flex items-center">
-                Try Our Simulator Now
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 ml-2 transition-transform group-hover:translate-x-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+              {/* Simulation Results */}
+              <div className="relative">
+                <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 min-h-[300px]">
+                  {isScanning ? (
+                    <div className="flex flex-col items-center justify-center h-full">
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
+                        className="w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full mb-4"
+                      />
+                      <h4 className="text-lg font-medium text-cyan-400">
+                        Scanning Contract
+                      </h4>
+                      <p className="text-gray-500 mt-1">
+                        Analyzing potential threats...
+                      </p>
+                    </div>
+                  ) : scanResult ? (
+                    <div>
+                      <div className="flex justify-between items-center mb-4">
+                        <h4 className="text-xl font-bold text-white">
+                          Scan Results
+                        </h4>
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-bold ${getRiskColor(
+                            scanResult.riskLevel
+                          )}`}
+                        >
+                          {scanResult.riskLevel} Risk
+                        </span>
+                      </div>
+
+                      <div className="flex border-b border-gray-700 mb-4">
+                        <button
+                          className={`px-4 py-2 text-sm font-medium ${
+                            activeTab === "details"
+                              ? "text-cyan-400 border-b-2 border-cyan-400"
+                              : "text-gray-400"
+                          }`}
+                          onClick={() => setActiveTab("details")}
+                        >
+                          Details
+                        </button>
+                        <button
+                          className={`px-4 py-2 text-sm font-medium ${
+                            activeTab === "indicators"
+                              ? "text-cyan-400 border-b-2 border-cyan-400"
+                              : "text-gray-400"
+                          }`}
+                          onClick={() => setActiveTab("indicators")}
+                        >
+                          Indicators
+                        </button>
+                      </div>
+
+                      {activeTab === "details" ? (
+                        <div>
+                          <p className="text-gray-300 mb-2">
+                            <span className="font-medium text-white">
+                              Type:
+                            </span>{" "}
+                            {scanResult.type}
+                          </p>
+                          <p className="text-gray-300 mb-2">
+                            <span className="font-medium text-white">
+                              Address:
+                            </span>{" "}
+                            {scanResult.address}
+                          </p>
+                          <p className="text-gray-300">
+                            <span className="font-medium text-white">
+                              Details:
+                            </span>{" "}
+                            {scanResult.details}
+                          </p>
+                        </div>
+                      ) : (
+                        <ul className="space-y-2">
+                          {scanResult.indicators.map((indicator, i) => (
+                            <li key={i} className="flex items-start">
+                              <svg
+                                className="w-4 h-4 mt-1 mr-2 text-red-400 flex-shrink-0"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M6 18L18 6M6 6l12 12"
+                                ></path>
+                              </svg>
+                              <span className="text-gray-300">{indicator}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center h-full">
+                      <div className="text-center">
+                        <div className="w-16 h-16 mx-auto mb-4 bg-gray-700 rounded-full flex items-center justify-center">
+                          <svg
+                            className="w-8 h-8 text-gray-500"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M13 10V3L4 14h7v7l9-11h-7z"
+                            ></path>
+                          </svg>
+                        </div>
+                        <h4 className="text-lg font-medium text-gray-400">
+                          Simulation Results
+                        </h4>
+                        <p className="text-gray-500 mt-1">
+                          Enter an address to analyze
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Scanning animation overlay */}
+                {isScanning && (
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-purple-600/10 rounded-xl pointer-events-none"
+                    animate={{
+                      backgroundPosition: ["0% 0%", "100% 100%"],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
                   />
-                </svg>
-              </span>
-            </motion.a>
+                )}
+              </div>
+            </div>
+
+            <div className="mt-8 text-center space-y-4">
+              <p className="text-sm text-gray-400 max-w-lg mx-auto">
+                Note: These demo results show how TxShield works. For real
+                analysis,
+                <span className="text-cyan-400">
+                  {" "}
+                  try our full simulator
+                </span>{" "}
+                with live blockchain scanning.
+              </p>
+
+              <motion.a
+                href="/simulate"
+                className="inline-block px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl font-bold text-white hover:shadow-lg transition-all duration-300 relative overflow-hidden group"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <span className="relative z-10 flex items-center justify-center">
+                  <svg
+                    className="w-5 h-5 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 15l8-8m0 0l-8-8m8 8H4"
+                    />
+                  </svg>
+                  Go to Full Simulator
+                </span>
+                <span className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              </motion.a>
+            </div>
           </div>
 
-          {/* Floating 3D elements */}
+          {/* Stats counter */}
           <motion.div
-            className="absolute -bottom-40 -right-40 w-80 h-80 rounded-full bg-cyan-500/10 blur-3xl"
-            animate={{
-              scale: [1, 1.1, 1],
-              opacity: [0.3, 0.4, 0.3],
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-          <motion.div
-            className="absolute -top-20 -left-20 w-60 h-60 rounded-full bg-purple-500/10 blur-3xl"
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.2, 0.3, 0.2],
-            }}
-            transition={{
-              duration: 10,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 2,
-            }}
-          />
+            className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ staggerChildren: 0.1 }}
+            viewport={{ once: true }}
+          >
+            {[
+              { value: "10,000+", label: "Scams Detected" },
+              { value: "$42M", label: "Protected" },
+              { value: "99.7%", label: "Accuracy" },
+              { value: "24/7", label: "Protection" },
+            ].map((stat, i) => (
+              <motion.div
+                key={i}
+                className="bg-gray-900/50 border border-gray-800 rounded-xl p-6 text-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+              >
+                <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-400">
+                  {stat.value}
+                </div>
+                <div className="text-gray-400 mt-2">{stat.label}</div>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
+
       {/* Testimonial Section */}
       <section className="relative py-24 px-6 bg-gradient-to-b from-[#0A0A0A] to-black overflow-hidden">
         {/* Floating tech elements */}
