@@ -1,4 +1,5 @@
 module.export = {
     detectApprovalScam: require('./detectApprovalScam'),
-    detectEtherForwarding: require('./detectEtherForward')
+    detectEtherForwarding: require('./detectEtherForward'),
+    detectMaliciousProxy: require('./detectMaliciousProxy')
 }

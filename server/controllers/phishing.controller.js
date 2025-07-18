@@ -8,21 +8,23 @@ const MasterPhishingController = async (req, res) => {
 
     const checkSumRecepientAddress = getAddress(recepientAddress);
 
-    const [approveScam, etherForwarding] = await Promise.all([
+    const [approveScam, etherForwarding, proxyScam] = await Promise.all([
       phishingHelper.phishingApproveScam(
         userAddress,
         recepientAddress,
         amount,
         currencySymbol
       ),
-      phishingHelper.phishingEtherForwardScam(checkSumRecepientAddress)
+      phishingHelper.phishingEtherForwardScam(checkSumRecepientAddress),
+      phishingHelper.phishingMaliciousProxy(checkSumRecepientAddress)
     ]);
   
     return res.status(200).json({
       success: true,
       checks: {
           approveScam,
-          etherForwarding
+          etherForwarding,
+          proxyScam
       }
     });
   } catch (err) {

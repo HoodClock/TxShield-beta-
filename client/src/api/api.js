@@ -32,6 +32,19 @@ export const honeypotChecks = async (formData) => {
   );
 };
 
+export const phishingChecks = async(formData) => {
+  return await axios.post(
+    `${BASE_URL}/api/phishing/phishing-checks`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true
+    }
+  )
+}
+
 export const contactApi = async (formData) => {
   return await axios.post(`${BASE_URL}/api/contact/connect`, formData, {
     headers: {

@@ -31,8 +31,24 @@ const phishingEtherForwardScam = async (_to)=> {
 
 }
 
+const phishingMaliciousProxy = async(_to)=> {
+    
+    if (!_to){
+        return {success: false, message: "The Recepeint address is missing or incorrect"}
+    }
+
+   try {
+     const response = await phishingService.MaliciousProxyPhishingService(_to);
+ 
+     return {success: true, data: response}
+   } catch (err) {
+    return {success: false, error: err.message}
+   }
+}
+
 
 module.exports = {
     phishingApproveScam,
-    phishingEtherForwardScam
+    phishingEtherForwardScam,
+    phishingMaliciousProxy
 }

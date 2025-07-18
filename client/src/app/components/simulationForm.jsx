@@ -6,9 +6,8 @@ import { motion } from "framer-motion";
 
 const USDT_TOKEN_ADDRESS = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
 
-export default function SimulationForm({ onSimulate, onHoneypot }) {
+export default function SimulationForm({ onSimulateAll }) {
   const { address: userAddress, isConnected } = useAccount();
-
   const [contractAddress, setContractAddress] = useState("");
   const [amount, setAmount] = useState("");
   const [currency, setCurrency] = useState("ETH");
@@ -19,7 +18,7 @@ export default function SimulationForm({ onSimulate, onHoneypot }) {
       return;
     }
 
-  const currencySymbol = currency === "ETH" ? "ETH" : USDT_TOKEN_ADDRESS;
+    const currencySymbol = currency === "ETH" ? "ETH" : USDT_TOKEN_ADDRESS;
 
     // credentials for simulation
     const simulationData = {
@@ -30,18 +29,17 @@ export default function SimulationForm({ onSimulate, onHoneypot }) {
     };
 
     // credentials for honeypot
-    const formData = {
+    const honeypotData = {
       address: contractAddress,
       userAddress,
       contractAddress,
       tokenAddress: contractAddress,
       recepientAddress: contractAddress,
       value: amount,
-      currencySymbol
+      currencySymbol,
     };
 
-    onSimulate(simulationData);
-    onHoneypot(formData);
+    onSimulateAll({honeypotData, simulationData})
   };
 
   return (

@@ -14,6 +14,7 @@ import {
   honeypotChecks as runHoneypotChecks,
   simulateTx as runSimulateTx,
   suggestionApi as recommendations,
+  phishingChecks as runPhishing,
 } from "@/api/api";
 
 export default function App() {
@@ -21,37 +22,34 @@ export default function App() {
   const [showResults, setShowResults] = useState(false);
   const [honeypotData, setHoneypotData] = useState(null);
   const [simulationData, setSimulationData] = useState(null);
+  const [phishingData, setPhishingData] = useState(null);
   const [recommendation, setRecommendation] = useState(null);
 
-  const handleSimulate = async (formData) => {
+
+  const handleSiulateAll = async({honeypotData, simulationData})=> {
     setIsLoading(true);
     setShowResults(false);
 
     try {
-      const response = await runSimulateTx(formData);
-      setSimulationData(response.data);
-      setIsLoading(false);
+      const [simulationRes, honeypotRes, phishingRes] = await Promise.all([
+        runSimulateTx(simulationData),
+        runHoneypotChecks(honeypotData),
+        runPhishing(simulationData),
+      ]);
+  
+      setSimulationData(simulationRes.data);
+      setHoneypotData(honeypotRes.data);
+      setPhishingData(phishingRes.data);
+  
       setShowResults(true);
+
     } catch (err) {
-      console.error("Honeypot API error:", err);
+      console.error("Simulation Error:", err);
+    }finally {
       setIsLoading(false);
     }
-  };
 
-  const handleHoneypot = async (formData) => {
-    setIsLoading(true);
-    setShowResults(false);
-
-    try {
-      const response = await runHoneypotChecks(formData);
-      setHoneypotData(response.data);
-      setIsLoading(false);
-      setShowResults(true);
-    } catch (err) {
-      console.error("Honeypot API error:", err);
-      setIsLoading(false);
-    }
-  };
+  }
 
   const handleRecommendation = async () => {
     try {
@@ -102,8 +100,7 @@ export default function App() {
           </p>
 
           <SimulationForm
-            onSimulate={handleSimulate}
-            onHoneypot={handleHoneypot}
+            onSimulateAll={handleSiulateAll}
           />
 
           {isLoading && <LoadingState isLoading={true} onComplete={() => {}} />}
@@ -118,6 +115,7 @@ export default function App() {
               isVisible={showResults}
               simulation={simulationData}
               honeypot={honeypotData}
+              phishing={phishingData}
             />
             <HoneypotChecks isVisible={showResults} data={honeypotData} />
           </div>

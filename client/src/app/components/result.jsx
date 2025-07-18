@@ -15,9 +15,15 @@ import {
   FiTarget,
 } from "react-icons/fi";
 import KeyMatrics from "./keyMatrics";
+import Phishing from "./phishing";
 
-export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
-  if (!isVisible || !simulation || !honeypot) return null;
+export default function ResultsDashboard({
+  isVisible,
+  simulation,
+  honeypot,
+  phishing,
+}) {
+  if (!isVisible || !simulation || !honeypot || !phishing) return null;
 
   // --- Honeypot Data ---
   const {
@@ -603,7 +609,7 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
         </div>
 
         {/* Key Metrics Cards */}
-        <KeyMatrics 
+        <KeyMatrics
           itemVariants={itemVariants}
           riskStyle={riskStyle}
           totalScore={totalScore}
@@ -637,6 +643,9 @@ export default function ResultsDashboard({ isVisible, simulation, honeypot }) {
           </motion.div>
         )}
       </motion.div>
+
+      {/* --- Phishing Analysis --- */}
+      <Phishing data={phishing} />
     </div>
   );
 }
