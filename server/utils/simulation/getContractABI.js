@@ -1,4 +1,4 @@
-const axios  = require("axios");
+const axios = require("axios");
 
 const getContractABI = async (_recipientAddress) => {
   try {
@@ -13,13 +13,15 @@ const getContractABI = async (_recipientAddress) => {
       },
     });
 
-    const { status, result, message } = response.data;
+    const abi = response.data?.data?.ContractABI;
 
-    if (status === "1") {
-      const abi = JSON.parse(result);
-      return { success: true, abi };
+    if (abi) {
+      return { success: true, abi: JSON.parse(abi) };
     } else {
-      return { success: false, error: `Etherscan error ${message || result}` };
+      return {
+        success: false,
+        error: "ABI not found in response. Possibly rate-limited or invalid address.",
+      };
     }
   } catch (err) {
     console.error("ABI Fetch Error:", err.message);
