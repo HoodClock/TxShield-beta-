@@ -6,107 +6,95 @@ const {
 } = require("../../services/etherscanService");
 
 const getTransactionHistory = require("../simulation/getTransferHistory");
-const aiService = require("../../services/aiServices");
+
+// keywords that signal phishing patterns
+const SUSPICIOUS_FUNCTIONS = ["approve", "transferFrom"];
+const MAX_UINT = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
 
 const detectApprovelScam = async (
   userAddress,
   recepientAddress,
-  amount,
-  currencySymbol
 ) => {
-  const isSmartcontract = await isContract(recepientAddress);
+  const isSmartContract = await isContract(recepientAddress);
 
-  if (!isSmartcontract)
+  if (!isSmartContract) {
     return {
       isScam: false,
-      reason: "Recepient address is not a smart contract",
+      confidence: "high",
+      reason: "Recepient address is not a smart contract.",
     };
-
-  const abi = await getAbi(recepientAddress);
-  const byteCode = await getByteCode(recepientAddress);
-  const sourceCode = await getSourceCode(recepientAddress);
-  const transacitonHistory = await getTransactionHistory(recepientAddress);
-
-  const data = {
-    abi,
-    byteCode,
-    sourceCode,
-    transacitonHistory,
-    userAddress,
-    amount,
-    currencySymbol,
-  };
-
-  // Fall-Back prompt scenario
-  if (!abi && !sourceCode) {
-    const prompt = `You are TxShield’s expert blockchain security analyst.
-
-Task:
-Determine if the target contract is a phishing approval scam — meaning it tricks users into granting unlimited allowances and later drains their tokens.
-
-This contract has NO verified ABI or source code.
-Analyze the bytecode and transaction history to detect phishing or scam patterns.
-
-Data to analyze:
-\`\`\`json
-Bytecode:
-${byteCode}
-Transaction:
-${JSON.stringify(transacitonHistory, null, 2)}
-\`\`\`
-
-Output strictly in this JSON format:
-\`\`\`json
-{
-  "isScam": true/false,
-  "confidence": "high"/"medium"/"low",
-  "reason": "one-sentence summary of why"
-}
-\`\`\``;
-
-    const response = await aiService(prompt);
-    return JSON.parse(response);
   }
 
-  const prompt = `
-You are TxShield’s expert blockchain security analyst.
+  const abi = await getAbi(recepientAddress);
+  const sourceCodeObj = await getSourceCode(recepientAddress);
+  const byteCode = await getByteCode(recepientAddress);
+  const transactionHistory = await getTransactionHistory(recepientAddress);
 
-Task:
-Determine if the target contract is a phishing approval scam — meaning it tricks users into granting unlimited allowances and later drains their tokens.
+  let suspiciousAbi = false;
+  let suspiciousSource = false;
+  let suspiciousHistory = false;
 
-Process:
-1. Verify it is a smart contract.
-2. Check ABI for suspicious 'approve' or 'transferFrom' or any form of scammy usage without restrictions.
-3. Inspect bytecode for hidden approval drains or backdoors.
-4. Review source code for owner-only or hidden transfer logic.
-5. Analyze recent transaction history for patterns of draining approved tokens.
-6. Consider the user's transaction intent (userAddress, amount, currencySymbol).
+  // Check ABI for suspicious functions
+  if (abi && Array.isArray(abi)) {
+    for (const item of abi) {
+      if (
+        item.name &&
+        SUSPICIOUS_FUNCTIONS.includes(item.name) &&
+        item.type === "function"
+      ) {
+        suspiciousAbi = true;
+        break;
+      }
+    }
+  }
 
-Data to analyze:
-\`\`\`json
-${JSON.stringify(data, null, 2)}
-\`\`\`
+  // Check source code for suspicious patterns (like owner-only drain logic)
+  if (sourceCodeObj.success && sourceCodeObj.data?.[0]?.SourceCode) {
+    const code = sourceCodeObj.data[0].SourceCode;
 
-Output strictly in this JSON format:
-\`\`\`json
-{
-  "isScam": true/false,
-  "confidence": "high"/"medium"/"low",
-  "reason": "one-sentence summary of why"
-}
-\`\`\`
+    const lowerCode = code.toLowerCase();
+    if (
+      lowerCode.includes("approve(") &&
+      lowerCode.includes(MAX_UINT.toLowerCase())
+    ) {
+      suspiciousSource = true;
+    }
+    if (lowerCode.includes("transferfrom") && lowerCode.includes("owner")) {
+      suspiciousSource = true;
+    }
+  }
 
-Example:
-\`\`\`json
-{ "isScam": true, "confidence": "high", "reason": "Contract allows unlimited approvals and has transaction history draining user tokens." }
-\`\`\`
+  // Check transaction history for multiple ERC20 transfers from other addresses
+  if (transactionHistory && Array.isArray(transactionHistory)) {
+    const tokenDrainTxs = transactionHistory.filter((tx) => {
+      return (
+        tx.method?.toLowerCase().includes("transferfrom") &&
+        tx.from?.toLowerCase() !== userAddress.toLowerCase() &&
+        tx.value && Number(tx.value) > 0
+      );
+    });
 
-Think step-by-step and provide only the JSON response.
-`;
+    if (tokenDrainTxs.length >= 3) {
+      suspiciousHistory = true;
+    }
+  }
 
-  const response = await aiService(prompt);
+  // Decision logic
+  if (suspiciousAbi || suspiciousSource || suspiciousHistory) {
+    return {
+      isScam: true,
+      confidence: suspiciousAbi && suspiciousSource && suspiciousHistory
+        ? "high"
+        : "medium",
+      reason: "Contract shows suspicious approval logic and draining behavior.",
+    };
+  }
 
-  return response;
+  return {
+    isScam: false,
+    confidence: "medium",
+    reason: "No strong phishing patterns detected in ABI or transaction history.",
+  };
 };
 
 module.exports = detectApprovelScam;

@@ -1,5 +1,6 @@
 const phishingHelper = require("../helpers/phishing.helper");
 const {getAddress} = require("ethers")
+const aiServices = require("../services/aiServices")
 
 const MasterPhishingController = async (req, res) => {
   const { userAddress, recepientAddress, amount, currencySymbol } = req.body;
@@ -12,8 +13,6 @@ const MasterPhishingController = async (req, res) => {
       phishingHelper.phishingApproveScam(
         userAddress,
         recepientAddress,
-        amount,
-        currencySymbol
       ),
       phishingHelper.phishingEtherForwardScam(checkSumRecepientAddress),
       phishingHelper.phishingMaliciousProxy(checkSumRecepientAddress)

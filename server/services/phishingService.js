@@ -3,8 +3,8 @@ const etherForward = require("../utils/phishing/detectEtherForward");
 const detectMaliciousProxy = require("../utils/phishing/detectMaliciousProxy");
 
 // for scam-approval
-const ApprovalScamPhishingService = async (_from, _to, _value, _currencySymbol)=> {
-    return await approveScamUtils(_from, _to, _value, _currencySymbol);
+const ApprovalScamPhishingService = async (_from, _to)=> {
+    return await approveScamUtils(_from, _to);
 }
 
 // for ether-forwarding

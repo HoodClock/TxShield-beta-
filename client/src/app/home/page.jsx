@@ -1017,16 +1017,16 @@ function HomePage() {
 
                   {/* Testimonial text */}
                   <blockquote className="text-xl md:text-2xl leading-relaxed text-gray-300 mb-8">
-                    "Just checked out TxShield — really cool stuff! I can
+                    Just checked out TxShield — really cool stuff! I can
                     totally see how something like this can help people feel
                     safer when interacting with Web3 apps. The interface is
                     clean, and I love that it's straight to the point without
-                    being overwhelming."
+                    being overwhelming.
                     <br />
                     <br />
-                    "Definitely a solid idea, especially with so many sketchy
+                    Definitely a solid idea, especially with so many sketchy
                     contracts out there. Would be awesome to see it evolve
-                    further."
+                    further.
                   </blockquote>
 
                   {/* Author */}

