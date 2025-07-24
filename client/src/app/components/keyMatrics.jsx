@@ -50,7 +50,7 @@ function keyMatrics({
             </svg>
           </div>
           <div>
-            <h4 className="text-2xl font-bold text-white">Security Analysis</h4>
+            <h4 className="text-2xl font-bold text-white">Honeypot Analysis</h4>
             <p className="text-white/60 text-sm">
               No honeypot checks were detected.
             </p>
