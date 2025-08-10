@@ -1,71 +1,63 @@
 const phishingHelper = require("../helpers/phishing.helper");
-const {getAddress} = require("ethers")
-const callAiModel = require("../services/aiServices")
+const { getAddress } = require("ethers");
+const callAiModel = require("../services/aiServices");
 
 const MasterPhishingController = async (req, res) => {
   const { userAddress, recepientAddress, amount, currencySymbol } = req.body;
 
   try {
-
     const checkSumRecepientAddress = getAddress(recepientAddress);
 
-    const [approveScam, etherForwarding, proxyScam] = await Promise.all([
-      phishingHelper.phishingApproveScam(
-        userAddress,
-        recepientAddress,
-      ),
+    const [approveScam, etherForwarding, proxyScam, permitCheck, domainCheck] = await Promise.all([
+      phishingHelper.phishingApproveScam(userAddress, recepientAddress),
       phishingHelper.phishingEtherForwardScam(checkSumRecepientAddress),
-      phishingHelper.phishingMaliciousProxy(checkSumRecepientAddress)
+      phishingHelper.phishingMaliciousProxy(checkSumRecepientAddress),
+      phishingHelper.phishingPermit(checkSumRecepientAddress),
+      phishingHelper.phishingDomainLink(checkSumRecepientAddress),
     ]);
 
-
-    // now gather the data and generate the prompt and call the ai model to analyze 
+    // Enhanced AI prompt with context to avoid false positives
     const prompt = `
     As a Web3 security expert, analyze these phishing checks and return ONLY valid JSON with:
-    - phishingScore (0-100%)
-    - riskLevel (low/medium/high/critical)
-    - keyFindings: [array of 2-3 most important findings as strings]
-    - recommendedActions: [array of 2 concrete steps as strings]
-    - confidence: (high/medium/low)
+    - phishingScore (0-100%, adjust conservatively if patterns are common in legit contracts)
+    - riskLevel (low/medium/high/critical, downgrade if findings are non-unique)
+    - keyFindings: [array of findings, noting if patterns are also seen in safe contracts]
+    - recommendedActions: [suggestions, but avoid extreme measures unless truly malicious]
+    - confidence: (high/medium/low, lower if patterns are ambiguous)
     
     IMPORTANT: 
-    1. Return ONLY the JSON object, no additional text or markdown
-    2. Never include <think> tags or reasoning
-    3. Format all findings and actions as plain strings
+    1. Return ONLY the JSON object, no additional text.
+    2. Flag as malicious ONLY if clear evidence exists (e.g., known scam address).
+    3. If CALL opcodes or approvals exist but are explainable (e.g., DEX routers), adjust risk accordingly.
     
-    Example response format:
+    Example safe response for ambiguous cases:
     {
-      "phishingScore": 95,
-      "riskLevel": "critical",
-      "keyFindings": ["Finding 1", "Finding 2"],
-      "recommendedActions": ["Action 1", "Action 2"],
-      "confidence": "high"
+      "phishingScore": 30,
+      "riskLevel": "medium",
+      "keyFindings": ["CALL opcodes detected (common in legit contracts)", "Approval logic requires further manual review"],
+      "recommendedActions": ["Review contract on Etherscan", "Check if address is verified"],
+      "confidence": "medium"
     }
     
     Checks to analyze:
     1. approveScam: ${JSON.stringify(approveScam)}
     2. etherForwarding: ${JSON.stringify(etherForwarding)}
     3. proxyScam: ${JSON.stringify(proxyScam)}
+    4. permitCheck: ${JSON.stringify(permitCheck)}
+    5. phishingDomainLinks: ${JSON.stringify(domainCheck)}
     `.trim();
-    
-      // calling the ai-model (Deepseek R1)
-      const phishingVerdict = await callAiModel(prompt);
-  
+
+    const phishingVerdict = await callAiModel(prompt);
+
     return res.status(200).json({
       success: true,
-      checks: {
-          approveScam,
-          etherForwarding,
-          proxyScam
-      },
-      // ai verdict is added to final response 
+      checks: { approveScam, etherForwarding, proxyScam, permitCheck, domainCheck },
       phishingVerdict
     });
   } catch (err) {
-    console.error("Internal Server Error, can't resolve phishing checks.")
-    return res.status(500).json({success: false, error: err.message}) 
+    console.error("Phishing check error:", err.message);
+    return res.status(500).json({ success: false, error: "Internal phishing analysis error" });
   }
-
 };
 
 module.exports = MasterPhishingController;

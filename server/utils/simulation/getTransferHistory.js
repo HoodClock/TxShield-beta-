@@ -91,8 +91,8 @@ const getTransferHistory = async (_recipientAddress) => {
     // Convert to string (raw) so frontend can format as needed
     const totalVolumeString = totalTokenVolume.toString();
 
-    // STEP 4: Keep only the top 5 most recent for display
-    const recentTransfers = rawTransfers.slice(0, 5).map((tx) => ({
+    // STEP 4: Keep only the top 10 most recent for display
+    const recentTransfers = rawTransfers.slice(0, 10).map((tx) => ({
       hash: tx.hash,
       from: tx.from,
       to: tx.to,

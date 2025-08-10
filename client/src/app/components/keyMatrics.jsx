@@ -92,7 +92,6 @@ function keyMatrics({
         </motion.div>
 
         {/* Total Score */}
-        {/* Total Score */}
         <motion.div
           whileHover={{ y: -4, scale: 1.02 }}
           className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500/10 to-blue-600/5 border border-blue-500/20 p-6"

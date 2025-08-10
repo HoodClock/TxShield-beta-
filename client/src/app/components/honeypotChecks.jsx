@@ -182,7 +182,7 @@ export default function HoneypotChecks({ isVisible, data }) {
                     <div className="mt-2">
                       <div className="flex justify-between text-xs text-white/50 mb-1">
                         <span>Security score</span>
-                        <span>{result.data.score}/100</span>
+                        <span>{result.data.score} {result.data.totalScore}</span>
                       </div>
                       <div className="w-full bg-white/10 h-1 rounded-full overflow-hidden">
                         <div

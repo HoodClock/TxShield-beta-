@@ -46,9 +46,39 @@ const phishingMaliciousProxy = async(_to)=> {
    }
 }
 
+const phishingPermit = async(_to)=> {
+    if (!_to){
+        return {success: false, message: "The Recepeint address is missing or incorrect"}
+    }
+
+    try {
+        const response = await phishingService.PermitPhishing(_to);
+    
+        return {success: true, data: response}
+    } catch (err) {
+        return {success: false, error: err.message}
+    }
+}
+
+const phishingDomainLink = async(_to)=> {
+    if (!_to){
+        return {success: false, message: "The Recepeint address is missing or incorrect"}
+    }
+
+    try {
+        const response = await phishingService.PhishingDomainLinks(_to);
+    
+        return {success: true, data: response}
+    } catch (err) {
+        return {success: false, error: err.message}
+    }
+}
+
 
 module.exports = {
     phishingApproveScam,
     phishingEtherForwardScam,
-    phishingMaliciousProxy
+    phishingMaliciousProxy,
+    phishingPermit,
+    phishingDomainLink
 }

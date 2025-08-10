@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 5000;
 // middlewares
 app.use(
   cors({
-    origin: ["http://localhost:3001", "https://tx-shield-beta.vercel.app"],
+    origin: ["http://localhost:3000", "https://tx-shield-beta.vercel.app"],
     credentials: true,
   })
 );
