@@ -28,18 +28,18 @@ export default function Footer() {
           <h4 className="text-lg font-semibold mb-4">Resources</h4>
           <ul className="space-y-2">
             <li>
-              <a href="#" className="footer-link transition">
+              <a href="https://txshield.gitbook.io/txshield-docs/" className="footer-link transition">
                 Documentation
               </a>
             </li>
             <li>
-              <a href="#" className="footer-link transition">
-                API
+              <a href="/Tos" className="footer-link transition">
+                Terms of Service
               </a>
             </li>
             <li>
-              <a href="#" className="footer-link transition">
-                Blog
+              <a href="/ApiRef" className="footer-link transition">
+                API
               </a>
             </li>
           </ul>

@@ -1,10 +1,10 @@
 import axios from "axios";
 
 // for local.
-// const BASE_URL = "http://localhost:5000";
+const BASE_URL = "http://localhost:5000";
 
 // for prod.
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+// const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const simulateTx = async (formData) => {
   return await axios.post(
@@ -66,3 +66,7 @@ export const suggestionApi = async (formData) => {
     }
   );
 };
+
+export const authConnect = async (formData) => {
+  return await axios.post(`${BASE_URL}/auth/connect`, formData);
+} 
