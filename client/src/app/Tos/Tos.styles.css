@@ -1,0 +1,124 @@
+[data-custom-class='body'],
+[data-custom-class='body'] * {
+    background: transparent !important;
+}
+
+[data-custom-class='title'],
+[data-custom-class='title'] * {
+    font-family: Arial !important;
+    font-size: 26px !important;
+    color: #000000 !important;
+}
+
+[data-custom-class='subtitle'],
+[data-custom-class='subtitle'] * {
+    font-family: Arial !important;
+    color: #595959 !important;
+    font-size: 14px !important;
+}
+
+[data-custom-class='heading_1'],
+[data-custom-class='heading_1'] * {
+    font-family: Arial !important;
+    font-size: 19px !important;
+    color: #000000 !important;
+}
+
+[data-custom-class='heading_2'],
+[data-custom-class='heading_2'] * {
+    font-family: Arial !important;
+    font-size: 17px !important;
+    color: #000000 !important;
+}
+
+[data-custom-class='body_text'],
+[data-custom-class='body_text'] * {
+    color: #595959 !important;
+    font-size: 14px !important;
+    font-family: Arial !important;
+}
+
+[data-custom-class='link'],
+[data-custom-class='link'] * {
+    color: #3030F1 !important;
+    font-size: 14px !important;
+    font-family: Arial !important;
+    word-break: break-word !important;
+}
+
+
+ul {
+    list-style-type: square;
+}
+
+ul>li>ul {
+    list-style-type: circle;
+}
+
+ul>li>ul>li>ul {
+    list-style-type: square;
+}
+
+ol li {
+    font-family: Arial;
+}
+
+
+/* Page container */
+.tos-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 40px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    font-family: 'Inter', Arial, sans-serif;
+    line-height: 1.7;
+    color: #333;
+  }
+  
+  /* Headings */
+  .tos-container h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #111;
+    text-align: center;
+  }
+  
+  .tos-container h2 {
+    font-size: 22px;
+    margin-top: 40px;
+    margin-bottom: 15px;
+    color: #222;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 5px;
+  }
+  
+  .tos-container h3 {
+    font-size: 18px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+    color: #444;
+  }
+  
+  /* Paragraphs */
+  .tos-container p {
+    margin-bottom: 15px;
+  }
+  
+  /* Table of contents links */
+  .tos-container a {
+    color: #2563eb;
+    text-decoration: none;
+  }
+  .tos-container a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Lists */
+  .tos-container ul {
+    margin: 15px 0 15px 20px;
+    padding-left: 20px;
+  }
+  

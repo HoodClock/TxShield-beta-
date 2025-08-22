@@ -8,18 +8,27 @@ import ContactUs from "../components/contactus";
 import Link from "next/link";
 import Footer from "../components/footer";
 
+// Define CSS custom properties for reusable styles
+const styles = `
+  :root {
+    --primary-gradient: linear-gradient(90deg, #3b82f6, #ec4899);
+    --glow-cyan: rgba(34, 211, 238, 0.3);
+    --glow-purple: rgba(139, 92, 246, 0.3);
+  }
+`;
+
 // ScamCard Component
 const ScamCard = ({ title, description, icon, gradient, scamType }) => (
   <div
-    className={`relative p-5 rounded-xl bg-gradient-to-br ${gradient} border border-white/10 backdrop-blur-sm overflow-hidden group hover:shadow-lg hover:-translate-y-2 transition-all duration-300`}
+    className={`relative p-4 sm:p-5 rounded-xl bg-gradient-to-br ${gradient} border border-white/10 backdrop-blur-sm overflow-hidden group hover:shadow-xl hover:-translate-y-2 transition-all duration-300 sm:min-w-[200px] min-w-[160px]`}
   >
     <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
     <div className="relative z-10">
-      <div className="flex items-center gap-3 mb-3">
-        <span className="text-2xl">{icon}</span>
-        <h3 className="text-lg font-bold text-white">{title}</h3>
+      <div className="flex items-center gap-2 sm:gap-3 mb-3">
+        <span className="text-xl sm:text-2xl">{icon}</span>
+        <h3 className="text-base sm:text-lg font-bold text-white">{title}</h3>
       </div>
-      <p className="text-white/90 text-sm">{description}</p>
+      <p className="text-white/90 text-xs sm:text-sm">{description}</p>
     </div>
     <div className="absolute bottom-2 right-2 px-2 py-1 rounded-md bg-black/30 text-xs text-white/80 border border-white/10">
       {scamType === "honeypot" ? "Honeypot" : "Phishing"}
@@ -36,19 +45,19 @@ function HomePage() {
   const isInView3 = useInView(ref3, { once: false });
   const controls = useAnimation();
 
-  // just for simulation (our solution)
+  // Simulation state
   const [address, setAddress] = useState("");
   const [isScanning, setIsScanning] = useState(false);
   const [scanResult, setScanResult] = useState(null);
   const [activeTab, setActiveTab] = useState("details");
+
   // Sample scam data
   const scamExamples = {
     Honeypot: {
       address: "0x1fD...3a4b",
       riskLevel: "Critical",
       type: "Honeypot",
-      details:
-        "This contract allows buying but prevents selling tokens. Funds will be trapped.",
+      details: "This contract allows buying but prevents selling tokens. Funds will be trapped.",
       indicators: [
         "Sell function always reverts",
         "Ownership not renounced",
@@ -94,12 +103,10 @@ function HomePage() {
     setIsScanning(true);
     setScanResult(null);
 
-    // Simulate API call delay
     setTimeout(() => {
       if (exampleType) {
         setScanResult(scamExamples[exampleType]);
       } else if (address) {
-        // For demo purposes, randomly pick a result if user enters custom address
         const types = Object.keys(scamExamples);
         const randomType = types[Math.floor(Math.random() * types.length)];
         setScanResult(scamExamples[randomType]);
@@ -147,9 +154,10 @@ function HomePage() {
 
   return (
     <div className="bg-black text-white min-h-screen font-sans scroll-smooth">
+      <style>{styles}</style>
       <Header />
       {/* Hero Section */}
-      <main className="flex flex-col md:flex-row justify-center items-center px-6 py-16 max-w-7xl mx-auto gap-12 min-h-[80vh]">
+      <main className="flex flex-col md:flex-row justify-center items-center px-4 sm:px-6 py-12 sm:py-16 max-w-7xl mx-auto gap-8 sm:gap-12 min-h-[70vh] sm:min-h-[80vh]">
         <motion.div
           className="flex-1 text-center w-full"
           initial={{ opacity: 0, y: 40 }}
@@ -159,7 +167,7 @@ function HomePage() {
           <h1
             style={{
               fontFamily: "'ClashDisplay-Bold', sans-serif",
-              fontSize: "clamp(10rem, 12vw, 8rem)",
+              fontSize: "clamp(2.5rem, 10vw, 6rem)",
               lineHeight: "1.1",
             }}
             className="glow-text font-extrabold bg-gradient-to-r from-white via-gray-300 to-gray-400 bg-clip-text text-transparent mb-6 drop-shadow-lg px-4 break-words"
@@ -168,11 +176,10 @@ function HomePage() {
           </h1>
 
           {/* Public Beta Badge */}
-          <div className="flex justify-center mb-8">
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-500/20 text-green-400 border border-green-500/30">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6 sm:mb-8">
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-green-500/20 text-green-400 border border-green-500/30">
               Public Beta
             </span>
-            {/* FYS Badge - Premium Animated Version */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -182,7 +189,6 @@ function HomePage() {
                 scale: 1.02,
                 transition: { type: "spring", stiffness: 300 },
               }}
-              className="mt-2"
             >
               <a
                 href="https://findyoursaas.com/tool/6873a57d02a7a777326a9d9b/txshield"
@@ -190,7 +196,6 @@ function HomePage() {
                 rel="noopener"
                 className="relative inline-flex items-center px-3 py-1.5 pr-4 rounded-full bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-700 hover:border-gray-600 shadow-lg overflow-hidden group"
               >
-                {/* Gradient shine animation (horizontal sweep) */}
                 <motion.span
                   initial={{ x: -100, opacity: 0 }}
                   animate={{ x: 150, opacity: 0.4 }}
@@ -201,12 +206,10 @@ function HomePage() {
                   }}
                   className="absolute top-0 left-0 w-16 h-full bg-gradient-to-r from-transparent via-white/30 to-transparent"
                 />
-
-                {/* Logo with subtle pulse */}
                 <motion.img
                   src="https://findyoursaas.com/fys-logo.png"
                   alt="FYS Logo"
-                  className="w-5 h-5 rounded-full mr-2 z-10"
+                  className="w-4 h-4 sm:w-5 sm:h-5 rounded-full mr-2 z-10"
                   animate={{
                     scale: [1, 1.05, 1],
                   }}
@@ -216,22 +219,19 @@ function HomePage() {
                     ease: "easeInOut",
                   }}
                 />
-
-                {/* Text with shimmer */}
-                <span className="text-xs font-medium text-gray-100 z-10">
-                  Featured on{" "}
-                  <span className="font-semibold text-white">FYS</span>
+                <span className="text-xs sm:text-sm font-medium text-gray-100 z-10">
+                  Featured on <span className="font-semibold text-white">FYS</span>
                 </span>
               </a>
             </motion.div>
           </div>
 
-          {/* Shield Now Button - Centered with hover effects */}
+          {/* Shield Now Button */}
           <div className="flex justify-center">
             <Link
               href="/simulate"
               style={{ fontFamily: "'ClashDisplay-Medium', sans-serif" }}
-              className="inline-flex items-center px-6 py-3 font-medium text-white bg-transparent border border-white/30 rounded-lg hover:bg-white hover:text-black transition-all duration-300 group"
+              className="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 font-medium text-white bg-transparent border border-white/30 rounded-lg hover:bg-white hover:text-black transition-all duration-300 group text-sm sm:text-base"
             >
               Shield Now
               <svg
@@ -251,10 +251,11 @@ function HomePage() {
           </div>
         </motion.div>
       </main>
+
       {/* Stats Section */}
-      <section className="max-w-7xl mx-auto px-6 py-20">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
         {/* 2023 Stats */}
-        <div className="flex flex-col md:flex-row items-center gap-12 mb-32">
+        <div className="flex flex-col lg:flex-row items-center gap-8 sm:gap-12 mb-16 sm:mb-32">
           <motion.div
             className="flex-1"
             initial="hidden"
@@ -262,19 +263,16 @@ function HomePage() {
             variants={textVariants}
           >
             <h2
-              className="text-4xl font-bold mb-6"
+              className="text-3xl sm:text-4xl font-bold mb-6"
               style={{ fontFamily: "'ClashDisplay-Bold', sans-serif" }}
             >
               2023: The Rise of Honeypot Scams
             </h2>
-            <p className="text-lg text-gray-300 mb-4">
-              In 2023, the DeFi space saw an explosion of sophisticated honeypot
-              scams targeting inexperienced investors.
+            <p className="text-base sm:text-lg text-gray-300 mb-4">
+              In 2023, the DeFi space saw an explosion of sophisticated honeypot scams targeting inexperienced investors.
             </p>
-            <p className="text-lg text-gray-300">
-              These scams allowed deposits but blocked withdrawals, locking
-              funds permanently. Attackers exploited trust in new projects and
-              the FOMO mentality prevalent in crypto markets.
+            <p className="text-base sm:text-lg text-gray-300">
+              These scams allowed deposits but blocked withdrawals, locking funds permanently. Attackers exploited trust in new projects and the FOMO mentality prevalent in crypto markets.
             </p>
           </motion.div>
 
@@ -288,35 +286,33 @@ function HomePage() {
             transition={{ type: "spring", stiffness: 300, damping: 10 }}
           >
             <div
-              className="p-8 rounded-2xl relative overflow-hidden min-h-[300px] flex items-center justify-center hover:shadow-xl transition-all duration-300"
+              className="p-6 sm:p-8 rounded-2xl relative overflow-hidden min-h-[250px] sm:min-h-[300px] flex items-center justify-center hover:shadow-xl transition-all duration-300"
               style={{
-                borderTopLeftRadius: "80px",
-                background:
-                  "linear-gradient(135deg, rgba(239,68,68,0.15) 0%, rgba(99,102,241,0.15) 100%)",
+                borderTopLeftRadius: "60px",
+                background: "linear-gradient(135deg, rgba(239,68,68,0.15) 0%, rgba(99,102,241,0.15) 100%)",
                 border: "1px solid rgba(239,68,68,0.3)",
                 boxShadow: "0 10px 30px -10px rgba(239,68,68,0.2)",
               }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-red-500/10 to-indigo-500/10 opacity-20"></div>
               <div className="text-center z-10">
-                <h3 className="text-2xl font-semibold mb-4">
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4">
                   Total Losses in 2023
                 </h3>
                 <div
-                  className="text-7xl font-bold"
+                  className="text-5xl sm:text-7xl font-bold"
                   style={{
                     fontFamily: "'Orbitron', sans-serif",
-                    background:
-                      "linear-gradient(90deg, #EF4444 0%, #6366F1 100%)",
+                    background: "var(--primary-gradient)",
                     WebkitBackgroundClip: "text",
                     backgroundClip: "text",
                     color: "transparent",
-                    textShadow: "0 2px 10px rgba(239,68,68,0.3)",
+                    textShadow: "0 2px 10px var(--glow-cyan)",
                   }}
                 >
                   $<CountUp end={12.7} decimals={1} duration={3} />M
                 </div>
-                <p className="mt-4 text-gray-300">
+                <p className="mt-4 text-gray-300 text-sm sm:text-base">
                   Across 3,200+ reported cases
                 </p>
               </div>
@@ -325,7 +321,7 @@ function HomePage() {
         </div>
 
         {/* 2024 Stats */}
-        <div className="flex flex-col md:flex-row-reverse items-center gap-12 mb-32">
+        <div className="flex flex-col lg:flex-row-reverse items-center gap-8 sm:gap-12 mb-16 sm:mb-32">
           <motion.div
             className="flex-1"
             initial="hidden"
@@ -333,18 +329,16 @@ function HomePage() {
             variants={textVariants}
           >
             <h2
-              className="text-4xl font-bold mb-6"
+              className="text-3xl sm:text-4xl font-bold mb-6"
               style={{ fontFamily: "'ClashDisplay-Bold', sans-serif" }}
             >
               2024: Escalating Threats
             </h2>
-            <p className="text-lg text-gray-300 mb-4">
-              The following year saw attackers refine their techniques, with
-              losses nearly doubling from the previous year.
+            <p className="text-base sm:text-lg text-gray-300 mb-4">
+              The following year saw attackers refine their techniques, with losses nearly doubling from the previous year.
             </p>
-            <p className="text-lg text-gray-300">
-              New variations emerged, including "soft honeypots" that allowed
-              partial withdrawals to appear legitimate before locking funds.
+            <p className="text-base sm:text-lg text-gray-300">
+              New variations emerged, including "soft honeypots" that allowed partial withdrawals to appear legitimate before locking funds.
             </p>
           </motion.div>
 
@@ -358,35 +352,33 @@ function HomePage() {
             transition={{ type: "spring", stiffness: 300, damping: 10 }}
           >
             <div
-              className="p-8 rounded-2xl relative overflow-hidden min-h-[300px] flex items-center justify-center hover:shadow-xl transition-all duration-300"
+              className="p-6 sm:p-8 rounded-2xl relative overflow-hidden min-h-[250px] sm:min-h-[300px] flex items-center justify-center hover:shadow-xl transition-all duration-300"
               style={{
-                borderTopRightRadius: "80px",
-                background:
-                  "linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(236,72,153,0.15) 100%)",
+                borderTopRightRadius: "60px",
+                background: "linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(236,72,153,0.15) 100%)",
                 border: "1px solid rgba(99,102,241,0.3)",
                 boxShadow: "0 10px 30px -10px rgba(99,102,241,0.2)",
               }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-pink-500/10 opacity-20"></div>
               <div className="text-center z-10">
-                <h3 className="text-2xl font-semibold mb-4">
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4">
                   Total Losses in 2024
                 </h3>
                 <div
-                  className="text-7xl font-bold"
+                  className="text-5xl sm:text-7xl font-bold"
                   style={{
                     fontFamily: "'Orbitron', sans-serif",
-                    background:
-                      "linear-gradient(90deg, #6366F1 0%, #EC4899 100%)",
+                    background: "var(--primary-gradient)",
                     WebkitBackgroundClip: "text",
                     backgroundClip: "text",
                     color: "transparent",
-                    textShadow: "0 2px 10px rgba(99,102,241,0.3)",
+                    textShadow: "0 2px 10px var(--glow-purple)",
                   }}
                 >
                   $<CountUp end={23.4} decimals={1} duration={3} />M
                 </div>
-                <p className="mt-4 text-gray-300">
+                <p className="mt-4 text-gray-300 text-sm sm:text-base">
                   Across 5,800+ reported cases
                 </p>
               </div>
@@ -395,7 +387,7 @@ function HomePage() {
         </div>
 
         {/* Revert Transaction Stats */}
-        <div className="flex flex-col md:flex-row items-center gap-12 mb-32">
+        <div className="flex flex-col lg:flex-row items-center gap-8 sm:gap-12 mb-16 sm:mb-32">
           <motion.div
             className="flex-1"
             initial="hidden"
@@ -403,19 +395,16 @@ function HomePage() {
             variants={textVariants}
           >
             <h2
-              className="text-4xl font-bold mb-6"
+              className="text-3xl sm:text-4xl font-bold mb-6"
               style={{ fontFamily: "'ClashDisplay-Bold', sans-serif" }}
             >
               The Revert Transaction Problem
             </h2>
-            <p className="text-lg text-gray-300 mb-4">
-              Beyond honeypots, revert transactions have become another major
-              pain point for crypto users.
+            <p className="text-base sm:text-lg text-gray-300 mb-4">
+              Beyond honeypots, revert transactions have become another major pain point for crypto users.
             </p>
-            <p className="text-lg text-gray-300">
-              These malicious contracts appear to execute transactions normally
-              but silently revert them after taking fees, draining wallets over
-              time.
+            <p className="text-base sm:text-lg text-gray-300">
+              These malicious contracts appear to execute transactions normally but silently revert them after taking fees, draining wallets over time.
             </p>
           </motion.div>
 
@@ -429,35 +418,35 @@ function HomePage() {
             transition={{ type: "spring", stiffness: 300, damping: 10 }}
           >
             <div
-              className="p-8 rounded-2xl relative overflow-hidden min-h-[300px] flex items-center justify-center hover:shadow-xl transition-all duration-300"
+              className="p-6 sm:p-8 rounded-2xl relative overflow-hidden min-h-[250px] sm:min-h-[300px] flex items-center justify-center hover:shadow-xl transition-all duration-300"
               style={{
-                borderTopLeftRadius: "80px",
-                background:
-                  "linear-gradient(135deg, rgba(208, 20, 6, 0.7) 0%, rgba(161, 70, 18, 0.33) 100%)",
+                borderTopLeftRadius: "60px",
+                background: "linear-gradient(135deg, rgba(208, 20, 6, 0.7) 0%, rgba(161, 70, 18, 0.33) 100%)",
                 border: "1px solid rgba(197, 59, 0, 0.3)",
                 boxShadow: "0 10px 30px -10px rgba(185, 16, 16, 0.2)",
               }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-blue-500/10 opacity-20"></div>
               <div className="text-center z-10">
-                <h3 className="text-2xl font-semibold mb-4">
+                <h3 className="text-xl sm:text-2xl font-semibold mb-4">
                   Revert Transaction Losses
                 </h3>
                 <div
-                  className="text-7xl font-bold"
+                  className="text-5xl sm:text-7xl font-bold"
                   style={{
                     fontFamily: "'Orbitron', sans-serif",
-                    background:
-                      "linear-gradient(90deg, #10B981 0%, #3B82F6 100%)",
+                    background: "var(--primary-gradient)",
                     WebkitBackgroundClip: "text",
                     backgroundClip: "text",
                     color: "transparent",
-                    textShadow: "0 2px 10px rgba(16,185,129,0.3)",
+                    textShadow: "0 2px 10px var(--glow-cyan)",
                   }}
                 >
                   $<CountUp end={8.2} decimals={1} duration={3} />M
                 </div>
-                <p className="mt-4 text-gray-300">Estimated annual losses</p>
+                <p className="mt-4 text-gray-300 text-sm sm:text-base">
+                  Estimated annual losses
+                </p>
               </div>
             </div>
           </motion.div>
@@ -465,15 +454,14 @@ function HomePage() {
       </section>
 
       {/* Analysis Section - Cyberpunk Style */}
-      <section className="relative bg-black py-28 px-6 overflow-hidden min-h-screen">
-        {/* Animated grid background */}
-        <div className="absolute inset-0 opacity-20">
+      <section className="relative bg-black py-16 sm:py-28 px-4 sm:px-6 overflow-hidden">
+        <div className="absolute inset-0 opacity-15">
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJncmlkIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjM2JmZTUwIiBzdHJva2Utd2lkdGg9IjAuNSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3QgZmlsbD0idXJsKCNncmlkKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==')]"></div>
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
           <motion.h2
-            className="text-6xl font-bold mb-20 text-center bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-600"
+            className="text-4xl sm:text-5xl md:text-6xl font-bold mb-12 sm:mb-20 text-center bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-600"
             style={{ fontFamily: "'ClashDisplay-Bold', sans-serif" }}
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -483,13 +471,12 @@ function HomePage() {
             The Scammer's <span className="text-white">Playbook</span>
           </motion.h2>
 
-          {/* Interactive Journey Path */}
-          <div className="relative h-[1200px] md:h-[800px]">
-            {/* Path Line */}
+          {/* Responsive Scam Journey Path */}
+          <div className="relative flex flex-col md:flex-row md:h-[800px] gap-6">
             <svg
-              className="absolute w-full h-full"
+              className="absolute w-full h-full hidden md:block"
               viewBox="0 0 1000 800"
-              preserveAspectRatio="none"
+              preserveAspectRatio="xMidYMid meet"
             >
               <path
                 d="M100,100 C300,50 400,200 500,150 C600,100 700,250 800,200 C900,150 950,300 950,500 C950,700 800,650 700,600 C600,550 500,700 400,650 C300,600 200,500 100,550"
@@ -500,13 +487,7 @@ function HomePage() {
                 className="animate-pulse"
               />
               <defs>
-                <linearGradient
-                  id="pathGradient"
-                  x1="0%"
-                  y1="0%"
-                  x2="100%"
-                  y2="0%"
-                >
+                <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stopColor="#3b82f6" />
                   <stop offset="50%" stopColor="#8b5cf6" />
                   <stop offset="100%" stopColor="#ec4899" />
@@ -514,153 +495,155 @@ function HomePage() {
               </defs>
             </svg>
 
-            {/* Scam Journey Steps */}
-            <div className="absolute w-full h-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
               {/* Honeypot Scam Path */}
-              <motion.div
-                className="absolute w-56 md:w-64 left-[5%] top-[5%] md:top-[10%]"
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-              >
-                <ScamCard
-                  title="1. Token Creation"
-                  description="Scammers deploy a new token with malicious contract code"
-                  icon="🪙"
-                  gradient="from-blue-500 to-cyan-400"
-                  scamType="honeypot"
-                />
-              </motion.div>
+              <div className="space-y-6">
+                <motion.div
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  viewport={{ once: true }}
+                >
+                  <ScamCard
+                    title="1. Token Creation"
+                    description="Scammers deploy a new token with malicious contract code"
+                    icon="🪙"
+                    gradient="from-blue-500 to-cyan-400"
+                    scamType="honeypot"
+                  />
+                </motion.div>
 
-              <motion.div
-                className="absolute w-56 md:w-64 left-[25%] top-[20%] md:top-[30%]"
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-              >
-                <ScamCard
-                  title="2. Fake Liquidity"
-                  description="Add just enough liquidity to appear legitimate"
-                  icon="💧"
-                  gradient="from-cyan-400 to-purple-500"
-                  scamType="honeypot"
-                />
-              </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  viewport={{ once: true }}
+                >
+                  <ScamCard
+                    title="2. Fake Liquidity"
+                    description="Add just enough liquidity to appear legitimate"
+                    icon="💧"
+                    gradient="from-cyan-400 to-purple-500"
+                    scamType="honeypot"
+                  />
+                </motion.div>
 
-              <motion.div
-                className="absolute w-56 md:w-64 left-[10%] top-[40%] md:top-[55%]"
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.6 }}
-              >
-                <ScamCard
-                  title="3. Marketing Push"
-                  description="Shill the token on social media with fake hype"
-                  icon="📢"
-                  gradient="from-purple-500 to-pink-500"
-                  scamType="honeypot"
-                />
-              </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: -50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.6 }}
+                  viewport={{ once: true }}
+                >
+                  <ScamCard
+                    title="3. Marketing Push"
+                    description="Shill the token on social media with fake hype"
+                    icon="📢"
+                    gradient="from-purple-500 to-pink-500"
+                    scamType="honeypot"
+                  />
+                </motion.div>
 
-              <motion.div
-                className="absolute w-56 md:w-64 left-[30%] top-[60%] md:top-[70%]"
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.8 }}
-              >
-                <ScamCard
-                  title="4. Deposit Trap"
-                  description="Users can buy but hidden code blocks withdrawals"
-                  icon="🕳️"
-                  gradient="from-pink-500 to-red-500"
-                  scamType="honeypot"
-                />
-              </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.8 }}
+                  viewport={{ once: true }}
+                >
+                  <ScamCard
+                    title="4. Deposit Trap"
+                    description="Users can buy but hidden code blocks withdrawals"
+                    icon="🕳️"
+                    gradient="from-pink-500 to-red-500"
+                    scamType="honeypot"
+                  />
+                </motion.div>
+              </div>
 
               {/* Phishing Scam Path */}
-              <motion.div
-                className="absolute w-56 md:w-64 right-[10%] top-[10%] md:top-[15%]"
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-              >
-                <ScamCard
-                  title="1. Fake Site"
-                  description="Create a clone of a legitimate crypto service"
-                  icon="🌐"
-                  gradient="from-green-500 to-emerald-400"
-                  scamType="phishing"
-                />
-              </motion.div>
+              <div className="space-y-6">
+                <motion.div
+                  initial={{ opacity: 0, x: 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                  viewport={{ once: true }}
+                >
+                  <ScamCard
+                    title="1. Fake Site"
+                    description="Create a clone of a legitimate crypto service"
+                    icon="🌐"
+                    gradient="from-green-500 to-emerald-400"
+                    scamType="phishing"
+                  />
+                </motion.div>
 
-              <motion.div
-                className="absolute w-56 md:w-64 right-[25%] top-[30%] md:top-[40%]"
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
-              >
-                <ScamCard
-                  title="2. Bait Setup"
-                  description="Offer fake airdrops or urgent security alerts"
-                  icon="🎣"
-                  gradient="from-emerald-400 to-teal-500"
-                  scamType="phishing"
-                />
-              </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.5 }}
+                  viewport={{ once: true }}
+                >
+                  <ScamCard
+                    title="2. Bait Setup"
+                    description="Offer fake airdrops or urgent security alerts"
+                    icon="🎣"
+                    gradient="from-emerald-400 to-teal-500"
+                    scamType="phishing"
+                  />
+                </motion.div>
 
-              <motion.div
-                className="absolute w-56 md:w-64 right-[5%] top-[50%] md:top-[60%]"
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.7 }}
-              >
-                <ScamCard
-                  title="3. Credential Harvest"
-                  description="Steal wallet connections or private keys"
-                  icon="🔑"
-                  gradient="from-teal-500 to-blue-500"
-                  scamType="phishing"
-                />
-              </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.7 }}
+                  viewport={{ once: true }}
+                >
+                  <ScamCard
+                    title="3. Credential Harvest"
+                    description="Steal wallet connections or private keys"
+                    icon="🔑"
+                    gradient="from-teal-500 to-blue-500"
+                    scamType="phishing"
+                  />
+                </motion.div>
 
-              <motion.div
-                className="absolute w-56 md:w-64 right-[20%] top-[70%] md:top-[80%]"
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.9 }}
-              >
-                <ScamCard
-                  title="4. Asset Drain"
-                  description="Transfer all funds from compromised wallets"
-                  icon="💸"
-                  gradient="from-blue-500 to-indigo-500"
-                  scamType="phishing"
-                />
-              </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.9 }}
+                  viewport={{ once: true }}
+                >
+                  <ScamCard
+                    title="4. Asset Drain"
+                    description="Transfer all funds from compromised wallets"
+                    icon="💸"
+                    gradient="from-blue-500 to-indigo-500"
+                    scamType="phishing"
+                  />
+                </motion.div>
+              </div>
 
-              {/* Final Exit Scam - Now properly centered at path end */}
+              {/* Exit Strategy */}
               <motion.div
-                className="absolute w-64 md:w-72 left-[0%] -translate-x-1/2 bottom-[40%]"
+                className="w-full max-w-xs sm:max-w-sm mx-auto mt-6"
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 1 }}
+                viewport={{ once: true }}
               >
-                <div className="relative p-6 rounded-xl bg-gradient-to-br from-red-600 to-rose-800 border border-rose-400/30 backdrop-blur-sm overflow-hidden group">
+                <div className="relative p-4 sm:p-6 rounded-xl bg-gradient-to-br from-red-600 to-rose-800 border border-rose-400/30 backdrop-blur-sm overflow-hidden group">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <div className="relative z-10">
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="text-2xl">💨</span>
-                      <h3 className="text-xl font-bold text-white">
+                    <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                      <span className="text-xl sm:text-2xl">💨</span>
+                      <h3 className="text-base sm:text-xl font-bold text-white">
                         Exit Strategy
                       </h3>
                     </div>
-                    <p className="text-rose-100">
-                      Both scams conclude with the attacker disappearing with
-                      all funds, leaving victims with worthless tokens or empty
-                      wallets.
+                    <p className="text-rose-100 text-xs sm:text-sm">
+                      Both scams conclude with the attacker disappearing with all funds, leaving victims with worthless tokens or empty wallets.
                     </p>
                   </div>
-                  <div className="absolute bottom-4 right-4 px-2 py-1 rounded-md bg-black/30 text-xs text-rose-200 border border-rose-400/20">
+                  <div className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 px-2 py-1 rounded-md bg-black/30 text-xs text-rose-200 border border-rose-400/20">
                     Both scams
                   </div>
                 </div>
@@ -671,27 +654,26 @@ function HomePage() {
       </section>
 
       {/* Interactive Threat Simulator Section */}
-      <section className="relative py-32 px-6 bg-gradient-to-b from-black to-[#0A0A0A] overflow-hidden">
-        {/* Floating holographic grid */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="h-full w-full bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0idHJhbnNwYXJlbnQiLz48cmVjdCB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9InJnYmEoMTU4LDE1OCwxNTgsMC4xKSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==')]"></div>
+      <section className="relative py-16 sm:py-32 px-4 sm:px-6 bg-gradient-to-b from-black to-[#0A0A0A] overflow-hidden">
+        <div className="absolute inset-0 opacity-15">
+          <div className="h-full w-full bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg4MCkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0idHJhbnNwYXJlbnQiLz48cmVjdCB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9InJnYmEoMTU4LDE1OCwxNTgsMC4xKSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==')]"></div>
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
           <motion.div
-            className="text-center mb-16"
+            className="text-center mb-12 sm:mb-16"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
             <h2
-              className="text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-600"
+              className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-600"
               style={{ fontFamily: "'ClashDisplay-Bold', sans-serif" }}
             >
               Test Drive <span className="text-white">TxShield</span>
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
               Try our{" "}
               <span className="text-cyan-400 font-medium">
                 interactive scam detector demo
@@ -701,16 +683,16 @@ function HomePage() {
           </motion.div>
 
           {/* Interactive Simulator Card */}
-          <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-8 backdrop-blur-sm max-w-4xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-8 items-center">
+          <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-6 sm:p-8 backdrop-blur-sm max-w-5xl mx-auto">
+            <div className="flex flex-col md:flex-row gap-6 sm:gap-8 items-stretch">
               {/* Transaction Input */}
-              <div>
-                <h3 className="text-2xl font-bold text-white mb-4">
+              <div className="flex-1">
+                <h3 className="text-xl sm:text-2xl font-bold text-white mb-4">
                   Enter a suspicious transaction:
                 </h3>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-gray-400 mb-2">
+                    <label className="block text-gray-400 text-sm sm:text-base mb-2">
                       Contract Address
                     </label>
                     <input
@@ -718,11 +700,11 @@ function HomePage() {
                       placeholder="0x..."
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
-                      className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                      className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 sm:py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 text-sm sm:text-base"
                     />
                   </div>
                   <div>
-                    <label className="block text-gray-400 mb-2">
+                    <label className="block text-gray-400 text-sm sm:text-base mb-2">
                       Or try a sample:
                     </label>
                     <div className="flex flex-wrap gap-2">
@@ -733,7 +715,7 @@ function HomePage() {
                             setAddress(scamExamples[type].address);
                             handleScan(type);
                           }}
-                          className="px-3 py-1.5 text-sm rounded-lg bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 transition-colors"
+                          className="px-3 py-1.5 text-xs sm:text-sm rounded-lg bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-300 transition-colors"
                         >
                           {type} Example
                         </button>
@@ -743,7 +725,7 @@ function HomePage() {
                   <button
                     onClick={() => handleScan()}
                     disabled={!address || isScanning}
-                    className={`w-full py-3 rounded-lg font-medium transition-all ${
+                    className={`w-full py-2 sm:py-3 rounded-lg font-medium transition-all text-sm sm:text-base ${
                       !address || isScanning
                         ? "bg-gray-800 text-gray-500 cursor-not-allowed"
                         : "bg-cyan-600 hover:bg-cyan-700 text-white"
@@ -755,8 +737,8 @@ function HomePage() {
               </div>
 
               {/* Simulation Results */}
-              <div className="relative">
-                <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 min-h-[300px]">
+              <div className="flex-1">
+                <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4 sm:p-6 min-h-[250px] sm:min-h-[300px]">
                   {isScanning ? (
                     <div className="flex flex-col items-center justify-center h-full">
                       <motion.div
@@ -766,23 +748,23 @@ function HomePage() {
                           repeat: Infinity,
                           ease: "linear",
                         }}
-                        className="w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full mb-4"
+                        className="w-12 sm:w-16 h-12 sm:h-16 border-4 border-cyan-500 border-t-transparent rounded-full mb-4"
                       />
-                      <h4 className="text-lg font-medium text-cyan-400">
+                      <h4 className="text-base sm:text-lg font-medium text-cyan-400">
                         Scanning Contract
                       </h4>
-                      <p className="text-gray-500 mt-1">
+                      <p className="text-gray-500 text-xs sm:text-sm mt-1">
                         Analyzing potential threats...
                       </p>
                     </div>
                   ) : scanResult ? (
                     <div>
                       <div className="flex justify-between items-center mb-4">
-                        <h4 className="text-xl font-bold text-white">
+                        <h4 className="text-lg sm:text-xl font-bold text-white">
                           Scan Results
                         </h4>
                         <span
-                          className={`px-3 py-1 rounded-full text-xs font-bold ${getRiskColor(
+                          className={`px-2 sm:px-3 py-1 rounded-full text-xs font-bold ${getRiskColor(
                             scanResult.riskLevel
                           )}`}
                         >
@@ -792,7 +774,7 @@ function HomePage() {
 
                       <div className="flex border-b border-gray-700 mb-4">
                         <button
-                          className={`px-4 py-2 text-sm font-medium ${
+                          className={`px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium ${
                             activeTab === "details"
                               ? "text-cyan-400 border-b-2 border-cyan-400"
                               : "text-gray-400"
@@ -802,7 +784,7 @@ function HomePage() {
                           Details
                         </button>
                         <button
-                          className={`px-4 py-2 text-sm font-medium ${
+                          className={`px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium ${
                             activeTab === "indicators"
                               ? "text-cyan-400 border-b-2 border-cyan-400"
                               : "text-gray-400"
@@ -814,32 +796,26 @@ function HomePage() {
                       </div>
 
                       {activeTab === "details" ? (
-                        <div>
+                        <div className="text-xs sm:text-sm">
                           <p className="text-gray-300 mb-2">
-                            <span className="font-medium text-white">
-                              Type:
-                            </span>{" "}
+                            <span className="font-medium text-white">Type:</span>{" "}
                             {scanResult.type}
                           </p>
                           <p className="text-gray-300 mb-2">
-                            <span className="font-medium text-white">
-                              Address:
-                            </span>{" "}
+                            <span className="font-medium text-white">Address:</span>{" "}
                             {scanResult.address}
                           </p>
                           <p className="text-gray-300">
-                            <span className="font-medium text-white">
-                              Details:
-                            </span>{" "}
+                            <span className="font-medium text-white">Details:</span>{" "}
                             {scanResult.details}
                           </p>
                         </div>
                       ) : (
-                        <ul className="space-y-2">
+                        <ul className="space-y-2 text-xs sm:text-sm">
                           {scanResult.indicators.map((indicator, i) => (
                             <li key={i} className="flex items-start">
                               <svg
-                                className="w-4 h-4 mt-1 mr-2 text-red-400 flex-shrink-0"
+                                className="w-3 sm:w-4 h-3 sm:h-4 mt-1 mr-2 text-red-400 flex-shrink-0"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -860,9 +836,9 @@ function HomePage() {
                   ) : (
                     <div className="flex items-center justify-center h-full">
                       <div className="text-center">
-                        <div className="w-16 h-16 mx-auto mb-4 bg-gray-700 rounded-full flex items-center justify-center">
+                        <div className="w-12 sm:w-16 h-12 sm:h-16 mx-auto mb-4 bg-gray-700 rounded-full flex items-center justify-center">
                           <svg
-                            className="w-8 h-8 text-gray-500"
+                            className="w-6 sm:w-8 h-6 sm:h-8 text-gray-500"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -875,54 +851,34 @@ function HomePage() {
                             ></path>
                           </svg>
                         </div>
-                        <h4 className="text-lg font-medium text-gray-400">
+                        <h4 className="text-base sm:text-lg font-medium text-gray-400">
                           Simulation Results
                         </h4>
-                        <p className="text-gray-500 mt-1">
+                        <p className="text-gray-500 text-xs sm:text-sm mt-1">
                           Enter an address to analyze
                         </p>
                       </div>
                     </div>
                   )}
                 </div>
-
-                {/* Scanning animation overlay */}
-                {isScanning && (
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-purple-600/10 rounded-xl pointer-events-none"
-                    animate={{
-                      backgroundPosition: ["0% 0%", "100% 100%"],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                  />
-                )}
               </div>
             </div>
 
-            <div className="mt-8 text-center space-y-4">
-              <p className="text-sm text-gray-400 max-w-lg mx-auto">
-                Note: These demo results show how TxShield works. For real
-                analysis,
-                <span className="text-cyan-400">
-                  {" "}
-                  try our full simulator
-                </span>{" "}
-                with live blockchain scanning.
+            <div className="mt-6 sm:mt-8 text-center space-y-4">
+              <p className="text-xs sm:text-sm text-gray-400 max-w-lg mx-auto">
+                Note: These demo results show how TxShield works. For real analysis,{" "}
+                <span className="text-cyan-400">try our full simulator</span> with live blockchain scanning.
               </p>
 
               <motion.a
                 href="/simulate"
-                className="inline-block px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl font-bold text-white hover:shadow-lg transition-all duration-300 relative overflow-hidden group"
+                className="inline-block px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-xl font-bold text-white hover:shadow-lg transition-all duration-300 relative overflow-hidden group text-sm sm:text-base"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
                 <span className="relative z-10 flex items-center justify-center">
                   <svg
-                    className="w-5 h-5 mr-2"
+                    className="w-4 sm:w-5 h-4 sm:h-5 mr-2"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -943,7 +899,7 @@ function HomePage() {
 
           {/* Stats counter */}
           <motion.div
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16"
+            className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 mt-12 sm:mt-16"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ staggerChildren: 0.1 }}
@@ -957,15 +913,15 @@ function HomePage() {
             ].map((stat, i) => (
               <motion.div
                 key={i}
-                className="bg-gray-900/50 border border-gray-800 rounded-xl p-6 text-center"
+                className="bg-gray-900/50 border border-gray-800 rounded-xl p-4 sm:p-6 text-center"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
               >
-                <div className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-400">
+                <div className="text-2xl sm:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-400">
                   {stat.value}
                 </div>
-                <div className="text-gray-400 mt-2">{stat.label}</div>
+                <div className="text-gray-400 mt-2 text-sm sm:text-base">{stat.label}</div>
               </motion.div>
             ))}
           </motion.div>
@@ -973,16 +929,15 @@ function HomePage() {
       </section>
 
       {/* Testimonial Section */}
-      <section className="relative py-24 px-6 bg-gradient-to-b from-[#0A0A0A] to-black overflow-hidden">
-        {/* Floating tech elements */}
+      <section className="relative py-16 sm:py-24 px-4 sm:px-6 bg-gradient-to-b from-[#0A0A0A] to-black overflow-hidden">
         <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-cyan-500/10 blur-3xl"></div>
-          <div className="absolute bottom-1/3 right-1/3 w-40 h-40 rounded-full bg-purple-500/10 blur-3xl"></div>
+          <div className="absolute top-1/4 left-1/4 w-24 sm:w-32 h-24 sm:h-32 rounded-full bg-cyan-500/10 blur-3xl"></div>
+          <div className="absolute bottom-1/3 right-1/3 w-32 sm:w-40 h-32 sm:h-40 rounded-full bg-purple-500/10 blur-3xl"></div>
         </div>
 
         <div className="max-w-6xl mx-auto relative z-10">
           <motion.h2
-            className="text-5xl md:text-6xl font-bold mb-20 text-center"
+            className="text-4xl sm:text-5xl md:text-6xl font-bold mb-12 sm:mb-20 text-center"
             style={{ fontFamily: "'ClashDisplay-Bold', sans-serif" }}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1003,36 +958,25 @@ function HomePage() {
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              {/* Testimonial Card */}
               <div className="relative p-0.5 rounded-3xl bg-gradient-to-br from-cyan-500/30 to-purple-600/30 backdrop-blur-sm">
-                <div className="bg-[#0F0F0F] rounded-3xl p-8 md:p-10">
-                  {/* Quote icon */}
+                <div className="bg-[#0F0F0F] rounded-3xl p-6 sm:p-8 md:p-10">
                   <svg
-                    className="w-12 h-12 mb-6 text-cyan-400 opacity-20"
+                    className="w-8 sm:w-12 h-8 sm:h-12 mb-6 text-cyan-400 opacity-20"
                     fill="currentColor"
                     viewBox="0 0 32 32"
                   >
                     <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z" />
                   </svg>
 
-                  {/* Testimonial text */}
-                  <blockquote className="text-xl md:text-2xl leading-relaxed text-gray-300 mb-8">
-                    Just checked out TxShield — really cool stuff! I can
-                    totally see how something like this can help people feel
-                    safer when interacting with Web3 apps. The interface is
-                    clean, and I love that it's straight to the point without
-                    being overwhelming.
+                  <blockquote className="text-base sm:text-xl md:text-2xl leading-relaxed text-gray-300 mb-6 sm:mb-8">
+                    Just checked out TxShield — really cool stuff! I can totally see how something like this can help people feel safer when interacting with Web3 apps. The interface is clean, and I love that it's straight to the point without being overwhelming.
                     <br />
                     <br />
-                    Definitely a solid idea, especially with so many sketchy
-                    contracts out there. Would be awesome to see it evolve
-                    further.
+                    Definitely a solid idea, especially with so many sketchy contracts out there. Would be awesome to see it evolve further.
                   </blockquote>
 
-                  {/* Author */}
                   <div className="flex items-center">
-                    {/* Profile image placeholder - replace with actual image */}
-                    <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-cyan-400/30 mr-4">
+                    <div className="relative w-12 sm:w-14 h-12 sm:h-14 rounded-full overflow-hidden border-2 border-cyan-400/30 mr-4">
                       <img
                         src="/Images/ravisankar.jpeg"
                         alt="User profile"
@@ -1043,10 +987,9 @@ function HomePage() {
                             "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEyIDJDNi40NzcgMiAyIDYuNDc3IDIgMTJzNC40NzcgMTAgMTAgMTAgMTAtNC40NzcgMTAtMTBTMTcuNTIzIDIgMTIgMnptMCAyYzIuMzkyIDAgNC41MzUuODQzIDYuMTg5IDIuMjUzbC0yLjE0OCAxLjE0OEMxNC42NjkgNi4wNTkgMTMuNDA5IDYgMTIgNmMtMS40MDkgMC0yLjY2OS4wNTktMy44NDEuNDAxTDYuMDExIDQuMjUzQzcuNjY1IDIuODQzIDkuNjA4IDIgMTIgMnptMCAxOEM5LjYxOCAyMCA3LjQzNCAxOS4xNTcgNS43MDkgMTcuNTQ0bDEuNDMxLTEuNDMxQzguMDYzIDE2LjQyOSA5LjkyMyAxNyAxMiAxN3MyLjkzNy0uNTcxIDQuMDYxLTEuODg3bDEuNDMxIDEuNDMxQzE2LjU2NiAxOS4xNTcgMTQuMzgyIDIwIDEyIDIwem0tNi0xMGMwIDEuNjU3IDEuMzQzIDMgMyAzczMtMS4zNDMgMy0zLTEuMzQzLTMtMy0zLTMgMS4zNDMtMyAzem0zLTMuNWMwIC44MjguNjcyIDEuNSAxLjUgMS41cyAxLjUtLjY3MiAxLjUtMS41LS42NzItMS41LTEuNS0xLjUtMS41LjY3Mi0xLjUgMS41eiIgZmlsbD0iI2RkZGRkZCIgLz48L3N2Zz4=";
                         }}
                       />
-                      {/* Verification badge */}
-                      <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-cyan-400 flex items-center justify-center">
+                      <div className="absolute -bottom-1 -right-1 w-4 sm:w-5 h-4 sm:h-5 rounded-full bg-cyan-400 flex items-center justify-center">
                         <svg
-                          className="w-3 h-3 text-black"
+                          className="w-2 sm:w-3 h-2 sm:h-3 text-black"
                           fill="currentColor"
                           viewBox="0 0 20 20"
                         >
@@ -1060,11 +1003,10 @@ function HomePage() {
                     </div>
 
                     <div>
-                      <div className="font-bold text-white">Ravi Sankar</div>
-                      <div className="text-sm text-cyan-400">
+                      <div className="font-bold text-white text-sm sm:text-base">Ravi Sankar</div>
+                      <div className="text-xs sm:text-sm text-cyan-400">
                         Web 3 Developer
                       </div>
-                      {/* LinkedIn link */}
                       <a
                         href="https://www.linkedin.com/in/ravi-sankar13/"
                         target="_blank"
@@ -1072,7 +1014,7 @@ function HomePage() {
                         className="flex items-center text-xs text-gray-400 hover:text-cyan-400 mt-1"
                       >
                         <svg
-                          className="w-3 h-3 mr-1"
+                          className="w-3 sm:w-4 h-3 sm:h-4 mr-1"
                           fill="currentColor"
                           viewBox="0 0 24 24"
                         >
@@ -1083,16 +1025,13 @@ function HomePage() {
                     </div>
                   </div>
                 </div>
-
-                {/* Glow effect */}
-                <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-cyan-500/10 blur-3xl -z-10"></div>
+                <div className="absolute -top-20 -right-20 w-48 sm:w-64 h-48 sm:h-64 rounded-full bg-cyan-500/10 blur-3xl -z-10"></div>
               </div>
             </motion.div>
           </div>
         </div>
       </section>
       <ContactUs />
-      {/* Footer */}
       <Footer />
     </div>
   );
