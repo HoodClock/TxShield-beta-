@@ -5,8 +5,8 @@ import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 function connectWallet() {
   return (
-    <div>
-      <ConnectButton/>
+    <div className="custom-rainbow-wrapper">
+      <ConnectButton />
     </div>
   )
 }

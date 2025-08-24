@@ -70,3 +70,7 @@ export const suggestionApi = async (formData) => {
 export const authConnect = async (formData) => {
   return await axios.post(`${BASE_URL}/auth/connect`, formData);
 } 
+
+export const authGetAPI = async(connectedAddress) => {
+  return await axios.get(`${BASE_URL}/auth/apiKey/${connectedAddress}`)
+}

@@ -5,6 +5,7 @@ const {ethers} = require('ethers')
 
 const router = express.Router();
 
+// to generate the key
 router.post('/connect', (req, res)=> {
     const {wallet, signature} = req.body
 
@@ -43,6 +44,27 @@ router.post('/connect', (req, res)=> {
             }
         )
     })
+})
+
+// to get the existing key
+router.get('/apiKey/:wallet', async(req, res)=> {
+    const {wallet} = req.params
+
+    if (!wallet) {
+        return res.status(400).json({ error: "Wallet address required" });
+    }
+
+    db.get("SELECT * FROM api_keys WHERE wallet = ?", [wallet], (err, row)=> {
+        if (err) {
+            return res.status(500).json({ error: "DB error" });
+        }
+
+        if (row){
+            return res.json({apiKey: row.apiKey})
+        }else{
+            return res.json({apiKey: null})
+        }
+    }) 
 })
 
 module.exports = router;
