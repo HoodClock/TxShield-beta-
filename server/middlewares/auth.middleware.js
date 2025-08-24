@@ -2,6 +2,16 @@ const db = require('../config/db')
 
 function authMidlleware(req, res, next){
 
+    const origin = req.headers.origin || req.headers.host;
+
+    if (
+        origin?.includes("localhost:3000") ||  // local frontend
+        origin?.includes("localhost:5000") ||  // local backend
+        origin?.includes("txshield-beta.vercel.app") // vercel frontend
+    ) {
+        return next();
+    }
+
     // extracting the authorization from the header
     const authHeader = req.header["authorization"]
 

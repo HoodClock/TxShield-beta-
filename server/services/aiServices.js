@@ -29,7 +29,7 @@ const callAiModel = async (prompt) => {
     return response.data.choices[0].message.content;
 
   } catch (error) {
-    console.error("AI model error:", error.response?.data || error.message);
+    console.error("AI model error:", error, error.response?.data || error.message);
     throw new Error("Failed to get AI recommendation");
   }
 };

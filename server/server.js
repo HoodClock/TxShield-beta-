@@ -19,7 +19,11 @@ const PORT = process.env.PORT || 5000;
 // middlewares
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://tx-shield-beta.vercel.app"],
+    origin: [
+      "http://localhost:3000", // for local 
+      "https://tx-shield-beta.vercel.app", // for testing vps
+      "https://txshield.xyz", // for prod
+      "https://www.txshield.xyz"], // for prod
     credentials: true,
   })
 );
@@ -32,9 +36,10 @@ app.use("/api/honeypot", authMiddleware, honeypotRouter);
 
 app.use("/api/phishing", authMiddleware, phishingRouter);
 
+app.use("/api/generations/", authMiddleware, suggestionRouter);
+
 app.use("/api/contact/", contactRouter);
 
-app.use("/api/generations/", authMiddleware, suggestionRouter);
 
 app.use("/auth", authRouter);
 
