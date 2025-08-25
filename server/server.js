@@ -29,14 +29,14 @@ app.use(
 );
 app.use(express.json());
 
-// Routes
-app.use("/api/simulate", authMiddleware, simulateRouter);
+// Routes (some need auth_middleware)
+app.use("/api/simulate", simulateRouter);
 
-app.use("/api/honeypot", authMiddleware, honeypotRouter);
+app.use("/api/honeypot", honeypotRouter);
 
-app.use("/api/phishing", authMiddleware, phishingRouter);
+app.use("/api/phishing", phishingRouter);
 
-app.use("/api/generations/", authMiddleware, suggestionRouter);
+app.use("/api/generations/", suggestionRouter);
 
 app.use("/api/contact/", contactRouter);
 
