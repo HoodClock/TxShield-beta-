@@ -3,8 +3,12 @@ import axios from "axios";
 // for local.
 // const BASE_URL = "http://localhost:5000";
 
-// for prod.
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+// for testing.
+// const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
+// for prod
+const BASE_URL = process.env.NEXT_PUBLIC_PROD_BASE_URL;
+
 
 export const simulateTx = async (formData) => {
   return await axios.post(
