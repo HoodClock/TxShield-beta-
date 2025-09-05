@@ -12,22 +12,25 @@ const PhishingAnalysis = ({ data }) => {
   }
 
   const { checks, phishingVerdict } = data;
-  
+
   // Safely parse the verdict
-  let verdict;
-  try {
-    verdict = JSON.parse(phishingVerdict);
-  } catch (e) {
-    const jsonMatch = phishingVerdict.match(/```json\n([\s\S]*?)\n```/);
-    if (jsonMatch) {
-      verdict = JSON.parse(jsonMatch[1]);
-    } else {
-      verdict = {
-        phishingScore: 0,
-        riskLevel: "unknown",
-        keyFindings: [],
-        recommendedActions: []
-      };
+  let verdict = phishingVerdict;
+
+  if (typeof phishingVerdict === "string") {
+    try {
+      verdict = JSON.parse(phishingVerdict);
+    } catch (e) {
+      const jsonMatch = phishingVerdict.match(/```json\n([\s\S]*?)\n```/);
+      if (jsonMatch) {
+        verdict = JSON.parse(jsonMatch[1]);
+      } else {
+        verdict = {
+          phishingScore: 0,
+          riskLevel: "unknown",
+          keyFindings: [],
+          recommendedActions: []
+        };
+      }
     }
   }
 
@@ -36,7 +39,7 @@ const PhishingAnalysis = ({ data }) => {
   // Process all security checks
   const securityChecks = Object.entries(checks).map(([checkName, check]) => {
     if (!check.success) return null;
-    
+
     const formattedName = checkName
       .replace(/([A-Z])/g, ' $1')
       .trim()
@@ -72,7 +75,7 @@ const PhishingAnalysis = ({ data }) => {
       </div>
 
       {/* Risk Score Card */}
-      <motion.div 
+      <motion.div
         initial={{ y: -10 }}
         animate={{ y: 0 }}
         className="bg-gray-900/50 border border-gray-800 rounded-xl p-5"
@@ -81,33 +84,31 @@ const PhishingAnalysis = ({ data }) => {
           <div>
             <h3 className="text-sm font-medium text-gray-400">Risk Assessment</h3>
             <div className="text-3xl font-bold mt-1" style={{
-              color: phishingScore > 70 ? '#ef4444' : 
-                    phishingScore > 30 ? '#f59e0b' : 
-                    '#10b981'
+              color: phishingScore > 70 ? '#ef4444' :
+                phishingScore > 30 ? '#f59e0b' :
+                  '#10b981'
             }}>
               {phishingScore}%
             </div>
           </div>
-          <div className={`px-3 py-1 rounded-full text-xs font-semibold ${
-            riskLevel === "critical" ? "bg-red-500/20 text-red-400" :
-            riskLevel === "high" ? "bg-orange-500/20 text-orange-400" :
-            riskLevel === "medium" ? "bg-yellow-500/20 text-yellow-400" :
-            "bg-green-500/20 text-green-400"
-          }`}>
+          <div className={`px-3 py-1 rounded-full text-xs font-semibold ${riskLevel === "critical" ? "bg-red-500/20 text-red-400" :
+              riskLevel === "high" ? "bg-orange-500/20 text-orange-400" :
+                riskLevel === "medium" ? "bg-yellow-500/20 text-yellow-400" :
+                  "bg-green-500/20 text-green-400"
+            }`}>
             {riskLevel.toUpperCase()}
           </div>
         </div>
 
         <div className="w-full bg-gray-800 rounded-full h-1.5 mb-2">
-          <motion.div 
+          <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${phishingScore}%` }}
             transition={{ duration: 1 }}
-            className={`h-1.5 rounded-full ${
-              phishingScore > 70 ? 'bg-red-500' :
-              phishingScore > 30 ? 'bg-yellow-500' :
-              'bg-green-500'
-            }`}
+            className={`h-1.5 rounded-full ${phishingScore > 70 ? 'bg-red-500' :
+                phishingScore > 30 ? 'bg-yellow-500' :
+                  'bg-green-500'
+              }`}
           />
         </div>
 
@@ -127,35 +128,31 @@ const PhishingAnalysis = ({ data }) => {
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className={`p-4 rounded-lg border ${
-                check.isScam ? 'border-red-500/20 bg-red-900/5' : 'border-gray-700 bg-gray-800/10'
-              }`}
+              className={`p-4 rounded-lg border ${check.isScam ? 'border-red-500/20 bg-red-900/5' : 'border-gray-700 bg-gray-800/10'
+                }`}
             >
               <div className="flex items-start gap-3">
-                <div className={`mt-0.5 flex-shrink-0 ${
-                  check.isScam ? 'text-red-500' : 'text-cyan-400'
-                }`}>
+                <div className={`mt-0.5 flex-shrink-0 ${check.isScam ? 'text-red-500' : 'text-cyan-400'
+                  }`}>
                   {check.isScam ? '✖' : '✓'}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
-                    <h4 className={`text-sm font-medium ${
-                      check.isScam ? 'text-red-400' : 'text-gray-300'
-                    }`}>
+                    <h4 className={`text-sm font-medium ${check.isScam ? 'text-red-400' : 'text-gray-300'
+                      }`}>
                       {check.name}
                     </h4>
                     {check.confidence !== "none" && (
-                      <span className={`text-xs px-2 py-0.5 rounded ${
-                        check.confidence === "high" ? "bg-red-500/10 text-red-400" :
-                        check.confidence === "medium" ? "bg-yellow-500/10 text-yellow-400" :
-                        "bg-green-500/10 text-green-400"
-                      }`}>
+                      <span className={`text-xs px-2 py-0.5 rounded ${check.confidence === "high" ? "bg-red-500/10 text-red-400" :
+                          check.confidence === "medium" ? "bg-yellow-500/10 text-yellow-400" :
+                            "bg-green-500/10 text-green-400"
+                        }`}>
                         {check.confidence}
                       </span>
                     )}
                   </div>
                   <p className="text-xs text-gray-400 mt-1">{check.reason}</p>
-                  
+
                   {/* Additional details */}
                   {check.details && (
                     <div className="mt-2 space-y-1">
@@ -185,7 +182,7 @@ const PhishingAnalysis = ({ data }) => {
           <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Critical Findings</h3>
           <ul className="space-y-2 pl-5">
             {keyFindings.map((finding, index) => (
-              <motion.li 
+              <motion.li
                 key={index}
                 initial={{ x: -10 }}
                 animate={{ x: 0 }}
@@ -210,7 +207,7 @@ const PhishingAnalysis = ({ data }) => {
           <h3 className="text-sm font-medium text-red-400 mb-2">Recommended Actions</h3>
           <ul className="space-y-2 pl-5">
             {recommendedActions.map((action, index) => (
-              <motion.li 
+              <motion.li
                 key={index}
                 initial={{ x: -10 }}
                 animate={{ x: 0 }}
