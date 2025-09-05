@@ -1,30 +1,13 @@
 const honeypotServices = require("../services/honeypotServices");
-const {isContract} = require("../services/etherscanService")
 
-const handleBlacklistCheck = async (address, abi) => {
-  
-  if (!address) return { success: false, message: "Address is missing" };
+const handleBlacklistCheck = async (context) => {
+  const { fromAddress, abi, contractAddress } = context;
 
-  const contractCheck = await isContract(address);
-
-
-  if (!contractCheck) {
-    return {
-      success: false,
-      message: "The provided address is a wallet address. Honeypot checks are applicable only to smart contracts.",
-    };
-  }
-
-
-  if (!abi) {
-    return {
-      success: false,
-      message: "ABI is missing. Honeypot checks require a verified contract address.",
-    };
-  }
+  if (!contractAddress) return { success: false, message: "Contract address is missing" };
+  if (!abi) return { success: false, message: "ABI is missing." };
 
   try {
-    const response = await honeypotServices.detectBlackListService(address, abi);
+    const response = await honeypotServices.detectBlackListService(fromAddress, abi);
     return response.success
       ? { success: true, data: response }
       : { success: false, message: response.message };
@@ -33,23 +16,14 @@ const handleBlacklistCheck = async (address, abi) => {
   }
 };
 
-const handleDisableTransferCheck = async (address, abi) => {
-  if (!address) return { success: false, message: "Address is missing" };
+const handleDisableTransferCheck = async (context) => {
+  const { fromAddress, abi } = context;
 
-  const contractCheck = await isContract(address);
-  if (!contractCheck) {
-    return {
-      success: false,
-      message: "The provided address is a wallet. This check is only valid for smart contracts.",
-    };
-  }
-
-  if (!abi) {
-    return { success: false, message: "ABI is missing." };
-  }
+  if (!fromAddress) return { success: false, message: "Address is missing" };
+  if (!abi) return { success: false, message: "ABI is missing." };
 
   try {
-    const response = await honeypotServices.detectDisableTransferService(address, abi);
+    const response = await honeypotServices.detectDisableTransferService(fromAddress, abi);
     return response.success
       ? { success: true, data: response }
       : { success: false, message: response.message };
@@ -58,20 +32,11 @@ const handleDisableTransferCheck = async (address, abi) => {
   }
 };
 
-const handleFakeBalanceCheck = async (tokenAddress, abi) => {
+const handleFakeBalanceCheck = async (context) => {
+  const { tokenAddress, abi } = context;
+
   if (!tokenAddress) return { success: false, message: "Token address is missing" };
-
-  const contractCheck = await isContract(tokenAddress);
-  if (!contractCheck) {
-    return {
-      success: false,
-      message: "The provided token address is a wallet. This check is only valid for token contracts.",
-    };
-  }
-
-  if (!abi) {
-    return { success: false, message: "ABI is missing." };
-  }
+  if (!abi) return { success: false, message: "ABI is missing." };
 
   try {
     const response = await honeypotServices.detectFakeBalanceService(tokenAddress, abi);
@@ -83,14 +48,20 @@ const handleFakeBalanceCheck = async (tokenAddress, abi) => {
   }
 };
 
-const handleGasTrapCheck = async (userAddress, recepientAddress, value, _currency) => {
-  if (!userAddress || !recepientAddress || !value || !_currency) {
-    return { success: false, message: "User / Recepient address or value is missing" };
+const handleGasTrapCheck = async (context) => {
+  const { userAddress, recepientAddress, value, currencySymbol } = context;
+
+  if (!userAddress || !recepientAddress || !value || !currencySymbol) {
+    return { success: false, message: "User / Recepient / Value / Currency is missing" };
   }
 
-
   try {
-    const response = await honeypotServices.detecGasTrapService(userAddress, recepientAddress, value, _currency);
+    const response = await honeypotServices.detecGasTrapService(
+      userAddress,
+      recepientAddress,
+      value,
+      currencySymbol
+    );
     return response.success
       ? { success: true, data: response }
       : { success: false, risk: response.risk, message: response.message };
@@ -99,20 +70,11 @@ const handleGasTrapCheck = async (userAddress, recepientAddress, value, _currenc
   }
 };
 
-const handleHiddenOwnerCheck = async (contractAddress, abi) => {
+const handleHiddenOwnerCheck = async (context) => {
+  const { contractAddress, abi } = context;
+
   if (!contractAddress) return { success: false, message: "Contract address is missing" };
-
-  const contractCheck = await isContract(contractAddress);
-  if (!contractCheck) {
-    return {
-      success: false,
-      message: "The provided address is not a smart contract.",
-    };
-  }
-
-  if (!abi) {
-    return { success: false, message: "ABI is missing." };
-  }
+  if (!abi) return { success: false, message: "ABI is missing." };
 
   try {
     const response = await honeypotServices.detectHiddenOwnerService(contractAddress, abi);
@@ -124,23 +86,14 @@ const handleHiddenOwnerCheck = async (contractAddress, abi) => {
   }
 };
 
-const handleHighSellTaxCheck = async (address, abi) => {
-  if (!address) return { success: false, message: "Address is missing" };
+const handleHighSellTaxCheck = async (context) => {
+  const { fromAddress, abi } = context;
 
-  const contractCheck = await isContract(address);
-  if (!contractCheck) {
-    return {
-      success: false,
-      message: "The provided address is a wallet.",
-    };
-  }
-
-  if (!abi) {
-    return { success: false, message: "ABI is missing." };
-  }
+  if (!fromAddress) return { success: false, message: "Address is missing" };
+  if (!abi) return { success: false, message: "ABI is missing." };
 
   try {
-    const response = await honeypotServices.detectHighSellTaxService(address, abi);
+    const response = await honeypotServices.detectHighSellTaxService(fromAddress, abi);
     return response.success
       ? { success: true, data: response }
       : { success: false, message: response.message };
@@ -149,13 +102,19 @@ const handleHighSellTaxCheck = async (address, abi) => {
   }
 };
 
-const handleBuySellCheck = async (userAddress, tokenAddress, value) => {
+const handleBuySellCheck = async (context) => {
+  const { userAddress, tokenAddress, value } = context;
+
   if (!userAddress || !tokenAddress || !value) {
-    return { success: false, message: "User / Token address or value is missing" };
+    return { success: false, message: "User / Token / Value is missing" };
   }
 
   try {
-    const response = await honeypotServices.detectHoneyPotBuySellService(userAddress, tokenAddress, value);
+    const response = await honeypotServices.detectHoneyPotBuySellService(
+      userAddress,
+      tokenAddress,
+      value
+    );
     return response.success
       ? { success: true, data: response }
       : { success: false, message: response.message };
@@ -164,20 +123,11 @@ const handleBuySellCheck = async (userAddress, tokenAddress, value) => {
   }
 };
 
-const handleMintAccessCheck = async (contractAddress, abi) => {
+const handleMintAccessCheck = async (context) => {
+  const { contractAddress, abi } = context;
+
   if (!contractAddress) return { success: false, message: "Contract address is missing" };
-
-  const contractCheck = await isContract(contractAddress);
-  if (!contractCheck) {
-    return {
-      success: false,
-      message: "Provided address is not a contract.",
-    };
-  }
-
-  if (!abi) {
-    return { success: false, message: "ABI is missing." };
-  }
+  if (!abi) return { success: false, message: "ABI is missing." };
 
   try {
     const response = await honeypotServices.detectMintAccessService(contractAddress, abi);
@@ -189,23 +139,14 @@ const handleMintAccessCheck = async (contractAddress, abi) => {
   }
 };
 
-const handleTradingControlCheck = async (address, abi) => {
-  if (!address) return { success: false, message: "Address is missing" };
+const handleTradingControlCheck = async (context) => {
+  const { fromAddress, abi } = context;
 
-  const contractCheck = await isContract(address);
-  if (!contractCheck) {
-    return {
-      success: false,
-      message: "The provided address is not a contract.",
-    };
-  }
-
-  if (!abi) {
-    return { success: false, message: "ABI is missing." };
-  }
+  if (!fromAddress) return { success: false, message: "Address is missing" };
+  if (!abi) return { success: false, message: "ABI is missing." };
 
   try {
-    const response = await honeypotServices.detectTradingControlService(address, abi);
+    const response = await honeypotServices.detectTradingControlService(fromAddress, abi);
     return response.success
       ? { success: true, data: response }
       : { success: false, message: response.message };

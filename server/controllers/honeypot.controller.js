@@ -43,7 +43,21 @@ const honeypotMasterController = async (req, res) => {
       return res.status(401).json({ message: "Missing required fields." });
     }
 
-    const abi = await getAbi(recepientAddress);
+    // ✅ Fetch ABI once only
+    const abi = await getAbi(normalRecepientAddress);
+
+    // Build context to pass to helpers
+    const context = {
+      abi,
+      contractAddress: normalRecepientAddress,
+      tokenAddress: normalTokenAddress,
+      userAddress,
+      recepientAddress: normalRecepientAddress,
+      value,
+      currencySymbol,
+      fromAddress: normalAddress,
+    };
+
 
     const [
       blackList,
@@ -56,20 +70,15 @@ const honeypotMasterController = async (req, res) => {
       mintAccess,
       tradingControl,
     ] = await Promise.all([
-      honeypotHelper.handleBlacklistCheck(normalAddress, abi),
-      honeypotHelper.handleDisableTransferCheck(normalAddress, abi),
-      honeypotHelper.handleFakeBalanceCheck(normalTokenAddress, abi),
-      honeypotHelper.handleGasTrapCheck(
-        userAddress,
-        normalRecepientAddress,
-        value,
-        currencySymbol
-      ),
-      honeypotHelper.handleHiddenOwnerCheck(normalcontractAddress, abi),
-      honeypotHelper.handleHighSellTaxCheck(normalAddress, abi),
-      honeypotHelper.handleBuySellCheck(userAddress, normalTokenAddress, value),
-      honeypotHelper.handleMintAccessCheck(normalcontractAddress, abi),
-      honeypotHelper.handleTradingControlCheck(normalAddress, abi),
+      honeypotHelper.handleBlacklistCheck(context),
+      honeypotHelper.handleDisableTransferCheck(context),
+      honeypotHelper.handleFakeBalanceCheck(context),
+      honeypotHelper.handleGasTrapCheck(context),
+      honeypotHelper.handleHiddenOwnerCheck(context),
+      honeypotHelper.handleHighSellTaxCheck(context),
+      honeypotHelper.handleBuySellCheck(context),
+      honeypotHelper.handleMintAccessCheck(context),
+      honeypotHelper.handleTradingControlCheck(context),
     ]);
 
     const checkResults = [
@@ -106,8 +115,8 @@ const honeypotMasterController = async (req, res) => {
       riskLevel === "Red Flag Zone"
         ? "❌ High risk — avoid interacting with this contract."
         : riskLevel === "Caution Zone"
-        ? "⚠️ Risky elements found — proceed carefully."
-        : "✅ Safe to proceed. No major red flags detected.";
+          ? "⚠️ Risky elements found — proceed carefully."
+          : "✅ Safe to proceed. No major red flags detected.";
 
     return res.status(200).json({
       success: true,
