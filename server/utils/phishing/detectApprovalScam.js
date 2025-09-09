@@ -1,7 +1,6 @@
 const {
   getAbi,
   isContract,
-  getByteCode,
   getSourceCode,
 } = require("../../services/etherscanService");
 
@@ -14,6 +13,7 @@ const MAX_UINT = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 const detectApprovelScam = async (
   userAddress,
   recepientAddress,
+  currencySymbol
 ) => {
   const isSmartContract = await isContract(recepientAddress);
 
@@ -25,9 +25,8 @@ const detectApprovelScam = async (
     };
   }
 
-  const abi = await getAbi(recepientAddress);
-  const sourceCodeObj = await getSourceCode(recepientAddress);
-  const byteCode = await getByteCode(recepientAddress);
+  const abi = await getAbi(recepientAddress, currencySymbol);
+  const sourceCodeObj = await getSourceCode(recepientAddress, currencySymbol);
   const transactionHistory = await getTransactionHistory(recepientAddress);
 
   let suspiciousAbi = false;

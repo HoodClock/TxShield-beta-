@@ -5,8 +5,8 @@ const detectPermitPhishing = require('../utils/phishing/detectPermitPhishing');
 const detectPhishingDomainLinks = require("../utils/phishing/detectPhishingDomainLinks")
 
 // for scam-approval
-const ApprovalScamPhishingService = async (_from, _to)=> {
-    return await approveScamUtils(_from, _to);
+const ApprovalScamPhishingService = async (_from, _to, currencySymbol)=> {
+    return await approveScamUtils(_from, _to, currencySymbol);
 }
 
 // for ether-forwarding
@@ -15,18 +15,18 @@ const EtherForwardPhishingService = async(_to)=> {
 }
 
 // for proxy manupilation
-const MaliciousProxyPhishingService = async(_to)=> {
-    return await detectMaliciousProxy(_to);
+const MaliciousProxyPhishingService = async(_to, currencySymbols)=> {
+    return await detectMaliciousProxy(_to, currencySymbols);
 }
 
 // for permit checking 
-const PermitPhishing = async(_to)=> {
-    return await detectPermitPhishing(_to)
+const PermitPhishing = async(_to, currencySymbols)=> {
+    return await detectPermitPhishing(_to, currencySymbols)
 }
 
 // for malacious phishing domain links (on-chain + off-chain)
-const PhishingDomainLinks = async(_to)=> {
-    return await detectPhishingDomainLinks(_to);
+const PhishingDomainLinks = async(_to, currencySymbol)=> {
+    return await detectPhishingDomainLinks(_to, currencySymbol);
 }
 
 module.exports = {

@@ -52,17 +52,17 @@ const countAmbiguousSignals = (checks) => {
 };
 
 const MasterPhishingController = async (req, res) => {
-  const { userAddress, recepientAddress } = req.body;
+  const { userAddress, recepientAddress, currencySymbol } = req.body;
 
   try {
     const checkSumRecepientAddress = getAddress(recepientAddress);
 
     const [approveScam, etherForwarding, proxyScam, permitCheck, domainCheck] = await Promise.all([
-      phishingHelper.phishingApproveScam(userAddress, recepientAddress),
+      phishingHelper.phishingApproveScam(userAddress, recepientAddress, currencySymbol),
       phishingHelper.phishingEtherForwardScam(checkSumRecepientAddress),
-      phishingHelper.phishingMaliciousProxy(checkSumRecepientAddress),
-      phishingHelper.phishingPermit(checkSumRecepientAddress),
-      phishingHelper.phishingDomainLink(checkSumRecepientAddress),
+      phishingHelper.phishingMaliciousProxy(checkSumRecepientAddress, currencySymbol),
+      phishingHelper.phishingPermit(checkSumRecepientAddress, currencySymbol),
+      phishingHelper.phishingDomainLink(checkSumRecepientAddress, currencySymbol),
     ]);
 
     const checks = { approveScam, etherForwarding, proxyScam, permitCheck, domainCheck };

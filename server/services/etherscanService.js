@@ -1,25 +1,47 @@
 const axios = require("axios");
 require("dotenv").config();
-const { ethers, getAddress } = require("ethers");
+const { ethers, getAddress, JsonRpcApiProvider } = require("ethers");
 
 const etherscanApiEndpoint = process.env.ETHERSCAN_API_ENDPOINT;
 const etherscanApiKey = process.env.ETHERSCAN_API_KEY;
 const provider = new ethers.JsonRpcProvider(process.env.ETH_MAINNET_NET_URL);
 
+const rpcUrl = {
+  ETH: process.env.ETH_MAINNET_NET_URL,
+  BNB: process.env.BNB_MAINNET_NET_URL
+}
+
+const getChainConfig = (chain)=> {
+  switch(chain){
+    case "ETH":
+    case "BNB":
+      return {
+        endpoint: etherscanApiEndpoint,
+        apikey: etherscanApiKey,
+        provider: new ethers.JsonRpcProvider(rpcUrl[chain])
+      }
+    default:
+      throw new Error(`Unsupported Chain ${chain}`)
+  }
+}
+
 // sleep function
 const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 
 // get ABI
-const getAbi = async (address) => {
+const getAbi = async (address, chain) => {
   await sleep(300); // throttle to avoid Etherscan rate limit
+
+  const {endpoint, apikey} = getChainConfig(chain)
   const checkSumAddress = getAddress(address);
+
   try {
-    const response = await axios.get(etherscanApiEndpoint, {
+    const response = await axios.get(endpoint, {
       params: {
         module: "contract",
         action: "getabi",
         address: checkSumAddress,
-        apikey: etherscanApiKey,
+        apikey: apikey,
       },
     });
 
@@ -36,15 +58,18 @@ const getAbi = async (address) => {
 };
 
 // getSourceCode
-const getSourceCode = async (address) => {
+const getSourceCode = async (address, chain) => {
+
+  const {endpoint, apikey} = getChainConfig(chain) 
   const checkSumAddress = getAddress(address);
+  
   try {
-    const response = await axios.get(etherscanApiEndpoint, {
+    const response = await axios.get(endpoint, {
       params: {
         module: "contract",
         action: "getsourcecode",
         address: checkSumAddress,
-        apikey: etherscanApiKey,
+        apikey: apikey,
       },
     });
 
@@ -73,16 +98,18 @@ const getSourceCode = async (address) => {
 };
 
 // getByteCode
-const getByteCode = async (address) => {
+const getByteCode = async (address, chain) => {
+
+  const {endpoint, apikey} = getChainConfig(chain) 
   const checkSumAddress = getAddress(address);
 
   try {
-    const response = await axios.get(etherscanApiEndpoint, {
+    const response = await axios.get(endpoint, {
       params: {
         module: "proxy",
         action: "eth_getCode",
         address: checkSumAddress,
-        apikey: etherscanApiKey,
+        apikey: apikey,
       },
     });
 
@@ -96,6 +123,7 @@ const getByteCode = async (address) => {
 // check address -> contract or not
 const isContract = async (address) => {
   const checkSumAddress = getAddress(address);
+  
   try {
     const code = await provider.getCode(checkSumAddress);
     return code && code != "0x";

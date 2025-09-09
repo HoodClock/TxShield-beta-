@@ -44,7 +44,7 @@ const honeypotMasterController = async (req, res) => {
     }
 
     // ✅ Fetch ABI once only
-    const abi = await getAbi(normalRecepientAddress);
+    const abi = await getAbi(normalRecepientAddress, currencySymbol);
 
     // Build context to pass to helpers
     const context = {
