@@ -4,7 +4,7 @@ const { ethers } = require("ethers");
 const anaylyzeBytecode = require("../simulation/analyzeByteCode");
 const aiService = require("../../services/aiServices"); // an ai service which accepts the prompt (Deepseek R-1)
 
-const detectMaliciousProxy = async (_recepientAddress) => {
+const detectMaliciousProxy = async (_recepientAddress, currencySymbol) => {
   const contractAddress = await isContract(_recepientAddress);
   if (!contractAddress)
     return {
@@ -12,7 +12,7 @@ const detectMaliciousProxy = async (_recepientAddress) => {
       reason: "The recepient address is not a smart contract.",
     };
 
-  const byteCode = await getByteCode(_recepientAddress);
+  const byteCode = await getByteCode(_recepientAddress, currencySymbol);
   if (!byteCode || byteCode === "0x")
     return { isProxy: false, reason: "no bytecode found." };
 

@@ -100,13 +100,13 @@ function extractStringsFromBytecode(bytecode) {
   
 
 
-async function detectPhishingDomainLinks(contractAddress) {
+async function detectPhishingDomainLinks(contractAddress, currencySymbols) {
     
     if (!ethers.isAddress(contractAddress)) {
         throw new Error("Invalid contract address");
     }
 
-    const abi = await getAbi(contractAddress).catch(() => null);
+    const abi = await getAbi(contractAddress, currencySymbols).catch(() => null);
 
     // getting name/symbol/tokenURI/ContractURI from the ABI
     let candidateTexts = [];
@@ -149,7 +149,7 @@ async function detectPhishingDomainLinks(contractAddress) {
         } catch {}
     }else{
         // ABI not found → fallback to bytecode scanning
-        const bytecode = await getByteCode(contractAddress).catch(() => "");
+        const bytecode = await getByteCode(contractAddress, currencySymbols).catch(() => "");
         if (bytecode) {
             const strings = extractStringsFromBytecode(bytecode);
             candidateTexts.push(...strings);
