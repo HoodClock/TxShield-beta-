@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { FaEthereum } from "react-icons/fa";
-import { SiBinance, SiTether } from "react-icons/si";
+import { SiBinance, SiTether, SiSolana } from "react-icons/si";
 
 const currencies = [
     { value: "ETH", label: "ETH", icon: <FaEthereum className="inline mr-2 text-purple-400" /> },
     { value: "BNB", label: "BNB", icon: <SiBinance className="inline mr-2 text-yellow-400" /> },
     { value: "USDT", label: "USDT", icon: <SiTether className="inline mr-2 text-green-400" /> },
+    { value: "SOL", label: "SOL", icon: <SiSolana className="inline mr-2 text-red-400" /> }
 ];
 
 function currencySymbolComp({currency, setCurrency}) {
