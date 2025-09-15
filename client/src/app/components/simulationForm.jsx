@@ -45,7 +45,7 @@ export default function SimulationForm({ onSimulateAll }) {
   };
 
   return (
-    <div className="bg-black rounded-xl p-6 mb-8 border border-white/20 shadow-lg max-w-4xl mx-auto">
+    <div className="bg-black rounded-xl p-6 mb-8 border  shadow-lg max-w-4xl mx-auto">
       <h2 className="text-2xl font-bold text-white mb-6">
         Secure Your Transactions
       </h2>
@@ -67,7 +67,7 @@ export default function SimulationForm({ onSimulateAll }) {
               type="text"
               id="contractAddress"
               placeholder="0x..."
-              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+              className="w-full px-4 py-3 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
               value={contractAddress}
               onChange={(e) => setContractAddress(e.target.value)}
             />
@@ -106,11 +106,11 @@ export default function SimulationForm({ onSimulateAll }) {
               type="number"
               id="amount"
               placeholder="0.0"
-              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent pr-20"
+              className="w-full px-4 py-3 border rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent pr-20"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
             />
-            <div className="absolute right-2 top-3">
+            <div className="absolute right-1 top-0">
               <CurrencySymbolComp currency={currency} setCurrency={setCurrency} />
             </div>
           </div>
