@@ -81,7 +81,6 @@ const simulateSolTranscation = async (_contracAddress, _userAddress, _amount, _c
         parsedLogs,
         rentExemption
     }
-
 }
 
 
