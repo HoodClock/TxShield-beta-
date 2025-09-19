@@ -7,6 +7,8 @@ import CountUp from "react-countup";
 import ContactUs from "../components/contactus";
 import Link from "next/link";
 import Footer from "../components/footer";
+import ChainDisplay from "../components/ChainDisplay";
+import OurSolutionTxShield from "../components/OurSolutionTxShield";
 
 // Define CSS custom properties for reusable styles
 const styles = `
@@ -628,6 +630,38 @@ function HomePage() {
         </div>
       </section>
 
+
+      {/* Chains display */}
+      <motion.h2
+        className="text-4xl sm:text-5xl md:text-6xl font-bold mb-12 sm:mb-20 text-center"
+        style={{ fontFamily: "'ClashDisplay-Bold', sans-serif" }}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true }}
+      >
+        <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">
+          What Chains
+        </span>
+        <br className="md:hidden" /> We Support
+        <ChainDisplay />
+      </motion.h2>
+
+      {/* Our Solution */}
+      <motion.h2
+        className="text-4xl sm:text-5xl md:text-6xl font-bold mb-12 sm:mb-20 text-center"
+        style={{ fontFamily: "'ClashDisplay-Bold', sans-serif" }}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true }}
+      >
+        <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">
+          Our 
+        </span>
+        <br className="md:hidden" /> Solution 
+        <OurSolutionTxShield />        
+      </motion.h2>
 
       {/* Testimonial Section */}
       <section className="relative py-16 sm:py-24 px-4 sm:px-6 bg-gradient-to-b from-[#0A0A0A] to-black overflow-hidden">
