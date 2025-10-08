@@ -13,10 +13,16 @@ export default function Header() {
         {/* Logo + Title (now clickable) */}
         <Link style={{
           fontFamily: "'ClashDisplay-Bold', sans-serif",
-         }} href="/home" className="flex items-center space-x-3 group">
+        }} href="/home" className="flex items-center space-x-3 group">
           <div
-           className="w-10 h-10 flex items-center justify-center bg-gradient-to-br from-white to-gray-300 rounded-lg transition-transform group-hover:scale-105">
-            <svg
+            className="w-10 h-10 flex items-center justify-center  rounded-lg transition-transform group-hover:scale-105">
+            <img
+              src="/Images/logo.png"
+              alt="User profile"
+              className="w-full h-full object-cover"
+            />
+
+            {/* <svg
               width="24"
               height="24"
               viewBox="0 0 24 24"
@@ -44,19 +50,19 @@ export default function Header() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
-            </svg>
+            </svg> */}
           </div>
           <h1 className="text-2xl font-bold text-white group-hover:text-gray-300 transition-colors">
-            TxShield
+            Shield
           </h1>
         </Link>
 
-         {/* Centered Navigation Menu */}
-         <nav
-         style={{
-          fontFamily: "'ClashDisplay-Bold', sans-serif",
-         }}
-         className="absolute left-1/2 transform -translate-x-1/2 flex justify-between flex-wrap items-center space-x-12">
+        {/* Centered Navigation Menu */}
+        <nav
+          style={{
+            fontFamily: "'ClashDisplay-Bold', sans-serif",
+          }}
+          className="absolute left-1/2 transform -translate-x-1/2 flex justify-between flex-wrap items-center space-x-12">
           <Link
             href="https://txshield.gitbook.io/txshield-docs/"
             className="relative group py-2"
