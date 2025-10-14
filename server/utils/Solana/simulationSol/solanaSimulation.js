@@ -29,7 +29,7 @@ const simulateSolTranscation = async (_contracAddress, _userAddress, _amount, _c
     const base64Tx = serilizedTx.toString("base64")
 
     // now checking contract existence
-    const existence = contractExistenceCheck(_currencySymbol, provider);
+    const existence = await contractExistenceCheck(contractPublicKey, provider);
 
     if (!(await existence).exists) return { error: "Contract does not exist on Solana" }
 
@@ -40,8 +40,9 @@ const simulateSolTranscation = async (_contracAddress, _userAddress, _amount, _c
 
     // mintAuthority check
     let mintDetail = null;
+
     if (programType === "SPL Token Program") {
-        await mintAuthorityCheck(_contracAddress, provider);
+        mintDetail = await mintAuthorityCheck(_contracAddress, provider);
     }
 
     // Balance
@@ -54,7 +55,7 @@ const simulateSolTranscation = async (_contracAddress, _userAddress, _amount, _c
     })
 
     // compute units from result
-    const computeUnits = result.value.err || null
+    const computeUnits = result.value.unitsConsumed || null
 
     // program call and filtering 
     const programCall = parseProgramCall(result.value.logs);
@@ -66,7 +67,7 @@ const simulateSolTranscation = async (_contracAddress, _userAddress, _amount, _c
     const parsedLogs = result.value.logs || []
 
 
-    // Rent Exemtion Check
+    // Rent Exemption Check
     const rentExemption = await rentExemptionCheck(contractPublicKey, provider);
 
     // FINAL RESULTS
