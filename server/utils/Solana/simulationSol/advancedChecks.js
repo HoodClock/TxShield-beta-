@@ -1,9 +1,9 @@
-const { getMint } = require = ("@solana/spl-token");
+const { getMint } = require ("@solana/spl-token");
 const { PublicKey } = require("@solana/web3.js")
 const { findMetadataPda, fetchMetadata } = require("@metaplex-foundation/mpl-token-metadata")
 
 
-export async function checkTokenMetaDataIntegrity(connection, mintAddress) {
+async function checkTokenMetaDataIntegrity(connection, mintAddress) {
 
     try {
         const mintPubKey = new PublicKey(mintAddress)
@@ -13,9 +13,10 @@ export async function checkTokenMetaDataIntegrity(connection, mintAddress) {
 
 
         // fetching PDA(Program Derived Address) for metadata account
-        const metadataPDA = findMetadataPda(mintAddress);
+        const metadataPDA = findMetadataPda(mintPubKey);
 
         // fetching metadata account data
+        
         const metadata = await fetchMetadata(connection, metadataPDA);
 
         // verifying metadata URI
@@ -39,7 +40,7 @@ export async function checkTokenMetaDataIntegrity(connection, mintAddress) {
             symbol: metadata.symbol,
             uri: metadata.uri,
             mintAuthority: mintInfo.mintAuthority?.toBase58() || null,
-            freezeAithority: mintInfo.freezeAithority?.toBase58() || null,
+            freezeAithority: mintInfo.freezeAuthority?.toBase58() || null,
             uriValid,
             valid:
                 metadata.name?.length > 0 &&
@@ -57,3 +58,5 @@ export async function checkTokenMetaDataIntegrity(connection, mintAddress) {
         return { error: error.message }
     }
 }
+
+module.exports = {checkTokenMetaDataIntegrity}
