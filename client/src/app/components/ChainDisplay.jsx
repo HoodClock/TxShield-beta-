@@ -126,7 +126,7 @@ function ChainSection() {
                     </p>
 
                     {/* Animated Chains Rows */}
-                    <div className="relative h-48 overflow-hidden">
+                    <div className="relative h-auto overflow-hidden">
                         {/* First Row - Right to Left */}
                         <div className="mb-8 relative h-24">
                             <ChainRow 
@@ -157,7 +157,6 @@ function ChainSection() {
                     viewport={{ once: true }}
                     className="text-center"
                 >
-                  <OurSolutionTxShield />
                 </motion.div>
             </div>
         </section>
