@@ -21,8 +21,8 @@ export default function Header() {
       }`}>
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/home" className="flex items-center space-x-3 group">
-          <div className="w-8 h-8 flex items-center justify-center rounded-lg transition-transform group-hover:scale-110">
+        <Link href="/home" className="flex items-center group">
+          <div className="w-14 h-14 flex items-center justify-center rounded-full transition-transform group-hover:scale-110">
             <img
               src="/Images/logo.png"
               alt="Shield Logo"

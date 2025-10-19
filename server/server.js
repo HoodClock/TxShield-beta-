@@ -12,6 +12,7 @@ const phishingRouter = require("./routes/phishing/phishing.routes");
 const contactRouter = require("./routes/contact/contact.routes");
 const suggestionRouter = require("./routes/aiModel/aiModel.routes");
 const authRouter = require("./routes/auth/auth");
+const solSimulateRouter = require("./routes/simulation/sol-simulation.routes")
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -40,8 +41,9 @@ app.use("/api/generations/", suggestionRouter);
 
 app.use("/api/contact/", contactRouter);
 
-
 app.use("/auth", authRouter);
+
+app.use("/api/solana/", solSimulateRouter);
 
 // Listen Server
 app.listen(PORT, () => {
