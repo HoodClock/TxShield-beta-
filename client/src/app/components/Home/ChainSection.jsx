@@ -27,10 +27,6 @@ function ChainSection() {
                 transition={{ duration: 0.8 }}
                 viewport={{ once: true }}
             >
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">
-                    Our
-                </span>
-                <br className="md:hidden" /> Solution
                 <OurSolutionTxShield />
             </motion.h2>
         </>

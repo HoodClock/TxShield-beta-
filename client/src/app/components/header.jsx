@@ -47,6 +47,8 @@ export default function Header() {
               <span className="text-gray-300 group-hover:text-white transition-colors duration-300 text-sm font-medium">
                 {item}
               </span>
+
+
               <div className={`absolute bottom-0 left-0 w-full h-0.5 bg-white transition-all duration-300 ${activeTab === item.toLowerCase() ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
                 }`} />
             </Link>
