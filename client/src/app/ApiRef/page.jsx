@@ -84,7 +84,10 @@ function Page() {
     colors: ["#a864fd", "#29cdff", "#78ff44", "#ff718d", "#fdff6a"]
   };
 
+
+
   return (
+
     <div className="relative min-h-screen bg-black text-white flex flex-col items-center justify-center overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>

@@ -56,14 +56,14 @@ function AnalysisSection() {
     }, [isInView]);
 
     const ScamJourney = ({ title, steps, color, isReversed = false }) => (
-        <div className={`flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-start gap-8 lg:gap-16 relative`}>
+        <div className="flex flex-col items-start gap-8 lg:gap-16 relative">
             {/* Title Section */}
             <motion.div
-                initial={{ opacity: 0, x: isReversed ? 50 : -50 }}
+                initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8 }}
                 viewport={{ once: true }}
-                className="flex-1 lg:sticky lg:top-24"
+                className="w-full"
             >
                 <div className={`p-6 rounded-2xl border ${color.border} bg-gradient-to-br from-black to-gray-900 backdrop-blur-sm`}>
                     <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4">{title}</h3>
@@ -75,7 +75,7 @@ function AnalysisSection() {
             </motion.div>
 
             {/* Steps Timeline */}
-            <div className="flex-1 relative">
+            <div className="w-full relative">
                 {/* Vertical Connection Line */}
                 <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-gray-700 via-gray-500 to-gray-700 opacity-30 connection-line"></div>
                 
@@ -228,23 +228,25 @@ function AnalysisSection() {
                     </p>
                 </motion.div>
 
-                {/* Honeypot Journey */}
-                <div className="mb-32">
-                    <ScamJourney 
-                        title="Honeypot Scam Strategy"
-                        steps={honeypotSteps}
-                        color={colors.honeypot}
-                    />
-                </div>
+                {/* Side by side sections */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 mb-20">
+                    {/* Honeypot Section - Left */}
+                    <div className="honeypot-section">
+                        <ScamJourney 
+                            title="Honeypot Scam Strategy"
+                            steps={honeypotSteps}
+                            color={colors.honeypot}
+                        />
+                    </div>
 
-                {/* Phishing Journey */}
-                <div className="mb-20">
-                    <ScamJourney 
-                        title="Phishing Attack Flow"
-                        steps={phishingSteps}
-                        color={colors.phishing}
-                        isReversed={true}
-                    />
+                    {/* Phishing Section - Right */}
+                    <div className="phishing-section">
+                        <ScamJourney 
+                            title="Phishing Attack Flow"
+                            steps={phishingSteps}
+                            color={colors.phishing}
+                        />
+                    </div>
                 </div>
 
                 {/* Final Outcome */}
