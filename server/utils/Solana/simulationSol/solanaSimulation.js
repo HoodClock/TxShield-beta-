@@ -2,6 +2,7 @@ const {
   PublicKey,
   SystemProgram,
   Transaction,
+  Keypair
 } = require("@solana/web3.js");
 const { decideChains } = require("../../../config/provider");
 
@@ -21,6 +22,7 @@ const simulateSolTranscation = async (_userAddress, _contractAddress, _amount, _
       })
     );
 
+    // blockhash & fee payer
     const { blockhash } = await provider.getLatestBlockhash("finalized");
     tx.recentBlockhash = blockhash;
     tx.feePayer = userWalletPublicKey;
@@ -30,6 +32,7 @@ const simulateSolTranscation = async (_userAddress, _contractAddress, _amount, _
       recentBlockhash: tx.recentBlockhash,
       instructionsCount: tx.instructions.length,
     });
+
 
     // checking contract existence 
     const existence = await contractExistenceCheck(contractPublicKey, provider);
@@ -52,10 +55,13 @@ const simulateSolTranscation = async (_userAddress, _contractAddress, _amount, _
     // checking account balance 
     const balance = await accountBalanceCheck(userWalletPublicKey, provider);
 
+    // dummy signing to bypass validation
+    const  dummyKeypair = Keypair.generate();
+    tx.partialSign(dummyKeypair);
 
     // just simulating not signing
     const result = await provider.simulateTransaction(tx, {
-      sigVerify: false,               // skip signature check
+      sigVerify: false,               // dummy signature check applied already for backend
       replaceRecentBlockhash: false,  // use provided blockhash
     });
 

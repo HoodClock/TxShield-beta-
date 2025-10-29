@@ -22,16 +22,16 @@ export default function Header() {
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
         <Link href="/home" className="flex items-center group">
-          <div className="w-14 h-14 flex items-center justify-center rounded-full transition-transform group-hover:scale-110">
+          <div className="w-30 h-30 flex items-center justify-center rounded-full transition-transform group-hover:scale-110">
             <img
               src="/Images/logo.png"
               alt="Shield Logo"
               className="w-full h-full object-cover"
             />
           </div>
-          <h1 className="text-xl font-bold text-white group-hover:text-gray-300 transition-colors">
-            Shield
-          </h1>
+          {/* <h1 className="text-xl font-bold text-white group-hover:text-gray-300 transition-colors"> */}
+            {/* Shield */}
+          {/* </h1> */}
         </Link>
 
         {/* Navigation */}
