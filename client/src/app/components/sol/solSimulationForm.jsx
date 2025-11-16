@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import CurrencySymbolComp from "./currencySymbolComp"
+import CurrencySymbolComp from "../currencySymbolComp"
 import { useWallet } from "@solana/wallet-adapter-react"
 
 
