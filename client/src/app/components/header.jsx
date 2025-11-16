@@ -1,11 +1,8 @@
 "use client";
 import Link from "next/link";
-import ConnectWallet from "./connectWallet";
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
 
 export default function Header() {
-  const pathname = usePathname();
 
   const [activeTab, setActiveTab] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
@@ -16,14 +13,13 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const showWallet = pathname.startsWith("/simulate");
 
   return (
     <header className={`fixed top-0 w-full z-50 transition-all duration-500
       ${isScrolled ? "bg-black/80 backdrop-blur-lg border-b border-white/10" : "bg-transparent"}
     `}>
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        
+
         <Link href="/home" className="flex items-center group">
           <div className="w-30 h-30">
             <img src="/Images/logo.png" className="w-full h-full object-cover" />
@@ -50,7 +46,6 @@ export default function Header() {
           ))}
         </nav>
 
-        {showWallet && <ConnectWallet />}
       </div>
     </header>
   );

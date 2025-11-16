@@ -4,6 +4,7 @@ import { useState } from "react";
 import Head from "next/head";
 import Header from "../components/header";
 import SimulationForm from "../components/simulationForm";
+import ConnectWallet from "../components/connectWallet";
 import LoadingState from "../components/loading";
 import ResultsDashboard from "../components/result";
 import HoneypotChecks from "../components/honeypotChecks";
@@ -158,10 +159,17 @@ export default function App() {
           )}
           {/* render simulation Forms with correct Provider based on selected chains */}
           {chain && (
-            <WalletProviderWrapper chain={chain}>
-              {chain === "EVM" && <EvmSimulationForm onSimulateAll={handleSimulateAll} />}
-              {chain === "SOL" && <SolSimulationForm onSolSimulateAll={handleSolSimulation} />}
-            </WalletProviderWrapper>
+            // Showing connect wallet inside the wrapper
+            <>
+              <div className="flex justify-center my-6">
+                <ConnectWallet />
+              </div>
+
+              <WalletProviderWrapper chain={chain}>
+                {chain === "EVM" && <EvmSimulationForm onSimulateAll={handleSimulateAll} />}
+                {chain === "SOL" && <SolSimulationForm onSolSimulateAll={handleSolSimulation} />}
+              </WalletProviderWrapper>
+            </>
           )}
           {/* <SimulationForm
             onSolSimulateAll={handleSolSimulation}
