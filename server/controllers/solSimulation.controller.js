@@ -3,9 +3,10 @@ const solSimulationHelper = require("../helpers/solSimulation.helper")
 
 const simulateSOLTransactionController = async (req, res) => {
     try {
-      const { userAddress, recepientAddress, amount, currencySymbol } = req.body;
+      const {signedTxBase64, userAddress, recepientAddress, amount, currencySymbol } = req.body;
 
       const result = await solSimulationHelper.simulateSOLTxHelper(
+        signedTxBase64,
         userAddress,
         recepientAddress,
         amount,

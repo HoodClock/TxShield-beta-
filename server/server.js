@@ -43,7 +43,7 @@ app.use("/api/contact/", contactRouter);
 
 app.use("/auth", authRouter);
 
-app.use("/api/solana/", solSimulateRouter);
+app.use("/api/solana/simulate", solSimulateRouter);
 
 // Listen Server
 app.listen(PORT, () => {
