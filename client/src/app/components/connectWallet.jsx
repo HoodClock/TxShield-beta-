@@ -1,14 +1,18 @@
-"use client"
+'use client'
 
-import React from 'react'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { SolanaConnectButton } from "@/app/components/SolanaConnectButton"
+import { usePathname } from 'next/navigation'
 
-function connectWallet() {
+export default function ConnectWallet() {
+  const pathname = usePathname();
+
+  if (!pathname.startsWith("/simulate")) return null;
+
   return (
-    <div className="custom-rainbow-wrapper">
+    <div className='flex flex-wrap gap-2'>
+      <SolanaConnectButton />
       <ConnectButton />
     </div>
   )
 }
-
-export default connectWallet
