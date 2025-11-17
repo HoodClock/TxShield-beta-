@@ -6,6 +6,25 @@
 }
 
 
+@import '@rainbow-me/rainbowkit/styles.css';
+@import '@solana/wallet-adapter-react-ui/styles.css';
+
+/* Ensure RainbowKit modal has proper z-index */
+[data-rk] {
+  position: relative;
+  z-index: 1000;
+}
+
+/* Fix for connect button */
+.rainbowkit-connect-wrapper [data-rk] ._12lbo {
+  cursor: pointer !important;
+}
+
+/* Make sure buttons are interactive */
+.rainbowkit-connect-wrapper button {
+  cursor: pointer !important;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

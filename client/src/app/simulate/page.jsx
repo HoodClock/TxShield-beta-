@@ -1,20 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense, lazy } from "react";
 import Head from "next/head";
-import Header from "../components/header";
-import SimulationForm from "../components/simulationForm";
-import ConnectWallet from "../components/connectWallet";
-import LoadingState from "../components/loading";
-import ResultsDashboard from "../components/result";
-import HoneypotChecks from "../components/honeypotChecks";
-import Recommendations from "../components/recomendations";
-import Footer from "../components/footer";
+
+// all the components of Simualtion forms
+const Header = lazy(() => import("../components/header"))
+const SimulationForm = lazy(() => import("../components/simulationForm"));
+const ConnectWallet = lazy(() => import("../components/connectWallet"));
+const ResultsDashboard = lazy(() => import("../components/result"));
+const HoneypotChecks = lazy(() => import("../components/honeypotChecks"));
+const Recommendations = lazy(() => import("../components/recomendations"));
+const Footer = lazy(() => import("../components/footer"));
+
 
 // wallet providers & EVM/SOL-Components imports
-import WalletProviderWrapper from "../components/WalletProviderWrapper";
-import EvmSimulationForm from "../components/evm/evmSimulationForm"
-import SolSimulationForm from "../components/sol/solSimulationForm"
+const WalletProviderWrapper = lazy(() => import("../components/WalletProviderWrapper"))
+const EvmSimulationForm = lazy(() => import("../components/evm/evmSimulationForm"))
+const SolSimulationForm = lazy(() => import("../components/sol/solSimulationForm"))
 
 import {
   honeypotChecks as runHoneypotChecks,
@@ -120,7 +122,9 @@ export default function App() {
         />
       </Head>
 
-      <Header />
+      <Suspense fallback={<div className="h-16 bg-black"></div>}>
+        <Header />
+      </Suspense>
 
       <main className="container mx-auto px-4 py-8">
         {/* Centered Section (Form + Loading) */}
@@ -128,10 +132,6 @@ export default function App() {
           <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary-400 to-secondary-500 bg-clip-text text-transparent">
             Secure Your Transactions
           </h2>
-          <p className="text-xl text-gray-300 mb-8">
-            Simulate and analyze your blockchain transactions before execution
-            with our advanced security checks
-          </p>
 
           {/* select chains first */}
           {!chain && (
@@ -157,24 +157,25 @@ export default function App() {
               </div>
             </div>
           )}
+
           {/* render simulation Forms with correct Provider based on selected chains */}
           {chain && (
             // Showing connect wallet inside the wrapper
-            <>
-              <div className="flex justify-center my-6">
-                <ConnectWallet />
-              </div>
 
-              <WalletProviderWrapper chain={chain}>
+            <WalletProviderWrapper chain={chain}>
+              <div className="flex justify-center my-6">
+                <ConnectWallet chain={chain} />
+              </div>
+              <Suspense fallback={<div className="h-64 bg-gray-900 rounded-xl animate-pulse"></div>}>
                 {chain === "EVM" && <EvmSimulationForm onSimulateAll={handleSimulateAll} />}
                 {chain === "SOL" && <SolSimulationForm onSolSimulateAll={handleSolSimulation} />}
-              </WalletProviderWrapper>
-            </>
+              </Suspense>
+            </WalletProviderWrapper>
           )}
-          <SimulationForm
+          {/* <SimulationForm
             onSolSimulateAll={handleSolSimulation}
             onSimulateAll={handleSimulateAll}
-          />
+          /> */}
 
           {isLoading && <LoadingState isLoading={true} onComplete={() => { }} />}
         </section>
@@ -183,29 +184,37 @@ export default function App() {
         {showResults && (
           <div className="space-y-8">
             {" "}
-            {/* Removed mx-auto and text-center */}
-            <ResultsDashboard
-              isVisible={showResults}
-              simulation={simulationData}
-              honeypot={honeypotData}
-              phishing={phishingData}
-            />
-            <HoneypotChecks isVisible={showResults} data={honeypotData} />
+            <Suspense fallback={<div className="h-64 bg-gray-900 rounded-xl animate-pulse"></div>}>
+              {/* Removed mx-auto and text-center */}
+              <ResultsDashboard
+                isVisible={showResults}
+                simulation={simulationData}
+                honeypot={honeypotData}
+                phishing={phishingData}
+              />
+            </Suspense>
+            <Suspense fallback={<div className="h-48 bg-gray-900 rounded-xl animate-pulse"></div>}>
+              <HoneypotChecks isVisible={showResults} data={honeypotData} />
+            </Suspense>
           </div>
         )}
 
         {/* recommendations */}
         {showResults && (
-          <Recommendations
-            simulationData={simulationData}
-            honeypotData={honeypotData}
-            onGenerate={handleRecommendation}
-            recommendation={recommendation}
-          />
+          <Suspense fallback={<div className="h-32 bg-gray-900 rounded-xl animate-pulse"></div>}>
+            <Recommendations
+              simulationData={simulationData}
+              honeypotData={honeypotData}
+              onGenerate={handleRecommendation}
+              recommendation={recommendation}
+            />
+          </Suspense>
         )}
       </main>
 
-      <Footer />
+      <Suspense fallback={<div className="h-20 bg-black"></div>}>
+        <Footer />
+      </Suspense>
     </div>
   );
 }
