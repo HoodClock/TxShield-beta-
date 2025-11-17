@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
+import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import {
   FaShieldAlt,
   FaSearch,
@@ -21,14 +22,12 @@ import {
   FaBan,
   FaCoins,
   FaEye,
-  FaRobot,
-  FaChevronDown,
-  FaChevronUp
+  FaRobot
 } from 'react-icons/fa';
 
 function OurSolutionTxShield() {
   const ref = useRef();
-  const isInView = useInView(ref, { once: false, amount: 0.3 });
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
 
   const [openSection, setOpenSection] = useState({
     honeypot: true,
@@ -97,81 +96,50 @@ function OurSolutionTxShield() {
 
   const DropdownSection = ({ sectionKey, isOpen, onToggle }) => {
     const section = sections[sectionKey];
-    const sectionRef = useRef();
-    const sectionInView = useInView(sectionRef, { once: true, amount: 0.2 });
-
-    const getSectionColor = (key) => {
-      switch (key) {
-        case 'honeypot': return 'border-l-purple-500';
-        case 'phishing': return 'border-l-red-500';
-        case 'upcoming': return 'border-l-blue-500';
-        default: return 'border-l-gray-500';
-      }
-    };
 
     return (
-      <div ref={sectionRef} className="mb-6 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 overflow-hidden">
-        {/* Dropdown Header */}
-        <motion.button
-          className="w-full p-6 text-left flex items-center justify-between hover:bg-white/5 transition-all duration-300"
+      <div className="mb-4 rounded-xl bg-white/4 border border-white/6 overflow-hidden backdrop-blur-sm">
+        <button
           onClick={() => onToggle(sectionKey)}
-          whileHover={{ backgroundColor: 'rgba(255,255,255,0.08)' }}
+          className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-white/5 transition-all"
         >
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-white/10">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-lg bg-white/6 flex items-center justify-center text-white">
               {section.icon}
             </div>
-            <div className="text-left">
-              <div className="flex items-center space-x-3">
-                <h2 className="text-xl font-semibold text-white">{section.title}</h2>
-                <span className="px-2 py-1 text-xs font-medium bg-white/10 rounded-full text-white/80">
+            <div>
+              <div className="flex items-center gap-3">
+                <h3 className="font-semibold text-white text-lg">{section.title}</h3>
+                <span className="text-xs text-gray-400 bg-white/5 px-3 py-1 rounded-full">
                   {section.count}
                 </span>
               </div>
-              <p className="text-white/60 text-sm mt-1">{section.description}</p>
+              <p className="text-gray-400 text-sm mt-1">{section.description}</p>
             </div>
           </div>
-          <div className="text-white/60 transition-transform duration-300">
-            {isOpen ? <FaChevronUp /> : <FaChevronDown />}
+          <div className="text-gray-400 text-lg transition-transform">
+            {isOpen ? <FiChevronUp /> : <FiChevronDown />}
           </div>
-        </motion.button>
+        </button>
 
-        {/* Dropdown Content */}
         <motion.div
           initial={false}
-          animate={isOpen ? {
-            height: 'auto',
-            opacity: 1,
-            transition: { duration: 0.3, ease: "easeOut" }
-          } : {
-            height: 0,
-            opacity: 0,
-            transition: { duration: 0.2, ease: "easeIn" }
-          }}
+          animate={isOpen ? { height: 'auto', opacity: 1 } : { height: 0, opacity: 0 }}
+          transition={{ duration: 0.25 }}
           className="overflow-hidden"
         >
-          <div className="p-6 border-t border-white/10">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="px-6 py-4 border-t border-white/6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
               {section.items.map((item, index) => (
-                <motion.div
+                <div
                   key={index}
-                  className={`p-4 rounded-lg bg-white/5 border-l-4 ${getSectionColor(sectionKey)} backdrop-blur-sm hover:bg-white/10 transition-all duration-300 group`}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={sectionInView && isOpen ? { opacity: 1, scale: 1 } : {}}
-                  transition={{ duration: 0.3, delay: index * 0.05 }}
-                  whileHover={{ scale: 1.02 }}
+                  className="p-3 rounded-lg bg-white/5 border border-white/6 hover:bg-white/8 transition-all flex flex-col items-center text-center gap-2"
                 >
-                  <div className="flex items-center space-x-3">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-white/10 group-hover:bg-white/20 transition-colors">
-                      <div className="text-white/70 group-hover:text-white">
-                        {item.icon}
-                      </div>
-                    </div>
-                    <h3 className="text-sm font-medium text-white group-hover:text-white/90">
-                      {item.title}
-                    </h3>
+                  <div className="w-8 h-8 rounded-lg bg-white/6 flex items-center justify-center text-white text-sm">
+                    {item.icon}
                   </div>
-                </motion.div>
+                  <span className="text-xs text-gray-300 font-medium">{item.title}</span>
+                </div>
               ))}
             </div>
           </div>
@@ -181,33 +149,31 @@ function OurSolutionTxShield() {
   };
 
   return (
-    <div ref={ref} className="min-h-screen text-white py-16 px-4">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
+    <div ref={ref} className="relative py-12 px-4 sm:px-6">
+      <div className="max-w-6xl mx-auto">
         <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
+          className="text-center mb-10"
+          initial={{ opacity: 0, y: 12 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 border border-white/10 mb-6">
+          <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white/5 border border-white/10 mb-4">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-sm text-gray-300">Our Solution</span>
+            <span className="text-sm text-gray-300 uppercase">Our Solution</span>
           </div>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
+          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-3">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-300 to-gray-500">
               TxShield
             </span>
-            <br />
+            {' '}
             <span className="text-white">Security</span>
-          </h1>
-          <p className="text-lg text-white/60 max-w-2xl mx-auto leading-relaxed">
-            Comprehensive blockchain security framework with advanced threat detection and prevention
+          </h2>
+          <p className="text-gray-400 max-w-2xl mx-auto">
+            Multi-layered detection systems designed to protect your assets.
           </p>
         </motion.div>
 
-        {/* Dropdown Sections */}
-        <div className="space-y-6 max-w-6xl mx-auto">
+        <div className="space-y-4 max-w-4xl mx-auto">
           <DropdownSection
             sectionKey="honeypot"
             isOpen={openSection.honeypot}

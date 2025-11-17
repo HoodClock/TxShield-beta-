@@ -1,195 +1,81 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { motion, useInView } from "framer-motion";
-import { gsap } from "gsap";
 
 function AnalysisSection() {
     const sectionRef = useRef(null);
-    const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
-    const timelineRef = useRef(null);
-
-    useEffect(() => {
-        if (isInView) {
-            // Create master timeline
-            timelineRef.current = gsap.timeline();
-            
-            // Animate connecting lines
-            timelineRef.current.fromTo(".connection-line",
-                { scaleX: 0, opacity: 0 },
-                { scaleX: 1, opacity: 1, duration: 1.5, ease: "power3.out", stagger: 0.2 },
-                0
-            );
-
-            // Animate scam cards with stagger
-            timelineRef.current.fromTo(".scam-card",
-                { opacity: 0, y: 60, scale: 0.8 },
-                { opacity: 1, y: 0, scale: 1, duration: 1, ease: "back.out(1.7)", stagger: 0.15 },
-                0.5
-            );
-
-            // Animate background elements
-            timelineRef.current.fromTo(".floating-icon",
-                { y: -20, opacity: 0 },
-                { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: "power2.out" },
-                0.3
-            );
-
-            // Continuous floating animation for icons
-            gsap.to(".floating-icon", {
-                y: -10,
-                duration: 2,
-                ease: "power1.inOut",
-                repeat: -1,
-                yoyo: true,
-                stagger: 0.2
-            });
-
-            // Pulse animation for active steps
-            gsap.to(".step-pulse", {
-                scale: 1.1,
-                duration: 1.5,
-                ease: "power1.inOut",
-                repeat: -1,
-                yoyo: true,
-                stagger: 0.3
-            });
-        }
-    }, [isInView]);
-
-    const ScamJourney = ({ title, steps, color, isReversed = false }) => (
-        <div className="flex flex-col items-start gap-8 lg:gap-16 relative">
-            {/* Title Section */}
-            <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8 }}
-                viewport={{ once: true }}
-                className="w-full"
-            >
-                <div className={`p-6 rounded-2xl border ${color.border} bg-gradient-to-br from-black to-gray-900 backdrop-blur-sm`}>
-                    <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4">{title}</h3>
-                    <div className="flex items-center gap-3">
-                        <div className={`w-3 h-3 rounded-full ${color.pulse} step-pulse`}></div>
-                        <span className="text-gray-400 text-sm">{steps.length} step process</span>
-                    </div>
-                </div>
-            </motion.div>
-
-            {/* Steps Timeline */}
-            <div className="w-full relative">
-                {/* Vertical Connection Line */}
-                <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-gray-700 via-gray-500 to-gray-700 opacity-30 connection-line"></div>
-                
-                {steps.map((step, index) => (
-                    <div key={index} className="relative mb-8 last:mb-0">
-                        {/* Step Connector */}
-                        <div className="absolute left-6 -translate-x-1/2 w-4 h-4 rounded-full bg-black border-2 border-white z-10"></div>
-                        
-                        {/* Step Card */}
-                        <motion.div
-                            className="scam-card ml-12 p-6 rounded-xl border border-white/10 bg-gradient-to-br from-black to-gray-900 backdrop-blur-sm hover:border-white/20 transition-all duration-300 group hover:scale-105"
-                            whileHover={{ y: -5 }}
-                        >
-                            <div className="flex items-start gap-4">
-                                <div className={`flex-shrink-0 w-12 h-12 rounded-lg ${color.gradient} flex items-center justify-center text-white text-lg font-bold group-hover:scale-110 transition-transform duration-300 floating-icon`}>
-                                    {step.icon}
-                                </div>
-                                <div className="flex-1">
-                                    <div className="flex items-center gap-3 mb-2">
-                                        <span className="text-sm text-gray-400">Step {index + 1}</span>
-                                        <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
-                                        <span className={`text-xs px-2 py-1 rounded-full ${color.badge} ${color.text}`}>
-                                            {step.type}
-                                        </span>
-                                    </div>
-                                    <h4 className="text-lg font-bold text-white mb-2">{step.title}</h4>
-                                    <p className="text-gray-400 text-sm leading-relaxed">{step.description}</p>
-                                </div>
-                            </div>
-                            
-                            {/* Hover Effect */}
-                            <div className={`absolute inset-0 rounded-xl ${color.hover} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
-                        </motion.div>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
+    const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
+    const [open, setOpen] = useState(false);
+    const [selected, setSelected] = useState('honeypot');
 
     const honeypotSteps = [
         {
-            icon: "🪙",
-            title: "Malicious Token Creation",
-            description: "Deploy smart contract with hidden backdoors and withdrawal blockers disguised as legitimate code.",
-            type: "Deployment"
+            icon: '🪙',
+            title: 'Malicious Token Creation',
+            description: 'Deploy smart contract with hidden backdoors and withdrawal blockers disguised as legitimate code.',
+            type: 'Deployment'
         },
         {
-            icon: "💧",
-            title: "Fake Liquidity Pool",
-            description: "Add minimal liquidity to create trading activity illusion while preventing large withdrawals.",
-            type: "Setup"
+            icon: '💧',
+            title: 'Fake Liquidity Pool',
+            description: 'Add minimal liquidity to create trading activity illusion while preventing large withdrawals.',
+            type: 'Setup'
         },
         {
-            icon: "📢",
-            title: "Social Engineering Push",
-            description: "Coordinate fake influencers and bots to create artificial hype and FOMO around the token.",
-            type: "Marketing"
+            icon: '📢',
+            title: 'Social Engineering Push',
+            description: 'Coordinate fake influencers and bots to create artificial hype and FOMO around the token.',
+            type: 'Marketing'
         },
         {
-            icon: "🕳️",
-            title: "Deposit Trap Activation",
-            description: "Allow deposits but block all withdrawal attempts through hidden contract logic.",
-            type: "Execution"
+            icon: '🕳️',
+            title: 'Deposit Trap Activation',
+            description: 'Allow deposits but block all withdrawal attempts through hidden contract logic.',
+            type: 'Execution'
         }
     ];
 
     const phishingSteps = [
         {
-            icon: "🌐",
-            title: "Clone Legitimate Platform",
-            description: "Create perfect replicas of popular DEXs, wallets, or NFT markets with malicious modifications.",
-            type: "Impersonation"
+            icon: '🌐',
+            title: 'Clone Legitimate Platform',
+            description: 'Create perfect replicas of popular DEXs, wallets, or NFT markets with malicious modifications.',
+            type: 'Impersonation'
         },
         {
-            icon: "🎣",
-            title: "Urgent Action Bait",
+            icon: '🎣',
+            title: 'Urgent Action Bait',
             description: "Send fake security alerts, airdrop announcements, or limited-time offers to create urgency.",
-            type: "Lure"
+            type: 'Lure'
         },
         {
-            icon: "🔑",
-            title: "Credential Harvesting",
-            description: "Capture wallet connections, private keys, or seed phrases through fake login portals.",
-            type: "Theft"
+            icon: '🔑',
+            title: 'Credential Harvesting',
+            description: 'Capture wallet connections, private keys, or seed phrases through fake login portals.',
+            type: 'Theft'
         },
         {
-            icon: "💸",
-            title: "Instant Asset Drain",
-            description: "Immediately transfer all accessible funds from compromised wallets to attacker addresses.",
-            type: "Extraction"
+            icon: '💸',
+            title: 'Instant Asset Drain',
+            description: 'Immediately transfer all accessible funds from compromised wallets to attacker addresses.',
+            type: 'Extraction'
         }
     ];
 
-    const colors = {
-        honeypot: {
-            gradient: "bg-gradient-to-br from-red-500 to-orange-500",
-            border: "border-red-500/30",
-            badge: "bg-red-500/20",
-            text: "text-red-300",
-            hover: "bg-red-500",
-            pulse: "bg-red-400"
-        },
-        phishing: {
-            gradient: "bg-gradient-to-br from-blue-500 to-purple-500",
-            border: "border-blue-500/30",
-            badge: "bg-blue-500/20",
-            text: "text-blue-300",
-            hover: "bg-blue-500",
-            pulse: "bg-blue-400"
-        }
-    };
+    const playbooks = [
+        { id: 'honeypot', title: 'Honeypot Scam Strategy', steps: honeypotSteps, color: 'red' },
+        { id: 'phishing', title: 'Phishing Attack Flow', steps: phishingSteps, color: 'blue' }
+    ];
+
+    const selectedPlaybook = playbooks.find(p => p.id === selected) || playbooks[0];
+
+    const panelVariants = {
+        hidden: { height: 0, opacity: 0 },
+        show: { height: 'auto', opacity: 1, transition: { duration: 0.35 } }
+    }
+
 
     return (
-        <section ref={sectionRef} className="relative py-20 px-4 sm:px-6 overflow-hidden bg-black">
+        <section ref={sectionRef} className="relative py-16 px-4 sm:px-6 overflow-hidden bg-black">
             {/* Animated Background */}
             <div className="absolute inset-0">
                 <div className="absolute top-0 left-0 w-72 h-72 bg-red-500/5 rounded-full blur-3xl animate-pulse"></div>
@@ -228,49 +114,94 @@ function AnalysisSection() {
                     </p>
                 </motion.div>
 
-                {/* Side by side sections */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 mb-20">
-                    {/* Honeypot Section - Left */}
-                    <div className="honeypot-section">
-                        <ScamJourney 
-                            title="Honeypot Scam Strategy"
-                            steps={honeypotSteps}
-                            color={colors.honeypot}
-                        />
-                    </div>
+                {/* Dropdown playbook selector */}
+                <div className="max-w-3xl mx-auto mb-10">
+                    <div className="relative">
+                        <button
+                            onClick={() => setOpen(!open)}
+                            className="w-full flex items-center justify-between gap-4 px-5 py-3 rounded-xl bg-white/4 border border-white/6 backdrop-blur-sm"
+                        >
+                            <div className="text-left">
+                                <div className="text-sm text-gray-400">Select Playbook</div>
+                                <div className="text-lg font-semibold text-white">{selectedPlaybook.title}</div>
+                            </div>
+                            <div className="text-gray-400">{open ? '▴' : '▾'}</div>
+                        </button>
 
-                    {/* Phishing Section - Right */}
-                    <div className="phishing-section">
-                        <ScamJourney 
-                            title="Phishing Attack Flow"
-                            steps={phishingSteps}
-                            color={colors.phishing}
-                        />
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={open ? 'show' : 'hidden'}
+                            variants={panelVariants}
+                            className="absolute left-0 right-0 mt-3 z-20"
+                        >
+                            <div className="rounded-xl bg-white/4 border border-white/6 p-3 backdrop-blur-sm shadow-md">
+                                {playbooks.map(pb => (
+                                    <button
+                                        key={pb.id}
+                                        onClick={() => { setSelected(pb.id); setOpen(false); }}
+                                        className={`w-full text-left px-4 py-3 rounded-md mb-2 transition ${selected === pb.id ? 'bg-white/6 border-white/10' : 'hover:bg-white/5'}`}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <div className="text-sm text-gray-300">{pb.title}</div>
+                                            <div className="text-xs text-gray-400">{pb.id === 'honeypot' ? '4 step process' : '4 step process'}</div>
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                        </motion.div>
                     </div>
                 </div>
 
-                {/* Final Outcome */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.6 }}
-                    viewport={{ once: true }}
-                    className="text-center p-8 rounded-2xl border border-white/10 bg-gradient-to-br from-black to-gray-900 backdrop-blur-sm relative overflow-hidden"
-                >
-                    <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 via-purple-500/5 to-blue-500/5 opacity-50"></div>
-                    <div className="relative z-10">
-                        <div className="text-6xl mb-4">💨</div>
-                        <h3 className="text-2xl font-bold text-white mb-4">The Inevitable Outcome</h3>
-                        <p className="text-gray-400 text-lg max-w-2xl mx-auto mb-6">
-                            Both attack vectors lead to the same result: complete loss of funds. 
-                            Attackers vanish with all assets, leaving victims with empty wallets and worthless tokens.
-                        </p>
-                        <div className="inline-flex items-center gap-4 px-6 py-3 rounded-full bg-white/5 border border-white/10">
-                            <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
-                            <span className="text-sm text-gray-300">Average loss per victim: $2,800+</span>
+                {/* Playbook details panel */}
+                <div className="max-w-4xl mx-auto">
+                    <motion.div
+                        variants={panelVariants}
+                        initial="show"
+                        animate={isInView ? 'show' : 'hidden'}
+                        className="rounded-2xl bg-white/4 border border-white/6 p-6 backdrop-blur-sm mb-8"
+                    >
+                        <div className="flex items-start gap-6">
+                            <div className="flex-1">
+                                <div className="text-sm text-gray-400 mb-1">{selectedPlaybook.title}</div>
+                                <h3 className="text-2xl font-bold text-white mb-3">Overview</h3>
+                                <p className="text-gray-400 mb-4">A concise breakdown of the main stages. Expand the dropdown to switch playbooks.</p>
+
+                                <div className="space-y-3">
+                                    {(selectedPlaybook.steps || []).map((step, i) => (
+                                        <div key={i} className="flex items-start gap-4">
+                                            <div className="w-10 h-10 rounded-lg bg-white/6 flex items-center justify-center text-lg">
+                                                {step.icon}
+                                            </div>
+                                            <div>
+                                                <div className="text-sm text-gray-300">Step {i + 1} • <span className="text-xs text-gray-500">{step.type}</span></div>
+                                                <div className="text-white font-semibold">{step.title}</div>
+                                                <div className="text-gray-400 text-sm">{step.description}</div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="w-36 hidden lg:block">
+                                <div className="rounded-xl bg-white/6 p-4 text-center">
+                                    <div className="text-sm text-gray-400">Estimated Impact</div>
+                                    <div className="text-3xl font-bold text-white mt-2">$12.7M</div>
+                                    <div className="text-xs text-gray-500 mt-1">reported cases • 3,200+</div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </motion.div>
+                    </motion.div>
+
+                    <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={isInView ? { opacity: 1, y: 0 } : {}}
+                        transition={{ duration: 0.5 }}
+                        className="text-center p-6 rounded-lg border border-white/10 bg-gradient-to-br from-black to-gray-900/50"
+                    >
+                        <h4 className="text-lg font-semibold text-white mb-2">The Inevitable Outcome</h4>
+                        <p className="text-gray-400">Both attack vectors lead to the same result: complete loss of funds. Attackers vanish with all assets.</p>
+                    </motion.div>
+                </div>
             </div>
         </section>
     );

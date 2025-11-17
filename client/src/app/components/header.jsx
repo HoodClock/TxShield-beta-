@@ -23,8 +23,8 @@ export default function Header() {
         {/* Logo */}
         <Link href="/home" className="flex items-center group">
           <div className="w-30 h-30 flex items-center justify-center rounded-full transition-transform group-hover:scale-110">
-            <img
-              src="/Images/logo.png"
+            <img 
+              src="/Images/newlogo.jpg"
               alt="Shield Logo"
               className="w-full h-full object-cover"
             />
