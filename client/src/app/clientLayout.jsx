@@ -1,17 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import dynamic from "next/dynamic";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
-
-const EvmProvider = dynamic(() => import("./provider/EvmProvider"), {
-  ssr: false
-})
-
-const SolProvider = dynamic(() => import("./provider/SolProvider"), {
-  ssr: false
-})
 
 
 export default function ClientLayout({ children }) {
@@ -19,11 +9,7 @@ export default function ClientLayout({ children }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <EvmProvider>
-        <SolProvider>
-          {children}
-        </SolProvider>
-      </EvmProvider>
+      {children}
     </QueryClientProvider>
   );
 }

@@ -1,19 +1,29 @@
 "use client"
 
-import dynamic from "next/dynamic"
-import { useMemo } from "react"
+import { Suspense, lazy } from "react"
+
+
+const EvmProvider = lazy(() => import("./evm/EvmProvider"))
+const SolProvider = lazy(() => import("./sol/SolProvider"))
 
 export default function WalletProviderWrapper({ chain, children }) {
-    const Provider = useMemo(() => {
-        if (chain === "EVM") {
-            return dynamic(() => import("./evm/EvmProvider"), { ssr: false })
-        }
-        if (chain === "SOL") {
-            return dynamic(() => import("./sol/SolProvider"), { ssr: false })
-        }
+    if (!chain) {
+        return <>{children}</>
+    }
 
-        return ({ children }) => <>{children}</>
-    }, [chain])
+    const Provider = chain === "EVM" ? EvmProvider : SolProvider;
 
-    return <Provider>{children}</Provider>
+    return (
+        <Suspense
+            fallback={
+                <div className="flex justify-center py-4">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                </div>
+            }
+        >
+            <Provider>
+                {children}
+            </Provider>
+        </Suspense>
+    )
 }
