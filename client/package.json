@@ -11,6 +11,10 @@
   "dependencies": {
     "@next/font": "^14.2.15",
     "@rainbow-me/rainbowkit": "^2.2.5",
+    "@solana/wallet-adapter-react": "^0.15.39",
+    "@solana/wallet-adapter-react-ui": "^0.9.39",
+    "@solana/wallet-adapter-wallets": "^0.19.37",
+    "@solana/web3.js": "^1.98.4",
     "@tanstack/react-query": "^5.79.0",
     "@web3icons/react": "^4.0.35",
     "axios": "^1.9.0",
@@ -19,7 +23,12 @@
     "gsap": "^3.13.0",
     "lottie-react": "^2.4.1",
     "lucide-react": "^0.511.0",
+<<<<<<< HEAD
     "next": "^15.5.6",
+=======
+    "next": "15.3.3",
+    "pino-pretty": "^13.1.2",
+>>>>>>> d5e225ca75a92ffe1a6b54a165cbd61e9bccab29
     "react": "^19.0.0",
     "react-countup": "^6.5.3",
     "react-dom": "^19.0.0",

@@ -6,74 +6,50 @@ const {
 } = require("@solana/web3.js");
 const { decideChains } = require("../../../config/provider");
 
-const simulateSolTranscation = async (_userAddress, _contractAddress, _amount, _currencySymbol) => {
+const simulateSolTranscation = async (_signedTxBase64, _userAddress, _contractAddress, _amount, _currencySymbol) => {
   try {
     const provider = decideChains(_currencySymbol);
-    console.log("The currency symbol :", _currencySymbol);
+
+    const txBuffer = Buffer.from(_signedTxBase64, "base64")
+
+    const tx = Transaction.from(txBuffer);
 
     const userWalletPublicKey = new PublicKey(_userAddress);
     const contractPublicKey = new PublicKey(_contractAddress);
 
-    const tx = new Transaction().add(
-      SystemProgram.transfer({
-        fromPubkey: userWalletPublicKey,
-        toPubkey: contractPublicKey,
-        lamports: Number(_amount),
-      })
-    );
-
-    // blockhash & fee payer
-    const { blockhash } = await provider.getLatestBlockhash("finalized");
-    tx.recentBlockhash = blockhash;
-    tx.feePayer = userWalletPublicKey;
-
-    console.log("Prepared TX:", {
-      feePayer: tx.feePayer.toBase58(),
-      recentBlockhash: tx.recentBlockhash,
-      instructionsCount: tx.instructions.length,
-    });
-
-
-    // checking contract existence 
+    // make sure both accounts exist
     const existence = await contractExistenceCheck(contractPublicKey, provider);
     if (!existence.exists) {
-      return { success: false, message: "Contract does not exist on Solana" }
+      return { success: false, message: "Contract does not exist on Solana" };
     }
 
-    // checking program type
+    // program type check
     let programType = existence.isProgram
       ? await programTypeDetection(contractPublicKey, provider)
-      : "Regular account (not Executable)"
+      : "Regular account (not Executable)";
 
-
-    // checking mint Authority
+    // mint authority (only for SPL)
     let mintDetail = null;
     if (programType === "SPL Token Program") {
       mintDetail = await mintAuthorityCheck(contractPublicKey, provider);
     }
 
-    // checking account balance 
+    // balance check
     const balance = await accountBalanceCheck(userWalletPublicKey, provider);
 
-    // dummy signing to bypass validation
-    const  dummyKeypair = Keypair.generate();
-    tx.partialSign(dummyKeypair);
-
-    // just simulating not signing
+    // simulate transaction signed by frontend wallet
     const result = await provider.simulateTransaction(tx, {
-      sigVerify: false,               // dummy signature check applied already for backend
-      replaceRecentBlockhash: false,  // use provided blockhash
+      sigVerify: false, // since it’s signed on frontend
+      replaceRecentBlockhash: false,
     });
 
-    console.log("Simulation Result:", result);
-
-    // now parsing log with the response 
+    // parse results
     const computeUnits = result.value?.unitsConsumed || null;
     const programCall = parseProgramCall(result.value?.logs);
     const txError = result.value?.err || null;
     const parsedLogs = result.value?.logs || [];
 
-    // exempting rents
+    // rent exemption
     const rentExemption = await rentExemptionCheck(contractPublicKey, provider);
 
     return {

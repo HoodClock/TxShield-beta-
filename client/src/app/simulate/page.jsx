@@ -4,17 +4,24 @@ import { useState } from "react";
 import Head from "next/head";
 import Header from "../components/header";
 import SimulationForm from "../components/simulationForm";
+import ConnectWallet from "../components/connectWallet";
 import LoadingState from "../components/loading";
 import ResultsDashboard from "../components/result";
 import HoneypotChecks from "../components/honeypotChecks";
 import Recommendations from "../components/recomendations";
 import Footer from "../components/footer";
 
+// wallet providers & EVM/SOL-Components imports
+import WalletProviderWrapper from "../components/WalletProviderWrapper";
+import EvmSimulationForm from "../components/evm/evmSimulationForm"
+import SolSimulationForm from "../components/sol/solSimulationForm"
+
 import {
   honeypotChecks as runHoneypotChecks,
   simulateTx as runSimulateTx,
   suggestionApi as recommendations,
   phishingChecks as runPhishing,
+  solSimulateTx as runSolSimulation
 } from "@/api/api";
 
 export default function App() {
@@ -24,9 +31,14 @@ export default function App() {
   const [simulationData, setSimulationData] = useState(null);
   const [phishingData, setPhishingData] = useState(null);
   const [recommendation, setRecommendation] = useState(null);
+  const [solSimulationData, setSolSimulationData] = useState(null);
+
+  // setting chain for wallet providers
+  const [chain, setChain] = useState(null);
 
 
-  const handleSiulateAll = async({honeypotData, simulationData})=> {
+  // for simulation when currency => ETH
+  const handleSimulateAll = async ({ honeypotData, simulationData }) => {
     setIsLoading(true);
     setShowResults(false);
 
@@ -36,19 +48,41 @@ export default function App() {
         runHoneypotChecks(honeypotData),
         runPhishing(simulationData),
       ]);
-  
+
       setSimulationData(simulationRes.data);
       setHoneypotData(honeypotRes.data);
       setPhishingData(phishingRes.data);
-  
+
       setShowResults(true);
 
     } catch (err) {
       console.error("Simulation Error:", err);
-    }finally {
+    } finally {
       setIsLoading(false);
     }
 
+  }
+
+  // for simulation when currency => SOL
+  const handleSolSimulation = async ({ solSimulationData }) => {
+    setIsLoading(true);
+    setShowResults(false);
+
+    try {
+
+      const [solSimulationRes] = await Promise.all([
+        runSolSimulation(solSimulationData)
+      ]);
+
+      setSolSimulationData(solSimulationRes.data);
+
+      setShowResults(true);
+
+    } catch (err) {
+      console.error("Simulation Error:", err);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   const handleRecommendation = async () => {
@@ -99,11 +133,50 @@ export default function App() {
             with our advanced security checks
           </p>
 
-          <SimulationForm
-            onSimulateAll={handleSiulateAll}
-          />
+          {/* select chains first */}
+          {!chain && (
+            <div className="text-center mt-12">
+              <h2 className="text-3xl font-bold text-white mb-6">
+                Choose Blockchain
+              </h2>
 
-          {isLoading && <LoadingState isLoading={true} onComplete={() => {}} />}
+              <div className="flex justify-center gap-6">
+                <button
+                  className="px-8 py-3 bg-white text-black rounded-lg font-bold"
+                  onClick={() => setChain("EVM")}
+                >
+                  Ethereum / EVM
+                </button>
+
+                <button
+                  className="px-8 py-3 bg-purple-500 text-white rounded-lg font-bold"
+                  onClick={() => setChain("SOL")}
+                >
+                  Solana
+                </button>
+              </div>
+            </div>
+          )}
+          {/* render simulation Forms with correct Provider based on selected chains */}
+          {chain && (
+            // Showing connect wallet inside the wrapper
+            <>
+              <div className="flex justify-center my-6">
+                <ConnectWallet />
+              </div>
+
+              <WalletProviderWrapper chain={chain}>
+                {chain === "EVM" && <EvmSimulationForm onSimulateAll={handleSimulateAll} />}
+                {chain === "SOL" && <SolSimulationForm onSolSimulateAll={handleSolSimulation} />}
+              </WalletProviderWrapper>
+            </>
+          )}
+          {/* <SimulationForm
+            onSolSimulateAll={handleSolSimulation}
+            onSimulateAll={handleSimulateAll}
+          /> */}
+
+          {isLoading && <LoadingState isLoading={true} onComplete={() => { }} />}
         </section>
 
         {/* Results Section (Not Centered) */}
