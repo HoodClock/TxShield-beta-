@@ -1,12 +1,10 @@
 import React from 'react'
-import Home from "./home/page"
+import HomeClient from './HomeClient'
 
-function home() {
+export default function Page() {
   return (
     <div>
-        <Home/>
+      <HomeClient />
     </div>
   )
 }
-
-export default home
