@@ -1,13 +1,14 @@
 const solSimulationService = require("../services/solSimulationService")
 
-const simulateSOLTxHelper = async (userAddress, recepientAddress, amount, currencySymbol) => {
+const simulateSOLTxHelper = async (signedTxBase64, userAddress, recepientAddress, amount, currencySymbol) => {
 
-  if (!userAddress || !recepientAddress || !amount || !currencySymbol) {
+  if (!signedTxBase64 || !userAddress || !recepientAddress || !amount || !currencySymbol) {
     return { success: false, message: "User / Recepient address / amount or currency symbol is missing" };
   }
 
   try {
     const response = await solSimulationService.getSolSimulationService(
+      signedTxBase64,
       userAddress,
       recepientAddress,
       amount,

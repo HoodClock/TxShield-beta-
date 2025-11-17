@@ -1,24 +1,29 @@
 'use client';
 
 import { useState } from 'react';
-import { WagmiConfig } from 'wagmi';
-import { wagmiConfig, chains } from '@/lib/wagmi';
-import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
-import '@rainbow-me/rainbowkit/styles.css';
-
+import dynamic from "next/dynamic";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+
+const EvmProvider = dynamic(() => import("./provider/EvmProvider"), {
+  ssr: false
+})
+
+const SolProvider = dynamic(() => import("./provider/SolProvider"), {
+  ssr: false
+})
+
 
 export default function ClientLayout({ children }) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
-    <WagmiConfig config={wagmiConfig}>
-      <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider chains={chains}>
+    <QueryClientProvider client={queryClient}>
+      <EvmProvider>
+        <SolProvider>
           {children}
-        </RainbowKitProvider>
-      </QueryClientProvider>
-    </WagmiConfig>
+        </SolProvider>
+      </EvmProvider>
+    </QueryClientProvider>
   );
 }
-    

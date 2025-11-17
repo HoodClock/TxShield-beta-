@@ -3,18 +3,16 @@
 import { useState } from "react";
 import { serialize, useAccount } from "wagmi";
 import { motion } from "framer-motion";
-import CurrencySymbolComp from "./currencySymbolComp"
-import { useWallet } from "@solana/wallet-adapter-react"
+import CurrencySymbolComp from "../currencySymbolComp"
 
 
 const USDT_TOKEN_ADDRESS = "0xdAC17F958D2ee523a2206206994597C13D831ec7" || "USDT";
 
-export default function SimulationForm({ onSimulateAll, onSolSimulateAll }) {
+export default function SimulationForm({ onSimulateAll}) {
   const { address: userAddress, isConnected } = useAccount();
   const [contractAddress, setContractAddress] = useState("");
   const [amount, setAmount] = useState("");
   const [currency, setCurrency] = useState("ETH");
-  const { publicKey } = useWallet()
 
   const handleSimulate = async () => {
 
@@ -22,54 +20,6 @@ export default function SimulationForm({ onSimulateAll, onSolSimulateAll }) {
       alert("Please enter both contract address and amount.");
       return;
     }
-
-
-    if (currency === "SOL") {
-
-      if (!publicKey) {
-        alert("Please enter both contract address and amount.");
-        return
-      }
-
-      const { Connection, SystemProgram, Transaction, PublicKey } = await import("@solana/web3.js")
-
-      const connection = new Connection(process.env.NEXT_PUBLIC_SOL_MAINNET_RPC);
-      const recepientPubKey = new PublicKey(contractAddress);
-
-      // building dummy tx
-      const tx = new Transaction().add(
-        SystemProgram.transfer({
-          fromPubkey: publicKey,
-          toPubkey: recepientPubKey,
-          lamports: Number(amount) * 1_000_000_000, // conversion in lamports
-        })
-      )
-
-      // feePayer & recent blockhash
-      tx.feePayer = publicKey;
-      const { blockhash } = await connection.getLatestBlockhash();
-      tx.recentBlockhash = blockhash;
-
-      // signing our {tx} with wallet
-      const signedTx = await window.solana.signTransaction(tx);
-
-      // convert to base64 for the backend payload 
-      const serelizedTx = signedTx.serialize();
-      const base64Tx = Buffer.from(serelizedTx).toString("base64");
-
-      // builiding payload
-      const solSimulationData = {
-        signedTxBase64: base64Tx,
-        userAddress: publicKey.toBase58(),
-        recepientAddress: contractAddress,
-        amount: amount,
-        currencySymbol: currency
-      }
-
-      console.log("Submission form payload : SOl Simulation", solSimulationData)
-
-      onSolSimulateAll({ solSimulationData })
-    } else {
 
       const currencySymbol = currency === "ETH" ? "ETH" : USDT_TOKEN_ADDRESS;
 
@@ -93,7 +43,6 @@ export default function SimulationForm({ onSimulateAll, onSolSimulateAll }) {
       };
 
       onSimulateAll({ honeypotData, simulationData })
-    }
   };
 
   return (

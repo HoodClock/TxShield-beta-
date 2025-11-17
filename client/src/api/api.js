@@ -1,13 +1,13 @@
 import axios from "axios";
 
 // for local.
-// const BASE_URL = "http://localhost:5000";
+const BASE_URL = "http://localhost:5000";
 
 // for testing.
 // const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 // for prod
-const BASE_URL = process.env.NEXT_PUBLIC_PROD_BASE_URL;
+// const BASE_URL = process.env.NEXT_PUBLIC_PROD_BASE_URL;
 
 
 export const simulateTx = async (formData) => {
@@ -36,7 +36,7 @@ export const honeypotChecks = async (formData) => {
   );
 };
 
-export const phishingChecks = async(formData) => {
+export const phishingChecks = async (formData) => {
   return await axios.post(
     `${BASE_URL}/api/phishing/phishing-checks`,
     formData,
@@ -73,8 +73,20 @@ export const suggestionApi = async (formData) => {
 
 export const authConnect = async (formData) => {
   return await axios.post(`${BASE_URL}/auth/connect`, formData);
-} 
+}
 
-export const authGetAPI = async(connectedAddress) => {
+export const authGetAPI = async (connectedAddress) => {
   return await axios.get(`${BASE_URL}/auth/apiKey/${connectedAddress}`)
+}
+
+// Solana apis
+export const solSimulateTx = async (formData) => {
+  return await axios.post(
+    `${BASE_URL}/api/solana/simulate/execute-sol-simulation`, formData,{
+      headers: {
+        "Content-Type": "application/json"
+      },
+      withCredentials: true
+    }
+  )
 }
