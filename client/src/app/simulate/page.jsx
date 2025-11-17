@@ -171,10 +171,10 @@ export default function App() {
               </WalletProviderWrapper>
             </>
           )}
-          {/* <SimulationForm
+          <SimulationForm
             onSolSimulateAll={handleSolSimulation}
             onSimulateAll={handleSimulateAll}
-          /> */}
+          />
 
           {isLoading && <LoadingState isLoading={true} onComplete={() => { }} />}
         </section>
