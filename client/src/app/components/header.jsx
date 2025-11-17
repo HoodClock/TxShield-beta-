@@ -21,17 +21,12 @@ export default function Header() {
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
 
         <Link href="/home" className="flex items-center group">
-<<<<<<< HEAD
           <div className="w-30 h-30 flex items-center justify-center rounded-full transition-transform group-hover:scale-110">
             <img 
               src="/Images/newlogo.jpg"
               alt="Shield Logo"
               className="w-full h-full object-cover"
             />
-=======
-          <div className="w-30 h-30">
-            <img src="/Images/logo.png" className="w-full h-full object-cover" />
->>>>>>> d5e225ca75a92ffe1a6b54a165cbd61e9bccab29
           </div>
         </Link>
 
