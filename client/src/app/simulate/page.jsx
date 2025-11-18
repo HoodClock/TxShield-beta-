@@ -11,6 +11,7 @@ const ResultsDashboard = lazy(() => import("../components/result"));
 const HoneypotChecks = lazy(() => import("../components/honeypotChecks"));
 const Recommendations = lazy(() => import("../components/recomendations"));
 const Footer = lazy(() => import("../components/footer"));
+const LoadingState = lazy(() => import("../components/loading"));
 
 
 // wallet providers & EVM/SOL-Components imports

@@ -1,23 +1,52 @@
 const {
   PublicKey,
-  SystemProgram,
+  LAMPORTS_PER_SOL,
   Transaction,
-  Keypair
+  VersionedTransaction,
 } = require("@solana/web3.js");
 const { decideChains } = require("../../../config/provider");
+const { getMint } = require("@solana/spl-token")
 
 const simulateSolTranscation = async (_signedTxBase64, _userAddress, _contractAddress, _amount, _currencySymbol) => {
   try {
     const provider = decideChains(_currencySymbol);
 
+    if (!provider || !provider.simulateTransaction) {
+      throw new Error("Invalid provider configuration");
+    }
+
+    // Validate and deserialize transaction
+    if (!_signedTxBase64) {
+      throw new Error("Signed transaction is required");
+    }
+
     const txBuffer = Buffer.from(_signedTxBase64, "base64")
+    let tx;
+    try {
+      tx = VersionedTransaction.deserialize(txBuffer);
+    } catch (VersionedError) {
+      try {
+        // its fall-back
+        tx = Transaction.from(txBuffer);
+      } catch (legacyError) {
+        console.error("Both transaction deserialization failed:", {
+          versionedError: versionedError.message,
+          legacyError: legacyError.message
+        });
+        throw new Error("Invalid transaction format - neither Versioned nor Legacy");
+      }
+    }
 
-    const tx = Transaction.from(txBuffer);
+    let userWalletPublicKey, contractPublicKey;
+    try {
+      userWalletPublicKey = new PublicKey(_userAddress);
+      contractPublicKey = new PublicKey(_contractAddress);
+    } catch (pubKeyError) {
+      throw new Error(`Invalid public key: ${pubKeyError.message}`);
+    }
 
-    const userWalletPublicKey = new PublicKey(_userAddress);
-    const contractPublicKey = new PublicKey(_contractAddress);
 
-    // make sure both accounts exist
+    // make sure contract exists on solana
     const existence = await contractExistenceCheck(contractPublicKey, provider);
     if (!existence.exists) {
       return { success: false, message: "Contract does not exist on Solana" };
@@ -37,11 +66,19 @@ const simulateSolTranscation = async (_signedTxBase64, _userAddress, _contractAd
     // balance check
     const balance = await accountBalanceCheck(userWalletPublicKey, provider);
 
-    // simulate transaction signed by frontend wallet
-    const result = await provider.simulateTransaction(tx, {
-      sigVerify: false, // since it’s signed on frontend
-      replaceRecentBlockhash: false,
-    });
+    // Actual simulate transaction signed by frontend wallet
+    let result;
+    try {
+      result = await provider.simulateTransaction(tx, {
+        sigVerify: false, // since it’s signed on frontend
+        commitment: 'confirmed'
+      });
+
+    } catch (simError) {
+      console.error("Simulation failed:", simError);
+      throw new Error(`Transaction simulation failed: ${simError.message}`);
+    }
+
 
     // parse results
     const computeUnits = result.value?.unitsConsumed || null;
