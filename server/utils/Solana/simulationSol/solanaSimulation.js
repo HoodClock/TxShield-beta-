@@ -10,6 +10,7 @@ const { getMint } = require("@solana/spl-token")
 const simulateSolTranscation = async (_signedTxBase64, _userAddress, _contractAddress, _amount, _currencySymbol) => {
   try {
     const provider = decideChains(_currencySymbol);
+    console.log("Provider Type", typeof (provider));
 
     if (!provider || !provider.simulateTransaction) {
       throw new Error("Invalid provider configuration");
