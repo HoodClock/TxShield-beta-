@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 import { motion, useInView } from "framer-motion";
 import CountUp from "react-countup";
 import { FiShield, FiAlertTriangle, FiZap } from 'react-icons/fi'
+import TiltedCard from '../TiltedCard'
 
 function StatsSection() {
 	const ref = useRef(null)
@@ -68,25 +69,27 @@ function StatsSection() {
 
 				<motion.div variants={container} initial="hidden" animate={isInView ? 'show' : 'hidden'} className="grid grid-cols-1 md:grid-cols-3 gap-6">
 					{stats.map(s => (
-						<motion.div key={s.id} variants={card} className="rounded-xl bg-white/4 border border-white/6 p-6 backdrop-blur-sm flex flex-col gap-4">
-							<div className="flex items-center justify-between">
-								<div className="inline-flex items-center gap-3">
-									<div className="w-10 h-10 rounded-lg bg-white/6 flex items-center justify-center">
-										{s.icon}
+						<motion.div key={s.id} variants={card}>
+							<TiltedCard className="group rounded-xl bg-white/4 border border-white/6 p-6 backdrop-blur-sm flex flex-col gap-4 h-full hover:border-cyan-400/30 transition-all duration-300">
+								<div className="flex items-center justify-between">
+									<div className="inline-flex items-center gap-3">
+										<div className="w-10 h-10 rounded-lg bg-white/6 flex items-center justify-center">
+											{s.icon}
+										</div>
+										<div>
+											<div className="text-sm text-gray-400">{s.title}</div>
+											<div className="text-xs text-gray-500">{s.meta}</div>
+										</div>
 									</div>
-									<div>
-										<div className="text-sm text-gray-400">{s.title}</div>
-										<div className="text-xs text-gray-500">{s.meta}</div>
+									<div className="text-right">
+										<div className="text-2xl font-bold text-white">
+											$<CountUp end={s.value} decimals={1} duration={1.8} />{s.suffix}
+										</div>
 									</div>
 								</div>
-								<div className="text-right">
-									<div className="text-2xl font-bold text-white">
-										$<CountUp end={s.value} decimals={1} duration={1.8} />{s.suffix}
-									</div>
-								</div>
-							</div>
 
-							<div className="text-sm text-gray-400">Concise context copy that explains the metric and why it matters — short and unobtrusive.</div>
+								<div className="text-sm text-gray-400">Concise context copy that explains the metric and why it matters — short and unobtrusive.</div>
+							</TiltedCard>
 						</motion.div>
 					))}
 				</motion.div>
