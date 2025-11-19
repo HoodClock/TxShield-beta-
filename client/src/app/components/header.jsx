@@ -23,7 +23,7 @@ export default function Header() {
         <Link href="/home" className="flex items-center group">
           <div className="w-30 h-30 flex items-center justify-center rounded-full transition-transform group-hover:scale-110">
             <img 
-              src="/Images/newlogo.jpg"
+              src="/Images/NewLogoActual.jpg"
               alt="Shield Logo"
               className="w-full h-full object-cover"
             />
