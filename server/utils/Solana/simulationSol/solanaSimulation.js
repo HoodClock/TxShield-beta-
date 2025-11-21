@@ -6,11 +6,12 @@ const {
 } = require("@solana/web3.js");
 const { decideChains } = require("../../../config/provider");
 const { getMint } = require("@solana/spl-token")
+const { checkTokenMetaDataIntegrity } = require("./advancedChecks")
+
 
 const simulateSolTranscation = async (_signedTxBase64, _userAddress, _contractAddress, _amount, _currencySymbol) => {
   try {
     const provider = decideChains(_currencySymbol);
-    console.log("Provider Type", typeof (provider));
 
     if (!provider || !provider.simulateTransaction) {
       throw new Error("Invalid provider configuration");
@@ -64,6 +65,16 @@ const simulateSolTranscation = async (_signedTxBase64, _userAddress, _contractAd
       mintDetail = await mintAuthorityCheck(contractPublicKey, provider);
     }
 
+    // mint address for advanced Checks
+    let mintAddress = null;
+    if (programType === "SPL Token Program" && mintDetail?.mintAuthority !== undefined) {
+      mintAddress = _contractAddress
+    }
+
+    const advancedCheckResponse = mintAddress
+      ? await checkTokenMetaDataIntegrity(provider, mintAddress)
+      : { error: "Not an SPL token mint" }
+
     // balance check
     const balance = await accountBalanceCheck(userWalletPublicKey, provider);
 
@@ -101,7 +112,8 @@ const simulateSolTranscation = async (_signedTxBase64, _userAddress, _contractAd
       programCall,
       txError,
       parsedLogs,
-      rentExemption
+      rentExemption,
+      advancedChecks: advancedCheckResponse
     };
 
   } catch (error) {

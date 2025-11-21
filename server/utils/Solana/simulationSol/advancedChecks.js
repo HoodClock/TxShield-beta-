@@ -6,18 +6,20 @@ const { findMetadataPda, fetchMetadata } = require("@metaplex-foundation/mpl-tok
 async function checkTokenMetaDataIntegrity(connection, mintAddress) {
 
     try {
+        // PublicKey type address
         const mintPubKey = new PublicKey(mintAddress)
 
-        // getting mint info
+        // getting on-chain mint info gives us (minting_Authority, freeze_Authority, decimals)
         const mintInfo = await getMint(connection, mintPubKey)
 
 
-        // fetching PDA(Program Derived Address) for metadata account
+        // fetching PDA(Program Derived Address) for off-chain metadata account: gives (metadata address)
         const metadataPDA = findMetadataPda(mintPubKey);
 
-        // fetching metadata account data
-        
+        // fetching metadata account data: gives metadata.(name, symbol, uri)
         const metadata = await fetchMetadata(connection, metadataPDA);
+
+        // Now if this URI:response:TRUE (not-scam) otherwise (Scam)
 
         // verifying metadata URI
         let uriValid = false;
@@ -40,8 +42,9 @@ async function checkTokenMetaDataIntegrity(connection, mintAddress) {
             symbol: metadata.symbol,
             uri: metadata.uri,
             mintAuthority: mintInfo.mintAuthority?.toBase58() || null,
-            freezeAithority: mintInfo.freezeAuthority?.toBase58() || null,
+            freezeAuthority: mintInfo.freezeAuthority?.toBase58() || null,
             uriValid,
+            offChainData,
             valid:
                 metadata.name?.length > 0 &&
                 metadata.symbol?.length > 0 && uriValid,
@@ -49,11 +52,12 @@ async function checkTokenMetaDataIntegrity(connection, mintAddress) {
             issues: [],
         }
 
-        if (!uriValid) response.issues.push("Invalid metadata URI")
+        if (!uriValid) response.issues.push("Broken MetaData URI")
         if (!metadata.name) response.issues.push("Missing token name")
         if (!metadata.symbol) response.issues.push("Missing token symbol")
 
         return response;
+        
     } catch (error) {
         return { error: error.message }
     }
