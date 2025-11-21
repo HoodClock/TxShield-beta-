@@ -5,7 +5,6 @@ import Head from "next/head";
 
 // all the components of Simualtion forms
 const Header = lazy(() => import("../components/header"))
-const SimulationForm = lazy(() => import("../components/simulationForm"));
 const ConnectWallet = lazy(() => import("../components/connectWallet"));
 const ResultsDashboard = lazy(() => import("../components/result"));
 const HoneypotChecks = lazy(() => import("../components/honeypotChecks"));
@@ -173,10 +172,6 @@ export default function App() {
               </Suspense>
             </WalletProviderWrapper>
           )}
-          {/* <SimulationForm
-            onSolSimulateAll={handleSolSimulation}
-            onSimulateAll={handleSimulateAll}
-          /> */}
 
           {isLoading && <LoadingState isLoading={true} onComplete={() => { }} />}
         </section>

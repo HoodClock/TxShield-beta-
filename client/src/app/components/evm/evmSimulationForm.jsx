@@ -3,10 +3,7 @@
 import { useState } from "react";
 import { serialize, useAccount } from "wagmi";
 import { motion } from "framer-motion";
-import CurrencySymbolComp from "../currencySymbolComp"
 
-
-const USDT_TOKEN_ADDRESS = "0xdAC17F958D2ee523a2206206994597C13D831ec7" || "USDT";
 
 export default function SimulationForm({ onSimulateAll}) {
   const { address: userAddress, isConnected } = useAccount();
@@ -21,14 +18,14 @@ export default function SimulationForm({ onSimulateAll}) {
       return;
     }
 
-      const currencySymbol = currency === "ETH" ? "ETH" : USDT_TOKEN_ADDRESS;
+      const currencySymbol = currency === "ETH";
 
       // credentials for simulation
       const simulationData = {
         userAddress,
         recepientAddress: contractAddress,
         amount: amount,
-        currencySymbol,
+        currencySymbol: currency,
       };
 
       // credentials for honeypot
@@ -111,9 +108,6 @@ export default function SimulationForm({ onSimulateAll}) {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
             />
-            <div className="absolute right-1 top-0">
-              <CurrencySymbolComp currency={currency} setCurrency={setCurrency} />
-            </div>
           </div>
         </div>
       </div>

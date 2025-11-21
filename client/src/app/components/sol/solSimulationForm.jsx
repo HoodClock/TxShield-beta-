@@ -2,16 +2,12 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import CurrencySymbolComp from "../currencySymbolComp"
 import { useWallet } from "@solana/wallet-adapter-react"
-
-
-const USDT_TOKEN_ADDRESS = "0xdAC17F958D2ee523a2206206994597C13D831ec7" || "USDT";
 
 export default function SimulationForm({ onSolSimulateAll }) {
     const [contractAddress, setContractAddress] = useState("");
     const [amount, setAmount] = useState("");
-    const [currency, setCurrency] = useState("ETH");
+    const [currency, setCurrency] = useState("SOL");
     const { publicKey } = useWallet()
 
     const handleSimulate = async () => {
@@ -131,9 +127,6 @@ export default function SimulationForm({ onSolSimulateAll }) {
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
                         />
-                        <div className="absolute right-1 top-0">
-                            <CurrencySymbolComp currency={currency} setCurrency={setCurrency} />
-                        </div>
                     </div>
                 </div>
             </div>
