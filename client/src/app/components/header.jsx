@@ -34,7 +34,7 @@ export default function Header() {
         <Link href="/home" className="flex items-center group z-10 flex-shrink-0">
           <div className="relative h-20 w-auto flex items-center justify-center transition-all duration-300 group-hover:scale-105">
             <img 
-              src="/Images/NewLogoActual.jpg"
+              src="/Images/logo.png"
               alt="Shield Logo"
               className="h-full w-auto object-contain"
             />
