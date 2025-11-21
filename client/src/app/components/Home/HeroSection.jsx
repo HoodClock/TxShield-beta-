@@ -4,14 +4,22 @@ import React from 'react'
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { MdArrowRightAlt } from "react-icons/md";
+import DarkVeil from '../backgrounds/DarkVeil';
 
 function HeroSection() {
     return (
         <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
-            {/* Background Elements */}
-            <div className="absolute inset-0 bg-gradient-to-br from-black via-[#0A0A0A] to-black"></div>
-            <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-white/5 blur-3xl"></div>
-            <div className="absolute bottom-1/3 right-1/3 w-96 h-96 rounded-full bg-white/3 blur-3xl"></div>
+            {/* Dark Veil Background */}
+            <div className="absolute inset-0 z-0">
+                <DarkVeil 
+                    hueShift={0}
+                    noiseIntensity={0.02}
+                    scanlineIntensity={0}
+                    speed={0.5}
+                    scanlineFrequency={0}
+                    warpAmount={0.3}
+                />
+            </div>
 
             <motion.div
                 className="text-center px-4 max-w-4xl mx-auto relative z-10"
