@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import SectionIndicator from './components/SectionIndicator';
 
 
 export default function ClientLayout({ children }) {
@@ -10,6 +11,7 @@ export default function ClientLayout({ children }) {
   return (
     <QueryClientProvider client={queryClient}>
       {children}
+      <SectionIndicator />
     </QueryClientProvider>
   );
 }
