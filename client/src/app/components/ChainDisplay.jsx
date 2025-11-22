@@ -1,225 +1,126 @@
-import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react'
+import React from 'react'
 import { motion, useInView } from "framer-motion";
-import { TokenIcon } from '@web3icons/react';
+import { useRef } from 'react';
 
-const ANIMATION_CONFIG = { SMOOTH_TAU: 0.25, MIN_COPIES: 2, COPY_HEADROOM: 2 };
-
-function ChainSection() {
+function ChainDisplay() {
     const sectionRef = useRef(null);
     const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
 
+    // Chain logos using CoinGecko CDN for reliable logo sources
     const chains = [
-        { id: 'eth', label: 'Ethereum', symbol: 'eth' },
-        { id: 'bnb', label: 'BNB Smart Chain', symbol: 'bnb' },
-        { id: 'avax', label: 'Avalanche', symbol: 'avax' },
-        { id: 'matic', label: 'Polygon', symbol: 'matic' },
-        { id: 'arb', label: 'Arbitrum', symbol: 'arb' },
-        { id: 'op', label: 'Optimism', symbol: 'op' },
-        { id: 'ftm', label: 'Fantom', symbol: 'ftm' },
-        { id: 'celo', label: 'Celo', symbol: 'celo' },
-        { id: 'aurora', label: 'Aurora', symbol: 'aurora' },
-        { id: 'sol', label: 'Solana', symbol: 'sol' }
+        { id: 'eth', label: 'Ethereum', logo: 'https://assets.coingecko.com/coins/images/279/small/ethereum.png' },
+        { id: 'bnb', label: 'BNB Smart Chain', logo: 'https://assets.coingecko.com/coins/images/825/small/bnb-icon2_2x.png' },
+        { id: 'avax', label: 'Avalanche', logo: 'https://assets.coingecko.com/coins/images/12559/small/avalanche-avax-logo.png', fallback: 'https://cryptologos.cc/logos/avalanche-avax-logo.png' },
+        { id: 'matic', label: 'Polygon', logo: 'https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png' },
+        { id: 'arb', label: 'Arbitrum', logo: 'https://assets.coingecko.com/coins/images/16547/small/arbitrum.png', fallback: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png' },
+        { id: 'op', label: 'Optimism', logo: 'https://assets.coingecko.com/coins/images/25244/small/Optimism.png' },
+        { id: 'ftm', label: 'Fantom', logo: 'https://assets.coingecko.com/coins/images/4001/small/Fantom.png' },
+        { id: 'celo', label: 'Celo', logo: 'https://assets.coingecko.com/coins/images/11090/small/InjXBNx9_400x400.jpg' },
+        { id: 'aurora', label: 'Aurora', logo: 'https://assets.coingecko.com/coins/images/20582/small/aurora.jpeg' },
+        { id: 'sol', label: 'Solana', logo: 'https://assets.coingecko.com/coins/images/4128/small/solana.png' }
     ];
 
-    const containerRef = useRef(null);
-    const trackRef = useRef(null);
-    const seqRef = useRef(null);
-
-    const [seqWidth, setSeqWidth] = useState(0);
-    const [copyCount, setCopyCount] = useState(ANIMATION_CONFIG.MIN_COPIES);
-    const [isHovered, setIsHovered] = useState(false);
-
-    const speed = 120; // px per second
-
-    const updateDimensions = useCallback(() => {
-        const containerWidth = containerRef.current?.clientWidth ?? 0;
-        const seqRect = seqRef.current?.getBoundingClientRect?.();
-        const sequenceWidth = seqRect?.width ?? 0;
-
-        if (sequenceWidth > 0) {
-            setSeqWidth(Math.ceil(sequenceWidth));
-            const copiesNeeded = Math.ceil(containerWidth / sequenceWidth) + ANIMATION_CONFIG.COPY_HEADROOM;
-            setCopyCount(Math.max(ANIMATION_CONFIG.MIN_COPIES, copiesNeeded));
-        }
-    }, []);
-
-    useEffect(() => {
-        if (!window.ResizeObserver) {
-            const onResize = () => updateDimensions();
-            window.addEventListener('resize', onResize);
-            updateDimensions();
-            return () => window.removeEventListener('resize', onResize);
-        }
-
-        const observers = [containerRef, seqRef].map(ref => {
-            if (!ref.current) return null;
-            const obs = new ResizeObserver(updateDimensions);
-            obs.observe(ref.current);
-            return obs;
-        });
-
-        updateDimensions();
-        return () => observers.forEach(o => o?.disconnect());
-    }, [updateDimensions]);
-
-    // Wait for images to load before measuring
-    useEffect(() => {
-        const imgs = seqRef.current?.querySelectorAll('img') ?? [];
-        if (imgs.length === 0) {
-            updateDimensions();
-            return;
-        }
-        let remaining = imgs.length;
-        const onLoad = () => {
-            remaining -= 1;
-            if (remaining === 0) updateDimensions();
-        };
-        imgs.forEach(img => {
-            if (img.complete) onLoad();
-            else {
-                img.addEventListener('load', onLoad, { once: true });
-                img.addEventListener('error', onLoad, { once: true });
-            }
-        });
-        return () => imgs.forEach(img => {
-            img.removeEventListener('load', onLoad);
-            img.removeEventListener('error', onLoad);
-        });
-    }, [chains, updateDimensions]);
-
-    // RAF-driven loop (always running, no pause)
-    useEffect(() => {
-        const track = trackRef.current;
-        if (!track) return;
-
-        // disable CSS marquee when JS drives transform to avoid conflicting transforms
-        track.classList.add('js-driven');
-
-        let rafId = null;
-        let lastTs = null;
-        let offset = 0;
-        let velocity = 0;
-
-        const seqSize = seqWidth || 0;
-
-        if (seqSize > 0) {
-            offset = ((offset % seqSize) + seqSize) % seqSize;
-            track.style.transform = `translate3d(${-offset}px, 0, 0)`;
-        }
-
-        const animate = (ts) => {
-            if (lastTs === null) lastTs = ts;
-            const delta = Math.max(0, ts - lastTs) / 1000;
-            lastTs = ts;
-
-            const target = speed; // always run — user requested no pauses
-            const easing = 1 - Math.exp(-delta / ANIMATION_CONFIG.SMOOTH_TAU);
-            velocity += (target - velocity) * easing;
-
-            if (seqSize > 0) {
-                let next = offset + velocity * delta;
-                // keep offset within [0, seqSize) without causing layout thrash
-                next = ((next % seqSize) + seqSize) % seqSize;
-                offset = next;
-                track.style.transform = `translate3d(${-offset}px, 0, 0)`;
-            }
-
-            rafId = requestAnimationFrame(animate);
-        };
-
-        rafId = requestAnimationFrame(animate);
-
-        return () => {
-            if (rafId) cancelAnimationFrame(rafId);
-            lastTs = null;
-            track.classList.remove('js-driven');
-        };
-    }, [seqWidth, isHovered]);
-
-    // Keep mouse handlers inert (no pause) to satisfy "no pauses" requirement
-    const handleMouseEnter = () => {};
-    const handleMouseLeave = () => {};
-
-    const copies = useMemo(() => Array.from({ length: copyCount }), [copyCount]);
-
-    // Generate a deterministic circular SVG badge (data URL) for a symbol/label.
-    const getBadgeDataUrl = (symbol, label, size = 64) => {
-        const initials = (label || symbol || '').slice(0, 2).toUpperCase() || '??';
-        // deterministic hue from symbol
-        let hash = 0;
-        for (let i = 0; i < (symbol || '').length; i++) hash = ((hash << 5) - hash) + symbol.charCodeAt(i);
-        const hue = Math.abs(hash) % 360;
-        const color1 = `hsl(${hue} 80% 55%)`;
-        const color2 = `hsl(${(hue + 40) % 360} 80% 55%)`;
-        const svg = `<?xml version="1.0" encoding="UTF-8"?><svg xmlns='http://www.w3.org/2000/svg' width='${size}' height='${size}' viewBox='0 0 ${size} ${size}'><defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='${color1}'/><stop offset='1' stop-color='${color2}'/></linearGradient></defs><rect width='${size}' height='${size}' rx='${size * 0.25}' fill='url(%23g)'/><text x='50%' y='55%' font-family='Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial' font-size='${Math.floor(size * 0.38)}' fill='#fff' text-anchor='middle' font-weight='700'>${initials}</text></svg>`;
-        return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
-    };
-
-    function LogoRenderer({ symbol, label, size = 28 }) {
-        const dataUrl = useMemo(() => getBadgeDataUrl(symbol, label, 64), [symbol, label]);
-        return (
-            <img src={dataUrl} alt={label || symbol} width={size} height={size} className="w-14 h-14 rounded-full object-cover" />
-        );
-    }
-
     return (
-        <section ref={sectionRef} className="relative py-12 px-4 sm:px-6 overflow-hidden bg-black">
+        <section ref={sectionRef} className="relative py-16 px-4 sm:px-6 overflow-hidden bg-black">
+            {/* Animated Background */}
+            <div className="absolute inset-0">
+                <div className="absolute top-0 left-0 w-72 h-72 bg-purple-500/5 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute bottom-0 right-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-black to-black"></div>
+            </div>
+
             <div className="max-w-7xl mx-auto relative z-10">
+                {/* Section Header */}
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.7 }}
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                    viewport={{ once: true }}
                     className="text-center mb-12"
                 >
-                    <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white/5 border border-white/10 mb-4">
+                    <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 border border-white/10 mb-6">
                         <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                         <span className="text-sm text-gray-300">MULTI-CHAIN SUPPORT</span>
                     </div>
-
                     <h2 className="text-3xl md:text-4xl font-semibold text-white mb-3">Supported <span className="grad-word">Blockchains</span></h2>
                     <p className="text-gray-400 max-w-2xl mx-auto">We support monitoring across the most widely used networks.</p>
                 </motion.div>
 
-                <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.7, delay: 0.05 }}
-                    className="logo-loop py-6"
-                >
-                    <div
-                        ref={containerRef}
-                        className="logo-loop__inner"
-                        onMouseEnter={handleMouseEnter}
-                        onMouseLeave={handleMouseLeave}
+                {/* Main Card with Chain Grid */}
+                <div className="max-w-4xl mx-auto">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={isInView ? { opacity: 1, y: 0 } : {}}
+                        transition={{ duration: 0.7, delay: 0.2 }}
+                        className="rounded-2xl fancy-gradient-border subtle bg-white/4 border border-white/6 p-6 backdrop-blur-sm"
                     >
-                        <div className="logo-track" ref={trackRef}>
-                                        {copies.map((_, copyIndex) => (
-                                <div
-                                    className="flex items-center gap-5"
-                                    key={`copy-${copyIndex}`}
-                                    aria-hidden={copyIndex > 0}
-                                    ref={copyIndex === 0 ? seqRef : undefined}
-                                >
-                                    {chains.map((c, idx) => (
-                                        <div key={`${copyIndex}-${c.id}-${idx}`} className="logo-item">
-                                            <button
-                                                aria-label={c.label}
-                                                title={c.label}
-                                                                className={`w-14 h-14 rounded-full bg-white/4 border border-white/6 backdrop-blur-sm flex items-center justify-center hover:scale-105 transition-transform ${copyIndex > 0 ? 'pointer-events-none' : ''}`}
-                                                                tabIndex={copyIndex > 0 ? -1 : 0}
-                                            >
-                                                                <LogoRenderer symbol={c.symbol} label={c.label} size={28} />
-                                            </button>
-                                        </div>
+                        <div className="flex items-start gap-6">
+                            {/* Chains Grid */}
+                            <div className="flex-1">
+                                <div className="text-sm text-gray-400 mb-1">Supported Networks</div>
+                                <h3 className="text-2xl font-bold text-white mb-4">Overview</h3>
+                                <p className="text-gray-400 mb-6 text-sm">A comprehensive list of blockchain networks we monitor and protect.</p>
+
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                                    {chains.map((chain, index) => (
+                                        <motion.div
+                                            key={chain.id}
+                                            initial={{ opacity: 0, scale: 0.8 }}
+                                            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                                            transition={{ duration: 0.5, delay: 0.1 + index * 0.03 }}
+                                            className="group"
+                                        >
+                                            <div className="flex flex-col items-center p-3 rounded-xl bg-white/2 border border-white/5 hover:border-purple-400/30 hover:bg-white/5 transition-all duration-300">
+                                                <div className="relative mb-2">
+                                                    <div className="p-[2px] rounded-full bg-gradient-to-br from-purple-500 via-indigo-600 to-cyan-400" style={{ boxShadow: '0 4px 15px rgba(79,70,229,0.12)' }}>
+                                                        <div className="w-12 h-12 rounded-full bg-[#0B0B0B] flex items-center justify-center p-1.5">
+                                                            <img 
+                                                                src={chain.logo} 
+                                                                alt={chain.label}
+                                                                className="w-full h-full object-contain"
+                                                                onError={(e) => {
+                                                                    // Try fallback logo if available
+                                                                    if (chain.fallback && e.target.src !== chain.fallback) {
+                                                                        e.target.src = chain.fallback;
+                                                                    } else {
+                                                                        // If fallback also fails, show a placeholder
+                                                                        e.target.style.display = 'none';
+                                                                        const placeholder = e.target.parentElement;
+                                                                        if (placeholder && !placeholder.querySelector('.logo-placeholder')) {
+                                                                            const placeholderDiv = document.createElement('div');
+                                                                            placeholderDiv.className = 'logo-placeholder w-full h-full rounded-full bg-gradient-to-br from-purple-500/20 to-cyan-500/20 flex items-center justify-center text-white text-xs font-bold';
+                                                                            placeholderDiv.textContent = chain.label.substring(0, 2).toUpperCase();
+                                                                            placeholder.appendChild(placeholderDiv);
+                                                                        }
+                                                                    }
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <span className="text-xs font-medium text-gray-300 group-hover:text-white transition-colors duration-300 text-center leading-tight">
+                                                    {chain.label}
+                                                </span>
+                                            </div>
+                                        </motion.div>
                                     ))}
                                 </div>
-                            ))}
+                            </div>
+
+                            {/* Stats Sidebar */}
+                            <div className="w-36 hidden lg:block">
+                                <div className="rounded-xl bg-white/6 p-4 text-center">
+                                    <div className="text-sm text-gray-400">Total Networks</div>
+                                    <div className="text-3xl font-bold text-white mt-2">{chains.length}</div>
+                                    <div className="text-xs text-gray-500 mt-1">active chains • supported</div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </motion.div>
+                    </motion.div>
+                </div>
             </div>
         </section>
     );
 }
 
-export default ChainSection;
+export default ChainDisplay;

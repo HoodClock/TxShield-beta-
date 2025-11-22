@@ -26,7 +26,7 @@ function HomePage() {
   }, []);
 
   return (
-    <div className="bg-black text-white min-h-screen font-sans overflow-x-hidden" style={{ fontFamily: "'ClashDisplay-Bold', sans-serif" }}>
+    <div className="bg-black text-white min-h-screen font-sans overflow-x-hidden relative" style={{ fontFamily: "'ClashDisplay-Bold', sans-serif", margin: 0, padding: 0, border: 'none', borderTop: 'none', position: 'relative' }}>
       <style>{`
         @font-face {
           font-family: 'ClashDisplay-Bold';
@@ -57,10 +57,10 @@ function HomePage() {
           font-family: 'Space Grotesk', sans-serif;
         }
       `}</style>
-      <div id="smooth-wrapper">
-        <div id="smooth-content">
+      <div id="smooth-wrapper" style={{ margin: 0, padding: 0, border: 'none', borderTop: 'none' }}>
+        <div id="smooth-content" style={{ margin: 0, padding: 0, border: 'none', borderTop: 'none' }}>
           <Header />
-          <div className="section-merge">
+          <div className="section-merge" style={{ border: 'none', borderTop: 'none', marginTop: 0, paddingTop: 0 }}>
             <HeroSection />
           </div>
 

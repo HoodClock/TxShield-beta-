@@ -308,6 +308,9 @@ html {
 .section-merge {
   position: relative;
   overflow: visible;
+  border: none !important;
+  border-top: none !important;
+  outline: none !important;
 }
 .section-merge > * {
   position: relative;
@@ -329,6 +332,17 @@ html {
   margin-top: -44px;
   padding-top: 72px;
   padding-bottom: 40px;
+}
+
+/* Remove border from first section-merge */
+.section-merge:first-child {
+  border-top: none !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+  border: none !important;
+  outline: none !important;
 }
 
 @media (max-width: 768px) {
@@ -483,8 +497,73 @@ html {
 html, body {
   -ms-overflow-style: none; /* IE 10+ */
   scrollbar-width: none; /* Firefox */
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  outline: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
 }
 html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; } /* Chrome/Safari/Edge */
+
+/* Ensure no borders or lines at the top */
+html {
+  border-top: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+body {
+  border-top: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Remove any default borders from main containers */
+#smooth-wrapper,
+#smooth-content,
+#__next,
+div[id="smooth-wrapper"],
+div[id="smooth-content"] {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  border-top: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Remove any lines from sections */
+section,
+section:first-child,
+.section-merge:first-child,
+div > section:first-child {
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Black stroke for SHIELD text - using text-shadow for gradient text compatibility */
+.shield-text-stroke {
+  text-shadow: 
+    -2px -2px 0 #000000,
+    2px -2px 0 #000000,
+    -2px 2px 0 #000000,
+    2px 2px 0 #000000,
+    -2px 0 0 #000000,
+    2px 0 0 #000000,
+    0 -2px 0 #000000,
+    0 2px 0 #000000,
+    -1px -1px 0 #000000,
+    1px -1px 0 #000000,
+    -1px 1px 0 #000000,
+    1px 1px 0 #000000;
+}
 
 /* Section indicator (right-side small boxes) */
 .section-indicator {
@@ -535,4 +614,68 @@ html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; } /* Chrome/Sa
   clip: rect(0 0 0 0) !important;
   white-space: nowrap !important;
   border: 0 !important;
+}
+
+/* Logo floating animation */
+@keyframes logoFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-logo-float {
+  animation: logoFloat 3s ease-in-out infinite;
+}
+
+/* API button shimmer animation (uses existing shimmer keyframes) */
+.animate-shimmer {
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}
+
+/* API Button Rotating Border Animations */
+@keyframes rotateBorder1 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotateBorder2 {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.api-rotating-border-1 {
+  pointer-events: none;
+  transform-origin: 50% 50%;
+  animation: rotateBorder1 3s linear infinite;
+}
+
+.api-rotating-border-2 {
+  pointer-events: none;
+  transform-origin: 50% 50%;
+  animation: rotateBorder2 4s linear infinite;
+}
+
+.api-border-circle-1 {
+  transform-origin: 50% 50%;
+}
+
+.api-border-circle-2 {
+  transform-origin: 50% 50%;
+}
+
+/* API button wrapper */
+.api-button-wrapper {
+  will-change: transform;
 }
