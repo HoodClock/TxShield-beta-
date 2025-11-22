@@ -109,13 +109,13 @@ function AnalysisSection() {
                     <div className="relative">
                         <button
                             onClick={() => setOpen(!open)}
-                            className="w-full flex items-center justify-between gap-4 px-4 sm:px-5 py-3 rounded-xl bg-white/4 border border-white/6 backdrop-blur-sm fancy-gradient-border subtle"
+                            className="w-full flex items-center justify-between gap-4 px-4 sm:px-5 py-3 rounded-xl bg-gradient-to-br from-white/5 via-white/4 to-white/3 border border-white/6 backdrop-blur-sm fancy-gradient-border subtle hover:border-purple-400/50 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300 group"
                         >
                             <div className="text-left flex-1 min-w-0">
-                                <div className="text-xs sm:text-sm text-gray-400">Select Playbook</div>
-                                <div className="text-base sm:text-lg font-semibold text-white truncate">{selectedPlaybook.title}</div>
+                                <div className="text-xs sm:text-sm text-gray-400 group-hover:text-gray-300 transition-colors">Select Playbook</div>
+                                <div className="text-base sm:text-lg font-semibold text-white truncate group-hover:text-cyan-200 transition-colors">{selectedPlaybook.title}</div>
                             </div>
-                            <div className="text-gray-400 flex-shrink-0">{open ? '▴' : '▾'}</div>
+                            <div className="text-gray-400 flex-shrink-0 group-hover:text-purple-400 transition-colors transform group-hover:scale-110 transition-transform">{open ? '▴' : '▾'}</div>
                         </button>
 
                         <motion.div
@@ -148,7 +148,7 @@ function AnalysisSection() {
                         variants={panelVariants}
                         initial="show"
                         animate={isInView ? 'show' : 'hidden'}
-                        className="rounded-2xl fancy-gradient-border subtle bg-white/4 border border-white/6 p-4 sm:p-6 backdrop-blur-sm mb-8"
+                        className="rounded-2xl fancy-gradient-border subtle bg-gradient-to-br from-white/5 via-white/4 to-white/3 border border-white/6 p-4 sm:p-6 backdrop-blur-sm mb-8 hover:border-purple-400/30 hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300"
                     >
                         <div className="flex flex-col lg:flex-row items-start gap-4 sm:gap-6">
                             <div className="flex-1 w-full">
@@ -158,18 +158,18 @@ function AnalysisSection() {
 
                                 <div className="space-y-3 sm:space-y-4">
                                     {(selectedPlaybook.steps || []).map((step, i) => (
-                                        <div key={i} className="flex items-start gap-3 sm:gap-4">
+                                        <div key={i} className="flex items-start gap-3 sm:gap-4 group/step hover:bg-white/2 rounded-lg p-2 -m-2 transition-all duration-300">
                                             <div className="flex-shrink-0">
-                                                <div className="p-[2px] rounded-full bg-gradient-to-br from-purple-500 via-indigo-600 to-cyan-400" style={{ boxShadow: '0 8px 30px rgba(79,70,229,0.12)' }}>
-                                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#0B0B0B] flex items-center justify-center text-xs sm:text-sm font-semibold text-white">
+                                                <div className="p-[2px] rounded-full bg-gradient-to-br from-purple-500 via-indigo-600 to-cyan-400 group-hover/step:from-purple-400 group-hover/step:via-cyan-400 group-hover/step:to-purple-400 transition-all duration-300" style={{ boxShadow: '0 8px 30px rgba(79,70,229,0.12)' }}>
+                                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#0B0B0B] flex items-center justify-center text-xs sm:text-sm font-semibold text-white group-hover/step:scale-110 transition-transform duration-300">
                                                         {i + 1}
                                                     </div>
                                                 </div>
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <div className="text-xs sm:text-sm text-gray-300">Step {i + 1} • <span className="text-xs text-gray-500">{step.type}</span></div>
-                                                <div className="text-white font-semibold text-base sm:text-lg mt-1">{step.title}</div>
-                                                <div className="text-gray-400 text-xs sm:text-sm mt-1">{step.description}</div>
+                                                <div className="text-xs sm:text-sm text-gray-300 group-hover/step:text-gray-200 transition-colors">Step {i + 1} • <span className="text-xs text-gray-500">{step.type}</span></div>
+                                                <div className="text-white font-semibold text-base sm:text-lg mt-1 group-hover/step:text-cyan-200 transition-colors">{step.title}</div>
+                                                <div className="text-gray-400 text-xs sm:text-sm mt-1 group-hover/step:text-gray-300 transition-colors">{step.description}</div>
                                             </div>
                                         </div>
                                     ))}
@@ -177,9 +177,9 @@ function AnalysisSection() {
                             </div>
 
                             <div className="w-full lg:w-36 mt-6 lg:mt-0">
-                                <div className="rounded-xl bg-white/6 p-4 text-center">
-                                    <div className="text-xs sm:text-sm text-gray-400">Estimated Impact</div>
-                                    <div className="text-2xl sm:text-3xl font-bold text-white mt-2">$12.7M</div>
+                                <div className="rounded-xl bg-gradient-to-br from-purple-500/10 via-cyan-500/10 to-purple-500/10 border border-purple-400/20 p-4 text-center hover:border-purple-400/40 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300">
+                                    <div className="text-xs sm:text-sm text-gray-400">Estimated Loss</div>
+                                    <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-white via-cyan-200 to-white bg-clip-text text-transparent mt-2">$12.7M</div>
                                     <div className="text-xs text-gray-500 mt-1">reported cases • 3,200+</div>
                                 </div>
                             </div>
@@ -190,10 +190,16 @@ function AnalysisSection() {
                         initial={{ opacity: 0, y: 8 }}
                         animate={isInView ? { opacity: 1, y: 0 } : {}}
                         transition={{ duration: 0.5 }}
-                        className="text-center p-4 sm:p-6 rounded-lg border border-white/10 bg-gradient-to-br from-black to-gray-900/50"
+                        className="text-center p-4 sm:p-6 rounded-lg border border-red-500/20 bg-gradient-to-br from-red-950/20 via-black to-red-950/20 relative overflow-hidden group"
                     >
-                        <h4 className="text-base sm:text-lg font-semibold text-white mb-2">The Inevitable Outcome</h4>
-                        <p className="text-gray-400 text-sm sm:text-base">Both attack vectors lead to the same result: complete loss of funds. Attackers vanish with all assets.</p>
+                        {/* Animated background glow */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-red-500/0 via-red-500/10 to-red-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        {/* Subtle border glow */}
+                        <div className="absolute inset-0 border border-red-500/30 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm"></div>
+                        <div className="relative z-10">
+                            <h4 className="text-base sm:text-lg font-semibold text-white mb-2 group-hover:text-red-200 transition-colors">The Inevitable Outcome</h4>
+                            <p className="text-gray-400 text-sm sm:text-base group-hover:text-gray-300 transition-colors">Both attack vectors lead to the same result: complete loss of funds. Attackers vanish with all assets.</p>
+                        </div>
                     </motion.div>
                 </div>
             </div>

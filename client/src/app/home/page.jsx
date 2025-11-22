@@ -64,6 +64,9 @@ function HomePage() {
             <HeroSection />
           </div>
 
+          {/* Beautiful Section Divider */}
+          <div className="section-divider"></div>
+
           <div className="orb-bg section-merge">
             <div className="orb orb-1" aria-hidden="true"></div>
             <div className="orb orb-2" aria-hidden="true"></div>
@@ -71,12 +74,18 @@ function HomePage() {
             <StatsSection />
           </div>
 
+          {/* Beautiful Section Divider */}
+          <div className="section-divider"></div>
+
           <div className="orb-bg section-merge">
             <div className="orb orb-1" aria-hidden="true"></div>
             <div className="orb orb-2" aria-hidden="true"></div>
             <div className="orb orb-3" aria-hidden="true"></div>
             <AnalysisSection />
           </div>
+
+          {/* Beautiful Section Divider */}
+          <div className="section-divider"></div>
 
           <div className="orb-bg section-merge">
             <div className="orb orb-1" aria-hidden="true"></div>

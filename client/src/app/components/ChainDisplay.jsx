@@ -70,10 +70,10 @@ function ChainDisplay() {
                                             transition={{ duration: 0.5, delay: 0.1 + index * 0.03 }}
                                             className="group"
                                         >
-                                            <div className="flex flex-col items-center p-2 sm:p-3 rounded-xl bg-white/2 border border-white/5 hover:border-purple-400/30 hover:bg-white/5 transition-all duration-300">
+                                            <div className="flex flex-col items-center p-2 sm:p-3 rounded-xl bg-gradient-to-br from-white/3 via-white/2 to-white/1 border border-white/5 hover:border-purple-400/50 hover:bg-white/8 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300 group/chain">
                                                 <div className="relative mb-1.5 sm:mb-2">
-                                                    <div className="p-[2px] rounded-full bg-gradient-to-br from-purple-500 via-indigo-600 to-cyan-400" style={{ boxShadow: '0 4px 15px rgba(79,70,229,0.12)' }}>
-                                                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#0B0B0B] flex items-center justify-center p-1 sm:p-1.5">
+                                                    <div className="p-[2px] rounded-full bg-gradient-to-br from-purple-500 via-indigo-600 to-cyan-400 group-hover/chain:from-purple-400 group-hover/chain:via-cyan-400 group-hover/chain:to-purple-400 transition-all duration-300" style={{ boxShadow: '0 4px 15px rgba(79,70,229,0.12)' }}>
+                                                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#0B0B0B] flex items-center justify-center p-1 sm:p-1.5 group-hover/chain:scale-110 transition-transform duration-300">
                                                             <img 
                                                                 src={chain.logo} 
                                                                 alt={chain.label}
@@ -98,7 +98,7 @@ function ChainDisplay() {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <span className="text-xs font-medium text-gray-300 group-hover:text-white transition-colors duration-300 text-center leading-tight">
+                                                <span className="text-xs font-medium text-gray-300 group-hover/chain:text-cyan-200 transition-colors duration-300 text-center leading-tight">
                                                     {chain.label}
                                                 </span>
                                             </div>
@@ -109,9 +109,9 @@ function ChainDisplay() {
 
                             {/* Stats Sidebar */}
                             <div className="w-full lg:w-36 mt-4 lg:mt-0">
-                                <div className="rounded-xl bg-white/6 p-4 text-center">
+                                <div className="rounded-xl bg-gradient-to-br from-purple-500/10 via-cyan-500/10 to-purple-500/10 border border-purple-400/20 p-4 text-center hover:border-purple-400/40 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300">
                                     <div className="text-xs sm:text-sm text-gray-400">Total Networks</div>
-                                    <div className="text-2xl sm:text-3xl font-bold text-white mt-2">{chains.length}</div>
+                                    <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-white via-cyan-200 to-white bg-clip-text text-transparent mt-2">{chains.length}</div>
                                     <div className="text-xs text-gray-500 mt-1">active chains • supported</div>
                                 </div>
                             </div>

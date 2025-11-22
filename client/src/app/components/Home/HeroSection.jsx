@@ -60,19 +60,31 @@ function HeroSection() {
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-4">
                     <Link
                         href="/simulate"
-                        className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-white text-black rounded-lg hover:bg-gray-200 transition-all duration-300 font-medium group text-center"
+                        className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-medium group text-center relative overflow-hidden hero-primary-btn"
                     >
-                        Start Protecting
-                        <MdArrowRightAlt className="w-4 h-4 ml-2 inline-block group-hover:translate-x-1 transition-transform" />
+                        {/* Gradient background */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-white via-gray-100 to-white"></div>
+                        {/* Shimmer effect */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                        {/* Text */}
+                        <span className="relative z-10 text-black flex items-center justify-center">
+                            Start Protecting
+                            <MdArrowRightAlt className="w-4 h-4 ml-2 inline-block group-hover:translate-x-1 transition-transform" />
+                        </span>
                     </Link>
 
                     <Link
                         href="https://txshield.gitbook.io/txshield-docs/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border border-white/30 rounded-lg hover:bg-white/10 transition-all duration-300 font-medium text-center"
+                        className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-medium text-center relative overflow-hidden hero-secondary-btn group border border-white/30 hover:border-white/50 transition-all duration-300"
                     >
-                        Learn More
+                        {/* Animated gradient border glow on hover */}
+                        <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-purple-500/50 via-cyan-500/50 to-purple-500/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm -z-10"></div>
+                        {/* Text */}
+                        <span className="relative z-10 text-white">
+                            Learn More
+                        </span>
                     </Link>
                 </div>
             </motion.div>
