@@ -28,7 +28,7 @@ function HeroSection() {
                 transition={{ duration: 1 }}
             >
                 <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 tracking-tight">
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+                    <span className="bg-clip-text text-transparent grad-word ">
                         SHIELD
                     </span>
                     <br />
