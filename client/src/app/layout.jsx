@@ -19,7 +19,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+    // Add the `dark` class so the CSS custom properties default to the dark theme
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} dark`}>
       <body className="antialiased bg-background text-foreground">
         <ClientLayout>
           {children}
