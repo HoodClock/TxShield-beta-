@@ -29,8 +29,9 @@ function OurSolutionTxShield() {
   const ref = useRef();
   const isInView = useInView(ref, { once: true, amount: 0.2 });
 
+  // Start all sections collapsed by default
   const [openSection, setOpenSection] = useState({
-    honeypot: true,
+    honeypot: false,
     phishing: false,
     upcoming: false
   });

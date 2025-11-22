@@ -60,13 +60,51 @@ function HomePage() {
       <div id="smooth-wrapper">
         <div id="smooth-content">
           <Header />
-          <HeroSection />
-          <StatsSection />
-          <AnalysisSection />
-          <ChainSection />
-          <TestimonialSection />
-          <ContactUs />
-          <Footer />
+          <div className="section-merge">
+            <HeroSection />
+          </div>
+
+          <div className="orb-bg section-merge">
+            <div className="orb orb-1" aria-hidden="true"></div>
+            <div className="orb orb-2" aria-hidden="true"></div>
+            <div className="orb orb-3" aria-hidden="true"></div>
+            <StatsSection />
+          </div>
+
+          <div className="orb-bg section-merge">
+            <div className="orb orb-1" aria-hidden="true"></div>
+            <div className="orb orb-2" aria-hidden="true"></div>
+            <div className="orb orb-3" aria-hidden="true"></div>
+            <AnalysisSection />
+          </div>
+
+          <div className="orb-bg section-merge">
+            <div className="orb orb-1" aria-hidden="true"></div>
+            <div className="orb orb-2" aria-hidden="true"></div>
+            <div className="orb orb-3" aria-hidden="true"></div>
+            <ChainSection />
+          </div>
+
+          <div className="orb-bg section-merge">
+            <div className="orb orb-1" aria-hidden="true"></div>
+            <div className="orb orb-2" aria-hidden="true"></div>
+            <div className="orb orb-3" aria-hidden="true"></div>
+            <TestimonialSection />
+          </div>
+
+          <div className="orb-bg section-merge">
+            <div className="orb orb-1" aria-hidden="true"></div>
+            <div className="orb orb-2" aria-hidden="true"></div>
+            <div className="orb orb-3" aria-hidden="true"></div>
+            <ContactUs />
+          </div>
+
+          <div className="orb-bg section-merge">
+            <div className="orb orb-1" aria-hidden="true"></div>
+            <div className="orb orb-2" aria-hidden="true"></div>
+            <div className="orb orb-3" aria-hidden="true"></div>
+            <Footer />
+          </div>
         </div>
       </div>
     </div>
