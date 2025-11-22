@@ -334,3 +334,147 @@ html {
 @media (max-width: 768px) {
   .section-merge { margin-top: -28px; padding-top: 56px; }
 }
+
+/* Subtle purple-blue gradient utility used to highlight important words */
+.grad-word {
+  background: linear-gradient(90deg, #7C3AED 0%, #4F46E5 50%, #0EA5E9 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grad-word { color: #7C3AED; background-clip: unset; -webkit-background-clip: unset; }
+}
+
+/* Fancy gradient border for containers and controls */
+.fancy-gradient-border {
+  background: linear-gradient(var(--background), var(--background)) padding-box,
+              linear-gradient(90deg, rgba(124,58,237,0.65), rgba(79,70,229,0.6), rgba(14,165,233,0.6)) border-box;
+  border: 1px solid transparent;
+  box-shadow: 0 6px 30px rgba(79,70,229,0.06);
+}
+
+.fancy-gradient-border.subtle {
+  box-shadow: 0 8px 40px rgba(14,165,233,0.04);
+}
+
+.fancy-dropdown {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius: 0.75rem;
+  padding: 0.125rem; /* small padding so border gradient shows */
+}
+
+.fancy-dropdown > .fancy-inner {
+  border-radius: 0.625rem;
+  background: rgba(11,11,11,0.7);
+  padding: 0.75rem;
+}
+
+/* Dimmed surface overrides for Tailwind translucent white utilities
+   These make UI panels/sub-surfaces more subtle and less bright while
+   preserving existing shape and backdrop blur. Placed after Tailwind
+   imports so these rules take precedence. */
+.bg-white\/4 { background-color: rgba(255,255,255,0.03) !important; }
+.bg-white\/5 { background-color: rgba(255,255,255,0.025) !important; }
+.bg-white\/6 { background-color: rgba(255,255,255,0.02) !important; }
+.bg-white\/8 { background-color: rgba(255,255,255,0.012) !important; }
+.bg-white\/10 { background-color: rgba(255,255,255,0.008) !important; }
+
+/* Slightly darker, subtler borders for the same utilities */
+.border-white\/6 { border-color: rgba(255,255,255,0.04) !important; }
+.border-white\/10 { border-color: rgba(255,255,255,0.02) !important; }
+
+/* Reduce hover/active brightness on these surfaces to keep the UI calm */
+.hover\:bg-white\/5:hover { background-color: rgba(255,255,255,0.03) !important; }
+.hover\:bg-white\/8:hover { background-color: rgba(255,255,255,0.01) !important; }
+
+@media (prefers-reduced-transparency: reduce) {
+  .bg-white\/4, .bg-white\/5, .bg-white\/6 { background-color: rgba(255,255,255,0.02) !important; }
+}
+
+/* Very dim feature surface used for feature-grid containers so they blend
+   with the site background while preserving content contrast. */
+.feature-surface {
+  background: rgba(6,6,6,0.6) !important;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.feature-surface .rounded-lg { border-radius: 0.5rem; }
+
+/* Feature item hover tooltip */
+.feature-item { position: relative; }
+.feature-popup {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 10px);
+  transform: translateX(-50%) translateY(8px) scale(0.98);
+  opacity: 0;
+  pointer-events: none;
+  width: min(320px, 86vw);
+  max-width: 380px;
+  background: rgba(10,10,10,0.95);
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.5rem;
+  color: #d6d6e0;
+  font-size: 0.9rem;
+  line-height: 1.25rem;
+  box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+  z-index: 60;
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+.feature-item:hover .feature-popup,
+.feature-item:focus-within .feature-popup {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+/* keep tooltip inside viewport on small screens by shifting slightly left/right */
+@media (max-width: 640px) {
+  .feature-popup { left: 50%; top: calc(100% + 6px); width: calc(100% - 2rem); transform: translateX(-50%); }
+}
+
+/* Continuous horizontal logo loop (marquee) */
+ .logo-loop {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+ }
+
+ .logo-track {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  will-change: transform;
+  /* duplicate content is expected (two copies) so translate by the measured
+    scroll distance moves one copy out — CSS vars are set by JS for exactness. */
+  animation: marquee var(--marquee-duration, 20s) linear infinite;
+ }
+
+/* When JavaScript drives the transform we must disable the CSS animation to avoid
+   transform conflicts/jumps. Add the class `js-driven` to the track element
+   to turn off the CSS marquee. */
+.logo-track.js-driven {
+  animation: none !important;
+}
+
+ .logo-item { flex: 0 0 auto; }
+
+ @keyframes marquee {
+  0% { transform: translateX(0); }
+  /* use measured pixel distance when available; fallback to -50% */
+  100% { transform: translateX(calc(var(--scroll-distance, -50%))); }
+ }
+
+ /* Pause animation when hovered or focused for accessibility */
+ .logo-loop:hover .logo-track,
+ .logo-loop:focus-within .logo-track {
+  animation-play-state: paused;
+ }
+
+ @media (prefers-reduced-motion: reduce) {
+  .logo-track { animation: none; }
+ }
