@@ -84,7 +84,7 @@ export default function ContactForm() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-5 py-3 rounded-lg bg-transparent border border-gray-700 focus:border-white focus:ring-1 focus:ring-white/20 text-white placeholder-gray-500 transition-all duration-300"
+                  className="w-full px-5 py-3 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 focus:border-purple-400/50 focus:ring-2 focus:ring-purple-500/20 text-white placeholder-gray-500 transition-all duration-300 focus:bg-white/10"
                   placeholder="Full Name"
                 />
               </div>
@@ -97,7 +97,7 @@ export default function ContactForm() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-5 py-3 rounded-lg bg-transparent border border-gray-700 focus:border-white focus:ring-1 focus:ring-white/20 text-white placeholder-gray-500 transition-all duration-300"
+                  className="w-full px-5 py-3 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 focus:border-cyan-400/50 focus:ring-2 focus:ring-cyan-500/20 text-white placeholder-gray-500 transition-all duration-300 focus:bg-white/10"
                   placeholder="Email Address"
                 />
               </div>
@@ -111,7 +111,7 @@ export default function ContactForm() {
                 value={formData.message}
                 onChange={handleChange}
                 required
-                className="w-full px-5 py-3 rounded-lg bg-transparent border border-gray-700 focus:border-white focus:ring-1 focus:ring-white/20 text-white placeholder-gray-500 transition-all duration-300 resize-none"
+                className="w-full px-5 py-3 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 focus:border-purple-400/50 focus:ring-2 focus:ring-purple-500/20 text-white placeholder-gray-500 transition-all duration-300 resize-none focus:bg-white/10"
                 placeholder="Your Message"
               ></textarea>
             </div>
@@ -122,12 +122,16 @@ export default function ContactForm() {
                 disabled={isSubmitting}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className={`w-full py-4 px-6 rounded-lg font-medium transition-all duration-300 relative overflow-hidden ${
+                className={`w-full py-4 px-6 rounded-lg font-medium transition-all duration-300 relative overflow-hidden group ${
                   isSubmitting
                     ? "bg-gray-700 cursor-not-allowed text-gray-300"
-                    : "bg-white text-black hover:bg-gray-200"
+                    : "bg-gradient-to-r from-white via-gray-100 to-white text-black hover:shadow-lg hover:shadow-cyan-500/20"
                 }`}
               >
+                {/* Shimmer effect */}
+                {!isSubmitting && (
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                )}
                 <div className="relative z-10 flex items-center justify-center">
                   {isSubmitting ? (
                     <>
@@ -136,7 +140,7 @@ export default function ContactForm() {
                     </>
                   ) : (
                     <>
-                      <Send className="w-4 h-4 mr-3" />
+                      <Send className="w-4 h-4 mr-3 group-hover:translate-x-1 transition-transform" />
                       Send Message
                     </>
                   )}
