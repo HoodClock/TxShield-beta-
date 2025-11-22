@@ -679,3 +679,32 @@ div > section:first-child {
 .api-button-wrapper {
   will-change: transform;
 }
+
+/* Responsive improvements */
+@media (max-width: 640px) {
+  /* Reduce padding on small screens */
+  .section-merge {
+    padding-top: 40px !important;
+    padding-bottom: 32px !important;
+  }
+  
+  /* Ensure text doesn't overflow on mobile */
+  h1, h2, h3 {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  /* Better touch targets for mobile */
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .section-merge {
+    padding-top: 56px !important;
+    padding-bottom: 40px !important;
+  }
+}

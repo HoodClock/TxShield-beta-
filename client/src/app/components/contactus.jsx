@@ -40,28 +40,28 @@ export default function ContactForm() {
   };
 
   return (
-    <section className="py-16 px-4">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <section className="py-12 sm:py-16 px-4 sm:px-6">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
         {/* Left side - Contact info */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="space-y-6"
+          className="space-y-4 sm:space-y-6 text-center lg:text-left"
         >
           <h2
-            className="text-4xl font-bold text-white"
+            className="text-3xl sm:text-4xl font-bold text-white"
             style={{ fontFamily: "'ClashDisplay-Bold', sans-serif" }}
           >
             Get in <span className="grad-word">Touch</span>
           </h2>
-          <p className="text-gray-400 text-lg">
+          <p className="text-gray-400 text-base sm:text-lg">
             Have a project in mind or want to collaborate? Reach out and we'll
             respond within 24 hours.
           </p>
           <div className="space-y-4">
-            <p style={{ fontFamily: "'ClashDisplay-Bold', sans-serif" }} className="text-2xl font-bold mb-8">
+            <p style={{ fontFamily: "'ClashDisplay-Bold', sans-serif" }} className="text-xl sm:text-2xl font-bold">
               <span className="grad-word">TxShield</span>@proton.me
             </p>
           </div>

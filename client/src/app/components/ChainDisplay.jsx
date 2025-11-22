@@ -47,21 +47,21 @@ function ChainDisplay() {
                 </motion.div>
 
                 {/* Main Card with Chain Grid */}
-                <div className="max-w-4xl mx-auto">
+                <div className="max-w-4xl mx-auto px-4 sm:px-6">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={isInView ? { opacity: 1, y: 0 } : {}}
                         transition={{ duration: 0.7, delay: 0.2 }}
-                        className="rounded-2xl fancy-gradient-border subtle bg-white/4 border border-white/6 p-6 backdrop-blur-sm"
+                        className="rounded-2xl fancy-gradient-border subtle bg-white/4 border border-white/6 p-4 sm:p-6 backdrop-blur-sm"
                     >
-                        <div className="flex items-start gap-6">
+                        <div className="flex flex-col lg:flex-row items-start gap-4 sm:gap-6">
                             {/* Chains Grid */}
-                            <div className="flex-1">
-                                <div className="text-sm text-gray-400 mb-1">Supported Networks</div>
-                                <h3 className="text-2xl font-bold text-white mb-4">Overview</h3>
-                                <p className="text-gray-400 mb-6 text-sm">A comprehensive list of blockchain networks we monitor and protect.</p>
+                            <div className="flex-1 w-full">
+                                <div className="text-xs sm:text-sm text-gray-400 mb-1">Supported Networks</div>
+                                <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Overview</h3>
+                                <p className="text-gray-400 mb-4 sm:mb-6 text-xs sm:text-sm">A comprehensive list of blockchain networks we monitor and protect.</p>
 
-                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
                                     {chains.map((chain, index) => (
                                         <motion.div
                                             key={chain.id}
@@ -70,10 +70,10 @@ function ChainDisplay() {
                                             transition={{ duration: 0.5, delay: 0.1 + index * 0.03 }}
                                             className="group"
                                         >
-                                            <div className="flex flex-col items-center p-3 rounded-xl bg-white/2 border border-white/5 hover:border-purple-400/30 hover:bg-white/5 transition-all duration-300">
-                                                <div className="relative mb-2">
+                                            <div className="flex flex-col items-center p-2 sm:p-3 rounded-xl bg-white/2 border border-white/5 hover:border-purple-400/30 hover:bg-white/5 transition-all duration-300">
+                                                <div className="relative mb-1.5 sm:mb-2">
                                                     <div className="p-[2px] rounded-full bg-gradient-to-br from-purple-500 via-indigo-600 to-cyan-400" style={{ boxShadow: '0 4px 15px rgba(79,70,229,0.12)' }}>
-                                                        <div className="w-12 h-12 rounded-full bg-[#0B0B0B] flex items-center justify-center p-1.5">
+                                                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#0B0B0B] flex items-center justify-center p-1 sm:p-1.5">
                                                             <img 
                                                                 src={chain.logo} 
                                                                 alt={chain.label}
@@ -108,10 +108,10 @@ function ChainDisplay() {
                             </div>
 
                             {/* Stats Sidebar */}
-                            <div className="w-36 hidden lg:block">
+                            <div className="w-full lg:w-36 mt-4 lg:mt-0">
                                 <div className="rounded-xl bg-white/6 p-4 text-center">
-                                    <div className="text-sm text-gray-400">Total Networks</div>
-                                    <div className="text-3xl font-bold text-white mt-2">{chains.length}</div>
+                                    <div className="text-xs sm:text-sm text-gray-400">Total Networks</div>
+                                    <div className="text-2xl sm:text-3xl font-bold text-white mt-2">{chains.length}</div>
                                     <div className="text-xs text-gray-500 mt-1">active chains • supported</div>
                                 </div>
                             </div>
