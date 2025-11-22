@@ -8,7 +8,7 @@ import DarkVeil from '../backgrounds/DarkVeil';
 
 function HeroSection() {
     return (
-        <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
+        <section className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{ border: 'none', borderTop: 'none', marginTop: 0, paddingTop: 0 }}>
             {/* Dark Veil Background */}
             <div className="absolute inset-0 z-0">
                 <DarkVeil 
@@ -27,6 +27,21 @@ function HeroSection() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1 }}
             >
+                {/* Centered Logo above SHIELD */}
+                <Link 
+                    href="/home" 
+                    className="flex items-center justify-center mb-8 group pointer-events-auto"
+                    style={{ margin: '0 auto' }}
+                >
+                    <div className="relative h-20 md:h-24 w-auto flex items-center justify-center transition-all duration-300 group-hover:scale-110 animate-logo-float">
+                        <img 
+                            src="/Images/logo.png"
+                            alt="Shield Logo"
+                            className="h-full w-auto object-contain"
+                        />
+                    </div>
+                </Link>
+
                 <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 tracking-tight">
                     <span className="bg-clip-text text-transparent grad-word ">
                         SHIELD
@@ -51,9 +66,14 @@ function HeroSection() {
                         <MdArrowRightAlt className="w-4 h-4 ml-2 inline-block group-hover:translate-x-1 transition-transform" />
                     </Link>
 
-                    <button className="px-8 py-4 border border-white/30 rounded-lg hover:bg-white/10 transition-all duration-300 font-medium">
+                    <Link
+                        href="https://txshield.gitbook.io/txshield-docs/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-8 py-4 border border-white/30 rounded-lg hover:bg-white/10 transition-all duration-300 font-medium"
+                    >
                         Learn More
-                    </button>
+                    </Link>
                 </div>
             </motion.div>
         </section>
