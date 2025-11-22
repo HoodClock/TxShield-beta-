@@ -19,9 +19,7 @@ function TestimonialSection() {
                     transition={{ duration: 0.8 }}
                     viewport={{ once: true }}
                 >
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">
-                        What People Say
-                    </span>
+                    <span className="grad-word">What People Say</span>
                     <br className="md:hidden" /> About Our Platform
                 </motion.h2>
 

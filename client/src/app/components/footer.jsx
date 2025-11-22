@@ -3,7 +3,7 @@ export default function Footer() {
     <footer className="bg-[#0A0A0A] border-t border-[#222] py-12 px-6">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
         <div>
-          <h3 className="text-2xl font-bold mb-4">TxShield</h3>
+          <h3 className="text-2xl font-bold mb-4"><span className="grad-word">TxShield</span></h3>
           <p className="text-gray-400">
             Protecting your crypto transactions from scams and malicious
             contracts.

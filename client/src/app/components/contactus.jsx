@@ -54,18 +54,15 @@ export default function ContactForm() {
             className="text-4xl font-bold text-white"
             style={{ fontFamily: "'ClashDisplay-Bold', sans-serif" }}
           >
-            Get in Touch
+            Get in <span className="grad-word">Touch</span>
           </h2>
           <p className="text-gray-400 text-lg">
             Have a project in mind or want to collaborate? Reach out and we'll
             respond within 24 hours.
           </p>
           <div className="space-y-4">
-            <p
-              style={{ fontFamily: "'ClashDisplay-Bold', sans-serif" }}
-              className="text-2xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-600"
-            >
-              <span className="text-white">TxShield</span>@proton.me
+            <p style={{ fontFamily: "'ClashDisplay-Bold', sans-serif" }} className="text-2xl font-bold mb-8">
+              <span className="grad-word">TxShield</span>@proton.me
             </p>
           </div>
         </motion.div>

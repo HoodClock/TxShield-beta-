@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import {
   FaShieldAlt,
@@ -36,10 +36,24 @@ function OurSolutionTxShield() {
     upcoming: false
   });
 
+  // Track expanded feature per section (only one at a time per section)
+  const [expandedFeature, setExpandedFeature] = useState({
+    honeypot: null,
+    phishing: null,
+    upcoming: null
+  });
+
   const toggleSection = (section) => {
     setOpenSection(prev => ({
       ...prev,
       [section]: !prev[section]
+    }));
+  };
+
+  const toggleFeature = (sectionKey, index) => {
+    setExpandedFeature(prev => ({
+      ...prev,
+      [sectionKey]: prev[sectionKey] === index ? null : index
     }));
   };
 
@@ -50,15 +64,15 @@ function OurSolutionTxShield() {
       count: "9 Checks",
       description: "Advanced token trap detection",
       items: [
-        { title: "Blacklist Check", icon: <FaUserSlash /> },
-        { title: "Transfer Control", icon: <FaBan /> },
-        { title: "Fake Balance", icon: <FaEye /> },
-        { title: "Gas Trap", icon: <FaGasPump /> },
-        { title: "Hidden Owner", icon: <FaKey /> },
-        { title: "High Sell Tax", icon: <FaPercentage /> },
-        { title: "Buy/Sell Control", icon: <FaExchangeAlt /> },
-        { title: "Mint Access", icon: <FaCoins /> },
-        { title: "Trading Control", icon: <FaLock /> }
+        { title: "Blacklist Check", icon: <FaUserSlash />, description: "Checks token and address blacklists to flag known malicious actors and previously tagged scams." },
+        { title: "Transfer Control", icon: <FaBan />, description: "Detects transfer restrictions and code paths that prevent withdrawals or transfers under certain conditions." },
+        { title: "Fake Balance", icon: <FaEye />, description: "Identifies contracts that fake user balances or manipulate reporting to trick interfaces and users." },
+        { title: "Gas Trap", icon: <FaGasPump />, description: "Finds deceptive gas-related logic that causes transactions to fail or generate excessive fees for victims." },
+        { title: "Hidden Owner", icon: <FaKey />, description: "Detects hidden owner functions and privileged roles allowing stealthy control or fund extraction." },
+        { title: "High Sell Tax", icon: <FaPercentage />, description: "Flags contracts with punitive sell taxes that block token exits for holders and create traps." },
+        { title: "Buy/Sell Control", icon: <FaExchangeAlt />, description: "Analyzes trading controls that can block sells while allowing buys (honeypot patterns)." },
+        { title: "Mint Access", icon: <FaCoins />, description: "Checks for arbitrary minting capabilities that could dilute value or enable rug pulls." },
+        { title: "Trading Control", icon: <FaLock />, description: "Detects admin-controlled trading switches and circuit-breakers used maliciously." }
       ]
     },
     phishing: {
@@ -67,11 +81,11 @@ function OurSolutionTxShield() {
       count: "5 Checks",
       description: "Approval scam prevention",
       items: [
-        { title: "Approve Scam", icon: <FaKey /> },
-        { title: "Ether Forward", icon: <FaExchangeAlt /> },
-        { title: "Malicious Proxy", icon: <FaSkull /> },
-        { title: "Permit Scam", icon: <FaKey /> },
-        { title: "Domain Link", icon: <FaLink /> }
+        { title: "Approve Scam", icon: <FaKey />, description: "Detects malicious approval patterns and suspicious allowance flows that enable token draining." },
+        { title: "Ether Forward", icon: <FaExchangeAlt />, description: "Finds contracts or links that forward incoming Ether/assets to attacker-controlled addresses." },
+        { title: "Malicious Proxy", icon: <FaSkull />, description: "Identifies proxy contracts that reroute logic to malicious implementations or hidden backdoors." },
+        { title: "Permit Scam", icon: <FaKey />, description: "Detects abusive or crafted permit flows that can be used to stealthily grant approvals." },
+        { title: "Domain Link", icon: <FaLink />, description: "Flags suspicious domain links and phishing URLs commonly used in social-engineering attacks." }
       ]
     },
     upcoming: {
@@ -80,33 +94,36 @@ function OurSolutionTxShield() {
       count: "11 Features",
       description: "Future security enhancements",
       items: [
-        { title: "Address Poisoning", icon: <FaUserSlash /> },
-        { title: "Rug Pull Analysis", icon: <FaHandHoldingUsd /> },
-        { title: "Approval Revocation", icon: <FaKey /> },
-        { title: "Dusting Protection", icon: <FaDatabase /> },
-        { title: "Fake Token", icon: <FaSkull /> },
-        { title: "Simulation Spoofing", icon: <FaShieldAlt /> },
-        { title: "Front Running", icon: <FaChartLine /> },
-        { title: "Risk Scoring", icon: <FaBrain /> },
-        { title: "Fee Manipulation", icon: <FaPercentage /> },
-        { title: "Bridge Assessment", icon: <FaGlobe /> },
-        { title: "AI Detection", icon: <FaRobot /> }
+        { title: "Address Poisoning", icon: <FaUserSlash />, description: "Detects attempts to poison analytics or reputation by injecting malicious addresses or tokens." },
+        { title: "Rug Pull Analysis", icon: <FaHandHoldingUsd />, description: "Analyzes token/team patterns and liquidity risks that indicate potential rug pulls." },
+        { title: "Approval Revocation", icon: <FaKey />, description: "Tools to help users revoke dangerous approvals and reduce long-term exposure." },
+        { title: "Dusting Protection", icon: <FaDatabase />, description: "Identifies small-value dusting attacks used to deanonymize or track wallets." },
+        { title: "Fake Token", icon: <FaSkull />, description: "Detects scam tokens that impersonate popular assets or misrepresent metadata." },
+        { title: "Simulation Spoofing", icon: <FaShieldAlt />, description: "Prevents attackers from spoofing results from on-chain simulations to hide malicious behavior." },
+        { title: "Front Running", icon: <FaChartLine />, description: "Identifies patterns and mempool behavior that enable front-running and sandwich attacks." },
+        { title: "Risk Scoring", icon: <FaBrain />, description: "Aggregated risk scores combining static and dynamic signals for quick assessment." },
+        { title: "Fee Manipulation", icon: <FaPercentage />, description: "Detects fee/tax manipulation schemes used to trap or heavily penalize trades." },
+        { title: "Bridge Assessment", icon: <FaGlobe />, description: "Evaluates bridge contracts for insecurity and fund-exposure risks." },
+        { title: "AI Detection", icon: <FaRobot />, description: "Leverages AI to detect novel scam patterns and anomalies in behavior." }
       ]
     }
   };
 
   const DropdownSection = ({ sectionKey, isOpen, onToggle }) => {
     const section = sections[sectionKey];
+    const isExpanded = expandedFeature[sectionKey];
 
     return (
       <div className="mb-4 rounded-xl bg-white/4 border border-white/6 overflow-hidden backdrop-blur-sm">
         <button
           onClick={() => onToggle(sectionKey)}
-          className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-white/5 transition-all"
+          className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-white/5 transition-all fancy-gradient-border subtle"
         >
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-lg bg-white/6 flex items-center justify-center text-white">
-              {section.icon}
+            <div className="p-[2px] rounded-full fancy-gradient-border subtle">
+              <div className="w-10 h-10 rounded-full bg-white/6 flex items-center justify-center text-white">
+                {section.icon}
+              </div>
             </div>
             <div>
               <div className="flex items-center gap-3">
@@ -126,21 +143,54 @@ function OurSolutionTxShield() {
         <motion.div
           initial={false}
           animate={isOpen ? { height: 'auto', opacity: 1 } : { height: 0, opacity: 0 }}
-          transition={{ duration: 0.25 }}
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
           className="overflow-hidden"
         >
-          <div className="px-6 py-4 border-t border-white/6">
+          <div className="px-6 py-4 border-t border-white/6 feature-surface">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
               {section.items.map((item, index) => (
-                <div
+                <motion.div
                   key={index}
-                  className="p-3 rounded-lg bg-white/5 border border-white/6 hover:bg-white/8 transition-all flex flex-col items-center text-center gap-2"
+                  layout
+                  onClick={() => toggleFeature(sectionKey, index)}
+                  className="cursor-pointer"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-white/6 flex items-center justify-center text-white text-sm">
-                    {item.icon}
-                  </div>
-                  <span className="text-xs text-gray-300 font-medium">{item.title}</span>
-                </div>
+                  <motion.div
+                    initial={false}
+                    animate={isExpanded === index ? { height: 'auto' } : { height: 'auto' }}
+                    className="rounded-lg fancy-gradient-border subtle overflow-hidden bg-white/3 border border-white/6"
+                  >
+                    {/* Card header - always visible */}
+                    <div className="p-3 flex flex-col items-center text-center gap-2 hover:bg-white/5 transition-all">
+                      <div className="p-[2px] rounded-full fancy-gradient-border subtle">
+                        <div className="w-8 h-8 rounded-full bg-white/6 flex items-center justify-center text-white text-sm">
+                          {item.icon}
+                        </div>
+                      </div>
+                      <span className="text-xs text-gray-300 font-medium">{item.title}</span>
+                      {isExpanded !== index && (
+                        <div className="text-[10px] text-gray-500 mt-1">Click to explore</div>
+                      )}
+                    </div>
+
+                    {/* Expanded description */}
+                    <AnimatePresence>
+                      {isExpanded === index && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.3, ease: 'easeInOut' }}
+                          className="overflow-hidden border-t border-white/6"
+                        >
+                          <div className="p-3 text-left">
+                            <p className="text-xs text-gray-400 leading-relaxed">{item.description}</p>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -163,9 +213,7 @@ function OurSolutionTxShield() {
             <span className="text-sm text-gray-300 uppercase">Our Solution</span>
           </div>
           <h2 className="text-3xl md:text-4xl font-semibold text-white mb-3">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-300 to-gray-500">
-              TxShield
-            </span>
+            <span className="grad-word">TxShield</span>
             {' '}
             <span className="text-white">Security</span>
           </h2>

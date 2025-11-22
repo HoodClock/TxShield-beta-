@@ -9,25 +9,21 @@ function AnalysisSection() {
 
     const honeypotSteps = [
         {
-            icon: '🪙',
             title: 'Malicious Token Creation',
             description: 'Deploy smart contract with hidden backdoors and withdrawal blockers disguised as legitimate code.',
             type: 'Deployment'
         },
         {
-            icon: '💧',
             title: 'Fake Liquidity Pool',
             description: 'Add minimal liquidity to create trading activity illusion while preventing large withdrawals.',
             type: 'Setup'
         },
         {
-            icon: '📢',
             title: 'Social Engineering Push',
             description: 'Coordinate fake influencers and bots to create artificial hype and FOMO around the token.',
             type: 'Marketing'
         },
         {
-            icon: '🕳️',
             title: 'Deposit Trap Activation',
             description: 'Allow deposits but block all withdrawal attempts through hidden contract logic.',
             type: 'Execution'
@@ -36,25 +32,21 @@ function AnalysisSection() {
 
     const phishingSteps = [
         {
-            icon: '🌐',
             title: 'Clone Legitimate Platform',
             description: 'Create perfect replicas of popular DEXs, wallets, or NFT markets with malicious modifications.',
             type: 'Impersonation'
         },
         {
-            icon: '🎣',
             title: 'Urgent Action Bait',
             description: "Send fake security alerts, airdrop announcements, or limited-time offers to create urgency.",
             type: 'Lure'
         },
         {
-            icon: '🔑',
             title: 'Credential Harvesting',
             description: 'Capture wallet connections, private keys, or seed phrases through fake login portals.',
             type: 'Theft'
         },
         {
-            icon: '💸',
             title: 'Instant Asset Drain',
             description: 'Immediately transfer all accessible funds from compromised wallets to attacker addresses.',
             type: 'Extraction'
@@ -102,9 +94,7 @@ function AnalysisSection() {
                         <span className="text-sm text-gray-300">ATTACK ANALYSIS</span>
                     </div>
                     <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
-                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-300 to-gray-500">
-                            The Scammer
-                        </span>
+                        <span className="text-white">The <span className="grad-word">Scammer</span></span>
                         <br />
                         <span className="text-white">Playbook</span>
                     </h1>
@@ -119,7 +109,7 @@ function AnalysisSection() {
                     <div className="relative">
                         <button
                             onClick={() => setOpen(!open)}
-                            className="w-full flex items-center justify-between gap-4 px-5 py-3 rounded-xl bg-white/4 border border-white/6 backdrop-blur-sm"
+                            className="w-full flex items-center justify-between gap-4 px-5 py-3 rounded-xl bg-white/4 border border-white/6 backdrop-blur-sm fancy-gradient-border subtle"
                         >
                             <div className="text-left">
                                 <div className="text-sm text-gray-400">Select Playbook</div>
@@ -132,14 +122,14 @@ function AnalysisSection() {
                             initial={{ opacity: 0, height: 0 }}
                             animate={open ? 'show' : 'hidden'}
                             variants={panelVariants}
-                            className="absolute left-0 right-0 mt-3 z-20"
+                            className="absolute left-0 right-0 mt-3 z-20 fancy-dropdown"
                         >
-                            <div className="rounded-xl bg-white/4 border border-white/6 p-3 backdrop-blur-sm shadow-md">
+                            <div className="fancy-inner rounded-xl bg-white/4 border border-white/6 backdrop-blur-sm shadow-md">
                                 {playbooks.map(pb => (
                                     <button
                                         key={pb.id}
                                         onClick={() => { setSelected(pb.id); setOpen(false); }}
-                                        className={`w-full text-left px-4 py-3 rounded-md mb-2 transition ${selected === pb.id ? 'bg-white/6 border-white/10' : 'hover:bg-white/5'}`}
+                                        className={`w-full text-left px-4 py-3 rounded-md mb-2 transition fancy-gradient-border subtle ${selected === pb.id ? 'bg-white/6 border-white/10' : 'hover:bg-white/5'}`}
                                     >
                                         <div className="flex items-center justify-between">
                                             <div className="text-sm text-gray-300">{pb.title}</div>
@@ -158,7 +148,7 @@ function AnalysisSection() {
                         variants={panelVariants}
                         initial="show"
                         animate={isInView ? 'show' : 'hidden'}
-                        className="rounded-2xl bg-white/4 border border-white/6 p-6 backdrop-blur-sm mb-8"
+                        className="rounded-2xl fancy-gradient-border subtle bg-white/4 border border-white/6 p-6 backdrop-blur-sm mb-8"
                     >
                         <div className="flex items-start gap-6">
                             <div className="flex-1">
@@ -169,12 +159,16 @@ function AnalysisSection() {
                                 <div className="space-y-3">
                                     {(selectedPlaybook.steps || []).map((step, i) => (
                                         <div key={i} className="flex items-start gap-4">
-                                            <div className="w-10 h-10 rounded-lg bg-white/6 flex items-center justify-center text-lg">
-                                                {step.icon}
+                                            <div className="flex-shrink-0">
+                                                <div className="p-[2px] rounded-full bg-gradient-to-br from-purple-500 via-indigo-600 to-cyan-400" style={{ boxShadow: '0 8px 30px rgba(79,70,229,0.12)' }}>
+                                                    <div className="w-10 h-10 rounded-full bg-[#0B0B0B] flex items-center justify-center text-sm font-semibold text-white">
+                                                        {i + 1}
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div>
                                                 <div className="text-sm text-gray-300">Step {i + 1} • <span className="text-xs text-gray-500">{step.type}</span></div>
-                                                <div className="text-white font-semibold">{step.title}</div>
+                                                <div className="text-white font-semibold text-lg">{step.title}</div>
                                                 <div className="text-gray-400 text-sm">{step.description}</div>
                                             </div>
                                         </div>
