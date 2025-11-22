@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ClientLayout from "./clientLayout";
+import ScrollProgressBar from "./components/ScrollProgressBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,6 +24,7 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} dark`}>
       <body className="antialiased bg-background text-foreground">
         <ClientLayout>
+          <ScrollProgressBar />
           {children}
         </ClientLayout>
       </body>
