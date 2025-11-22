@@ -87,35 +87,35 @@ function AnalysisSection() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
                     viewport={{ once: true }}
-                    className="text-center mb-20"
+                    className="text-center mb-12 sm:mb-16 md:mb-20 px-4 sm:px-6"
                 >
-                    <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 border border-white/10 mb-6">
-                        <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
-                        <span className="text-sm text-gray-300">ATTACK ANALYSIS</span>
+                    <div className="inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-3 rounded-full bg-white/5 border border-white/10 mb-4 sm:mb-6">
+                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+                        <span className="text-xs sm:text-sm text-gray-300">ATTACK ANALYSIS</span>
                     </div>
-                    <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
                         <span className="text-white">The <span className="grad-word">Scammer</span></span>
                         <br />
                         <span className="text-white">Playbook</span>
                     </h1>
-                    <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+                    <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">
                         Understanding how attackers operate is the first step in building effective protection. 
                         Here's how modern crypto scams unfold.
                     </p>
                 </motion.div>
 
                 {/* Dropdown playbook selector */}
-                <div className="max-w-3xl mx-auto mb-10">
+                <div className="max-w-3xl mx-auto mb-8 sm:mb-10 px-4 sm:px-6">
                     <div className="relative">
                         <button
                             onClick={() => setOpen(!open)}
-                            className="w-full flex items-center justify-between gap-4 px-5 py-3 rounded-xl bg-white/4 border border-white/6 backdrop-blur-sm fancy-gradient-border subtle"
+                            className="w-full flex items-center justify-between gap-4 px-4 sm:px-5 py-3 rounded-xl bg-white/4 border border-white/6 backdrop-blur-sm fancy-gradient-border subtle"
                         >
-                            <div className="text-left">
-                                <div className="text-sm text-gray-400">Select Playbook</div>
-                                <div className="text-lg font-semibold text-white">{selectedPlaybook.title}</div>
+                            <div className="text-left flex-1 min-w-0">
+                                <div className="text-xs sm:text-sm text-gray-400">Select Playbook</div>
+                                <div className="text-base sm:text-lg font-semibold text-white truncate">{selectedPlaybook.title}</div>
                             </div>
-                            <div className="text-gray-400">{open ? '▴' : '▾'}</div>
+                            <div className="text-gray-400 flex-shrink-0">{open ? '▴' : '▾'}</div>
                         </button>
 
                         <motion.div
@@ -143,43 +143,43 @@ function AnalysisSection() {
                 </div>
 
                 {/* Playbook details panel */}
-                <div className="max-w-4xl mx-auto">
+                <div className="max-w-4xl mx-auto px-4 sm:px-6">
                     <motion.div
                         variants={panelVariants}
                         initial="show"
                         animate={isInView ? 'show' : 'hidden'}
-                        className="rounded-2xl fancy-gradient-border subtle bg-white/4 border border-white/6 p-6 backdrop-blur-sm mb-8"
+                        className="rounded-2xl fancy-gradient-border subtle bg-white/4 border border-white/6 p-4 sm:p-6 backdrop-blur-sm mb-8"
                     >
-                        <div className="flex items-start gap-6">
-                            <div className="flex-1">
-                                <div className="text-sm text-gray-400 mb-1">{selectedPlaybook.title}</div>
-                                <h3 className="text-2xl font-bold text-white mb-3">Overview</h3>
-                                <p className="text-gray-400 mb-4">A concise breakdown of the main stages. Expand the dropdown to switch playbooks.</p>
+                        <div className="flex flex-col lg:flex-row items-start gap-4 sm:gap-6">
+                            <div className="flex-1 w-full">
+                                <div className="text-xs sm:text-sm text-gray-400 mb-1">{selectedPlaybook.title}</div>
+                                <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3">Overview</h3>
+                                <p className="text-gray-400 mb-4 text-sm sm:text-base">A concise breakdown of the main stages. Expand the dropdown to switch playbooks.</p>
 
-                                <div className="space-y-3">
+                                <div className="space-y-3 sm:space-y-4">
                                     {(selectedPlaybook.steps || []).map((step, i) => (
-                                        <div key={i} className="flex items-start gap-4">
+                                        <div key={i} className="flex items-start gap-3 sm:gap-4">
                                             <div className="flex-shrink-0">
                                                 <div className="p-[2px] rounded-full bg-gradient-to-br from-purple-500 via-indigo-600 to-cyan-400" style={{ boxShadow: '0 8px 30px rgba(79,70,229,0.12)' }}>
-                                                    <div className="w-10 h-10 rounded-full bg-[#0B0B0B] flex items-center justify-center text-sm font-semibold text-white">
+                                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#0B0B0B] flex items-center justify-center text-xs sm:text-sm font-semibold text-white">
                                                         {i + 1}
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div>
-                                                <div className="text-sm text-gray-300">Step {i + 1} • <span className="text-xs text-gray-500">{step.type}</span></div>
-                                                <div className="text-white font-semibold text-lg">{step.title}</div>
-                                                <div className="text-gray-400 text-sm">{step.description}</div>
+                                            <div className="flex-1 min-w-0">
+                                                <div className="text-xs sm:text-sm text-gray-300">Step {i + 1} • <span className="text-xs text-gray-500">{step.type}</span></div>
+                                                <div className="text-white font-semibold text-base sm:text-lg mt-1">{step.title}</div>
+                                                <div className="text-gray-400 text-xs sm:text-sm mt-1">{step.description}</div>
                                             </div>
                                         </div>
                                     ))}
                                 </div>
                             </div>
 
-                            <div className="w-36 hidden lg:block">
+                            <div className="w-full lg:w-36 mt-6 lg:mt-0">
                                 <div className="rounded-xl bg-white/6 p-4 text-center">
-                                    <div className="text-sm text-gray-400">Estimated Impact</div>
-                                    <div className="text-3xl font-bold text-white mt-2">$12.7M</div>
+                                    <div className="text-xs sm:text-sm text-gray-400">Estimated Impact</div>
+                                    <div className="text-2xl sm:text-3xl font-bold text-white mt-2">$12.7M</div>
                                     <div className="text-xs text-gray-500 mt-1">reported cases • 3,200+</div>
                                 </div>
                             </div>
@@ -190,10 +190,10 @@ function AnalysisSection() {
                         initial={{ opacity: 0, y: 8 }}
                         animate={isInView ? { opacity: 1, y: 0 } : {}}
                         transition={{ duration: 0.5 }}
-                        className="text-center p-6 rounded-lg border border-white/10 bg-gradient-to-br from-black to-gray-900/50"
+                        className="text-center p-4 sm:p-6 rounded-lg border border-white/10 bg-gradient-to-br from-black to-gray-900/50"
                     >
-                        <h4 className="text-lg font-semibold text-white mb-2">The Inevitable Outcome</h4>
-                        <p className="text-gray-400">Both attack vectors lead to the same result: complete loss of funds. Attackers vanish with all assets.</p>
+                        <h4 className="text-base sm:text-lg font-semibold text-white mb-2">The Inevitable Outcome</h4>
+                        <p className="text-gray-400 text-sm sm:text-base">Both attack vectors lead to the same result: complete loss of funds. Attackers vanish with all assets.</p>
                     </motion.div>
                 </div>
             </div>
