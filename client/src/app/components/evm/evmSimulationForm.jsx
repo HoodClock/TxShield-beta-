@@ -43,7 +43,24 @@ export default function SimulationForm({ onSimulateAll}) {
   };
 
   return (
-    <div className="bg-black rounded-xl p-6 mb-8 border  shadow-lg max-w-4xl mx-auto">
+    <>
+      <style jsx>{`
+        .evm-btn-gradient-anim {
+          background-size: 200% auto;
+          background-image: linear-gradient(to right, #627EEA 0%, #8C52FF 50%, #627EEA 100%);
+          transition: background-position 0.5s ease;
+        }
+        .evm-btn-gradient-anim:hover {
+          background-position: right center; /* change the direction of the change here */
+        }
+      `}</style>
+      <div className="relative p-6 mb-8 border border-[#627EEA]/50 rounded-2xl shadow-xl max-w-4xl mx-auto overflow-hidden bg-gradient-to-br from-[#1C1C2E] to-[#0A0A1A] backdrop-blur-sm" // Deeper, more distinct background
+      style={{ boxShadow: "0 0 80px rgba(98, 126, 234, 0.5)" }} // Even stronger blue glow
+>
+    {/* Ethereum themed glow/gradient - more prominent */}
+    <div className="absolute inset-0 bg-gradient-to-tr from-[#627EEA] to-[#8C52FF] opacity-15 blur-3xl rounded-2xl"></div>
+    {/* Another subtle background layer */}
+    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-blue-700/10 via-transparent to-transparent opacity-5"></div>
       <h2 className="text-2xl font-bold text-white mb-6">
         Secure Your Transactions
       </h2>
@@ -65,7 +82,7 @@ export default function SimulationForm({ onSimulateAll}) {
               type="text"
               id="contractAddress"
               placeholder="0x..."
-              className="w-full px-4 py-3 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+              className="w-full px-4 py-3 border border-blue-400/30 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 placeholder-gray-500"
               value={contractAddress}
               onChange={(e) => setContractAddress(e.target.value)}
             />
@@ -104,7 +121,7 @@ export default function SimulationForm({ onSimulateAll}) {
               type="number"
               id="amount"
               placeholder="0.0"
-              className="w-full px-4 py-3 border rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent pr-20"
+              className="w-full px-4 py-3 border border-blue-400/30 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 placeholder-gray-500"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
             />
@@ -117,7 +134,7 @@ export default function SimulationForm({ onSimulateAll}) {
           onClick={handleSimulate}
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.98 }}
-          className="w-full md:w-auto px-8 py-3 bg-white text-black font-bold rounded-lg hover:bg-gray-100 transition-all duration-300 shadow-lg shadow-white/20 flex items-center justify-center"
+          className="w-full md:w-auto px-8 py-3 text-white font-bold rounded-lg transition-all duration-300 shadow-lg shadow-[#627EEA]/40 flex items-center justify-center evm-btn-gradient-anim"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -137,5 +154,6 @@ export default function SimulationForm({ onSimulateAll}) {
         </motion.button>
       </div>
     </div>
+    </>
   );
 }

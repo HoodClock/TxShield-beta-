@@ -28,20 +28,19 @@ function HeroSection() {
                 transition={{ duration: 1 }}
             >
                 {/* Centered Logo above SHIELD */}
-                <Link 
-                    href="/home" 
-                    className="flex items-center justify-center mb-6 sm:mb-8 group pointer-events-auto"
-                    style={{ margin: '0 auto' }}
-                >
-                    <div className="relative h-16 sm:h-20 md:h-24 w-auto flex items-center justify-center transition-all duration-300 group-hover:scale-110 animate-logo-float">
-                        <img 
-                            src="/Images/logo.png"
-                            alt="Shield Logo"
-                            className="h-full w-auto object-contain"
-                        />
-                    </div>
-                </Link>
-
+                                <Link
+                                    href="/home"
+                                    className="flex items-center justify-center mb-6 sm:mb-8 pointer-events-auto"
+                                    style={{ margin: '0 auto' }}
+                                >
+                                    <div className="relative h-24 sm:h-28 md:h-32 w-auto flex items-center justify-center transition-all duration-300">
+                                        <img
+                                            src="/Images/logo.png"
+                                            alt="Shield Logo"
+                                            className="h-full w-auto object-contain"
+                                        />
+                                    </div>
+                                </Link>
                 <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold mb-4 sm:mb-6 tracking-tight px-2">
                     <span className="bg-clip-text text-transparent grad-word ">
                         SHIELD
