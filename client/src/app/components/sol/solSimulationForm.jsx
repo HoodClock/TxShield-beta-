@@ -18,13 +18,13 @@ export default function SimulationForm({ onSolSimulateAll }) {
         }
 
         if (!publicKey) {
-            alert("Please enter both contract address and amount.");
+            alert("Please connect your wallet first.");
             return
         }
 
         const { Connection, SystemProgram, Transaction, PublicKey } = await import("@solana/web3.js")
 
-        const connection = new Connection(process.env.NEXT_PUBLIC_SOL_MAINNET_RPC);
+        const connection = new Connection(process.env.NEXT_PUBLIC_SOL_MAINNET_RPC || "https://api.mainnet-beta.solana.com");
         const recepientPubKey = new PublicKey(contractAddress);
 
         // building dummy tx
@@ -62,7 +62,24 @@ export default function SimulationForm({ onSolSimulateAll }) {
     };
 
     return (
-        <div className="bg-black rounded-xl p-6 mb-8 border  shadow-lg max-w-4xl mx-auto">
+        <>
+            <style jsx>{`
+              .sol-btn-gradient-anim {
+                background-size: 200% auto;
+                background-image: linear-gradient(to right, #9945FF 0%, #14F195 50%, #9945FF 100%);
+                transition: background-position 0.5s ease;
+              }
+              .sol-btn-gradient-anim:hover {
+                background-position: right center; /* change the direction of the change here */
+              }
+            `}</style>
+            <div className="relative p-6 mb-8 border border-purple-500/50 rounded-2xl shadow-xl max-w-4xl mx-auto overflow-hidden bg-gradient-to-br from-[#1A0A1A] to-[#0A1A1A] backdrop-blur-sm" // Deeper, more distinct background
+      style={{ boxShadow: "0 0 80px rgba(153, 69, 255, 0.5)" }} // Even stronger purple glow
+>
+    {/* Solana themed glow/gradient - more prominent */}
+    <div className="absolute inset-0 bg-gradient-to-tr from-purple-500 to-cyan-500 opacity-15 blur-3xl rounded-2xl"></div>
+    {/* Another subtle background layer */}
+    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-purple-700/10 via-transparent to-transparent opacity-5"></div>
             <h2 className="text-2xl font-bold text-white mb-6">
                 Secure Your Transactions
             </h2>
@@ -84,7 +101,7 @@ export default function SimulationForm({ onSolSimulateAll }) {
                             type="text"
                             id="contractAddress"
                             placeholder="0x..."
-                            className="w-full px-4 py-3 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
+                            className="w-full px-4 py-3 border border-purple-400/20 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
                             value={contractAddress}
                             onChange={(e) => setContractAddress(e.target.value)}
                         />
@@ -123,7 +140,7 @@ export default function SimulationForm({ onSolSimulateAll }) {
                             type="number"
                             id="amount"
                             placeholder="0.0"
-                            className="w-full px-4 py-3 border rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent pr-20"
+                            className="w-full px-4 py-3 border border-purple-400/20 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
                         />
@@ -136,7 +153,7 @@ export default function SimulationForm({ onSolSimulateAll }) {
                     onClick={handleSimulate}
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full md:w-auto px-8 py-3 bg-white text-black font-bold rounded-lg hover:bg-gray-100 transition-all duration-300 shadow-lg shadow-white/20 flex items-center justify-center"
+                    className="w-full md:w-auto px-8 py-3 text-white font-bold rounded-lg transition-all duration-300 shadow-lg shadow-purple-500/30 flex items-center justify-center sol-btn-gradient-anim"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -156,5 +173,6 @@ export default function SimulationForm({ onSolSimulateAll }) {
                 </motion.button>
             </div>
         </div>
+        </>
     );
 }
