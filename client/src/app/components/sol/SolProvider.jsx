@@ -10,7 +10,7 @@ export default function SolProvider({ children }) {
     const wallets = useMemo(() => [], []) // empty because the phantom wallet isntance is already initialized
 
     return (
-        <ConnectionProvider endpoint={process.env.NEXT_PUBLIC_SOL_MAINNET_RPC}>
+        <ConnectionProvider endpoint={process.env.NEXT_PUBLIC_SOL_MAINNET_RPC || "https://api.mainnet-beta.solana.com"}>
             <WalletProvider wallets={wallets} autoConnect>
                 <WalletModalProvider>
                     {children}

@@ -23,7 +23,7 @@ import {
   simulateTx as runSimulateTx,
   suggestionApi as recommendations,
   phishingChecks as runPhishing,
-  solSimulateTx as runSolSimulation
+  solSimulateTx as runSolSimulation,
 } from "@/api/api";
 
 export default function App() {
@@ -37,7 +37,6 @@ export default function App() {
 
   // setting chain for wallet providers
   const [chain, setChain] = useState(null);
-
 
   // for simulation when currency => ETH
   const handleSimulateAll = async ({ honeypotData, simulationData }) => {
@@ -56,14 +55,12 @@ export default function App() {
       setPhishingData(phishingRes.data);
 
       setShowResults(true);
-
     } catch (err) {
       console.error("Simulation Error:", err);
     } finally {
       setIsLoading(false);
     }
-
-  }
+  };
 
   // for simulation when currency => SOL
   const handleSolSimulation = async ({ solSimulationData }) => {
@@ -71,21 +68,19 @@ export default function App() {
     setShowResults(false);
 
     try {
-
       const [solSimulationRes] = await Promise.all([
-        runSolSimulation(solSimulationData)
+        runSolSimulation(solSimulationData),
       ]);
 
       setSolSimulationData(solSimulationRes.data);
 
       setShowResults(true);
-
     } catch (err) {
       console.error("Simulation Error:", err);
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   const handleRecommendation = async () => {
     try {
@@ -113,7 +108,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-black flex flex-col">
       <Head>
         <title>TxShield - Secure Transaction Simulator</title>
         <link
@@ -126,7 +121,7 @@ export default function App() {
         <Header />
       </Suspense>
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 flex-grow">
         {/* Centered Section (Form + Loading) */}
         <section className="max-w-4xl mx-auto text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary-400 to-secondary-500 bg-clip-text text-transparent">
@@ -142,17 +137,27 @@ export default function App() {
 
               <div className="flex justify-center gap-6">
                 <button
-                  className="px-8 py-3 bg-white text-black rounded-lg font-bold"
+                  className="bg-[#627EEA] text-white rounded-lg font-bold w-48 h-48 flex flex-col items-center justify-center transition-all duration-300 hover:scale-105 hover:brightness-110"
                   onClick={() => setChain("EVM")}
                 >
-                  Ethereum / EVM
+                  <img
+                    src="https://assets.coingecko.com/coins/images/279/small/ethereum.png"
+                    alt="Ethereum"
+                    className="w-16 h-16"
+                  />
+                  <span className="mt-4">Ethereum</span>
                 </button>
 
                 <button
-                  className="px-8 py-3 bg-purple-500 text-white rounded-lg font-bold"
+                  className="bg-gradient-to-r from-purple-500 to-cyan-500 text-white rounded-lg font-bold w-48 h-48 flex flex-col items-center justify-center transition-all duration-300 hover:scale-105 hover:from-purple-600 hover:to-cyan-600"
                   onClick={() => setChain("SOL")}
                 >
-                  Solana
+                  <img
+                    src="https://assets.coingegecko.com/coins/images/4128/small/solana.png"
+                    alt="Solana"
+                    className="w-16 h-16"
+                  />
+                  <span className="mt-4">Solana</span>
                 </button>
               </div>
             </div>
@@ -166,21 +171,35 @@ export default function App() {
               <div className="flex justify-center my-6">
                 <ConnectWallet chain={chain} />
               </div>
-              <Suspense fallback={<div className="h-64 bg-gray-900 rounded-xl animate-pulse"></div>}>
-                {chain === "EVM" && <EvmSimulationForm onSimulateAll={handleSimulateAll} />}
-                {chain === "SOL" && <SolSimulationForm onSolSimulateAll={handleSolSimulation} />}
+              <Suspense
+                fallback={
+                  <div className="h-64 bg-gray-900 rounded-xl animate-pulse"></div>
+                }
+              >
+                {chain === "EVM" && (
+                  <EvmSimulationForm onSimulateAll={handleSimulateAll} />
+                )}
+                {chain === "SOL" && (
+                  <SolSimulationForm onSolSimulateAll={handleSolSimulation} />
+                )}
               </Suspense>
             </WalletProviderWrapper>
           )}
 
-          {isLoading && <LoadingState isLoading={true} onComplete={() => { }} />}
+          {isLoading && (
+            <LoadingState isLoading={true} onComplete={() => {}} />
+          )}
         </section>
 
         {/* Results Section (Not Centered) */}
         {showResults && (
           <div className="space-y-8">
             {" "}
-            <Suspense fallback={<div className="h-64 bg-gray-900 rounded-xl animate-pulse"></div>}>
+            <Suspense
+              fallback={
+                <div className="h-64 bg-gray-900 rounded-xl animate-pulse"></div>
+              }
+            >
               {/* Removed mx-auto and text-center */}
               <ResultsDashboard
                 isVisible={showResults}
@@ -189,7 +208,11 @@ export default function App() {
                 phishing={phishingData}
               />
             </Suspense>
-            <Suspense fallback={<div className="h-48 bg-gray-900 rounded-xl animate-pulse"></div>}>
+            <Suspense
+              fallback={
+                <div className="h-48 bg-gray-900 rounded-xl animate-pulse"></div>
+              }
+            >
               <HoneypotChecks isVisible={showResults} data={honeypotData} />
             </Suspense>
           </div>
@@ -197,7 +220,11 @@ export default function App() {
 
         {/* recommendations */}
         {showResults && (
-          <Suspense fallback={<div className="h-32 bg-gray-900 rounded-xl animate-pulse"></div>}>
+          <Suspense
+            fallback={
+              <div className="h-32 bg-gray-900 rounded-xl animate-pulse"></div>
+            }
+          >
             <Recommendations
               simulationData={simulationData}
               honeypotData={honeypotData}
