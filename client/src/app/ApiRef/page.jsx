@@ -11,6 +11,7 @@ import {
 import { motion } from "framer-motion";
 import Confetti from "react-dom-confetti";
 import Head from "next/head";
+import ScrollProgressBar from "../components/ScrollProgressBar";
 
 const Header = lazy(() => import("../components/header"));
 const Footer = lazy(() => import("../components/footer"));
@@ -84,32 +85,18 @@ function ApiRefPage() {
     colors: ["#a864fd", "#29cdff", "#78ff44", "#ff718d", "#fdff6a"],
   };
 
-  const ApiHeroSection = () => (
-    <section className="relative text-center py-20 px-4">
-      <div className="absolute inset-0 bg-black bg-opacity-50"></div>
-      <div className="relative z-10">
-        <motion.h1 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-primary-400 to-secondary-500 bg-clip-text text-transparent">
-          TxShield API
-        </motion.h1>
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">
-          Integrate our powerful transaction simulation and security analysis directly into your dApp or service. Get started in minutes.
-        </motion.p>
-      </div>
-    </section>
-  );
+
 
   const ApiKeySection = () => (
     <section className="py-16 px-4">
-        <div className="max-w-3xl mx-auto p-8 rounded-2xl glass-morphism gradient-border">
-          <h2 className="text-3xl font-bold text-center mb-6 text-white">
+        <div className="max-w-3xl mx-auto p-8 rounded-2xl glass-morphism gradient-border relative overflow-hidden">
+          {/* Animated Background Orbs */}
+          <div className="absolute inset-0 z-0 pointer-events-none">
+            <div className="absolute top-0 left-0 w-72 h-72 bg-purple-500/5 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute bottom-0 right-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-black to-black"></div>
+          </div>
+          <h2 className="text-3xl font-bold text-center mb-6 text-white relative z-10">
             Your API Key
           </h2>
           <div className="flex justify-center mb-8">
@@ -188,47 +175,57 @@ function ApiRefPage() {
     </section>
   );
 
-  const ApiDocsSection = () => (
+  const ApiTutorialSection = () => (
     <section className="py-16 px-4">
-      <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-8 text-white">
-            API Documentation
+      <div className="max-w-3xl mx-auto p-8 rounded-2xl glass-morphism gradient-border relative overflow-hidden">
+          {/* Animated Background Orbs */}
+          <div className="absolute inset-0 z-0 pointer-events-none">
+            <div className="absolute top-0 left-0 w-72 h-72 bg-purple-500/5 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute bottom-0 right-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-black to-black"></div>
+          </div>
+          <h2 className="text-3xl font-bold text-center mb-8 text-white relative z-10">
+            How to Use the TxShield API
           </h2>
-          <div className="space-y-8">
-            <div>
-              <h3 className="text-2xl font-semibold mb-4 text-cyan-400">Introduction</h3>
-              <p className="text-gray-400">
-                The TxShield API provides endpoints for simulating transactions, checking for honeypots, and detecting phishing scams. To get started, generate an API key above and include it in the `x-api-key` header of your requests.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-2xl font-semibold mb-4 text-cyan-400">Authentication</h3>
-              <p className="text-gray-400 mb-4">
-                Authenticate your API requests by including your API key in the `x-api-key` header.
-              </p>
-              <pre className="bg-gray-900 p-4 rounded-lg border border-white/10 overflow-x-auto">
-                <code className="text-sm text-gray-300">
-                  {`curl --request POST \\n--url 'https://api.txshield.com/v1/simulate' \\n--header 'x-api-key: YOUR_API_KEY' \\n--header 'Content-Type: application/json'`}
-                </code>
-              </pre>
-            </div>
-
-            <div>
-              <h3 className="text-2xl font-semibold mb-4 text-cyan-400">Endpoints</h3>
-                <div className="space-y-4">
-                    <h4 className="text-xl font-semibold text-purple-400">POST /v1/simulate</h4>
-                    <p className="text-gray-400">Simulate a transaction on an EVM-compatible chain.</p>
-                    <h4 className="text-xl font-semibold text-purple-400">POST /v1/honeypot</h4>
-                    <p className="text-gray-400">Check a token address for honeypot characteristics.</p>
-                    <h4 className="text-xl font-semibold text-purple-400">POST /v1/phishing</h4>
-                    <p className="text-gray-400">Analyze a transaction for phishing risks.</p>
-                </div>
+          <div className="space-y-6 text-gray-400">
+            <ul className="list-disc list-inside space-y-3 pl-5">
+              <li>
+                <strong>Step 1: Connect Wallet.</strong> Connect your Web3 wallet to our platform.
+              </li>
+              <li>
+                <strong>Step 2: Generate API Key.</strong> Click "Generate API Key" above to create your unique key.
+              </li>
+              <li>
+                <strong>Step 3: Copy API Key.</strong> Copy the displayed API key; keep it secure.
+              </li>
+              <li>
+                <strong>Step 4: Use API Key in Requests.</strong> Include your API key in the <code className="bg-gray-700 px-1 rounded">x-api-key</code> header for all requests.
+              </li>
+              <li>
+                <strong>Available API Endpoints:</strong>
+                <ul className="list-disc list-inside space-y-2 pl-5 mt-2">
+                  <li><strong className="text-purple-400">POST /v1/simulate</strong>: Simulate EVM transaction.</li>
+                  <li><strong className="text-purple-400">POST /v1/honeypot</strong>: Check token for honeypot.</li>
+                  <li><strong className="text-purple-400">POST /v1/phishing</strong>: Analyze transaction for phishing risks.</li>
+                  <li><strong className="text-purple-400">POST /v1/sol-simulate</strong>: Simulate Solana transaction.</li>
+                </ul>
+              </li>
+            </ul>
+            <div className="flex justify-center mt-8">
+              <a
+                href="https://txshield.gitbook.io/txshield-docs" // New documentation URL
+                target="_blank" // Open in new tab
+                rel="noopener noreferrer" // Security best practice for target="_blank"
+                className="text-gray-500 hover:text-gray-300 underline transition-colors duration-300 text-lg"
+              >
+                Learn More
+              </a>
             </div>
           </div>
-        </div>
+      </div>
     </section>
   );
+
 
   return (
     <div className="bg-black text-white min-h-screen font-sans overflow-x-hidden relative">
@@ -262,7 +259,7 @@ function ApiRefPage() {
         }
         .gradient-border {
           background: linear-gradient(black, black) padding-box,
-                      linear-gradient(45deg, transparent, white, transparent) border-box;
+                      linear-gradient(45deg, rgba(30, 30, 30, 0.8), white, rgba(30, 30, 30, 0.8)) border-box;
           border: 1px solid transparent;
         }
       `}</style>
@@ -273,16 +270,20 @@ function ApiRefPage() {
       <Suspense fallback={<div className="h-16 bg-black"></div>}>
         <Header />
       </Suspense>
+      <ScrollProgressBar />
       
       <main>
-        <div className="orb-bg section-merge">
+        <div className="orb-bg section-merge pt-70 text-center">
             <div className="orb orb-1" aria-hidden="true"></div>
             <div className="orb orb-2" aria-hidden="true"></div>
             <div className="orb orb-3" aria-hidden="true"></div>
-            <ApiHeroSection />
+            <h1 className="pt-12 text-5xl md:text-7xl font-bold bg-clip-text text-transparent grad-word relative z-10">
+              TxShield API
+            </h1>
         </div>
         <div className="section-divider"></div>
-        <div className="orb-bg section-merge">
+
+        <div className="orb-bg section-merge pt-20">
             <div className="orb orb-1" aria-hidden="true"></div>
             <div className="orb orb-2" aria-hidden="true"></div>
             <div className="orb orb-3" aria-hidden="true"></div>
@@ -293,8 +294,10 @@ function ApiRefPage() {
             <div className="orb orb-1" aria-hidden="true"></div>
             <div className="orb orb-2" aria-hidden="true"></div>
             <div className="orb orb-3" aria-hidden="true"></div>
-            <ApiDocsSection />
+            <ApiTutorialSection />
         </div>
+        <div className="section-divider"></div>
+
       </main>
 
       <Suspense fallback={<div className="h-20 bg-black"></div>}>
