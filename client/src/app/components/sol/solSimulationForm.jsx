@@ -72,9 +72,18 @@ export default function SimulationForm({ onSolSimulateAll, backButtonHandler }) 
               .sol-btn-gradient-anim:hover {
                 background-position: right center; /* change the direction of the change here */
               }
+              /* Hide spin buttons for number inputs */
+              input::-webkit-outer-spin-button,
+              input::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+              }
+              input[type='number'] {
+                -moz-appearance: textfield;
+              }
             `}</style>
             <div className="relative p-6 mb-8 border border-purple-500/50 rounded-2xl shadow-xl max-w-4xl mx-auto overflow-hidden bg-gradient-to-br from-[#1A0A1A] to-[#0A1A1A] backdrop-blur-sm" // Deeper, more distinct background
-                style={{ boxShadow: "0 0 80px rgba(153, 69, 255, 0.5)" }} // Even stronger purple glow
+                style={{ boxShadow: "0 0 40px rgba(153, 69, 255, 0.3)" }} // Even stronger purple glow
             >
                 <button
                     onClick={backButtonHandler}
@@ -96,7 +105,7 @@ export default function SimulationForm({ onSolSimulateAll, backButtonHandler }) 
                     </svg>
                 </button>
                 {/* Solana themed glow/gradient - more prominent */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-purple-500 to-cyan-500 opacity-15 blur-3xl rounded-2xl"></div>
+                <div className="absolute inset-0 bg-gradient-to-tr from-purple-500 to-cyan-500 opacity-10 blur-2xl rounded-2xl"></div>
                 {/* Another subtle background layer */}
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-purple-700/10 via-transparent to-transparent opacity-5"></div>
                 <h2 className="text-2xl font-bold text-white mb-6">
@@ -167,7 +176,7 @@ export default function SimulationForm({ onSolSimulateAll, backButtonHandler }) 
                     </div>
                 </div>
 
-                <div className="mt-8">
+                <div className="mt-8 flex justify-center">
                     <motion.button
                         onClick={handleSimulate}
                         whileHover={{ scale: 1.03 }}
