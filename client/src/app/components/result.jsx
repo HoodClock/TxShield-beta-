@@ -152,16 +152,14 @@ export default function ResultsDashboard({
               </div>
 
               <div
-                className={`flex items-center p-4 rounded-xl border ${
-                  executionSuccess
+                className={`flex items-center p-4 rounded-xl border ${executionSuccess
                     ? "bg-emerald-500/10 border-emerald-500/20"
                     : "bg-red-500/10 border-red-500/20"
-                }`}
+                  }`}
               >
                 <div
-                  className={`p-2 rounded-lg mr-4 ${
-                    executionSuccess ? "bg-emerald-500/20" : "bg-red-500/20"
-                  }`}
+                  className={`p-2 rounded-lg mr-4 ${executionSuccess ? "bg-emerald-500/20" : "bg-red-500/20"
+                    }`}
                 >
                   {executionSuccess ? (
                     <FiCheck className="h-5 w-5 text-emerald-400" />
@@ -171,9 +169,8 @@ export default function ResultsDashboard({
                 </div>
                 <div>
                   <p
-                    className={`font-medium ${
-                      executionSuccess ? "text-emerald-400" : "text-red-400"
-                    }`}
+                    className={`font-medium ${executionSuccess ? "text-emerald-400" : "text-red-400"
+                      }`}
                   >
                     {executionSuccess ? "Success" : "Failed"}
                   </p>
@@ -429,7 +426,7 @@ export default function ResultsDashboard({
                     <tbody>
                       {recentTransfers.slice(0, 5).map((tx, idx) => (
                         <motion.tr
-                          key={tx.hash}
+                          key={`${tx.hash}-${idx}`} 
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: 0.1 * idx }}
@@ -540,11 +537,10 @@ export default function ResultsDashboard({
                 {Object.entries(checks).map(([name, check]) => (
                   <div
                     key={name}
-                    className={`flex items-center justify-between p-3 rounded-lg border ${
-                      check?.data?.risk
+                    className={`flex items-center justify-between p-3 rounded-lg border ${check?.data?.risk
                         ? "bg-red-500/10 border-red-500/20"
                         : "bg-emerald-500/10 border-emerald-500/20"
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center">
                       {check?.data?.risk ? (
@@ -557,11 +553,10 @@ export default function ResultsDashboard({
                       </span>
                     </div>
                     <span
-                      className={`text-xs px-2 py-1 rounded-full ${
-                        check?.data?.risk
+                      className={`text-xs px-2 py-1 rounded-full ${check?.data?.risk
                           ? "bg-red-500/20 text-red-300"
                           : "bg-emerald-500/20 text-emerald-300"
-                      }`}
+                        }`}
                     >
                       {check?.data?.risk ? "Risk" : "Safe"}
                     </span>
