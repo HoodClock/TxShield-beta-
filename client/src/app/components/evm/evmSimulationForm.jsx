@@ -47,15 +47,24 @@ export default function SimulationForm({ onSimulateAll, backButtonHandler }) {
       <style jsx>{`
         .evm-btn-gradient-anim {
           background-size: 200% auto;
-          background-image: linear-gradient(to right, #627EEA 0%, #8C52FF 50%, #627EEA 100%);
+          background-image: linear-gradient(to right, #627EEA 0%, #4A90E2 50%, #627EEA 100%);
           transition: background-position 0.5s ease;
         }
         .evm-btn-gradient-anim:hover {
           background-position: right center; /* change the direction of the change here */
         }
+        /* Hide spin buttons for number inputs */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        input[type='number'] {
+          -moz-appearance: textfield;
+        }
       `}</style>
       <div className="relative p-6 mb-8 border border-[#627EEA]/50 rounded-2xl shadow-xl max-w-4xl mx-auto overflow-hidden bg-gradient-to-br from-[#1C1C2E] to-[#0A0A1A] backdrop-blur-sm" // Deeper, more distinct background
-        style={{ boxShadow: "0 0 80px rgba(98, 126, 234, 0.5)" }} // Even stronger blue glow
+        style={{ boxShadow: "0 0 40px rgba(98, 126, 234, 0.3)" }} // Even stronger blue glow
       >
         <button
           onClick={backButtonHandler}
@@ -77,7 +86,7 @@ export default function SimulationForm({ onSimulateAll, backButtonHandler }) {
           </svg>
         </button>
         {/* Ethereum themed glow/gradient - more prominent */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-[#627EEA] to-[#8C52FF] opacity-15 blur-3xl rounded-2xl"></div>
+        <div className="absolute inset-0 bg-gradient-to-tr from-[#627EEA] to-[#4A90E2] opacity-10 blur-2xl"></div>
         {/* Another subtle background layer */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-blue-700/10 via-transparent to-transparent opacity-5"></div>
         <h2 className="text-2xl font-bold text-white mb-6">
@@ -147,7 +156,7 @@ export default function SimulationForm({ onSimulateAll, backButtonHandler }) {
             </div>
           </div>
         </div>
-        <div className="mt-8">
+        <div className="mt-8 flex justify-center">
           <motion.button
             onClick={handleSimulate}
             whileHover={{ scale: 1.03 }}

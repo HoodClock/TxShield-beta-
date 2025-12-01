@@ -32,7 +32,7 @@ export default function PhishingLoader({ isLoading }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-gray-950/90 backdrop-blur-sm z-50 flex items-center justify-center"
+      className="fixed inset-0 bg-gray-950/90 backdrop-blur-sm z-[9999] flex items-center justify-center"
     >
       <motion.div 
         className="w-full max-w-md p-8 text-center"

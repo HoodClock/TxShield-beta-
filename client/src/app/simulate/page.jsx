@@ -143,7 +143,7 @@ export default function App() {
                   <img
                     src="https://assets.coingecko.com/coins/images/279/small/ethereum.png"
                     alt="Ethereum"
-                    className="w-16 h-16"
+                    className="w-16 h-16 drop-shadow-xl filter drop-shadow-[0_0_0_2px_rgb(0,0,0)]"
                   />
                   <span className="mt-4">Ethereum</span>
                 </button>
@@ -155,7 +155,7 @@ export default function App() {
                   <img
                     src="https://assets.coingecko.com/coins/images/4128/small/solana.png"
                     alt="Solana"
-                    className="w-16 h-16"
+                    className="w-16 h-16 drop-shadow-xl filter drop-shadow-[0_0_0_2px_rgb(0,0,0)]"
                   />
                   <span className="mt-4">Solana</span>
                 </button>
