@@ -10,6 +10,7 @@ import axios from "axios";
 const BASE_URL = process.env.NEXT_PUBLIC_PROD_BASE_URL;
 
 
+// eth api's
 export const simulateTx = async (formData) => {
   return await axios.post(
     `${BASE_URL}/api/simulate/execute-simulation`,
@@ -79,7 +80,7 @@ export const authGetAPI = async (connectedAddress) => {
   return await axios.get(`${BASE_URL}/auth/apiKey/${connectedAddress}`)
 }
 
-// Solana apis
+// Solana api's
 export const solSimulateTx = async (formData) => {
   return await axios.post(
     `${BASE_URL}/api/solana/simulate/execute-sol-simulation`, formData,{

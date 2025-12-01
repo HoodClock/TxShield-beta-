@@ -36,7 +36,7 @@ export default function SimulationForm({ onSimulateAll}) {
         tokenAddress: contractAddress,
         recepientAddress: contractAddress,
         value: amount,
-        currencySymbol,
+        currencySymbol: currency,
       };
 
       onSimulateAll({ honeypotData, simulationData })
