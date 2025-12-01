@@ -5,9 +5,9 @@ import { serialize, useAccount } from "wagmi";
 import { motion } from "framer-motion";
 
 
-export default function SimulationForm({ onSimulateAll }) {
+export default function SimulationForm({ onSimulateAll, backButtonHandler }) {
   const { address: userAddress, isConnected } = useAccount();
-  const [contractAddress, setContractAddress] = useState("");
+  const [contractAddress, setContractAddress, ] = useState("");
   const [amount, setAmount] = useState("");
   const [currency, setCurrency] = useState("ETH");
 
@@ -57,6 +57,25 @@ export default function SimulationForm({ onSimulateAll }) {
       <div className="relative p-6 mb-8 border border-[#627EEA]/50 rounded-2xl shadow-xl max-w-4xl mx-auto overflow-hidden bg-gradient-to-br from-[#1C1C2E] to-[#0A0A1A] backdrop-blur-sm" // Deeper, more distinct background
         style={{ boxShadow: "0 0 80px rgba(98, 126, 234, 0.5)" }} // Even stronger blue glow
       >
+        <button
+          onClick={backButtonHandler}
+          className="absolute top-4 left-4 text-gray-400 hover:text-white transition-colors duration-300 z-20"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
+          </svg>
+        </button>
         {/* Ethereum themed glow/gradient - more prominent */}
         <div className="absolute inset-0 bg-gradient-to-tr from-[#627EEA] to-[#8C52FF] opacity-15 blur-3xl rounded-2xl"></div>
         {/* Another subtle background layer */}
@@ -82,7 +101,7 @@ export default function SimulationForm({ onSimulateAll }) {
                 type="text"
                 id="contractAddress"
                 placeholder="0x..."
-                className="w-full px-4 py-3 border border-blue-400/30 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 placeholder-gray-500"
+                className="w-full px-4 py-3 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 placeholder-gray-500"
                 value={contractAddress}
                 onChange={(e) => setContractAddress(e.target.value)}
               />
@@ -121,7 +140,7 @@ export default function SimulationForm({ onSimulateAll }) {
                 type="number"
                 id="amount"
                 placeholder="0.0"
-                className="w-full px-4 py-3 border border-blue-400/30 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 placeholder-gray-500"
+                className="w-full px-4 py-3 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 placeholder-gray-500"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
               />

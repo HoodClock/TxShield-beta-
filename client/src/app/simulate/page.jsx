@@ -153,7 +153,7 @@ export default function App() {
                   onClick={() => setChain("SOL")}
                 >
                   <img
-                    src="https://assets.coingegecko.com/coins/images/4128/small/solana.png"
+                    src="https://assets.coingecko.com/coins/images/4128/small/solana.png"
                     alt="Solana"
                     className="w-16 h-16"
                   />
@@ -177,10 +177,10 @@ export default function App() {
                 }
               >
                 {chain === "EVM" && (
-                  <EvmSimulationForm onSimulateAll={handleSimulateAll} />
+                  <EvmSimulationForm onSimulateAll={handleSimulateAll} backButtonHandler={() => setChain(null)} />
                 )}
                 {chain === "SOL" && (
-                  <SolSimulationForm onSolSimulateAll={handleSolSimulation} />
+                  <SolSimulationForm onSolSimulateAll={handleSolSimulation} backButtonHandler={() => setChain(null)} />
                 )}
               </Suspense>
             </WalletProviderWrapper>

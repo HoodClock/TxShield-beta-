@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useWallet } from "@solana/wallet-adapter-react"
 
-export default function SimulationForm({ onSolSimulateAll }) {
+export default function SimulationForm({ onSolSimulateAll, backButtonHandler }) {
     const [contractAddress, setContractAddress] = useState("");
     const [amount, setAmount] = useState("");
     const [currency, setCurrency] = useState("SOL");
@@ -76,6 +76,25 @@ export default function SimulationForm({ onSolSimulateAll }) {
             <div className="relative p-6 mb-8 border border-purple-500/50 rounded-2xl shadow-xl max-w-4xl mx-auto overflow-hidden bg-gradient-to-br from-[#1A0A1A] to-[#0A1A1A] backdrop-blur-sm" // Deeper, more distinct background
                 style={{ boxShadow: "0 0 80px rgba(153, 69, 255, 0.5)" }} // Even stronger purple glow
             >
+                <button
+                    onClick={backButtonHandler}
+                    className="absolute top-4 left-4 text-gray-400 hover:text-white transition-colors duration-300 z-20"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                        />
+                    </svg>
+                </button>
                 {/* Solana themed glow/gradient - more prominent */}
                 <div className="absolute inset-0 bg-gradient-to-tr from-purple-500 to-cyan-500 opacity-15 blur-3xl rounded-2xl"></div>
                 {/* Another subtle background layer */}
@@ -101,7 +120,7 @@ export default function SimulationForm({ onSolSimulateAll }) {
                                 type="text"
                                 id="contractAddress"
                                 placeholder="0x..."
-                                className="w-full px-4 py-3 border border-purple-400/20 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                                className="w-full px-4 py-3 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
                                 value={contractAddress}
                                 onChange={(e) => setContractAddress(e.target.value)}
                             />
@@ -140,7 +159,7 @@ export default function SimulationForm({ onSolSimulateAll }) {
                                 type="number"
                                 id="amount"
                                 placeholder="0.0"
-                                className="w-full px-4 py-3 border border-purple-400/20 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                                className="w-full px-4 py-3 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
                                 value={amount}
                                 onChange={(e) => setAmount(e.target.value)}
                             />
