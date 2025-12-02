@@ -57,9 +57,9 @@ export default function PhishingLoader({ isLoading }) {
             className="w-full h-full rounded-full border-2 border-blue-400/30 flex items-center justify-center"
             animate={{
               background: [
-                "conic-gradient(from 0deg, #3b82f6 0%, transparent 20%)",
-                "conic-gradient(from 180deg, #3b82f6 0%, transparent 20%)",
-                "conic-gradient(from 360deg, #3b82f6 0%, transparent 20%)",
+                "conic-gradient(from 0deg, #591e8aff 0%, transparent 20%)",
+                "conic-gradient(from 180deg, #6d2ba3ff 0%, transparent 20%)",
+                "conic-gradient(from 360deg, #792db8ff 0%, transparent 20%)",
               ]
             }}
             transition={{
