@@ -2,81 +2,105 @@
 
 const { getMint } = require("@solana/spl-token")
 
+
 const mintSupplyManipulation = async (_connection, _mintPubkey) => {
 
     const tokenMetaData = await getMint(_connection, _mintPubkey)
+    let riskScore = 0 // Max Risk is 10
+    let riskFlags = []
 
-    const firstManipulation = tokenMetaData.mintAuthority
-        ? "Due to mint authority: Token supply can still be increased."
-        : "No Freeze Authority So Token can't be increased."
+    // Check Mint Authority (Weight: 4 - Highest Risk)
+    const hasMintAuthority = !!tokenMetaData.mintAuthority;
+    const mintStatus = hasMintAuthority
+        ? "**HIGH RISK**: Mint authority enabled. Token supply can be infinitely increased (inflationary attack)."
+        : "Low Risk: Mint authority revoked. Token supply is fixed."
 
-    const secondManipulation = tokenMetaData.freezeAuthority
-        ? "Attackers can freeze your token anytime due to enabled freeze authority"
-        : "Attackers can't freeze your token because freeze authority not enabled"
-
-    let trustScore = 0
-    let riskLevel = "Low"
-
-    if (tokenMetaData.mintAuthority || tokenMetaData.freezeAuthority) {
-        // risky
-        trustScore--
-        riskLevel = "High"
-    } else {
-        // safe 
-        trustScore++
-        riskLevel = "Low"
+    if (hasMintAuthority) {
+        riskScore += 4;
+        riskFlags.push("Mint Authority Present");
     }
 
-    // current token supply
+    // Check Freeze Authority (Weight: 3 - Major Risk)
+    const hasFreezeAuthority = !!tokenMetaData.freezeAuthority;
+    const freezeStatus = hasFreezeAuthority
+        ? "**MAJOR RISK**: Freeze authority enabled. Attackers can freeze/lock your tokens anytime."
+        : "Low Risk: Freeze authority revoked. Tokens cannot be frozen."
+
+    if (hasFreezeAuthority) {
+        riskScore += 3;
+        riskFlags.push("Freeze Authority Present");
+    }
+
+    // Current Token Supply (Weight: 1 - Contextual Risk)
     const totalSupply = tokenMetaData.supply
-
-    // getting token decimals
     const tokenDecimals = tokenMetaData.decimals
-
-    // converting to human readable form with decimals
     const humanSupply = totalSupply / 10 ** tokenDecimals
-
-    // making threshold around (1 lack token) 
-    const threshold = 100000
+    const threshold = 100000 
+    let supplyRisk = "Neutral";
 
     if (humanSupply < threshold) {
-        riskLevel = "Midium"
+        // While not a direct honeypot, low supply can mean higher volatility/manipulation risk
+        riskScore += 1;
+        supplyRisk = "Minor Risk: Very low initial supply (< 100k) suggests high volatility/potential for rapid pump.";
+        riskFlags.push("Low Initial Supply");
     }
 
-    // getting timestamps along with SLOT
+    // Token Age Check (Weight: 2 - Time Risk)
     const parsedInfo = await _connection.getParsedAccountInfo(_mintPubkey)
     const createdSlot = parsedInfo.value?.slot || null
-
     let createdTime = null
 
     if (createdSlot) {
         createdTime = await _connection.getBlockTime(createdSlot)
     }
 
-    // if token is very new (< 7) increase risk 
     const currentUnix = Math.floor(Date.now() / 1000);
     const sevenDays = 60 * 60 * 24 * 7
+    let ageRisk = "Neutral";
 
-    if (createdTime && currentUnix - createdTime < sevenDays) {
-        riskLevel = "High"
-        trustScore--
+    if (createdTime && (currentUnix - createdTime) < sevenDays) {
+        // Tokens under 7 days old are considered extremely high risk for rugs/honeypots
+        riskScore += 2;
+        ageRisk = "**MAJOR RISK**: Token is brand new (less than 7 days old). High-risk period for pump-and-dump scams.";
+        riskFlags.push("Under 7 Days Old");
     }
 
+    // Final Risk Level Determination
+    let finalRiskLevel = "LOWEST";
+    if (riskScore >= 7) {
+        finalRiskLevel = "CRITICAL";
+    } else if (riskScore >= 4) {
+        finalRiskLevel = "HIGH";
+    } else if (riskScore > 0) {
+        finalRiskLevel = "MODERATE";
+    }
 
+    // RESPONSE STRUCTURE
     const responseOfSupplyManipulation = {
-        mintAuthorityStatus: firstManipulation,
-        freezeAuthorityStatus: secondManipulation,
-        supply: {
-            raw: totalSupply,
+        assessmentRating: finalRiskLevel,
+        totalRiskScore: `${riskScore} / 10`,
+
+        // Detailed authority responses
+        authorityStatus: {
+            mintAuthority: mintStatus,
+            freezeAuthority: freezeStatus
+        },
+
+        // Contextual Risk Factors
+        supplyRiskStatus: supplyRisk,
+        ageRiskStatus: ageRisk,
+
+        // Raw Data & Flags
+        rawSupply: {
+            raw: totalSupply.toString(),
             decimals: tokenDecimals,
             humanReadable: humanSupply
         },
         createdInfo: {
             createdSlot: createdSlot,
-            createdTime: createdTime
+            createdTime: createdTime ? new Date(createdTime * 1000).toISOString() : "Unknown"
         },
-        trustScore: trustScore,
-        riskLevel: riskLevel
+        riskFlags: riskFlags
     }
 
     return responseOfSupplyManipulation
