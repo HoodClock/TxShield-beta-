@@ -19,6 +19,7 @@ async function checkTokenMetaDataIntegrity(connection, mintAddress) {
         // fetching metadata account data: gives metadata.(name, symbol, uri)
         const metadata = await fetchMetadata(connection, metadataPDA);
 
+
         // Now if this URI:response:TRUE (not-scam) otherwise (Scam)
 
         // verifying metadata URI
