@@ -5,6 +5,7 @@ import Head from "next/head";
 
 // all the components of Simualtion forms
 const Header = lazy(() => import("../components/header"))
+const SimulateHeroSection = lazy(() => import("../components/SimulateHeroSection"))
 const ConnectWallet = lazy(() => import("../components/connectWallet"));
 const ResultsDashboard = lazy(() => import("../components/result"));
 const HoneypotChecks = lazy(() => import("../components/honeypotChecks"));
@@ -121,52 +122,17 @@ export default function App() {
         <Header />
       </Suspense>
 
-      <main className="container mx-auto px-4 py-8 flex-grow">
-        {/* Centered Section (Form + Loading) */}
-        <section className="max-w-4xl mx-auto text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary-400 to-secondary-500 bg-clip-text text-transparent">
-            Secure Your Transactions
-          </h2>
+      {/* Show Hero Section only when no chain is selected */}
+      {!chain && !showResults && (
+        <Suspense fallback={<div className="h-auto bg-black"></div>}>
+          <SimulateHeroSection onChainSelect={(selectedChain) => setChain(selectedChain)} />
+        </Suspense>
+      )}
 
-          {/* select chains first */}
-          {!chain && (
-            <div className="text-center mt-12">
-              <h2 className="text-3xl font-bold text-white mb-6">
-                Choose Blockchain
-              </h2>
-
-              <div className="flex justify-center gap-6">
-                <button
-                  className="bg-[#627EEA] text-white rounded-lg font-bold w-48 h-48 flex flex-col items-center justify-center transition-all duration-300 hover:scale-105 hover:brightness-110"
-                  onClick={() => setChain("EVM")}
-                >
-                  <img
-                    src="https://assets.coingecko.com/coins/images/279/small/ethereum.png"
-                    alt="Ethereum"
-                    className="w-16 h-16 drop-shadow-xl filter drop-shadow-[0_0_0_2px_rgb(0,0,0)]"
-                  />
-                  <span className="mt-4">Ethereum</span>
-                </button>
-
-                <button
-                  className="bg-gradient-to-r from-purple-500 to-cyan-500 text-white rounded-lg font-bold w-48 h-48 flex flex-col items-center justify-center transition-all duration-300 hover:scale-105 hover:from-purple-600 hover:to-cyan-600"
-                  onClick={() => setChain("SOL")}
-                >
-                  <img
-                    src="https://assets.coingecko.com/coins/images/4128/small/solana.png"
-                    alt="Solana"
-                    className="w-16 h-16 drop-shadow-xl filter drop-shadow-[0_0_0_2px_rgb(0,0,0)]"
-                  />
-                  <span className="mt-4">Solana</span>
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* render simulation Forms with correct Provider based on selected chains */}
-          {chain && (
-            // Showing connect wallet inside the wrapper
-
+      <main className="flex-grow">
+        {/* Form Section */}
+        {chain && !showResults && (
+          <section className="container mx-auto px-4 py-12">
             <WalletProviderWrapper chain={chain}>
               <div className="flex justify-center my-6">
                 <ConnectWallet chain={chain} />
@@ -184,23 +150,21 @@ export default function App() {
                 )}
               </Suspense>
             </WalletProviderWrapper>
-          )}
 
-          {isLoading && (
-            <LoadingState isLoading={true} onComplete={() => {}} />
-          )}
-        </section>
+            {isLoading && (
+              <LoadingState isLoading={true} onComplete={() => {}} />
+            )}
+          </section>
+        )}
 
-        {/* Results Section (Not Centered) */}
+        {/* Results Section */}
         {showResults && (
-          <div className="space-y-8">
-            {" "}
+          <section className="container mx-auto px-4 py-12 space-y-8">
             <Suspense
               fallback={
                 <div className="h-64 bg-gray-900 rounded-xl animate-pulse"></div>
               }
             >
-              {/* Removed mx-auto and text-center */}
               <ResultsDashboard
                 isVisible={showResults}
                 simulation={simulationData}
@@ -215,23 +179,21 @@ export default function App() {
             >
               <HoneypotChecks isVisible={showResults} data={honeypotData} />
             </Suspense>
-          </div>
-        )}
 
-        {/* recommendations */}
-        {showResults && (
-          <Suspense
-            fallback={
-              <div className="h-32 bg-gray-900 rounded-xl animate-pulse"></div>
-            }
-          >
-            <Recommendations
-              simulationData={simulationData}
-              honeypotData={honeypotData}
-              onGenerate={handleRecommendation}
-              recommendation={recommendation}
-            />
-          </Suspense>
+            {/* Recommendations */}
+            <Suspense
+              fallback={
+                <div className="h-32 bg-gray-900 rounded-xl animate-pulse"></div>
+              }
+            >
+              <Recommendations
+                simulationData={simulationData}
+                honeypotData={honeypotData}
+                onGenerate={handleRecommendation}
+                recommendation={recommendation}
+              />
+            </Suspense>
+          </section>
         )}
       </main>
 

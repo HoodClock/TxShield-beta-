@@ -18,11 +18,26 @@ gsap.registerPlugin(ScrollSmoother, ScrollTrigger);
 
 function HomePage() {
   useEffect(() => {
-    ScrollSmoother.create({
+    // Kill any existing ScrollSmoother instance to prevent stacking
+    let smoother = ScrollSmoother.get();
+    if (smoother) {
+      smoother.kill();
+    }
+
+    // Create a fresh ScrollSmoother instance
+    smoother = ScrollSmoother.create({
       smooth: 1,
       effects: true,
       smoothTouch: 0.1,
     });
+
+    // Cleanup on unmount
+    return () => {
+      if (smoother) {
+        smoother.kill();
+      }
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
   }, []);
 
   return (
