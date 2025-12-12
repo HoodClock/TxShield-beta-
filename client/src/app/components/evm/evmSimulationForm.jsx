@@ -51,9 +51,15 @@ export default function SimulationForm({ onSimulateAll, backButtonHandler }) {
           transition: background-position 0.5s ease;
         }
         .evm-btn-gradient-anim:hover {
-          background-position: right center; /* change the direction of the change here */
+          background-position: right center;
         }
-        /* Hide spin buttons for number inputs */
+        .evm-form-container {
+          background: linear-gradient(135deg, rgba(98, 126, 234, 0.05) 0%, rgba(74, 144, 226, 0.03) 100%);
+        }
+        .evm-input-focus {
+          border-color: #627EEA;
+          box-shadow: 0 0 20px rgba(98, 126, 234, 0.2);
+        }
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
           -webkit-appearance: none;
@@ -63,12 +69,23 @@ export default function SimulationForm({ onSimulateAll, backButtonHandler }) {
           -moz-appearance: textfield;
         }
       `}</style>
-      <div className="relative p-6 mb-8 border border-[#627EEA]/50 rounded-2xl shadow-xl max-w-4xl mx-auto overflow-hidden bg-gradient-to-br from-[#1C1C2E] to-[#0A0A1A] backdrop-blur-sm" // Deeper, more distinct background
-        style={{ boxShadow: "0 0 40px rgba(98, 126, 234, 0.3)" }} // Even stronger blue glow
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="relative p-8 mb-8 border border-[#627EEA]/40 rounded-2xl shadow-2xl max-w-4xl mx-auto overflow-hidden evm-form-container backdrop-blur-lg"
+        style={{ boxShadow: "0 0 40px rgba(98, 126, 234, 0.15), inset 0 0 40px rgba(98, 126, 234, 0.03)" }}
       >
+        {/* Gradient border glow */}
+        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#627EEA]/10 via-transparent to-[#4A90E2]/5 pointer-events-none"></div>
+        
+        {/* Animated background orbs - Reduced glow */}
+        <div className="absolute top-0 right-0 w-40 h-40 bg-blue-500/5 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-500/3 rounded-full blur-3xl animate-pulse"></div>
+
         <button
           onClick={backButtonHandler}
-          className="absolute top-4 left-4 text-gray-400 hover:text-white transition-colors duration-300 z-20"
+          className="absolute top-4 left-4 text-gray-400 hover:text-white transition-all duration-300 z-20 hover:scale-110"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -85,103 +102,110 @@ export default function SimulationForm({ onSimulateAll, backButtonHandler }) {
             />
           </svg>
         </button>
-        {/* Ethereum themed glow/gradient - more prominent */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-[#627EEA] to-[#4A90E2] opacity-10 blur-2xl"></div>
-        {/* Another subtle background layer */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-blue-700/10 via-transparent to-transparent opacity-5"></div>
-        <h2 className="text-2xl font-bold text-white mb-6">
-          Secure Your Transactions
-        </h2>
-        <p className="text-gray-300 mb-6">
-          Simulate and analyze your blockchain transactions before execution with
-          our advanced security checks
-        </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="col-span-2">
-            <label
-              htmlFor="contractAddress"
-              className="block text-left text-gray-300 mb-2 text-sm font-medium"
-            >
-              Contract / Wallet / Token Address
-            </label>
-            <div className="relative">
-              <input
-                type="text"
-                id="contractAddress"
-                placeholder="0x..."
-                className="w-full px-4 py-3 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 placeholder-gray-500"
-                value={contractAddress}
-                onChange={(e) => setContractAddress(e.target.value)}
-              />
-              <div className="absolute right-3 top-3 group">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-gray-400 hover:text-white cursor-pointer transition-colors"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                <div className="absolute hidden group-hover:block right-0 top-full mt-2 w-64 bg-gray-800 text-gray-300 text-sm p-3 rounded-lg shadow-lg border border-white/20 z-10">
-                  Enter any Ethereum contract, wallet, or token address to
-                  analyze.
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#627EEA] to-[#4A90E2] flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M2.5 11a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm6 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm6 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+              </svg>
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#627EEA] to-[#4A90E2]">
+              Ethereum Simulation
+            </h2>
+          </div>
+          <p className="text-gray-400 mb-8 text-sm md:text-base">
+            Analyze your EVM transaction with advanced security scanning and risk detection
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="col-span-2">
+              <label
+                htmlFor="contractAddress"
+                className="block text-left text-gray-200 mb-3 text-sm font-semibold"
+              >
+                Contract / Wallet / Token Address
+              </label>
+              <div className="relative group">
+                <input
+                  type="text"
+                  id="contractAddress"
+                  placeholder="0x..."
+                  className="w-full px-4 py-3 border border-[#627EEA]/30 rounded-lg text-white bg-black/30 focus:outline-none focus:ring-2 focus:ring-[#627EEA] focus:border-[#627EEA] transition-all duration-300 placeholder-gray-600"
+                  value={contractAddress}
+                  onChange={(e) => setContractAddress(e.target.value)}
+                />
+                <div className="absolute right-3 top-3 group">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 text-gray-500 hover:text-[#627EEA] cursor-pointer transition-colors"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
                 </div>
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="amount"
+                className="block text-left text-gray-200 mb-3 text-sm font-semibold"
+              >
+                Amount (ETH)
+              </label>
+              <div className="relative">
+                <input
+                  type="number"
+                  id="amount"
+                  placeholder="0.0"
+                  className="w-full px-4 py-3 border border-[#627EEA]/30 rounded-lg text-white bg-black/30 focus:outline-none focus:ring-2 focus:ring-[#627EEA] focus:border-[#627EEA] transition-all duration-300 placeholder-gray-600"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                />
               </div>
             </div>
           </div>
 
-          <div>
-            <label
-              htmlFor="amount"
-              className="block text-left text-gray-300 mb-2 text-sm font-medium"
-            >
-              Amount
-            </label>
-            <div className="relative">
-              <input
-                type="number"
-                id="amount"
-                placeholder="0.0"
-                className="w-full px-4 py-3 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 placeholder-gray-500"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="mt-8 flex justify-center">
-          <motion.button
-            onClick={handleSimulate}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.98 }}
-            className="w-full md:w-auto px-8 py-3 text-white font-bold rounded-lg transition-all duration-300 shadow-lg shadow-[#627EEA]/40 flex items-center justify-center evm-btn-gradient-anim relative z-10"
-            style={{position: 'relative'}}
+          <motion.div 
+            className="mt-8 flex justify-center relative"
+            whileHover={{ scale: 1.02 }}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 mr-2"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+            {/* Blue gradient glow around button */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#627EEA]/20 via-[#4A90E2]/20 to-[#627EEA]/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 scale-150"></div>
+            
+            <motion.button
+              onClick={handleSimulate}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.98 }}
+              className="w-full md:w-auto px-8 py-4 text-white font-bold rounded-xl transition-all duration-300 shadow-lg flex items-center justify-center evm-btn-gradient-anim relative z-10 hover:shadow-2xl hover:shadow-[#627EEA]/50"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13 10V3L4 14h7v7l9-11h-7z"
-              />
-            </svg>
-            Simulate Transaction
-          </motion.button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
+              </svg>
+              Simulate Transaction
+            </motion.button>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     </>
   );
 }
