@@ -40,6 +40,115 @@ export default function ResultsDashboard({
 }) {
   const router = useRouter();
   const mounted = useRef(true);
+
+  // Mock data for development/testing
+  const mockSimulation = {
+    checks: {
+      simulateTx: {
+        data: {
+          success: true,
+          amount: "1.5",
+          symbol: "ETH",
+          from: "0x742d35Cc6634C0532925a3b844Bc9e7595f1234a",
+          to: "0x8ba1f109551bD432803012645Ac136ddd64DBA72",
+          transferType: "eth",
+          gas: { estimated: 21000, priceGwei: "32.5", costUsd: "21.84" },
+          balances: {
+            sender: { before: { eth: "5.0" }, after: { eth: "3.5" } },
+            recipient: { before: { eth: "0.2" }, after: { eth: "1.7" } },
+          },
+          warnings: ["High gas price detected"],
+        },
+      },
+      byteCode: { data: { isContract: false, warnings: [] } },
+      transactionHistory: {
+        data: {
+          success: true,
+          summary: {
+            totalTransfers: 142,
+            lastTransferDate: "Dec 13, 2024",
+            totalERC20Volume: "5,234.50",
+          },
+          recentTransfers: [
+            {
+              hash: "0xabc123def456",
+              from: "0x742d35Cc...",
+              to: "0x8ba1f109...",
+              amount: "1.5",
+              symbol: "ETH",
+              date: "2 hours ago",
+            },
+            {
+              hash: "0xdef789ghi012",
+              from: "0x123abc456...",
+              to: "0x789def012...",
+              amount: "0.75",
+              symbol: "ETH",
+              date: "5 hours ago",
+            },
+            {
+              hash: "0x456jkl789mno",
+              from: "0x456xyz789...",
+              to: "0xabc123def...",
+              amount: "2.0",
+              symbol: "ETH",
+              date: "1 day ago",
+            },
+          ],
+        },
+      },
+    },
+  };
+
+  const mockHoneypot = {
+    totalScore: "8",
+    passRate: "85%",
+    riskLevel: "Safe Zone",
+    checks: {
+      gasTrap: { data: { risk: false } },
+      fakeBalance: { data: { risk: false } },
+      disableTransfer: { data: { risk: false } },
+      mintAccess: { data: { risk: true } },
+      tradingControl: { data: { risk: false } },
+      highSellTax: { data: { risk: false } },
+    },
+  };
+
+  const mockPhishing = {
+    checks: {
+      approvalScam: {
+        success: true,
+        data: { isScam: false, confidence: "high", reason: "No malicious approval patterns detected" }
+      },
+      etherForward: {
+        success: true,
+        data: { isScam: false, confidence: "high", reason: "Contract does not forward ether suspiciously" }
+      },
+      maliciousProxy: {
+        success: true,
+        data: { isScam: false, confidence: "high", reason: "No proxy pattern abuse detected" }
+      },
+      permitPhishing: {
+        success: true,
+        data: { isScam: false, confidence: "high", reason: "Permit signature is secure" }
+      }
+    },
+    phishingVerdict: {
+      phishingScore: 8,
+      riskLevel: "Low",
+      keyFindings: ["Standard ERC-20 transfer pattern", "No suspicious proxy calls", "Normal gas usage"],
+      recommendedActions: ["Proceed with caution", "Verify contract address", "Check community feedback"]
+    }
+  };
+
+  // Use mock data for testing, real data when available
+  // TESTING: Uncomment the next 3 lines to use mock data
+  // const finalSimulation = mockSimulation;
+  // const finalHoneypot = mockHoneypot;
+  // const finalPhishing = mockPhishing;
+  const finalSimulation = simulation;
+  const finalHoneypot = honeypot;
+  const finalPhishing = phishing;
   const [expandedSections, setExpandedSections] = useState({
     txDetails: true,
     balances: true,
@@ -64,7 +173,7 @@ export default function ResultsDashboard({
     }));
   };
 
-  if (!isVisible || !simulation || !honeypot || !phishing) return null;
+  if (!isVisible && !finalSimulation && !finalHoneypot && !finalPhishing) return null;
 
   // --- Honeypot Data ---
   const {
@@ -72,7 +181,7 @@ export default function ResultsDashboard({
     passRate = "0%",
     riskLevel = "Unknown",
     checks = {},
-  } = honeypot || {};
+  } = finalHoneypot || {};
 
   const totalChecks = Object.keys(checks).length;
   const passedChecks = Object.values(checks).filter(
@@ -114,10 +223,10 @@ export default function ResultsDashboard({
   const riskStyle = getRiskStyle(riskLevel);
 
   // --- Simulation Data ---
-  const simulateTxData = simulation?.checks?.simulateTx || {};
+  const simulateTxData = finalSimulation?.checks?.simulateTx || {};
   const simulateData = simulateTxData.data || {};
-  const byteData = simulation?.checks?.byteCode?.data || {};
-  const txHistoryData = simulation?.checks?.transactionHistory?.data || {};
+  const byteData = finalSimulation?.checks?.byteCode?.data || {};
+  const txHistoryData = finalSimulation?.checks?.transactionHistory?.data || {};
 
   const executionSuccess = simulateData.success ?? false;
   const executionMessage = executionSuccess
@@ -992,7 +1101,7 @@ export default function ResultsDashboard({
             riskLevel={riskLevel}
             ratioText={ratioText}
             isVisible={isVisible}
-            data={honeypot}
+            data={finalHoneypot}
           />
         </motion.div>
 
@@ -1032,7 +1141,7 @@ export default function ResultsDashboard({
 
       {/* Phishing Analysis */}
       <motion.div variants={itemVariants} className="mt-8 sm:mt-12 max-w-7xl mx-auto">
-        <Phishing data={phishing} />
+        <Phishing data={finalPhishing} />
       </motion.div>
 
       {/* Back to Simulate Button */}
