@@ -19,13 +19,13 @@ const simulateTxHelper = async (userAddress, recepientAddress, amount, currency)
   }
 };
 
-const byteCodeHelper = async (recepientAddress) => {
+const byteCodeHelper = async (recepientAddress, currency) => {
   if (!recepientAddress) {
     return { success: false, message: "Recepient address is missing" };
   }
 
   try {
-    const response = await simulationServices.getAnalyzedCodeService(recepientAddress);
+    const response = await simulationServices.getAnalyzedCodeService(recepientAddress, currency);
     return { success: true, data: response };
   } catch (err) {
     return { success: false, error: err.message };

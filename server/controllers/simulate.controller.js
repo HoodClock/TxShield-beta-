@@ -28,7 +28,7 @@ const masterSimulationController = async (req, res) => {
         amount,
         currencySymbol
       ),
-      simulationHelper.byteCodeHelper(checkSumAddress),
+      simulationHelper.byteCodeHelper(checkSumAddress, currencySymbol),
       simulationHelper.transactionHistoryHelper(checkSumAddress),
     ]);
 

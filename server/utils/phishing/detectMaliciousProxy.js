@@ -56,7 +56,7 @@ const detectMaliciousProxy = async (_recepientAddress, currencySymbol) => {
   // now check Implementation bytecode
   const implementationBytecode = await getByteCode(implementationAddress);
 
-  const analysisResult = await anaylyzeBytecode(implementationBytecode);
+  const analysisResult = await anaylyzeBytecode(implementationBytecode, currencySymbol);
 
   // now genrating AI summery of the whole data
   const prompt = `
