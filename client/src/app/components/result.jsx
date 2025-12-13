@@ -156,10 +156,12 @@ export default function ResultsDashboard({
   return (
     <div className="min-h-screen bg-black text-white p-4 sm:p-6 lg:p-8 relative overflow-hidden">
       {/* Animated Background Orbs */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-20 right-1/4 w-72 h-72 bg-purple-500/5 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-1/2 -right-20 w-80 h-80 bg-purple-600/3 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute top-20 right-1/4 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }}></div>
+        <div className="absolute bottom-1/4 left-1/3 w-full h-full bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 -right-20 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '2s' }}></div>
+        <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-indigo-500/12 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '7s', animationDelay: '0.5s' }}></div>
+        <div className="absolute top-1/3 right-1/3 w-72 h-72 bg-pink-500/8 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4.5s', animationDelay: '1.5s' }}></div>
       </div>
 
       <style jsx>{`
@@ -1027,7 +1029,7 @@ export default function ResultsDashboard({
       {/* Back to Simulate Button */}
       <div className="max-w-7xl mx-auto flex justify-center mt-12 sm:mt-16 pb-8">
         <button
-          onClick={() => router.push("/simulate")}
+          onClick={() => window.location.reload()}
           className="px-6 sm:px-8 py-3 sm:py-4 bg-black border border-purple-500/30 rounded-lg flex items-center gap-2 hover:border-purple-400/60 hover:bg-purple-950/20 transition-all duration-300 group"
         >
           <FiArrowLeft className="h-4 w-4 text-purple-400 group-hover:text-cyan-400 transition-colors" />
