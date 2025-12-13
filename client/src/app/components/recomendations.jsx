@@ -5,19 +5,61 @@ import { motion } from "framer-motion";
 export default function Recommendations({
   onGenerate,
   recommendation,
+  chain = "EVM"
 }) {
   const [generated, setGenerated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Theme Colors
+  const theme = chain === "EVM" ? {
+    primary: "blue",
+    secondary: "cyan",
+    accent: "sky",
+    gradientFrom: "from-blue-600/40",
+    gradientTo: "to-cyan-600/40",
+    textGradient: "bg-gradient-to-r from-blue-400 to-cyan-400",
+    buttonGradient: "bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400",
+    iconBg: "bg-blue-600/20",
+    iconColor: "text-blue-400",
+    border: "border-blue-500/20",
+    hoverBorder: "hover:border-blue-400/30",
+    hoverShadow: "hover:shadow-blue-500/20",
+    loadingIcon: "text-blue-300",
+    loadingDot: "bg-blue-400",
+    loadingCircle: "bg-gradient-to-br from-blue-500 to-cyan-400 shadow-blue-500/30",
+    loadingRing: "border-blue-400/30",
+    bgGlow1: "bg-blue-600",
+    bgGlow2: "bg-cyan-600"
+  } : {
+    primary: "purple",
+    secondary: "pink",
+    accent: "fuchsia",
+    gradientFrom: "from-purple-600/40",
+    gradientTo: "to-pink-600/40",
+    textGradient: "bg-gradient-to-r from-purple-400 to-pink-400",
+    buttonGradient: "bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400",
+    iconBg: "bg-purple-600/20",
+    iconColor: "text-purple-400",
+    border: "border-purple-500/20",
+    hoverBorder: "hover:border-purple-400/30",
+    hoverShadow: "hover:shadow-purple-500/20",
+    loadingIcon: "text-purple-300",
+    loadingDot: "bg-purple-400",
+    loadingCircle: "bg-gradient-to-br from-purple-500 to-pink-400 shadow-purple-500/30",
+    loadingRing: "border-purple-400/30",
+    bgGlow1: "bg-purple-600",
+    bgGlow2: "bg-pink-600"
+  };
+
   const gradientBorderCard = `
     p-[1px] rounded-2xl
-    bg-gradient-to-br from-purple-600/40 via-blue-500/30 to-purple-600/40
+    bg-gradient-to-br ${theme.gradientFrom} via-${theme.secondary}-500/30 ${theme.gradientTo}
   `;
 
   const innerContent = `
     rounded-2xl bg-black 
     border border-white/5 backdrop-blur-sm
-    hover:border-purple-400/30 hover:shadow-xl hover:shadow-purple-500/20 
+    ${theme.hoverBorder} hover:shadow-xl ${theme.hoverShadow}
     transition-all duration-300
   `;
 
@@ -37,19 +79,19 @@ export default function Recommendations({
     >
       <div className={innerContent + " p-8 relative overflow-hidden"}>
         {/* Glowing background elements */}
-        <div className="absolute top-[-30%] right-[-30%] w-96 h-96 bg-blue-600 opacity-10 rounded-full blur-3xl pointer-events-none animate-pulse" />
-        <div className="absolute bottom-[-20%] left-[-20%] w-64 h-64 bg-purple-600 opacity-5 rounded-full blur-2xl pointer-events-none" />
+        <div className={`absolute top-[-30%] right-[-30%] w-96 h-96 ${theme.bgGlow1} opacity-10 rounded-full blur-3xl pointer-events-none animate-pulse`} />
+        <div className={`absolute bottom-[-20%] left-[-20%] w-64 h-64 ${theme.bgGlow2} opacity-5 rounded-full blur-2xl pointer-events-none`} />
 
         <div className="flex items-center gap-4 mb-6 relative z-10">
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 260, damping: 20 }}
-            className="bg-blue-600/20 p-3 rounded-full shadow-inner"
+            className={`${theme.iconBg} p-3 rounded-full shadow-inner`}
           >
-            <Sparkles className="text-blue-400 w-6 h-6 drop-shadow-glow" />
+            <Sparkles className={`${theme.iconColor} w-6 h-6 drop-shadow-glow`} />
           </motion.div>
-          <h3 className="text-3xl font-semibold tracking-wide bg-gradient-to-r from-blue-400 to-cyan-400 text-transparent bg-clip-text drop-shadow-md">
+          <h3 className={`text-3xl font-semibold tracking-wide ${theme.textGradient} text-transparent bg-clip-text drop-shadow-md`}>
             AI Security Insights
           </h3>
         </div>
@@ -61,8 +103,7 @@ export default function Recommendations({
               whileTap={{ scale: 0.97 }}
               onClick={handleClick}
               disabled={isLoading}
-              disabled={isLoading}
-              className={`bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 transition duration-300 text-white font-semibold py-3 px-8 rounded-full shadow-lg ${
+              className={`${theme.buttonGradient} transition duration-300 text-white font-semibold py-3 px-8 rounded-full shadow-lg ${
                 isLoading ? "opacity-80 cursor-not-allowed" : ""
               }`}
             >
@@ -126,13 +167,13 @@ export default function Recommendations({
             className="absolute inset-0 bg-black/80 backdrop-blur-sm z-20 flex flex-col items-center justify-center"
           >
             <div className="relative">
-              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-blue-500/30 animate-pulse-slow">
+              <div className={`w-24 h-24 rounded-full ${theme.loadingCircle} flex items-center justify-center shadow-lg animate-pulse-slow`}>
                 <Bot className="w-10 h-10 text-white" />
               </div>
-              <div className="absolute -inset-2 border-4 border-blue-400/30 rounded-full animate-spin-slow pointer-events-none"></div>
+              <div className={`absolute -inset-2 border-4 ${theme.loadingRing} rounded-full animate-spin-slow pointer-events-none`}></div>
             </div>
             <motion.p 
-              className="mt-6 text-blue-300 font-medium tracking-wide"
+              className={`mt-6 ${theme.loadingIcon} font-medium tracking-wide`}
               animate={{ opacity: [0.6, 1, 0.6] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
@@ -142,7 +183,7 @@ export default function Recommendations({
               {[...Array(3)].map((_, i) => (
                 <motion.div
                   key={i}
-                  className="w-2 h-2 bg-blue-400 rounded-full"
+                  className={`w-2 h-2 ${theme.loadingDot} rounded-full`}
                     animate={{ y: [0, -5, 0] }}
                   transition={{
                     duration: 1.2,

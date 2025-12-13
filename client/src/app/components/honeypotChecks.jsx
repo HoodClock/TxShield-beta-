@@ -2,14 +2,37 @@
 
 import { motion } from "framer-motion";
 
-export default function HoneypotChecks({ isVisible, data }) {
+export default function HoneypotChecks({ isVisible, data, chain = "EVM" }) {
   if (!isVisible || !data) return null;
 
   const checks = data.checks || {};
 
+  // Theme configuration
+  const theme = chain === "EVM" ? {
+    gradientFrom: "from-blue-600/40",
+    gradientTo: "to-cyan-600/40",
+    secondary: "cyan",
+    hoverBorder: "hover:border-blue-400/30",
+    hoverShadow: "hover:shadow-blue-500/20",
+    iconColor: "text-blue-400",
+    headerText: "text-white" // Keep white for header title usually
+  } : {
+    gradientFrom: "from-purple-600/40",
+    gradientTo: "to-purple-600/40",
+    secondary: "pink", // or keep as is for SOL
+    hoverBorder: "hover:border-purple-400/30",
+    hoverShadow: "hover:shadow-purple-500/20",
+    iconColor: "text-amber-400", // Original was amber-400, maybe keep it or change?
+    headerText: "text-white"
+  };
+
+  // If chain is EVM, maybe icon should be blue? The original icon was amber-400 (warning shield).
+  // Keeping amber for shield is fine as it signifies security/warning irrespective of chain color.
+  // But the borders/gradients should change.
+
   if (Object.keys(checks).length === 0) {
     return (
-      <div className="bg-gradient-to-br from-white/5 to-white/10 border border-white/10 rounded-xl p-6 mb-6 text-white/80 text-sm shadow-inner shadow-white/5">
+      <div className={`bg-gradient-to-br from-white/5 to-white/10 border border-white/10 rounded-xl p-6 mb-6 text-white/80 text-sm shadow-inner shadow-white/5`}>
         <div className="flex items-center gap-4 mb-4">
           <div className="p-2 bg-white/10 rounded-lg">
             <svg
@@ -58,13 +81,13 @@ export default function HoneypotChecks({ isVisible, data }) {
 
   const gradientBorderCard = `
     p-[1px] rounded-2xl
-    bg-gradient-to-br from-purple-600/40 via-blue-500/30 to-purple-600/40
+    bg-gradient-to-br ${theme.gradientFrom} via-${theme.secondary}-500/30 ${theme.gradientTo}
   `;
 
   const innerContent = `
     rounded-2xl bg-black 
     border border-white/5 backdrop-blur-sm
-    hover:border-purple-400/30 hover:shadow-xl hover:shadow-purple-500/20 
+    ${theme.hoverBorder} hover:shadow-xl ${theme.hoverShadow}
     transition-all duration-300
   `;
 

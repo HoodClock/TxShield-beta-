@@ -41,9 +41,43 @@ export default function ResultsDashboard({
   phishing,
   onGenerateRecommendation,
   recommendationData,
+  chain = "EVM",
 }) {
   const router = useRouter();
   const mounted = useRef(true);
+
+  const theme = {
+    EVM: {
+      primary: "blue",
+      secondary: "cyan",
+      accent: "indigo",
+      rgbPrimary: "59, 130, 246",
+      rgbSecondary: "6, 182, 212",
+      textPrimary: "text-blue-400",
+      textSecondary: "text-cyan-400",
+      bgGradient: "from-blue-500/15",
+      border: "rgba(59, 130, 246, 0.3)", // blue-500
+      shadow: "rgba(59, 130, 246, 0.2)",
+      gradText: "bg-gradient-to-r from-blue-400 to-cyan-400",
+      buttonGlow: "hover:shadow-[0_0_30px_rgba(59,130,246,0.3)]",
+    },
+    SOL: {
+      primary: "purple",
+      secondary: "pink",
+      accent: "fuchsia",
+      rgbPrimary: "168, 85, 247",
+      rgbSecondary: "236, 72, 153",
+      textPrimary: "text-purple-400",
+      textSecondary: "text-pink-400",
+      bgGradient: "from-purple-500/15",
+      border: "rgba(168, 85, 247, 0.3)", // purple-500
+      shadow: "rgba(168, 85, 247, 0.2)",
+      gradText: "bg-gradient-to-r from-purple-400 to-pink-400",
+      buttonGlow: "hover:shadow-[0_0_30px_rgba(168,85,247,0.3)]",
+    }
+  };
+
+  const t = theme[chain] || theme.EVM;
 
   // Mock data for development/testing
   const mockSimulation = {
@@ -290,18 +324,22 @@ export default function ResultsDashboard({
         .gradient-border-card {
           padding: 1px;
           border-radius: 16px;
-          background: linear-gradient(135deg, rgba(168, 85, 247, 0.5), rgba(147, 51, 234, 0.5));
+          background: linear-gradient(135deg, rgba(${t.rgbPrimary}, 0.5), rgba(${t.rgbSecondary}, 0.5));
         }
         .gradient-border-card:hover {
-          background: linear-gradient(135deg, rgba(168, 85, 247, 0.7), rgba(147, 51, 234, 0.7));
+          background: linear-gradient(135deg, rgba(${t.rgbPrimary}, 0.7), rgba(${t.rgbSecondary}, 0.7));
           transition: all 0.3s ease;
         }
         .card-inner {
           border-radius: 14px;
           background: #000000;
           backdrop-filter: blur(10px);
-          border: 1px solid rgba(168, 85, 247, 0.3);
-          box-shadow: 0 14px 50px rgba(18, 24, 40, 0.4), inset 0 0 40px rgba(168, 85, 247, 0.02);
+          border: 1px solid rgba(${t.rgbPrimary}, 0.3);
+          box-shadow: 0 14px 50px rgba(18, 24, 40, 0.4), inset 0 0 40px rgba(${t.rgbPrimary}, 0.02);
+          transition: background 0.3s ease, transform 0.3s ease;
+        }
+        .gradient-border-card:hover .card-inner {
+          background: rgba(10, 10, 15, 0.6);
         }
         .icon-wrapper {
           width: 48px;
@@ -310,23 +348,29 @@ export default function ResultsDashboard({
           display: flex;
           align-items: center;
           justify-content: center;
-          background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(147, 51, 234, 0.15));
-          box-shadow: 0 8px 20px rgba(168, 85, 247, 0.08);
+          background: linear-gradient(135deg, rgba(${t.rgbPrimary}, 0.15), rgba(${t.rgbSecondary}, 0.15));
+          box-shadow: 0 8px 20px rgba(${t.rgbPrimary}, 0.08);
           transition: all 0.3s ease;
         }
         .gradient-border-card:hover .icon-wrapper {
-          transform: scale(1.1);
-          box-shadow: 0 8px 24px rgba(168, 85, 247, 0.15);
+          transform: scale(1.1) rotate(5deg);
+          box-shadow: 0 8px 24px rgba(${t.rgbPrimary}, 0.2);
+        }
+        .connector-line {
+          width: 2px;
+          height: 40px;
+          background: linear-gradient(to bottom, transparent, rgba(${t.rgbPrimary}, 0.5), transparent);
+          margin: 0 auto;
         }
         .gauge-circle {
           width: 80px;
           height: 80px;
           border-radius: 50%;
-          background: conic-gradient(from 0deg, #627EEA 0deg, #9945FF ${gasPercent}%, rgba(255,255,255,0.05) ${gasPercent}%);
+          background: conic-gradient(from 0deg, #627EEA 0deg, ${chain === 'EVM' ? '#3B82F6' : '#9945FF'} ${gasPercent}%, rgba(255,255,255,0.05) ${gasPercent}%);
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 0 8px 24px rgba(98,126,234,0.2);
+          box-shadow: 0 8px 24px rgba(${t.rgbPrimary}, 0.2);
         }
         .gauge-inner {
           width: 68px;
@@ -339,7 +383,7 @@ export default function ResultsDashboard({
           flex-direction: column;
         }
         .grad-word {
-          background: linear-gradient(90deg, #627EEA, #9945FF);
+          background: linear-gradient(90deg, ${chain === 'EVM' ? '#3B82F6, #06B6D4' : '#A855F7, #EC4899'});
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
@@ -909,10 +953,16 @@ export default function ResultsDashboard({
           </div>
         </div>
 
+        {/* Connector */}
+        <div className="connector-line my-4"></div>
+
       {/* Phishing Analysis */}
       <motion.div variants={itemVariants} className="mt-8 sm:mt-12 max-w-7xl mx-auto">
-        <Phishing data={finalPhishing} />
+        <Phishing data={finalPhishing} chain={chain} />
       </motion.div>
+
+      {/* Connector */}
+      <div className="connector-line my-4"></div>
 
       {/* === HONEYPOT & SECURITY ANALYSIS === */}
       <motion.div
@@ -937,6 +987,7 @@ export default function ResultsDashboard({
             ratioText={ratioText}
             isVisible={isVisible}
             data={finalHoneypot}
+            chain={chain}
           />
 
           {/* Bytecode Analysis */}
@@ -951,7 +1002,7 @@ export default function ResultsDashboard({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3 sm:gap-4">
                     <div className="icon-wrapper">
-                      <FiCode className="h-5 w-5 text-indigo-400" />
+                      <FiCode className={`h-5 w-5 ${t.textPrimary}`} />
                     </div>
                     <h2 className="text-lg sm:text-xl font-bold text-white text-left">
                       Bytecode Analysis
@@ -1013,7 +1064,7 @@ export default function ResultsDashboard({
 
       {/* Detailed Honeypot Checks */}
       <motion.div variants={itemVariants} className="max-w-7xl mx-auto mt-8 sm:mt-12">
-        <HoneypotChecks isVisible={isVisible} data={honeypot} />
+        <HoneypotChecks isVisible={isVisible} data={honeypot} chain={chain} />
       </motion.div>
 
       {/* AI Recommendations */}
@@ -1023,20 +1074,24 @@ export default function ResultsDashboard({
           honeypotData={honeypot}
           onGenerate={onGenerateRecommendation}
           recommendation={recommendationData}
+          chain={chain}
         />
       </motion.div>
 
       {/* Back to Simulate Button */}
       <motion.div
         variants={itemVariants}
-        className="max-w-7xl mx-auto flex justify-center mt-12 sm:mt-16 pb-8"
+        className="max-w-7xl mx-auto flex justify-center mt-12 sm:mt-16 pb-12"
       >
         <button
           onClick={() => window.location.reload()}
-          className="px-6 sm:px-8 py-3 sm:py-4 bg-black border border-purple-500/30 rounded-lg flex items-center gap-2 hover:border-purple-400/60 hover:bg-purple-950/20 transition-all duration-300 group"
+          className={`relative px-8 py-4 bg-black border ${t.border} rounded-xl flex items-center gap-3 overflow-hidden group transition-all duration-300 hover:border-${t.primary}-400 ${t.buttonGlow}`}
         >
-          <FiArrowLeft className="h-4 w-4 text-purple-400 group-hover:text-cyan-400 transition-colors" />
-          <span className="text-sm sm:text-base font-semibold text-white group-hover:text-cyan-200 transition-colors">
+          {/* Hover Gradient Background */}
+          <div className={`absolute inset-0 bg-gradient-to-r from-${t.primary}-600/10 via-${t.secondary}-500/10 to-${t.primary}-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+          
+          <FiArrowLeft className={`h-5 w-5 ${t.textPrimary} group-hover:${t.textSecondary} group-hover:-translate-x-1 transition-all duration-300 relative z-10`} />
+          <span className={`text-base font-semibold text-white group-hover:${chain === 'EVM' ? 'text-blue-100' : 'text-purple-100'} transition-colors relative z-10`}>
             Back to Simulate
           </span>
         </button>

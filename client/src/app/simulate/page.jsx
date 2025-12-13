@@ -205,6 +205,7 @@ export default function App() {
               }
             >
               <ResultsDashboard
+                chain={chain}
                 isVisible={showResults}
                 simulation={simulationData}
                 honeypot={honeypotData}
