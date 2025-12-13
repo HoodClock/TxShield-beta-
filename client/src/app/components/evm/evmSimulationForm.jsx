@@ -5,7 +5,7 @@ import { serialize, useAccount } from "wagmi";
 import { motion } from "framer-motion";
 
 
-export default function SimulationForm({ onSimulateAll, backButtonHandler }) {
+export default function SimulationForm({ onSimulateAll, backButtonHandler, onSwitchChain }) {
   const { address: userAddress, isConnected } = useAccount();
   const [contractAddress, setContractAddress, ] = useState("");
   const [amount, setAmount] = useState("");
@@ -65,9 +65,10 @@ export default function SimulationForm({ onSimulateAll, backButtonHandler }) {
         }
       `}</style>
       <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -50 }}
+        transition={{ duration: 0.4, ease: "easeInOut" }}
         className="relative p-1 rounded-3xl bg-gradient-to-br from-blue-500/30 via-blue-600/10 to-blue-400/5 max-w-2xl mx-auto shadow-2xl"
       >
         <div className="relative bg-black/90 backdrop-blur-xl rounded-[22px] p-6 md:p-8 overflow-hidden">
@@ -78,6 +79,7 @@ export default function SimulationForm({ onSimulateAll, backButtonHandler }) {
             <button
             onClick={backButtonHandler}
             className="absolute top-5 left-5 p-2 rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all duration-300 z-20 group"
+            title="Go Back"
             >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -93,6 +95,19 @@ export default function SimulationForm({ onSimulateAll, backButtonHandler }) {
                 d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 />
             </svg>
+            </button>
+
+            {/* Switch Chain Button (Solana Logo) */}
+            <button
+              onClick={onSwitchChain}
+              className="absolute top-5 right-5 p-1.5 rounded-full bg-white/5 hover:bg-purple-500/20 border border-white/10 hover:border-purple-500/50 transition-all duration-300 z-20 group"
+              title="Switch to Solana Simulation"
+            >
+              <img 
+                src="https://assets.coingecko.com/coins/images/4128/small/solana.png" 
+                alt="Switch to Solana" 
+                className="w-6 h-6 rounded-full group-hover:scale-110 transition-transform duration-300"
+              />
             </button>
 
             <div className="relative z-10">

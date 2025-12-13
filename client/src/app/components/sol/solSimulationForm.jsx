@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useWallet } from "@solana/wallet-adapter-react"
 
-export default function SimulationForm({ onSolSimulateAll, backButtonHandler }) {
+export default function SimulationForm({ onSolSimulateAll, backButtonHandler, onSwitchChain }) {
     const [contractAddress, setContractAddress] = useState("");
     const [amount, setAmount] = useState("");
     const [currency, setCurrency] = useState("SOL");
@@ -84,9 +84,10 @@ export default function SimulationForm({ onSolSimulateAll, backButtonHandler }) 
               }
             `}</style>
                   <motion.div 
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 50 }}
+                    transition={{ duration: 0.4, ease: "easeInOut" }}
                     className="relative p-1 rounded-3xl bg-gradient-to-br from-purple-500/30 via-purple-600/10 to-pink-400/5 max-w-2xl mx-auto shadow-2xl"
                   >
                     <div className="relative bg-black/90 backdrop-blur-xl rounded-[22px] p-6 md:p-8 overflow-hidden">
@@ -97,6 +98,7 @@ export default function SimulationForm({ onSolSimulateAll, backButtonHandler }) 
                         <button
                         onClick={backButtonHandler}
                         className="absolute top-5 left-5 p-2 rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all duration-300 z-20 group"
+                        title="Go Back"
                         >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -113,9 +115,21 @@ export default function SimulationForm({ onSolSimulateAll, backButtonHandler }) 
                             />
                         </svg>
                         </button>
+
+                        {/* Switch Chain Button (Ethereum Logo) */}
+                        <button
+                          onClick={onSwitchChain}
+                          className="absolute top-5 right-5 p-1.5 rounded-full bg-white/5 hover:bg-blue-500/20 border border-white/10 hover:border-blue-500/50 transition-all duration-300 z-20 group"
+                          title="Switch to EVM Simulation"
+                        >
+                          <img 
+                            src="https://assets.coingecko.com/coins/images/279/small/ethereum.png" 
+                            alt="Switch to EVM" 
+                            className="w-6 h-6 rounded-full group-hover:scale-110 transition-transform duration-300"
+                          />
+                        </button>
             
-                        <div className="relative z-10">
-                        <div className="text-center mb-8">
+                        <div className="relative z-10">                        <div className="text-center mb-8">
                             <div className="inline-flex items-center justify-center p-3 mb-3 rounded-2xl bg-purple-500/10 border border-purple-500/20 shadow-inner shadow-purple-500/10">
                               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
