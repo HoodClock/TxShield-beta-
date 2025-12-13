@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Header from "../components/header";
 import StatsSection from "../components/Home/StatsSection";
 import ContactUs from "../components/contactus";
@@ -17,26 +17,39 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollSmoother, ScrollTrigger);
 
 function HomePage() {
+  const smoother = useRef(null);
+  const mounted = useRef(true);
+
   useEffect(() => {
+    mounted.current = true;
+
     // Kill any existing ScrollSmoother instance to prevent stacking
-    let smoother = ScrollSmoother.get();
-    if (smoother) {
-      smoother.kill();
+    const existingSmoother = ScrollSmoother.get();
+    if (existingSmoother) {
+      existingSmoother.kill();
     }
 
+    // Kill all existing ScrollTriggers
+    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+
     // Create a fresh ScrollSmoother instance
-    smoother = ScrollSmoother.create({
-      smooth: 1,
-      effects: true,
-      smoothTouch: 0.1,
-    });
+    if (mounted.current) {
+      smoother.current = ScrollSmoother.create({
+        smooth: 1,
+        effects: true,
+        smoothTouch: 0.1,
+      });
+    }
 
     // Cleanup on unmount
     return () => {
-      if (smoother) {
-        smoother.kill();
+      mounted.current = false;
+      if (smoother.current) {
+        smoother.current.kill();
+        smoother.current = null;
       }
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      gsap.context(() => {}, document.body);
     };
   }, []);
 
