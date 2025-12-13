@@ -143,12 +143,12 @@ export default function ResultsDashboard({
 
   // Use mock data for testing, real data when available
   // TESTING: Uncomment the next 3 lines to use mock data
-  // const finalSimulation = mockSimulation;
-  // const finalHoneypot = mockHoneypot;
-  // const finalPhishing = mockPhishing;
-  const finalSimulation = simulation;
-  const finalHoneypot = honeypot;
-  const finalPhishing = phishing;
+  const finalSimulation = mockSimulation;
+  const finalHoneypot = mockHoneypot;
+  const finalPhishing = mockPhishing;
+  // const finalSimulation = simulation;
+  // const finalHoneypot = honeypot;
+  // const finalPhishing = phishing;
   const [expandedSections, setExpandedSections] = useState({
     txDetails: true,
     balances: true,
@@ -347,7 +347,7 @@ export default function ResultsDashboard({
         initial="hidden"
         animate="show"
         variants={containerVariants}
-        className="max-w-7xl mx-auto space-y-8"
+        className="max-w-7xl mx-auto space-y-12"
       >
         {/* Header */}
         <motion.div variants={itemVariants} className="text-center mb-12 sm:mb-16">
@@ -502,9 +502,9 @@ export default function ResultsDashboard({
         </motion.div>
 
         {/* === MAIN GRID === */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 sm:gap-12">
           {/* Left Column */}
-          <div className="xl:col-span-2 space-y-6 sm:space-y-8">
+          <div className="xl:col-span-2 space-y-8 sm:space-y-12">
             {/* COLLAPSIBLE: Transaction Details */}
             <motion.div
               variants={itemVariants}
@@ -677,10 +677,10 @@ export default function ResultsDashboard({
                     transition={{ duration: 0.3 }}
                     className="card-inner p-6 sm:p-8 pt-0 sm:pt-0"
                   >
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       {/* Sender */}
                       <div className="gradient-border-card">
-                        <div className="card-inner p-4 sm:p-5">
+                        <div className="card-inner p-6 sm:p-8">
                           <h3 className="text-base sm:text-lg font-bold text-white mb-4">
                             Sender
                           </h3>
@@ -733,7 +733,7 @@ export default function ResultsDashboard({
 
                       {/* Recipient */}
                       <div className="gradient-border-card">
-                        <div className="card-inner p-4 sm:p-5">
+                        <div className="card-inner p-6 sm:p-8">
                           <h3 className="text-base sm:text-lg font-bold text-white mb-4">
                             Recipient
                           </h3>
@@ -897,149 +897,8 @@ export default function ResultsDashboard({
           </div>
 
           {/* Right Column */}
-          <div className="space-y-6 sm:space-y-8">
-            {/* COLLAPSIBLE: Bytecode Analysis */}
-            <motion.div
-              variants={itemVariants}
-              className="group gradient-border-card"
-            >
-              <button
-                onClick={() => toggleSection("bytecode")}
-                className="card-inner p-6 sm:p-8 w-full"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3 sm:gap-4">
-                    <div className="icon-wrapper">
-                      <FiCode className="h-5 w-5 text-indigo-400" />
-                    </div>
-                    <h2 className="text-lg sm:text-xl font-bold text-white text-left">
-                      Bytecode Analysis
-                    </h2>
-                  </div>
-                  <motion.div
-                    animate={{ rotate: expandedSections.bytecode ? 180 : 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <FiChevronDown className="h-5 w-5 text-slate-400" />
-                  </motion.div>
-                </div>
-              </button>
+          <div className="space-y-8 sm:space-y-12">
 
-              {expandedSections.bytecode && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="card-inner p-6 sm:p-8 pt-0 space-y-3"
-                >
-                  {isContract ? (
-                    warnings.length > 0 ? (
-                      warnings.map((warning, idx) => (
-                        <motion.div
-                          key={idx}
-                          initial={{ opacity: 0, x: 10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: idx * 0.05 }}
-                          className="flex items-start gap-3 p-3 bg-red-500/10 border border-red-500/20 rounded-lg hover:border-red-500/40 hover:bg-red-500/15 transition-all duration-200"
-                        >
-                          <FiAlertTriangle className="h-4 w-4 text-red-400 mt-0.5 flex-shrink-0" />
-                          <span className="text-red-300 text-xs sm:text-sm">
-                            {warning}
-                          </span>
-                        </motion.div>
-                      ))
-                    ) : (
-                      <div className="flex items-center gap-3 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg hover:border-emerald-500/40 hover:bg-emerald-500/15 transition-all duration-200">
-                        <FiCheck className="h-4 w-4 text-emerald-400 flex-shrink-0" />
-                        <span className="text-emerald-300 text-xs sm:text-sm">
-                          No dangerous opcodes detected
-                        </span>
-                      </div>
-                    )
-                  ) : (
-                    <div className="flex items-center gap-3 p-4 bg-slate-700/30 border border-slate-600/50 rounded-lg hover:border-slate-600/80 hover:bg-slate-700/40 transition-all duration-200">
-                      <FiInfo className="h-4 w-4 text-slate-400 flex-shrink-0" />
-                      <span className="text-slate-300 text-xs sm:text-sm">
-                        Address is not a contract
-                      </span>
-                    </div>
-                  )}
-                </motion.div>
-              )}
-            </motion.div>
-
-            {/* COLLAPSIBLE: Security Checks */}
-            <motion.div
-              variants={itemVariants}
-              className="group gradient-border-card"
-            >
-              <button
-                onClick={() => toggleSection("checks")}
-                className="card-inner p-6 sm:p-8 w-full"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3 sm:gap-4">
-                    <div className="icon-wrapper">
-                      <FiShield className="h-5 w-5 text-green-400" />
-                    </div>
-                    <h2 className="text-lg sm:text-xl font-bold text-white text-left">
-                      Security Checks
-                    </h2>
-                  </div>
-                  <motion.div
-                    animate={{ rotate: expandedSections.checks ? 180 : 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <FiChevronDown className="h-5 w-5 text-slate-400" />
-                  </motion.div>
-                </div>
-              </button>
-
-              {expandedSections.checks && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="card-inner p-6 sm:p-8 pt-0 space-y-2"
-                >
-                  {Object.entries(checks).map(([name, check], idx) => (
-                    <motion.div
-                      key={name}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.3, delay: idx * 0.05 }}
-                      className={`flex items-center justify-between p-3 sm:p-4 rounded-lg border transition-all duration-200 ${
-                        check?.data?.risk
-                          ? "bg-red-500/10 border-red-500/20 hover:border-red-500/40 hover:bg-red-500/15"
-                          : "bg-emerald-500/10 border-emerald-500/20 hover:border-emerald-500/40 hover:bg-emerald-500/15"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2 flex-1 min-w-0">
-                        {check?.data?.risk ? (
-                          <FiAlertTriangle className="h-4 w-4 text-red-400 flex-shrink-0" />
-                        ) : (
-                          <FiCheck className="h-4 w-4 text-emerald-400 flex-shrink-0" />
-                        )}
-                        <span className="text-white font-medium text-xs sm:text-sm capitalize truncate">
-                          {name.replace(/([A-Z])/g, " $1").trim()}
-                        </span>
-                      </div>
-                      <span
-                        className={`text-xs px-2 py-1 rounded-full flex-shrink-0 ${
-                          check?.data?.risk
-                            ? "bg-red-500/20 text-red-300"
-                            : "bg-emerald-500/20 text-emerald-300"
-                        }`}
-                      >
-                        {check?.data?.risk ? "Risk" : "Safe"}
-                      </span>
-                    </motion.div>
-                  ))}
-                </motion.div>
-              )}
-            </motion.div>
 
             {/* Transaction Summary (Always visible) */}
             {txHistoryData.success && (
@@ -1088,6 +947,7 @@ export default function ResultsDashboard({
                 </div>
               </motion.div>
             )}
+
           </div>
         </div>
 
@@ -1103,6 +963,77 @@ export default function ResultsDashboard({
             isVisible={isVisible}
             data={finalHoneypot}
           />
+        </motion.div>
+
+        {/* COLLAPSIBLE: Bytecode Analysis */}
+        <motion.div
+          variants={itemVariants}
+          className="group gradient-border-card"
+        >
+          <button
+            onClick={() => toggleSection("bytecode")}
+            className="card-inner p-6 sm:p-8 w-full"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="icon-wrapper">
+                  <FiCode className="h-5 w-5 text-indigo-400" />
+                </div>
+                <h2 className="text-lg sm:text-xl font-bold text-white text-left">
+                  Bytecode Analysis
+                </h2>
+              </div>
+              <motion.div
+                animate={{ rotate: expandedSections.bytecode ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <FiChevronDown className="h-5 w-5 text-slate-400" />
+              </motion.div>
+            </div>
+          </button>
+
+          {expandedSections.bytecode && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="card-inner p-6 sm:p-8 pt-0 space-y-3"
+            >
+              {isContract ? (
+                warnings.length > 0 ? (
+                  warnings.map((warning, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, x: 10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.05 }}
+                      className="flex items-start gap-3 p-3 bg-red-500/10 border border-red-500/20 rounded-lg hover:border-red-500/40 hover:bg-red-500/15 transition-all duration-200"
+                    >
+                      <FiAlertTriangle className="h-4 w-4 text-red-400 mt-0.5 flex-shrink-0" />
+                      <span className="text-red-300 text-xs sm:text-sm">
+                        {warning}
+                      </span>
+                    </motion.div>
+                  ))
+                ) : (
+                  <div className="flex items-center gap-3 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg hover:border-emerald-500/40 hover:bg-emerald-500/15 transition-all duration-200">
+                    <FiCheck className="h-4 w-4 text-emerald-400 flex-shrink-0" />
+                    <span className="text-emerald-300 text-xs sm:text-sm">
+                      No dangerous opcodes detected
+                    </span>
+                  </div>
+                )
+              ) : (
+                <div className="flex items-center gap-3 p-4 bg-slate-700/30 border border-slate-600/50 rounded-lg hover:border-slate-600/80 hover:bg-slate-700/40 transition-all duration-200">
+                  <FiInfo className="h-4 w-4 text-slate-400 flex-shrink-0" />
+                  <span className="text-slate-300 text-xs sm:text-sm">
+                    Address is not a contract
+                  </span>
+                </div>
+              )}
+            </motion.div>
+          )}
         </motion.div>
 
         {/* Warnings Section */}
