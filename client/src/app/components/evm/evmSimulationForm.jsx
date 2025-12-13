@@ -45,165 +45,120 @@ export default function SimulationForm({ onSimulateAll, backButtonHandler }) {
   return (
     <>
       <style jsx>{`
-        .evm-btn-gradient-anim {
-          background-size: 200% auto;
-          background-image: linear-gradient(to right, #627EEA 0%, #4A90E2 50%, #627EEA 100%);
-          transition: background-position 0.5s ease;
+        .evm-btn-glow {
+          box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
         }
-        .evm-btn-gradient-anim:hover {
-          background-position: right center;
+        .evm-btn-glow:hover {
+          box-shadow: 0 0 40px rgba(59, 130, 246, 0.8);
         }
-        .evm-form-container {
-          background: linear-gradient(135deg, rgba(98, 126, 234, 0.05) 0%, rgba(74, 144, 226, 0.03) 100%);
-        }
-        .evm-input-focus {
-          border-color: #627EEA;
-          box-shadow: 0 0 20px rgba(98, 126, 234, 0.2);
-        }
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-          -webkit-appearance: none;
-          margin: 0;
-        }
-        input[type='number'] {
-          -moz-appearance: textfield;
+        .evm-input-gradient {
+          background: linear-gradient(90deg, rgba(59, 130, 246, 0.05) 0%, rgba(37, 99, 235, 0.05) 100%);
         }
       `}</style>
       <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="relative p-8 mb-8 border border-[#627EEA]/40 rounded-2xl shadow-2xl max-w-4xl mx-auto overflow-hidden evm-form-container backdrop-blur-lg"
-        style={{ boxShadow: "0 0 40px rgba(98, 126, 234, 0.15), inset 0 0 40px rgba(98, 126, 234, 0.03)" }}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="relative p-1 rounded-3xl bg-gradient-to-br from-blue-500/30 via-blue-600/10 to-blue-400/5 max-w-2xl mx-auto shadow-2xl"
       >
-        {/* Gradient border glow */}
-        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#627EEA]/10 via-transparent to-[#4A90E2]/5 pointer-events-none"></div>
-        
-        {/* Animated background orbs - Reduced glow */}
-        <div className="absolute top-0 right-0 w-40 h-40 bg-blue-500/5 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-500/3 rounded-full blur-3xl animate-pulse"></div>
+        <div className="relative bg-black/90 backdrop-blur-xl rounded-[22px] p-6 md:p-8 overflow-hidden">
+            {/* Ambient Background */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-600/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
 
-        <button
-          onClick={backButtonHandler}
-          className="absolute top-4 left-4 text-gray-400 hover:text-white transition-all duration-300 z-20 hover:scale-110"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M10 19l-7-7m0 0l7-7m-7 7h18"
-            />
-          </svg>
-        </button>
-
-        <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#627EEA] to-[#4A90E2] flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M2.5 11a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm6 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm6 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
-              </svg>
-            </div>
-            <h2 className="text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#627EEA] to-[#4A90E2]">
-              Ethereum Simulation
-            </h2>
-          </div>
-          <p className="text-gray-400 mb-8 text-sm md:text-base">
-            Analyze your EVM transaction with advanced security scanning and risk detection
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="col-span-2">
-              <label
-                htmlFor="contractAddress"
-                className="block text-left text-gray-200 mb-3 text-sm font-semibold"
-              >
-                Contract / Wallet / Token Address
-              </label>
-              <div className="relative group">
-                <input
-                  type="text"
-                  id="contractAddress"
-                  placeholder="0x..."
-                  className="w-full px-4 py-3 border border-[#627EEA]/30 rounded-lg text-white bg-black/30 focus:outline-none focus:ring-2 focus:ring-[#627EEA] focus:border-[#627EEA] transition-all duration-300 placeholder-gray-600"
-                  value={contractAddress}
-                  onChange={(e) => setContractAddress(e.target.value)}
-                />
-                <div className="absolute right-3 top-3 group">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 text-gray-500 hover:text-[#627EEA] cursor-pointer transition-colors"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <label
-                htmlFor="amount"
-                className="block text-left text-gray-200 mb-3 text-sm font-semibold"
-              >
-                Amount (ETH)
-              </label>
-              <div className="relative">
-                <input
-                  type="number"
-                  id="amount"
-                  placeholder="0.0"
-                  className="w-full px-4 py-3 border border-[#627EEA]/30 rounded-lg text-white bg-black/30 focus:outline-none focus:ring-2 focus:ring-[#627EEA] focus:border-[#627EEA] transition-all duration-300 placeholder-gray-600"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                />
-              </div>
-            </div>
-          </div>
-
-          <motion.div 
-            className="mt-8 flex justify-center relative"
-            whileHover={{ scale: 1.02 }}
-          >
-            {/* Blue gradient glow around button */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#627EEA]/20 via-[#4A90E2]/20 to-[#627EEA]/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 scale-150"></div>
-            
-            <motion.button
-              onClick={handleSimulate}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full md:w-auto px-8 py-4 text-white font-bold rounded-xl transition-all duration-300 shadow-lg flex items-center justify-center evm-btn-gradient-anim relative z-10 hover:shadow-2xl hover:shadow-[#627EEA]/50"
+            <button
+            onClick={backButtonHandler}
+            className="absolute top-5 left-5 p-2 rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all duration-300 z-20 group"
             >
-              <svg
+            <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 mr-2"
+                className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-              >
+            >
                 <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 />
-              </svg>
-              Simulate Transaction
-            </motion.button>
-          </motion.div>
+            </svg>
+            </button>
+
+            <div className="relative z-10">
+            <div className="text-center mb-8">
+                <div className="inline-flex items-center justify-center p-3 mb-3 rounded-2xl bg-blue-500/10 border border-blue-500/20 shadow-inner shadow-blue-500/10">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight">
+                EVM <span className="text-blue-500">Simulation</span>
+                </h2>
+                <p className="text-gray-400 text-sm max-w-md mx-auto">
+                Securely simulate Ethereum transactions before you sign.
+                </p>
+            </div>
+
+            <div className="space-y-5 max-w-lg mx-auto">
+                <div>
+                <label className="block text-blue-300/80 text-[10px] font-bold uppercase tracking-wider mb-1.5 ml-1">
+                    Contract / Address
+                </label>
+                <div className="relative group">
+                    <input
+                    type="text"
+                    placeholder="0x..."
+                    className="w-full px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:bg-blue-500/5 focus:ring-1 focus:ring-blue-500/50 transition-all duration-300 font-mono text-sm shadow-inner"
+                    value={contractAddress}
+                    onChange={(e) => setContractAddress(e.target.value)}
+                    />
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </div>
+                </div>
+                </div>
+
+                <div>
+                <label className="block text-blue-300/80 text-[10px] font-bold uppercase tracking-wider mb-1.5 ml-1">
+                    Amount (ETH)
+                </label>
+                <div className="relative group">
+                    <input
+                    type="number"
+                    placeholder="0.0"
+                    className="w-full px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:bg-blue-500/5 focus:ring-1 focus:ring-blue-500/50 transition-all duration-300 font-mono text-sm shadow-inner"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    />
+                     <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold text-[10px] bg-white/10 px-2 py-0.5 rounded">
+                        ETH
+                    </div>
+                </div>
+                </div>
+
+                <div className="pt-2">
+                    <motion.button
+                    onClick={handleSimulate}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold text-base shadow-lg evm-btn-glow relative overflow-hidden group"
+                    >
+                    <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                        Simulate Transaction
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </span>
+                    </motion.button>
+                </div>
+            </div>
+            </div>
         </div>
       </motion.div>
     </>

@@ -1,26 +1,57 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-const PhishingAnalysis = ({ data }) => {
+const PhishingAnalysis = ({ data, chain = "EVM" }) => {
   if (!data) {
     return (
       <div className="text-center py-8 text-gray-400">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-cyan-400 mx-auto mb-2"></div>
+        <div className={`animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 ${chain === 'EVM' ? 'border-blue-400' : 'border-purple-400'} mx-auto mb-2`}></div>
         <p className="text-sm">Analyzing contract security...</p>
       </div>
     );
   }
 
-  // Style definitions - Purple and Blue gradient borders with black backgrounds
+  // Define colors based on chain
+  const colors = chain === "EVM" ? {
+    primary: "blue",
+    secondary: "cyan",
+    accent: "sky",
+    gradientFrom: "from-blue-600/40",
+    gradientTo: "to-cyan-600/40",
+    textGradient: "bg-gradient-to-r from-blue-400 via-cyan-500 to-blue-400",
+    barGradient: "from-cyan-400/50 via-blue-500/50 to-cyan-400/50",
+    border: "border-blue-500/20",
+    hoverBorder: "hover:border-blue-400/30",
+    hoverShadow: "hover:shadow-blue-500/20"
+  } : {
+    primary: "purple",
+    secondary: "pink",
+    accent: "fuchsia",
+    gradientFrom: "from-purple-600/40",
+    gradientTo: "to-purple-600/40",
+    textGradient: "bg-gradient-to-r from-cyan-400 via-purple-500 to-cyan-400", // Keep original for SOL or adjust
+    barGradient: "from-cyan-400/50 via-purple-500/50 to-cyan-400/50",
+    border: "border-purple-500/20",
+    hoverBorder: "hover:border-purple-400/30",
+    hoverShadow: "hover:shadow-purple-500/20"
+  };
+
+  // Override textGradient for SOL to match original style if needed, or unify
+  if (chain === "SOL") {
+      colors.textGradient = "bg-gradient-to-r from-purple-400 via-pink-500 to-purple-400";
+      colors.barGradient = "from-purple-400/50 via-pink-500/50 to-purple-400/50";
+  }
+
+  // Style definitions
   const gradientBorderCard = `
     p-[1px] rounded-2xl
-    bg-gradient-to-br from-purple-600/40 via-blue-500/30 to-purple-600/40
+    bg-gradient-to-br ${colors.gradientFrom} via-${colors.secondary}-500/30 ${colors.gradientTo}
   `;
 
   const innerContent = `
     rounded-2xl bg-black 
     border border-white/5 backdrop-blur-sm
-    hover:border-purple-400/30 hover:shadow-xl hover:shadow-purple-500/20 
+    ${colors.hoverBorder} hover:shadow-xl ${colors.hoverShadow}
     transition-all duration-300
   `;
 
@@ -82,11 +113,11 @@ const PhishingAnalysis = ({ data }) => {
       {/* Risk Header */}
       <div className="text-center mb-8">
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-white">
-          <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-cyan-400 bg-clip-text text-transparent">
+          <span className={`${colors.textGradient} bg-clip-text text-transparent`}>
             Phishing Analysis
           </span>
         </h2>
-        <div className="w-24 h-1 bg-gradient-to-r from-cyan-400/50 via-purple-500/50 to-cyan-400/50 mx-auto rounded-full"></div>
+        <div className={`w-24 h-1 bg-gradient-to-r ${colors.barGradient} mx-auto rounded-full`}></div>
       </div>
 
       {/* Risk Score Card */}
