@@ -56,10 +56,23 @@ export default function HoneypotChecks({ isVisible, data }) {
     tradingControl: "Trading Control Check",
   };
 
+  const gradientBorderCard = `
+    p-[1px] rounded-2xl
+    bg-gradient-to-br from-purple-600/40 via-blue-500/30 to-purple-600/40
+  `;
+
+  const innerContent = `
+    rounded-2xl bg-black 
+    border border-white/5 backdrop-blur-sm
+    hover:border-purple-400/30 hover:shadow-xl hover:shadow-purple-500/20 
+    transition-all duration-300
+  `;
+
   return (
-    <div className="bg-black rounded-xl p-6 mb-6">
-      {/* Header with status summary */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+    <div className={gradientBorderCard}>
+      <div className={`${innerContent} p-6 mb-6`}>
+        {/* Header with status summary */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
         <div className="flex items-center">
           <div className="mr-4 p-2 bg-white/5 rounded-lg">
             <svg
@@ -115,47 +128,26 @@ export default function HoneypotChecks({ isVisible, data }) {
           const passed = result?.data ? !result.data.risk : false;
           const message =
             result?.data?.message || result?.message || "Check completed";
-          const severity = result?.data?.severity || "medium";
 
-          // Color mapping based on severity
-          const colorMap = {
-            high: {
-              bg: "bg-gradient-to-r from-red-900/20 to-red-900/10",
-              border: "border-red-500/40",
-              text: "text-red-400",
-              dot: "bg-red-500",
-            },
-            medium: {
-              bg: "bg-gradient-to-r from-amber-900/20 to-amber-900/10",
-              border: "border-amber-500/40",
-              text: "text-amber-400",
-              dot: "bg-amber-500",
-            },
-            low: {
-              bg: "bg-gradient-to-r from-white/5 to-white/5",
-              border: "border-white/20",
-              text: "text-white/80",
-              dot: "bg-white/60",
-            },
-          };
-
+          // Color mapping based on status
           const colors = passed
             ? {
-                bg: "bg-gradient-to-r from-emerald-900/10 to-emerald-900/5",
-                border: "border-emerald-400/30",
                 text: "text-emerald-400",
                 dot: "bg-emerald-400",
               }
-            : colorMap[severity];
+            : {
+                text: "text-red-400",
+                dot: "bg-red-500",
+              };
 
           return (
             <motion.div
               key={key}
-              whileHover={{ y: -2 }}
-              className={`p-4 rounded-lg border ${colors.border} ${colors.bg} transition-all`}
+              className={gradientBorderCard}
             >
+              <div className={`${innerContent} p-4 flex items-start gap-3 group cursor-pointer`}>
               <div className="flex items-start gap-3">
-                {/* Severity dot */}
+                {/* Status dot */}
                 <div
                   className={`w-3 h-3 rounded-full mt-1.5 flex-shrink-0 ${colors.dot}`}
                 ></div>
@@ -172,7 +164,7 @@ export default function HoneypotChecks({ isVisible, data }) {
                           : "bg-red-900/30 text-red-300"
                       }`}
                     >
-                      {passed ? "PASSED" : severity.toUpperCase()}
+                      {passed ? "PASSED" : "ALERT"}
                     </span>
                   </div>
                   <p className="text-sm mt-1 text-white/70">{message}</p>
@@ -194,10 +186,12 @@ export default function HoneypotChecks({ isVisible, data }) {
                   )}
                 </div>
               </div>
+              </div>
             </motion.div>
           );
         })}
       </div>   
+      </div>
     </div>
   );
 }
