@@ -1,4 +1,4 @@
-const provider = require("../../config/provider");
+const { decideChains } = require("../../config/provider");
 const { ethers } = require("ethers");
 const { isContract } = require("../../services/etherscanService");
 const { getTokenMeta } = require("../../services/getTokenMetaService");
@@ -30,6 +30,8 @@ const safeJson = (obj) =>
 
 const simulateTransfer = async (userAddress, recipientAddress, amount, currency) => {
   try {
+    const provider = decideChains(currency)
+
     if (!ethers.isAddress(userAddress)) throw new Error("Invalid user address");
     if (!ethers.isAddress(recipientAddress)) throw new Error("Invalid recipient address");
     if (isNaN(parseFloat(amount))) throw new Error("Invalid amount");
@@ -176,8 +178,8 @@ const simulateTransfer = async (userAddress, recipientAddress, amount, currency)
       error: error.message,
       reason:
         error.code === "INSUFFICIENT_FUNDS" ? "insufficient_balance" :
-        error.message.includes("revert") ? "contract_reverted" :
-        "simulation_error"
+          error.message.includes("revert") ? "contract_reverted" :
+            "simulation_error"
     };
   }
 };

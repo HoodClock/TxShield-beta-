@@ -1,7 +1,9 @@
-const { provider } = require("../../config/provider");
+const { decideChains } = require("../../config/provider");
 const { getAddress } = require("ethers");
-const analyzeBytecode = async (_recipientAddress) => {
+
+const analyzeBytecode = async (_recipientAddress, _currencySymbol) => {
   try {
+    const provider = decideChains(_currencySymbol)
     const checksumAddress = getAddress(_recipientAddress);
     const byteCode = await provider.getCode(checksumAddress);
 

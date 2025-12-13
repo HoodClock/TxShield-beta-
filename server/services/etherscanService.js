@@ -1,6 +1,6 @@
 const axios = require("axios");
+const { ethers, getAddress, JsonRpcProvider } = require("ethers");
 require("dotenv").config();
-const { ethers, getAddress, JsonRpcApiProvider } = require("ethers");
 
 const etherscanApiEndpoint = process.env.ETHERSCAN_API_ENDPOINT;
 const etherscanApiKey = process.env.ETHERSCAN_API_KEY;
