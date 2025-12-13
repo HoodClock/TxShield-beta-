@@ -1,11 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-
 export default function ClientLayout({ children }) {
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(() => 
+    new QueryClient({
+      defaultOptions: {
+        queries: {
+          staleTime: 1000 * 60 * 5, // 5 minutes
+          gcTime: 1000 * 60 * 10, // 10 minutes (garbage collection)
+        },
+      },
+    })
+  );
+
+  useEffect(() => {
+    // Optional: Clear cache when component unmounts
+    return () => {
+      queryClient.clear();
+    };
+  }, [queryClient]);
 
   return (
     <QueryClientProvider client={queryClient}>

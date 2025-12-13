@@ -1,14 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     experimental: {
-        optimizePackageImports: ['@rainbow-me/rainbowkit', '@solana/wallet-adapter-react', 'wagmi']
+        optimizePackageImports: ['@rainbow-me/rainbowkit', '@solana/wallet-adapter-react', 'wagmi'],
     },
     webpack: (config) => {
-        config.cache = true;
+        config.cache = {
+            type: 'filesystem',
+        };
         return config;
     },
     // Enable React strict mode for better error detection
     reactStrictMode: true,
+    onDemandEntries: {
+        maxInactiveAge: 15 * 1000, // 15 seconds
+        pagesBufferLength: 5,
+    },
 };
 
 export default nextConfig;

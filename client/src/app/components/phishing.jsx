@@ -11,6 +11,19 @@ const PhishingAnalysis = ({ data }) => {
     );
   }
 
+  // Style definitions - Purple and Blue gradient borders with black backgrounds
+  const gradientBorderCard = `
+    p-[1px] rounded-2xl
+    bg-gradient-to-br from-purple-600/40 via-blue-500/30 to-purple-600/40
+  `;
+
+  const innerContent = `
+    rounded-2xl bg-black 
+    border border-white/5 backdrop-blur-sm
+    hover:border-purple-400/30 hover:shadow-xl hover:shadow-purple-500/20 
+    transition-all duration-300
+  `;
+
   const { checks, phishingVerdict } = data;
 
   // Safely parse the verdict
@@ -64,106 +77,122 @@ const PhishingAnalysis = ({ data }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
-      className="space-y-6 max-w-2xl mx-auto"
+      className="space-y-6 max-w-4xl mx-auto"
     >
       {/* Risk Header */}
-      <div className="text-center">
-        <h2 className="text-2xl font-bold mb-1 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">
-          Security Analysis
+      <div className="text-center mb-8">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-white">
+          <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-cyan-400 bg-clip-text text-transparent">
+            Phishing Analysis
+          </span>
         </h2>
-        <div className="w-20 h-0.5 bg-gradient-to-r from-cyan-400/50 to-purple-500/50 mx-auto mb-4"></div>
+        <div className="w-24 h-1 bg-gradient-to-r from-cyan-400/50 via-purple-500/50 to-cyan-400/50 mx-auto rounded-full"></div>
       </div>
 
       {/* Risk Score Card */}
       <motion.div
-        initial={{ y: -10 }}
-        animate={{ y: 0 }}
-        className="bg-gray-900/50 border border-gray-800 rounded-xl p-5"
+        initial={{ y: -10, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className={gradientBorderCard}
       >
-        <div className="flex items-center justify-between mb-3">
-          <div>
-            <h3 className="text-sm font-medium text-gray-400">Risk Assessment</h3>
-            <div className="text-3xl font-bold mt-1" style={{
-              color: phishingScore > 70 ? '#ef4444' :
-                phishingScore > 30 ? '#f59e0b' :
-                  '#10b981'
-            }}>
-              {phishingScore}%
+        <div className={`${innerContent} p-6 sm:p-8`}>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+            <div className="flex-1">
+              <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Risk Assessment</h3>
+              <div className="text-5xl sm:text-6xl font-bold mt-2" style={{
+                background: `linear-gradient(135deg, ${phishingScore > 70 ? '#ef4444' :
+                  phishingScore > 30 ? '#f59e0b' :
+                    '#10b981'}, ${phishingScore > 70 ? '#991b1b' :
+                  phishingScore > 30 ? '#b45309' :
+                    '#065f46'})`,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>
+                {phishingScore}%
+              </div>
+            </div>
+            <div className={`px-4 py-2 rounded-full text-sm sm:text-base font-bold whitespace-nowrap ${riskLevel === "critical" ? "bg-red-500/20 text-red-400 border border-red-500/40" :
+                riskLevel === "high" ? "bg-orange-500/20 text-orange-400 border border-orange-500/40" :
+                  riskLevel === "medium" ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500/40" :
+                    "bg-green-500/20 text-green-400 border border-green-500/40"
+              }`}>
+              {riskLevel.toUpperCase()}
             </div>
           </div>
-          <div className={`px-3 py-1 rounded-full text-xs font-semibold ${riskLevel === "critical" ? "bg-red-500/20 text-red-400" :
-              riskLevel === "high" ? "bg-orange-500/20 text-orange-400" :
-                riskLevel === "medium" ? "bg-yellow-500/20 text-yellow-400" :
-                  "bg-green-500/20 text-green-400"
-            }`}>
-            {riskLevel.toUpperCase()}
+
+          <div className="mt-6">
+            <div className="w-full bg-slate-700/30 rounded-full h-2">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${phishingScore}%` }}
+                transition={{ duration: 1.2 }}
+                className={`h-2 rounded-full ${phishingScore > 70 ? 'bg-gradient-to-r from-red-500 to-red-600' :
+                    phishingScore > 30 ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
+                      'bg-gradient-to-r from-green-500 to-emerald-500'
+                  }`}
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="w-full bg-gray-800 rounded-full h-1.5 mb-2">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${phishingScore}%` }}
-            transition={{ duration: 1 }}
-            className={`h-1.5 rounded-full ${phishingScore > 70 ? 'bg-red-500' :
-                phishingScore > 30 ? 'bg-yellow-500' :
-                  'bg-green-500'
-              }`}
-          />
-        </div>
-
-        <div className="flex justify-between text-xs text-gray-400">
-          <span>{scamCount} malicious patterns</span>
-          <span>{cleanCount} clean checks</span>
+          <div className="flex justify-between text-xs sm:text-sm text-gray-400 mt-4 pt-4 border-t border-white/10">
+            <span className="flex items-center gap-1">
+              <span className="text-red-400 font-bold">{scamCount}</span> malicious patterns
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="text-green-400 font-bold">{cleanCount}</span> clean checks
+            </span>
+          </div>
         </div>
       </motion.div>
 
       {/* Security Checks */}
       <div className="space-y-4">
-        <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Detailed Analysis</h3>
+        <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider pl-2">Detailed Analysis</h3>
         <div className="space-y-3">
           {securityChecks.map((check, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 5 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className={`p-4 rounded-lg border ${check.isScam ? 'border-red-500/20 bg-red-900/5' : 'border-gray-700 bg-gray-800/10'
-                }`}
+              transition={{ delay: index * 0.08 }}
+              className={gradientBorderCard}
             >
-              <div className="flex items-start gap-3">
-                <div className={`mt-0.5 flex-shrink-0 ${check.isScam ? 'text-red-500' : 'text-cyan-400'
-                  }`}>
-                  {check.isScam ? '✖' : '✓'}
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <h4 className={`text-sm font-medium ${check.isScam ? 'text-red-400' : 'text-gray-300'
-                      }`}>
-                      {check.name}
-                    </h4>
-                    {check.confidence !== "none" && (
-                      <span className={`text-xs px-2 py-0.5 rounded ${check.confidence === "high" ? "bg-red-500/10 text-red-400" :
-                          check.confidence === "medium" ? "bg-yellow-500/10 text-yellow-400" :
-                            "bg-green-500/10 text-green-400"
+              <div className={`${innerContent} p-4 sm:p-5`}>
+                <div className="flex items-start gap-3 sm:gap-4">
+                  <div className={`mt-1 flex-shrink-0 text-lg font-bold ${check.isScam ? 'text-red-400' : 'text-emerald-400'
+                    }`}>
+                    {check.isScam ? '⚠' : '✓'}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-1">
+                      <h4 className={`text-base sm:text-lg font-semibold ${check.isScam ? 'text-red-400' : 'text-white'
                         }`}>
-                        {check.confidence}
-                      </span>
+                        {check.name}
+                      </h4>
+                      {check.confidence !== "none" && (
+                        <span className={`text-xs px-3 py-1 rounded-full font-semibold whitespace-nowrap ${check.confidence === "high" ? "bg-red-500/20 text-red-400 border border-red-500/40" :
+                            check.confidence === "medium" ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500/40" :
+                              "bg-green-500/20 text-green-400 border border-green-500/40"
+                          }`}>
+                          {check.confidence}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm text-gray-400 mb-2">{check.reason}</p>
+
+                    {/* Additional details */}
+                    {check.details && (
+                      <div className="mt-3 space-y-1 pl-3 border-l-2 border-white/10">
+                        {Object.entries(check.details).map(([key, value]) => (
+                          <div key={key} className="flex flex-col sm:flex-row sm:items-center gap-1 text-xs text-gray-500">
+                            <span className="font-semibold text-gray-400 capitalize">{key}:</span>
+                            <span className="text-gray-400">{String(value)}</span>
+                          </div>
+                        ))}
+                      </div>
                     )}
                   </div>
-                  <p className="text-xs text-gray-400 mt-1">{check.reason}</p>
-
-                  {/* Additional details */}
-                  {check.details && (
-                    <div className="mt-2 space-y-1">
-                      {Object.entries(check.details).map(([key, value]) => (
-                        <div key={key} className="flex text-xs text-gray-500">
-                          <span className="font-medium mr-1">{key}:</span>
-                          <span>{value}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
               </div>
             </motion.div>
@@ -177,22 +206,25 @@ const PhishingAnalysis = ({ data }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="space-y-3"
+          className={gradientBorderCard}
         >
-          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Critical Findings</h3>
-          <ul className="space-y-2 pl-5">
-            {keyFindings.map((finding, index) => (
-              <motion.li
-                key={index}
-                initial={{ x: -10 }}
-                animate={{ x: 0 }}
-                transition={{ delay: 0.1 * index }}
-                className="text-sm text-gray-300 list-disc"
-              >
-                {finding}
-              </motion.li>
-            ))}
-          </ul>
+          <div className={`${innerContent} p-6 sm:p-8`}>
+            <h3 className="text-sm font-semibold text-amber-400 uppercase tracking-wider mb-4">Critical Findings</h3>
+            <ul className="space-y-3">
+              {keyFindings.map((finding, index) => (
+                <motion.li
+                  key={index}
+                  initial={{ x: -10, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.08 * index }}
+                  className="text-sm text-gray-300 flex items-start gap-3"
+                >
+                  <span className="text-amber-400 font-bold mt-0.5 flex-shrink-0">•</span>
+                  <span>{finding}</span>
+                </motion.li>
+              ))}
+            </ul>
+          </div>
         </motion.div>
       )}
 
@@ -202,22 +234,25 @@ const PhishingAnalysis = ({ data }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="border border-red-500/20 bg-red-900/10 rounded-lg p-4"
+          className={gradientBorderCard}
         >
-          <h3 className="text-sm font-medium text-red-400 mb-2">Recommended Actions</h3>
-          <ul className="space-y-2 pl-5">
-            {recommendedActions.map((action, index) => (
-              <motion.li
-                key={index}
-                initial={{ x: -10 }}
-                animate={{ x: 0 }}
-                transition={{ delay: 0.1 * index + 0.2 }}
-                className="text-sm text-gray-300 list-disc"
-              >
-                {action}
-              </motion.li>
-            ))}
-          </ul>
+          <div className={`${innerContent} p-6 sm:p-8`}>
+            <h3 className="text-sm font-semibold text-red-400 uppercase tracking-wider mb-4">Recommended Actions</h3>
+            <ul className="space-y-3">
+              {recommendedActions.map((action, index) => (
+                <motion.li
+                  key={index}
+                  initial={{ x: -10, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.08 * index + 0.2 }}
+                  className="text-sm text-gray-300 flex items-start gap-3"
+                >
+                  <span className="text-red-400 font-bold mt-0.5 flex-shrink-0">→</span>
+                  <span>{action}</span>
+                </motion.li>
+              ))}
+            </ul>
+          </div>
         </motion.div>
       )}
     </motion.div>

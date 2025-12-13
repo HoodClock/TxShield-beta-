@@ -21,6 +21,18 @@ function keyMatrics({
     return "bg-green-500";
   };
 
+  const gradientBorderCard = `
+    p-[1px] rounded-2xl
+    bg-gradient-to-br from-purple-600/40 via-blue-500/30 to-purple-600/40
+  `;
+
+  const innerContent = `
+    rounded-2xl bg-black 
+    border border-white/5 backdrop-blur-sm
+    hover:border-purple-400/30 hover:shadow-xl hover:shadow-purple-500/20 
+    transition-all duration-300
+  `;
+
   const total = Number.parseFloat(totalScore) || 0;
   const zoneColor = getZoneColor(total);
   const zoneName =
@@ -75,27 +87,28 @@ function keyMatrics({
         {/* Risk Level */}
         <motion.div
           whileHover={{ y: -4, scale: 1.02 }}
-          className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${riskStyle.bg} border ${riskStyle.border} p-6`}
+          className={gradientBorderCard}
         >
-          <div className="flex items-center justify-between mb-4">
-            <div className={`p-3 rounded-xl ${riskStyle.accent}/20`}>
-              <FiShield className={`h-6 w-6 ${riskStyle.text}`} />
+          <div className={innerContent + " p-6"}>
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 rounded-xl bg-purple-500/20">
+                <FiShield className="h-6 w-6 text-purple-400" />
+              </div>
+              <div className="h-2 w-2 rounded-full bg-purple-500 animate-pulse" />
             </div>
-            <div
-              className={`h-2 w-2 rounded-full ${riskStyle.accent} animate-pulse`}
-            />
+            <h3 className="text-sm font-medium text-slate-400 mb-1">
+              Risk Level
+            </h3>
+            <p className="text-2xl font-bold text-purple-400">{riskLevel}</p>
           </div>
-          <h3 className="text-sm font-medium text-slate-400 mb-1">
-            Risk Level
-          </h3>
-          <p className={`text-2xl font-bold ${riskStyle.text}`}>{riskLevel}</p>
         </motion.div>
 
         {/* Total Score */}
         <motion.div
           whileHover={{ y: -4, scale: 1.02 }}
-          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500/10 to-blue-600/5 border border-blue-500/20 p-6"
+          className={gradientBorderCard}
         >
+          <div className={innerContent + " p-6"}>
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 rounded-xl bg-blue-500/20">
               <FiTarget className="h-6 w-6 text-blue-400" />
@@ -133,24 +146,27 @@ function keyMatrics({
               <div className="w-3 h-3 rounded-full bg-red-500" /> Red Flag (40+)
             </div>
           </div>
+          </div>
         </motion.div>
 
         {/* Pass Rate */}
         <motion.div
           whileHover={{ y: -4, scale: 1.02 }}
-          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border border-emerald-500/20 p-6"
+          className={gradientBorderCard}
         >
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-3 rounded-xl bg-emerald-500/20">
-              <FiCheck className="h-6 w-6 text-emerald-400" />
+          <div className={innerContent + " p-6"}>
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 rounded-xl bg-emerald-500/20">
+                <FiCheck className="h-6 w-6 text-emerald-400" />
+              </div>
+              <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
             </div>
-            <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            <h3 className="text-sm font-medium text-slate-400 mb-1">Honeypot Pass Rate</h3>
+            <p className="text-2xl font-bold text-emerald-400">{passRate}</p>
+            <p className="text-sm text-slate-500 mt-1">
+              {ratioText} checks passed
+            </p>
           </div>
-          <h3 className="text-sm font-medium text-slate-400 mb-1">Honeypot Pass Rate</h3>
-          <p className="text-2xl font-bold text-emerald-400">{passRate}</p>
-          <p className="text-sm text-slate-500 mt-1">
-            {ratioText} checks passed
-          </p>
         </motion.div>
       </motion.div>
     </div>

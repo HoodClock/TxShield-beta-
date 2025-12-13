@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense, lazy } from "react";
+import { useState, Suspense, lazy, useCallback, useRef, useEffect } from "react";
 import Head from "next/head";
 
 // all the components of Simualtion forms
@@ -39,51 +39,90 @@ export default function App() {
   // setting chain for wallet providers
   const [chain, setChain] = useState(null);
 
+  const abortControllerRef = useRef(null);
+  const mounted = useRef(true);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      mounted.current = false;
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
+
   // for simulation when currency => ETH
-  const handleSimulateAll = async ({ honeypotData, simulationData }) => {
+  const handleSimulateAll = useCallback(async ({ honeypotData: hpData, simulationData: simData }) => {
+    if (!mounted.current) return;
+
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    abortControllerRef.current = new AbortController();
+
     setIsLoading(true);
     setShowResults(false);
 
     try {
       const [simulationRes, honeypotRes, phishingRes] = await Promise.all([
-        runSimulateTx(simulationData),
-        runHoneypotChecks(honeypotData),
-        runPhishing(simulationData),
+        runSimulateTx(simData),
+        runHoneypotChecks(hpData),
+        runPhishing(simData),
       ]);
 
-      setSimulationData(simulationRes.data);
-      setHoneypotData(honeypotRes.data);
-      setPhishingData(phishingRes.data);
-
-      setShowResults(true);
+      if (mounted.current) {
+        setSimulationData(simulationRes.data);
+        setHoneypotData(honeypotRes.data);
+        setPhishingData(phishingRes.data);
+        setShowResults(true);
+      }
     } catch (err) {
-      console.error("Simulation Error:", err);
+      if (err.name !== 'AbortError') {
+        console.error("Simulation Error:", err);
+      }
     } finally {
-      setIsLoading(false);
+      if (mounted.current) {
+        setIsLoading(false);
+      }
     }
-  };
+  }, []);
 
   // for simulation when currency => SOL
-  const handleSolSimulation = async ({ solSimulationData }) => {
+  const handleSolSimulation = useCallback(async ({ solSimulationData: solData }) => {
+    if (!mounted.current) return;
+
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    abortControllerRef.current = new AbortController();
+
     setIsLoading(true);
     setShowResults(false);
 
     try {
       const [solSimulationRes] = await Promise.all([
-        runSolSimulation(solSimulationData),
+        runSolSimulation(solData),
       ]);
 
-      setSolSimulationData(solSimulationRes.data);
-
-      setShowResults(true);
+      if (mounted.current) {
+        setSolSimulationData(solSimulationRes.data);
+        setShowResults(true);
+      }
     } catch (err) {
-      console.error("Simulation Error:", err);
+      if (err.name !== 'AbortError') {
+        console.error("Simulation Error:", err);
+      }
     } finally {
-      setIsLoading(false);
+      if (mounted.current) {
+        setIsLoading(false);
+      }
     }
-  };
+  }, []);
 
-  const handleRecommendation = async () => {
+  const handleRecommendation = useCallback(async () => {
+    if (!mounted.current) return;
+
     try {
       if (!simulationData || !honeypotData) return;
 
@@ -93,11 +132,13 @@ export default function App() {
       };
 
       const response = await recommendations(promptContent);
-      setRecommendation(response.data.recommendation);
+      if (mounted.current) {
+        setRecommendation(response.data.recommendation);
+      }
     } catch (err) {
       console.error("Recommendation error:", err);
     }
-  };
+  }, [simulationData, honeypotData]);
 
   const handleSimulationComplete = () => {
     setIsLoading(false);
