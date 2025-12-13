@@ -7,7 +7,7 @@ import Head from "next/head";
 const Header = lazy(() => import("../components/header"))
 const SimulateHeroSection = lazy(() => import("../components/SimulateHeroSection"))
 const ConnectWallet = lazy(() => import("../components/connectWallet"));
-const ResultsDashboard = lazy(() => import("../components/result"));
+const ResultsDashboard = lazy(() => import("../components/result/index"));
 const Footer = lazy(() => import("../components/footer"));
 const LoadingState = lazy(() => import("../components/loading"));
 

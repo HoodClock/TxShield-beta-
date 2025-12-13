@@ -73,6 +73,7 @@ export default function SimulationForm({ onSolSimulateAll, backButtonHandler }) 
               .sol-input-gradient {
                 background: linear-gradient(90deg, rgba(168, 85, 247, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%);
               }
+              /* Remove arrows/spinners from number inputs */
               input::-webkit-outer-spin-button,
               input::-webkit-inner-spin-button {
                 -webkit-appearance: none;
