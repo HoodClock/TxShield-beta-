@@ -54,6 +54,15 @@ export default function SimulationForm({ onSimulateAll, backButtonHandler }) {
         .evm-input-gradient {
           background: linear-gradient(90deg, rgba(59, 130, 246, 0.05) 0%, rgba(37, 99, 235, 0.05) 100%);
         }
+        /* Remove arrows/spinners from number inputs */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        input[type=number] {
+          -moz-appearance: textfield;
+        }
       `}</style>
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}

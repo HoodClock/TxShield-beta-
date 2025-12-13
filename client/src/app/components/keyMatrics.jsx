@@ -13,8 +13,50 @@ function keyMatrics({
   ratioText,
   isVisible,
   data,
+  chain = "EVM"
 }) {
-  // Score range to color
+  // Theme configuration
+  const theme = chain === "EVM" ? {
+    gradientFrom: "from-blue-600/40",
+    gradientTo: "to-cyan-600/40",
+    secondary: "cyan",
+    hoverBorder: "hover:border-blue-400/30",
+    hoverShadow: "hover:shadow-blue-500/20",
+    iconBg1: "bg-blue-600/20",
+    iconText1: "text-blue-400",
+    iconBg2: "bg-cyan-600/20",
+    iconText2: "text-cyan-400",
+    iconBg3: "bg-emerald-500/20", // Keep pass rate green usually, or theme it
+    iconText3: "text-emerald-400",
+    barBg: "bg-slate-700", // or theme?
+    pulseColor1: "bg-blue-500",
+    pulseColor2: "bg-cyan-500",
+    pulseColor3: "bg-emerald-500",
+    textColor1: "text-blue-400",
+    textColor2: "text-cyan-400",
+    textColor3: "text-emerald-400"
+  } : {
+    gradientFrom: "from-purple-600/40",
+    gradientTo: "to-pink-600/40",
+    secondary: "pink",
+    hoverBorder: "hover:border-purple-400/30",
+    hoverShadow: "hover:shadow-purple-500/20",
+    iconBg1: "bg-purple-600/20",
+    iconText1: "text-purple-400",
+    iconBg2: "bg-pink-600/20",
+    iconText2: "text-pink-400",
+    iconBg3: "bg-emerald-500/20",
+    iconText3: "text-emerald-400",
+    barBg: "bg-slate-700",
+    pulseColor1: "bg-purple-500",
+    pulseColor2: "bg-pink-500",
+    pulseColor3: "bg-emerald-500",
+    textColor1: "text-purple-400",
+    textColor2: "text-pink-400",
+    textColor3: "text-emerald-400"
+  };
+
+  // Score range to color (Keep logic but maybe adjust colors if needed)
   const getZoneColor = (score) => {
     if (score >= 40) return "bg-red-500";
     if (score >= 20) return "bg-yellow-400";
@@ -23,13 +65,13 @@ function keyMatrics({
 
   const gradientBorderCard = `
     p-[1px] rounded-2xl
-    bg-gradient-to-br from-purple-600/40 via-blue-500/30 to-purple-600/40
+    bg-gradient-to-br ${theme.gradientFrom} via-${theme.secondary}-500/30 ${theme.gradientTo}
   `;
 
   const innerContent = `
     rounded-2xl bg-black 
     border border-white/5 backdrop-blur-sm
-    hover:border-purple-400/30 hover:shadow-xl hover:shadow-purple-500/20 
+    ${theme.hoverBorder} hover:shadow-xl ${theme.hoverShadow}
     transition-all duration-300
   `;
 
@@ -91,15 +133,15 @@ function keyMatrics({
         >
           <div className={innerContent + " p-6"}>
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-xl bg-purple-500/20">
-                <FiShield className="h-6 w-6 text-purple-400" />
+              <div className={`p-3 rounded-xl ${theme.iconBg1}`}>
+                <FiShield className={`h-6 w-6 ${theme.iconText1}`} />
               </div>
-              <div className="h-2 w-2 rounded-full bg-purple-500 animate-pulse" />
+              <div className={`h-2 w-2 rounded-full ${theme.pulseColor1} animate-pulse`} />
             </div>
             <h3 className="text-sm font-medium text-slate-400 mb-1">
               Risk Level
             </h3>
-            <p className="text-2xl font-bold text-purple-400">{riskLevel}</p>
+            <p className={`text-2xl font-bold ${theme.textColor1}`}>{riskLevel}</p>
           </div>
         </motion.div>
 
@@ -110,10 +152,10 @@ function keyMatrics({
         >
           <div className={innerContent + " p-6"}>
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 rounded-xl bg-blue-500/20">
-              <FiTarget className="h-6 w-6 text-blue-400" />
+            <div className={`p-3 rounded-xl ${theme.iconBg2}`}>
+              <FiTarget className={`h-6 w-6 ${theme.iconText2}`} />
             </div>
-            <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
+            <div className={`h-2 w-2 rounded-full ${theme.pulseColor2} animate-pulse`} />
           </div>
 
           <h3 className="text-sm font-medium text-slate-400 mb-1 flex items-center justify-between">
@@ -121,7 +163,7 @@ function keyMatrics({
             <span className="text-xs text-slate-500">{zoneName}</span>
           </h3>
 
-          <p className="text-2xl font-bold text-blue-400">{total}/60</p>
+          <p className={`text-2xl font-bold ${theme.textColor2}`}>{total}/60</p>
 
           {/* Dynamic Progress Bar */}
           <div className="mt-3 h-2 bg-slate-700 rounded-full overflow-hidden">
@@ -156,13 +198,13 @@ function keyMatrics({
         >
           <div className={innerContent + " p-6"}>
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 rounded-xl bg-emerald-500/20">
-                <FiCheck className="h-6 w-6 text-emerald-400" />
+              <div className={`p-3 rounded-xl ${theme.iconBg3}`}>
+                <FiCheck className={`h-6 w-6 ${theme.iconText3}`} />
               </div>
-              <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              <div className={`h-2 w-2 rounded-full ${theme.pulseColor3} animate-pulse`} />
             </div>
             <h3 className="text-sm font-medium text-slate-400 mb-1">Honeypot Pass Rate</h3>
-            <p className="text-2xl font-bold text-emerald-400">{passRate}</p>
+            <p className={`text-2xl font-bold ${theme.textColor3}`}>{passRate}</p>
             <p className="text-sm text-slate-500 mt-1">
               {ratioText} checks passed
             </p>
