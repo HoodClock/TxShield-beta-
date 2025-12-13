@@ -31,12 +31,16 @@ import { useRouter } from "next/navigation";
 import KeyMatrics from "./keyMatrics";
 import Phishing from "./phishing";
 import TiltedCard from "./TiltedCard";
+import HoneypotChecks from "./honeypotChecks";
+import Recommendations from "./recomendations";
 
 export default function ResultsDashboard({
   isVisible,
   simulation,
   honeypot,
   phishing,
+  onGenerateRecommendation,
+  recommendationData,
 }) {
   const router = useRouter();
   const mounted = useRef(true);
@@ -411,59 +415,13 @@ export default function ResultsDashboard({
                     </div>
                   </motion.div>
 
-                  {/* Risk Level */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, delay: 0.1 }}
-                    className={`flex items-center gap-4 p-5 rounded-xl border backdrop-blur-sm transition-all duration-300 bg-gradient-to-br ${riskStyle.bg} border-gradient-to-br ${riskStyle.border}`}
-                  >
-                    <div className="p-3 rounded-lg flex-shrink-0 bg-white/5">
-                      <FiAward className="h-6 w-6 text-blue-400" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-slate-400">Risk Level</p>
-                      <p className={`font-bold text-xl ${riskStyle.text}`}>
-                        {riskLevel}
-                      </p>
-                    </div>
-                  </motion.div>
+
                 </div>
               </div>
 
               {/* Quick Stats */}
               <div className="grid grid-cols-2 gap-4">
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 }}
-                  className="gradient-border-card"
-                >
-                  <div className="card-inner p-4 sm:p-5">
-                    <p className="text-slate-400 text-xs sm:text-sm mb-2">
-                      Honeypot Score
-                    </p>
-                    <p className="text-2xl sm:text-3xl font-bold text-cyan-400">
-                      {totalScore}/60
-                    </p>
-                  </div>
-                </motion.div>
 
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.15 }}
-                  className="gradient-border-card"
-                >
-                  <div className="card-inner p-4 sm:p-5">
-                    <p className="text-slate-400 text-xs sm:text-sm mb-2">
-                      Pass Rate
-                    </p>
-                    <p className="text-2xl sm:text-3xl font-bold text-emerald-400">
-                      {passRate}
-                    </p>
-                  </div>
-                </motion.div>
 
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
@@ -951,8 +909,25 @@ export default function ResultsDashboard({
           </div>
         </div>
 
-        {/* Key Metrics */}
-        <motion.div variants={itemVariants}>
+      {/* Phishing Analysis */}
+      <motion.div variants={itemVariants} className="mt-8 sm:mt-12 max-w-7xl mx-auto">
+        <Phishing data={finalPhishing} />
+      </motion.div>
+
+      {/* === HONEYPOT & SECURITY ANALYSIS === */}
+      <motion.div
+        variants={itemVariants}
+        className="max-w-7xl mx-auto space-y-8 sm:space-y-12 mt-12"
+      >
+          <div className="text-center">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              <span className="grad-word">Honeypot & Security</span> Analysis
+            </h2>
+          </div>
+
+
+
+          {/* Key Metrics */}
           <KeyMatrics
             itemVariants={itemVariants}
             riskStyle={riskStyle}
@@ -963,120 +938,99 @@ export default function ResultsDashboard({
             isVisible={isVisible}
             data={finalHoneypot}
           />
-        </motion.div>
 
-        {/* COLLAPSIBLE: Bytecode Analysis */}
-        <motion.div
-          variants={itemVariants}
-          className="group gradient-border-card"
-        >
-          <button
-            onClick={() => toggleSection("bytecode")}
-            className="card-inner p-6 sm:p-8 w-full"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3 sm:gap-4">
-                <div className="icon-wrapper">
-                  <FiCode className="h-5 w-5 text-indigo-400" />
-                </div>
-                <h2 className="text-lg sm:text-xl font-bold text-white text-left">
-                  Bytecode Analysis
-                </h2>
-              </div>
-              <motion.div
-                animate={{ rotate: expandedSections.bytecode ? 180 : 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <FiChevronDown className="h-5 w-5 text-slate-400" />
-              </motion.div>
-            </div>
-          </button>
-
-          {expandedSections.bytecode && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-              className="card-inner p-6 sm:p-8 pt-0 space-y-3"
-            >
-              {isContract ? (
-                warnings.length > 0 ? (
-                  warnings.map((warning, idx) => (
-                    <motion.div
-                      key={idx}
-                      initial={{ opacity: 0, x: 10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: idx * 0.05 }}
-                      className="flex items-start gap-3 p-3 bg-red-500/10 border border-red-500/20 rounded-lg hover:border-red-500/40 hover:bg-red-500/15 transition-all duration-200"
-                    >
-                      <FiAlertTriangle className="h-4 w-4 text-red-400 mt-0.5 flex-shrink-0" />
-                      <span className="text-red-300 text-xs sm:text-sm">
-                        {warning}
-                      </span>
-                    </motion.div>
-                  ))
-                ) : (
-                  <div className="flex items-center gap-3 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg hover:border-emerald-500/40 hover:bg-emerald-500/15 transition-all duration-200">
-                    <FiCheck className="h-4 w-4 text-emerald-400 flex-shrink-0" />
-                    <span className="text-emerald-300 text-xs sm:text-sm">
-                      No dangerous opcodes detected
-                    </span>
-                  </div>
-                )
-              ) : (
-                <div className="flex items-center gap-3 p-4 bg-slate-700/30 border border-slate-600/50 rounded-lg hover:border-slate-600/80 hover:bg-slate-700/40 transition-all duration-200">
-                  <FiInfo className="h-4 w-4 text-slate-400 flex-shrink-0" />
-                  <span className="text-slate-300 text-xs sm:text-sm">
-                    Address is not a contract
-                  </span>
-                </div>
-              )}
-            </motion.div>
-          )}
-        </motion.div>
-
-        {/* Warnings Section */}
-        {simulateData.warnings?.length > 0 && (
+          {/* Bytecode Analysis */}
           <motion.div
             variants={itemVariants}
             className="group gradient-border-card"
           >
-            <div className="card-inner p-6 sm:p-8 bg-gradient-to-br from-red-950/30 via-red-950/10 to-red-950/20">
-              <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
-                <div className="icon-wrapper bg-red-500/10">
-                  <FiAlertTriangle className="h-5 w-5 text-red-400" />
-                </div>
-                <h2 className="text-lg sm:text-xl font-bold text-red-400">
-                  Important Warnings
-                </h2>
-              </div>
-              <div className="space-y-2 sm:space-y-3">
-                {simulateData.warnings.map((warning, index) => (
-                  <motion.p
-                    key={index}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                    className="text-red-300 text-xs sm:text-sm flex items-start gap-2"
+            <button
+                onClick={() => toggleSection("bytecode")}
+                className="card-inner p-6 sm:p-8 w-full"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <div className="icon-wrapper">
+                      <FiCode className="h-5 w-5 text-indigo-400" />
+                    </div>
+                    <h2 className="text-lg sm:text-xl font-bold text-white text-left">
+                      Bytecode Analysis
+                    </h2>
+                  </div>
+                  <motion.div
+                    animate={{ rotate: expandedSections.bytecode ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    <span className="text-red-400 mt-1 flex-shrink-0">•</span>
-                    <span>{warning}</span>
-                  </motion.p>
-                ))}
-              </div>
-            </div>
+                    <FiChevronDown className="h-5 w-5 text-slate-400" />
+                  </motion.div>
+                </div>
+              </button>
+
+              {expandedSections.bytecode && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="card-inner p-6 sm:p-8 pt-0 space-y-3"
+                >
+                  {isContract ? (
+                    warnings.length > 0 ? (
+                      warnings.map((warning, idx) => (
+                        <motion.div
+                          key={idx}
+                          initial={{ opacity: 0, x: 10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: idx * 0.05 }}
+                          className="flex items-start gap-3 p-3 bg-red-500/10 border border-red-500/20 rounded-lg hover:border-red-500/40 hover:bg-red-500/15 transition-all duration-200"
+                        >
+                          <FiAlertTriangle className="h-4 w-4 text-red-400 mt-0.5 flex-shrink-0" />
+                          <span className="text-red-300 text-xs sm:text-sm">
+                            {warning}
+                          </span>
+                        </motion.div>
+                      ))
+                    ) : (
+                      <div className="flex items-center gap-3 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg hover:border-emerald-500/40 hover:bg-emerald-500/15 transition-all duration-200">
+                        <FiCheck className="h-4 w-4 text-emerald-400 flex-shrink-0" />
+                        <span className="text-emerald-300 text-xs sm:text-sm">
+                          No dangerous opcodes detected
+                        </span>
+                      </div>
+                    )
+                  ) : (
+                    <div className="flex items-center gap-3 p-4 bg-slate-700/30 border border-slate-600/50 rounded-lg hover:border-slate-600/80 hover:bg-slate-700/40 transition-all duration-200">
+                      <FiInfo className="h-4 w-4 text-slate-400 flex-shrink-0" />
+                      <span className="text-slate-300 text-xs sm:text-sm">
+                        Address is not a contract
+                      </span>
+                    </div>
+                  )}
+                </motion.div>
+              )}
           </motion.div>
-        )}
       </motion.div>
 
-      {/* Phishing Analysis */}
-      <motion.div variants={itemVariants} className="mt-8 sm:mt-12 max-w-7xl mx-auto">
-        <Phishing data={finalPhishing} />
+      {/* Detailed Honeypot Checks */}
+      <motion.div variants={itemVariants} className="max-w-7xl mx-auto mt-8 sm:mt-12">
+        <HoneypotChecks isVisible={isVisible} data={honeypot} />
+      </motion.div>
+
+      {/* AI Recommendations */}
+      <motion.div variants={itemVariants} className="max-w-7xl mx-auto mt-8 sm:mt-12">
+        <Recommendations
+          simulationData={simulation}
+          honeypotData={honeypot}
+          onGenerate={onGenerateRecommendation}
+          recommendation={recommendationData}
+        />
       </motion.div>
 
       {/* Back to Simulate Button */}
-      <div className="max-w-7xl mx-auto flex justify-center mt-12 sm:mt-16 pb-8">
+      <motion.div
+        variants={itemVariants}
+        className="max-w-7xl mx-auto flex justify-center mt-12 sm:mt-16 pb-8"
+      >
         <button
           onClick={() => window.location.reload()}
           className="px-6 sm:px-8 py-3 sm:py-4 bg-black border border-purple-500/30 rounded-lg flex items-center gap-2 hover:border-purple-400/60 hover:bg-purple-950/20 transition-all duration-300 group"
@@ -1086,7 +1040,8 @@ export default function ResultsDashboard({
             Back to Simulate
           </span>
         </button>
-      </div>
+      </motion.div>
+    </motion.div>
     </div>
   );
 }

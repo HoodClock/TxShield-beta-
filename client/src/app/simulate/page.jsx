@@ -8,8 +8,6 @@ const Header = lazy(() => import("../components/header"))
 const SimulateHeroSection = lazy(() => import("../components/SimulateHeroSection"))
 const ConnectWallet = lazy(() => import("../components/connectWallet"));
 const ResultsDashboard = lazy(() => import("../components/result"));
-const HoneypotChecks = lazy(() => import("../components/honeypotChecks"));
-const Recommendations = lazy(() => import("../components/recomendations"));
 const Footer = lazy(() => import("../components/footer"));
 const LoadingState = lazy(() => import("../components/loading"));
 
@@ -211,27 +209,8 @@ export default function App() {
                 simulation={simulationData}
                 honeypot={honeypotData}
                 phishing={phishingData}
-              />
-            </Suspense>
-            <Suspense
-              fallback={
-                <div className="h-48 bg-gray-900 rounded-xl animate-pulse"></div>
-              }
-            >
-              <HoneypotChecks isVisible={showResults} data={honeypotData} />
-            </Suspense>
-
-            {/* Recommendations */}
-            <Suspense
-              fallback={
-                <div className="h-32 bg-gray-900 rounded-xl animate-pulse"></div>
-              }
-            >
-              <Recommendations
-                simulationData={simulationData}
-                honeypotData={honeypotData}
-                onGenerate={handleRecommendation}
-                recommendation={recommendation}
+                onGenerateRecommendation={handleRecommendation}
+                recommendationData={recommendation}
               />
             </Suspense>
           </section>
