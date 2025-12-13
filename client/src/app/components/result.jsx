@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   FiCheck,
   FiInfo,
@@ -39,6 +39,7 @@ export default function ResultsDashboard({
   phishing,
 }) {
   const router = useRouter();
+  const mounted = useRef(true);
   const [expandedSections, setExpandedSections] = useState({
     txDetails: true,
     balances: true,
@@ -48,7 +49,15 @@ export default function ResultsDashboard({
     warnings: true,
   });
 
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+
   const toggleSection = (section) => {
+    if (!mounted.current) return;
     setExpandedSections((prev) => ({
       ...prev,
       [section]: !prev[section],
