@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, Suspense, lazy, useCallback, useRef, useEffect } from "react";
+import { AnimatePresence } from "framer-motion";
 import Head from "next/head";
 
 // all the components of Simualtion forms
@@ -181,12 +182,24 @@ export default function App() {
                   <div className="h-64 bg-gray-900 rounded-xl animate-pulse"></div>
                 }
               >
-                {chain === "EVM" && (
-                  <EvmSimulationForm onSimulateAll={handleSimulateAll} backButtonHandler={() => setChain(null)} />
-                )}
-                {chain === "SOL" && (
-                  <SolSimulationForm onSolSimulateAll={handleSolSimulation} backButtonHandler={() => setChain(null)} />
-                )}
+                <AnimatePresence mode="wait">
+                  {chain === "EVM" && (
+                    <EvmSimulationForm 
+                      key="evm-form"
+                      onSimulateAll={handleSimulateAll} 
+                      backButtonHandler={() => setChain(null)}
+                      onSwitchChain={() => setChain("SOL")}
+                    />
+                  )}
+                  {chain === "SOL" && (
+                    <SolSimulationForm 
+                      key="sol-form"
+                      onSolSimulateAll={handleSolSimulation} 
+                      backButtonHandler={() => setChain(null)} 
+                      onSwitchChain={() => setChain("EVM")}
+                    />
+                  )}
+                </AnimatePresence>
               </Suspense>
             </WalletProviderWrapper>
 
