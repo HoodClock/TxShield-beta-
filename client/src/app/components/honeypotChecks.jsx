@@ -32,7 +32,7 @@ export default function HoneypotChecks({ isVisible, data, chain = "EVM" }) {
 
   if (Object.keys(checks).length === 0) {
     return (
-      <div className={`bg-gradient-to-br from-white/5 to-white/10 border border-white/10 rounded-xl p-6 mb-6 text-white/80 text-sm shadow-inner shadow-white/5`}>
+      <div className={`bg-gradient-to-br from-white/5 to-white/10 border border-white/10 rounded-xl p-4 mb-4 text-white/80 text-sm shadow-inner shadow-white/5`}>
         <div className="flex items-center gap-4 mb-4">
           <div className="p-2 bg-white/10 rounded-lg">
             <svg
@@ -51,7 +51,7 @@ export default function HoneypotChecks({ isVisible, data, chain = "EVM" }) {
             </svg>
           </div>
           <div>
-            <h4 className="text-2xl font-bold text-white">Honeypot Analysis</h4>
+            <h4 className="text-xl font-bold text-white">Honeypot Analysis</h4>
             <p className="text-white/60 text-sm">
               No honeypot checks were detected.
             </p>
@@ -93,7 +93,7 @@ export default function HoneypotChecks({ isVisible, data, chain = "EVM" }) {
 
   return (
     <div className={gradientBorderCard}>
-      <div className={`${innerContent} p-6 mb-6`}>
+      <div className={`${innerContent} p-4 mb-4`}>
         {/* Header with status summary */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
         <div className="flex items-center">
@@ -114,7 +114,7 @@ export default function HoneypotChecks({ isVisible, data, chain = "EVM" }) {
             </svg>
           </div>
           <div>
-            <h4 className="text-2xl font-bold text-white">Security Analysis</h4>
+            <h4 className="text-xl font-bold text-white">Security Analysis</h4>
             <p className="text-sm text-white/60">
               Honeypot vulnerability checks
             </p>
@@ -168,7 +168,7 @@ export default function HoneypotChecks({ isVisible, data, chain = "EVM" }) {
               key={key}
               className={gradientBorderCard}
             >
-              <div className={`${innerContent} p-4 flex items-start gap-3 group cursor-pointer`}>
+              <div className={`${innerContent} p-3 flex items-start gap-3 group cursor-pointer`}>
               <div className="flex items-start gap-3">
                 {/* Status dot */}
                 <div

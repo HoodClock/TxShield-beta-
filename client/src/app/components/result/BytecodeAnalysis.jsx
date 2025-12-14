@@ -15,14 +15,14 @@ export default function BytecodeAnalysis({
     <motion.div variants={itemVariants} className="group gradient-border-card">
       <button
         onClick={() => toggleSection("bytecode")}
-        className="card-inner p-6 sm:p-8 w-full"
+        className="card-inner p-4 sm:p-6 w-full"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 sm:gap-4">
             <div className="icon-wrapper">
               <FiCode className={`h-5 w-5 ${t.textPrimary}`} />
             </div>
-            <h2 className="text-lg sm:text-xl font-bold text-white text-left">
+            <h2 className="text-base sm:text-lg font-bold text-white text-left">
               Bytecode Analysis
             </h2>
           </div>
@@ -41,7 +41,7 @@ export default function BytecodeAnalysis({
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.3 }}
-          className="card-inner p-6 sm:p-8 pt-0 space-y-3"
+          className="card-inner p-4 sm:p-6 pt-0 space-y-2"
         >
           {isContract ? (
             warnings.length > 0 ? (

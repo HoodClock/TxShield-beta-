@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FiRadio, FiChevronDown, FiExternalLink } from "react-icons/fi";
+import { FiRadio, FiChevronDown, FiExternalLink, FiHash, FiArrowRight, FiArrowLeft, FiDollarSign, FiCalendar, FiLink } from "react-icons/fi";
 
 export default function RecentTransfers({
   itemVariants,
@@ -15,14 +15,14 @@ export default function RecentTransfers({
     <motion.div variants={itemVariants} className="group gradient-border-card">
       <button
         onClick={() => toggleSection("transfers")}
-        className="card-inner p-6 sm:p-8 w-full"
+        className="card-inner p-4 sm:p-6 w-full"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 sm:gap-4">
             <div className="icon-wrapper">
               <FiRadio className="h-5 w-5 text-pink-400" />
             </div>
-            <h2 className="text-lg sm:text-xl font-bold text-white text-left">
+            <h2 className="text-base sm:text-lg font-bold text-white text-left">
               Recent Transfers
             </h2>
           </div>
@@ -41,21 +41,29 @@ export default function RecentTransfers({
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.3 }}
-          className="card-inner p-6 sm:p-8 pt-0 overflow-x-auto no-scrollbar"
+          className="card-inner p-4 sm:p-6 pt-0 overflow-x-auto no-scrollbar"
         >
           <table className="w-full text-xs sm:text-sm">
             <thead>
               <tr className="border-b border-slate-700">
-                {["Hash", "From", "To", "Amount", "Date", "Action"].map(
-                  (header) => (
-                    <th
-                      key={header}
-                      className="text-left py-3 px-3 sm:px-4 text-slate-400 font-semibold"
-                    >
-                      {header}
-                    </th>
-                  )
-                )}
+                {[
+                  { label: "Hash", icon: <FiHash className="h-4 w-4" /> },
+                  { label: "From", icon: <FiArrowRight className="h-4 w-4" /> },
+                  { label: "To", icon: <FiArrowLeft className="h-4 w-4" /> },
+                  { label: "Amount", icon: <FiDollarSign className="h-4 w-4" /> },
+                  { label: "Date", icon: <FiCalendar className="h-4 w-4" /> },
+                  { label: "Action", icon: <FiLink className="h-4 w-4" /> },
+                ].map((header) => (
+                  <th
+                    key={header.label}
+                    className="text-left py-3 px-3 sm:px-4 text-slate-400 font-semibold"
+                  >
+                    <div className="flex items-center gap-2">
+                      {header.icon}
+                      {header.label}
+                    </div>
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>

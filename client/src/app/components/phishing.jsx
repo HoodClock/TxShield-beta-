@@ -108,11 +108,11 @@ const PhishingAnalysis = ({ data, chain = "EVM" }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
-      className="space-y-6 max-w-4xl mx-auto"
+      className="space-y-4 max-w-3xl mx-auto"
     >
       {/* Risk Header */}
       <div className="text-center mb-8">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-white">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-white">
           <span className={`${colors.textGradient} bg-clip-text text-transparent`}>
             Phishing Analysis
           </span>
@@ -126,11 +126,11 @@ const PhishingAnalysis = ({ data, chain = "EVM" }) => {
         animate={{ y: 0, opacity: 1 }}
         className={gradientBorderCard}
       >
-        <div className={`${innerContent} p-6 sm:p-8`}>
+        <div className={`${innerContent} p-4 sm:p-6`}>
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
             <div className="flex-1">
               <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">Risk Assessment</h3>
-              <div className="text-5xl sm:text-6xl font-bold mt-2" style={{
+              <div className="text-4xl sm:text-5xl font-bold mt-2" style={{
                 background: `linear-gradient(135deg, ${phishingScore > 70 ? '#ef4444' :
                   phishingScore > 30 ? '#f59e0b' :
                     '#10b981'}, ${phishingScore > 70 ? '#991b1b' :
@@ -189,7 +189,7 @@ const PhishingAnalysis = ({ data, chain = "EVM" }) => {
               transition={{ delay: index * 0.08 }}
               className={gradientBorderCard}
             >
-              <div className={`${innerContent} p-4 sm:p-5`}>
+              <div className={`${innerContent} p-3 sm:p-4`}>
                 <div className="flex items-start gap-3 sm:gap-4">
                   <div className={`mt-1 flex-shrink-0 text-lg font-bold ${check.isScam ? 'text-red-400' : 'text-emerald-400'
                     }`}>
