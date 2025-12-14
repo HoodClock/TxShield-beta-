@@ -34,12 +34,12 @@ export default function ResultsDashboard({
 
   // Use mock data for testing, real data when available
   // TESTING: Uncomment the next 3 lines to use mock data
-  const finalSimulation = mockSimulation;
-  const finalHoneypot = mockHoneypot;
-  const finalPhishing = mockPhishing;
-  // const finalSimulation = simulation;
-  // const finalHoneypot = honeypot;
-  // const finalPhishing = phishing;
+  // const finalSimulation = mockSimulation;
+  // const finalHoneypot = mockHoneypot;
+  // const finalPhishing = mockPhishing;
+  const finalSimulation = simulation;
+  const finalHoneypot = honeypot;
+  const finalPhishing = phishing;
 
   const [expandedSections, setExpandedSections] = useState({
     txDetails: true,
