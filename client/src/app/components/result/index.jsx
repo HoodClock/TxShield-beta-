@@ -135,7 +135,7 @@ export default function ResultsDashboard({
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-4 sm:p-6 lg:p-8 relative overflow-hidden">
+    <div className="min-h-screen bg-black text-white p-3 sm:p-4 lg:p-6 relative overflow-hidden">
       {/* Animated Background Orbs */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute top-20 right-1/4 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }}></div>
@@ -234,12 +234,12 @@ export default function ResultsDashboard({
       >
         {/* Header */}
         <motion.div variants={itemVariants} className="text-center mb-12 sm:mb-16">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
             <span className="grad-word">Security Analysis</span>
             <br />
             <span className="text-white">Report</span>
           </h1>
-          <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-3xl mx-auto px-4">
+          <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-3xl mx-auto px-4">
             Comprehensive blockchain transaction and contract security assessment
           </p>
         </motion.div>
@@ -309,7 +309,7 @@ export default function ResultsDashboard({
           className="max-w-7xl mx-auto space-y-8 sm:space-y-12 mt-12"
         >
             <div className="text-center">
-              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
                 <span className="grad-word">Honeypot & Security</span> Analysis
               </h2>
             </div>

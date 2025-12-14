@@ -42,31 +42,31 @@ function SimulateHeroSection({ onChainSelect }) {
                     <motion.button
                         onClick={() => onChainSelect("EVM")}
                         whileTap={{ scale: 0.98 }}
-                        transition={{ duration: 0.6 }}
-                        className="relative group simulate-chain-btn w-56 h-56 sm:w-64 sm:h-64 rounded-3xl overflow-hidden flex-shrink-0"
-                        style={{ perspective: 1000 }}
+                        whileHover={{ scale: 1.02 }}
+                        transition={{ duration: 0.4 }}
+                        className="relative group w-56 h-56 sm:w-64 sm:h-64 flex-shrink-0 p-[1px] rounded-3xl bg-gradient-to-br from-blue-500/30 via-blue-600/10 to-blue-400/5 shadow-2xl overflow-hidden"
                     >
-                        {/* EVM Gradient Background - Blue Dominant with Purple */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-[#627EEA] via-[#4A90E2] to-[#2E5BFF]"></div>
-                        
-                        {/* Glowing overlay - Reduced */}
-                        <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/8 to-cyan-500/6 opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
-                        
-                        {/* Faint shine on hover */}
-                        <div className="absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-500 simulate-btn-shine bg-gradient-to-r from-white/6 via-white/10 to-white/6 rounded-3xl"></div>
-                        
-                        {/* Content */}
-                        <div className="relative z-10 h-full flex flex-col items-center justify-center gap-4">
-                            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-white/12 rounded-full flex items-center justify-center backdrop-blur-sm group-hover:bg-white/20 transition-all duration-300">
-                                <img
-                                    src="https://assets.coingecko.com/coins/images/279/small/ethereum.png"
-                                    alt="Ethereum"
-                                    className="w-12 h-12 sm:w-14 sm:h-14 logo-spin"
-                                />
-                            </div>
-                            <div className="text-center">
-                                <h3 className="text-xl sm:text-2xl font-bold text-white">Ethereum</h3>
-                                <p className="text-white/80 text-sm mt-2">EVM Compatible</p>
+                        <div className="relative h-full w-full bg-black/90 backdrop-blur-xl rounded-[23px] p-6 flex flex-col items-center justify-center gap-4 overflow-hidden">
+                            {/* Ambient Backgrounds */}
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/20 rounded-full blur-[40px] -translate-y-1/2 translate-x-1/2 pointer-events-none group-hover:bg-blue-600/30 transition-all duration-500"></div>
+                            <div className="absolute bottom-0 left-0 w-32 h-32 bg-cyan-600/10 rounded-full blur-[40px] translate-y-1/2 -translate-x-1/2 pointer-events-none group-hover:bg-cyan-600/20 transition-all duration-500"></div>
+                            
+                            {/* Shine Effect */}
+                            <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 bg-gradient-to-r from-white/10 via-white/20 to-white/10"></div>
+
+                            {/* Content */}
+                            <div className="relative z-10 flex flex-col items-center justify-center gap-4">
+                                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-blue-500/10 border border-blue-500/20 rounded-full flex items-center justify-center backdrop-blur-sm group-hover:bg-blue-500/20 group-hover:border-blue-500/30 transition-all duration-300 shadow-inner shadow-blue-500/10">
+                                    <img
+                                        src="https://assets.coingecko.com/coins/images/279/small/ethereum.png"
+                                        alt="Ethereum"
+                                        className="w-10 h-10 sm:w-12 sm:h-12 logo-spin"
+                                    />
+                                </div>
+                                <div className="text-center">
+                                    <h3 className="text-xl sm:text-2xl font-bold text-white group-hover:text-blue-400 transition-colors">Ethereum</h3>
+                                    <p className="text-gray-400 text-sm mt-1 group-hover:text-gray-300 transition-colors">EVM Compatible</p>
+                                </div>
                             </div>
                         </div>
                     </motion.button>
@@ -75,31 +75,31 @@ function SimulateHeroSection({ onChainSelect }) {
                     <motion.button
                         onClick={() => onChainSelect("SOL")}
                         whileTap={{ scale: 0.98 }}
-                        transition={{ duration: 0.6 }}
-                        className="relative group simulate-chain-btn w-56 h-56 sm:w-64 sm:h-64 rounded-3xl overflow-hidden flex-shrink-0"
-                        style={{ perspective: 1000 }}
+                        whileHover={{ scale: 1.02 }}
+                        transition={{ duration: 0.4 }}
+                        className="relative group w-56 h-56 sm:w-64 sm:h-64 flex-shrink-0 p-[1px] rounded-3xl bg-gradient-to-br from-purple-500/30 via-purple-600/10 to-pink-400/5 shadow-2xl overflow-hidden"
                     >
-                        {/* SOL Gradient Background - Purple Dominant with Blue */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-[#9945FF] via-[#7B3FF2] to-[#5A25CC]"></div>
-                        
-                        {/* Glowing overlay - Reduced */}
-                        <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/8 to-purple-500/6 opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
-                        
-                        {/* Faint shine on hover */}
-                        <div className="absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-500 simulate-btn-shine bg-gradient-to-r from-white/6 via-white/10 to-white/6 rounded-3xl"></div>
-                        
-                        {/* Content */}
-                        <div className="relative z-10 h-full flex flex-col items-center justify-center gap-4">
-                            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-white/12 rounded-full flex items-center justify-center backdrop-blur-sm group-hover:bg-white/20 transition-all duration-300">
-                                <img
-                                    src="https://assets.coingecko.com/coins/images/4128/small/solana.png"
-                                    alt="Solana"
-                                    className="w-12 h-12 sm:w-14 sm:h-14 logo-spin"
-                                />
-                            </div>
-                            <div className="text-center">
-                                <h3 className="text-xl sm:text-2xl font-bold text-white">Solana</h3>
-                                <p className="text-white/80 text-sm mt-2">SOL Network</p>
+                        <div className="relative h-full w-full bg-black/90 backdrop-blur-xl rounded-[23px] p-6 flex flex-col items-center justify-center gap-4 overflow-hidden">
+                            {/* Ambient Backgrounds */}
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-purple-600/20 rounded-full blur-[40px] -translate-y-1/2 translate-x-1/2 pointer-events-none group-hover:bg-purple-600/30 transition-all duration-500"></div>
+                            <div className="absolute bottom-0 left-0 w-32 h-32 bg-pink-600/10 rounded-full blur-[40px] translate-y-1/2 -translate-x-1/2 pointer-events-none group-hover:bg-pink-600/20 transition-all duration-500"></div>
+                            
+                            {/* Shine Effect */}
+                            <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 bg-gradient-to-r from-white/10 via-white/20 to-white/10"></div>
+
+                            {/* Content */}
+                            <div className="relative z-10 flex flex-col items-center justify-center gap-4">
+                                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-purple-500/10 border border-purple-500/20 rounded-full flex items-center justify-center backdrop-blur-sm group-hover:bg-purple-500/20 group-hover:border-purple-500/30 transition-all duration-300 shadow-inner shadow-purple-500/10">
+                                    <img
+                                        src="https://assets.coingecko.com/coins/images/4128/small/solana.png"
+                                        alt="Solana"
+                                        className="w-10 h-10 sm:w-12 sm:h-12 logo-spin"
+                                    />
+                                </div>
+                                <div className="text-center">
+                                    <h3 className="text-xl sm:text-2xl font-bold text-white group-hover:text-purple-400 transition-colors">Solana</h3>
+                                    <p className="text-gray-400 text-sm mt-1 group-hover:text-gray-300 transition-colors">SOL Network</p>
+                                </div>
                             </div>
                         </div>
                     </motion.button>

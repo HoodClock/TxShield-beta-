@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FiGitBranch, FiChevronDown, FiZap } from "react-icons/fi";
+import { FiGitBranch, FiChevronDown, FiZap, FiType, FiHash, FiUser, FiUserCheck, FiTrendingUp, FiDollarSign } from "react-icons/fi";
 
 export default function TransactionDetails({
   itemVariants,
@@ -16,14 +16,14 @@ export default function TransactionDetails({
     <motion.div variants={itemVariants} className="group gradient-border-card">
       <button
         onClick={() => toggleSection("txDetails")}
-        className="card-inner p-6 sm:p-8 w-full"
+        className="card-inner p-4 sm:p-6 w-full"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 sm:gap-4">
             <div className="icon-wrapper">
               <FiGitBranch className="h-5 w-5 text-purple-400" />
             </div>
-            <h2 className="text-lg sm:text-xl font-bold text-white text-left">
+            <h2 className="text-base sm:text-lg font-bold text-white text-left">
               Transaction Details
             </h2>
           </div>
@@ -42,7 +42,7 @@ export default function TransactionDetails({
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.3 }}
-          className="card-inner p-6 sm:p-8 pt-0 space-y-6"
+          className="card-inner p-4 sm:p-6 pt-0 space-y-4"
         >
           {/* Transaction Details Fields */}
           <div className="space-y-5">
@@ -53,17 +53,25 @@ export default function TransactionDetails({
                   simulateData.transferType === "eth"
                     ? "Native ETH Transfer"
                     : "Token Transfer",
+                icon: <FiType className="h-4 w-4 text-gray-400 group-hover/item:text-gray-300 transition-colors" />,
               },
               {
                 label: "Amount",
                 value: `${simulateData.amount} ${simulateData.symbol}`,
+                icon: <FiHash className="h-4 w-4 text-gray-400 group-hover/item:text-gray-300 transition-colors" />,
               },
               {
                 label: "From",
                 value: simulateData.from,
                 mono: true,
+                icon: <FiUser className="h-4 w-4 text-gray-400 group-hover/item:text-gray-300 transition-colors" />,
               },
-              { label: "To", value: simulateData.to, mono: true },
+              { 
+                label: "To", 
+                value: simulateData.to, 
+                mono: true,
+                icon: <FiUserCheck className="h-4 w-4 text-gray-400 group-hover/item:text-gray-300 transition-colors" />, 
+              },
             ].map((item, idx) => (
               <motion.div
                 key={idx}
@@ -72,11 +80,14 @@ export default function TransactionDetails({
                 transition={{ delay: idx * 0.05 }}
                 className="group/item pb-4 border-b border-slate-700/30 last:pb-0 last:border-b-0"
               >
-                <label className="text-xs sm:text-sm font-medium text-gray-400 group-hover/item:text-gray-300 transition-colors">
-                  {item.label}
-                </label>
+                <div className="flex items-center gap-2 mb-1">
+                  {item.icon}
+                  <label className="text-xs sm:text-sm font-medium text-gray-400 group-hover/item:text-gray-300 transition-colors">
+                    {item.label}
+                  </label>
+                </div>
                 <p
-                  className={`text-white font-semibold mt-3 ${
+                  className={`text-white font-semibold mt-1 pl-6 ${
                     item.mono ? "font-mono text-xs sm:text-sm break-all" : ""
                   } group-hover/item:text-cyan-200 transition-colors`}
                 >
@@ -117,10 +128,13 @@ export default function TransactionDetails({
 
                 <div className="space-y-3 col-span-1">
                   <div className="flex flex-col">
-                    <span className="text-slate-400 text-xs sm:text-sm mb-1">
-                      Gas Price
-                    </span>
-                    <span className="text-white font-semibold text-sm sm:text-base">
+                    <div className="flex items-center gap-2 mb-1">
+                      <FiTrendingUp className="text-slate-400 h-4 w-4" />
+                      <span className="text-slate-400 text-xs sm:text-sm">
+                        Gas Price
+                      </span>
+                    </div>
+                    <span className="text-white font-semibold text-sm sm:text-base pl-6">
                       {simulateData?.gas?.priceGwei ?? "N/A"} Gwei
                     </span>
                   </div>
@@ -128,10 +142,13 @@ export default function TransactionDetails({
 
                 <div className="space-y-3 col-span-1">
                   <div className="flex flex-col">
-                    <span className="text-slate-400 text-xs sm:text-sm mb-1">
-                      Total Cost
-                    </span>
-                    <span className="text-yellow-400 font-bold text-sm sm:text-base">
+                    <div className="flex items-center gap-2 mb-1">
+                      <FiDollarSign className="text-slate-400 h-4 w-4" />
+                      <span className="text-slate-400 text-xs sm:text-sm">
+                        Total Cost
+                      </span>
+                    </div>
+                    <span className="text-yellow-400 font-bold text-sm sm:text-base pl-6">
                       {simulateData?.gas?.costUsd
                         ? `$${simulateData.gas.costUsd}`
                         : "N/A"}

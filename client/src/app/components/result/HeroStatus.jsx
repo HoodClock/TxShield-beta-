@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FiCheckCircle, FiXCircle } from "react-icons/fi";
+import { FiCheckCircle, FiXCircle, FiActivity, FiShield } from "react-icons/fi";
 
 export default function HeroStatus({ 
   itemVariants, 
@@ -25,7 +25,7 @@ export default function HeroStatus({
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5 }}
-                className={`flex items-center gap-4 p-5 rounded-xl border backdrop-blur-sm transition-all duration-300 ${
+                className={`flex items-center gap-4 p-4 rounded-xl border backdrop-blur-sm transition-all duration-300 ${
                   executionSuccess
                     ? "bg-emerald-500/10 border-emerald-500/20 hover:border-emerald-500/40"
                     : "bg-red-500/10 border-red-500/20 hover:border-red-500/40"
@@ -67,10 +67,13 @@ export default function HeroStatus({
               className="gradient-border-card"
             >
               <div className="card-inner p-4 sm:p-5">
-                <p className="text-slate-400 text-xs sm:text-sm mb-2">
-                  Gas Estimate
-                </p>
-                <p className="text-2xl sm:text-3xl font-bold text-yellow-400">
+                <div className="flex items-center gap-2 mb-2">
+                  <FiActivity className="text-yellow-400" />
+                  <p className="text-slate-400 text-xs sm:text-sm">
+                    Gas Estimate
+                  </p>
+                </div>
+                <p className="text-xl sm:text-2xl font-bold text-yellow-400">
                   {gasPercent}%
                 </p>
               </div>
@@ -83,10 +86,13 @@ export default function HeroStatus({
               className="gradient-border-card"
             >
               <div className="card-inner p-4 sm:p-5">
-                <p className="text-slate-400 text-xs sm:text-sm mb-2">
-                  Checks Passed
-                </p>
-                <p className="text-2xl sm:text-3xl font-bold text-purple-400">
+                <div className="flex items-center gap-2 mb-2">
+                  <FiShield className="text-purple-400" />
+                  <p className="text-slate-400 text-xs sm:text-sm">
+                    Checks Passed
+                  </p>
+                </div>
+                <p className="text-xl sm:text-2xl font-bold text-purple-400">
                   {ratioText}
                 </p>
               </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FiBarChart2, FiChevronDown, FiArrowRight } from "react-icons/fi";
+import { FiBarChart2, FiChevronDown, FiArrowRight, FiUpload, FiDownload } from "react-icons/fi";
 
 export default function BalanceChanges({
   itemVariants,
@@ -15,14 +15,14 @@ export default function BalanceChanges({
     <motion.div variants={itemVariants} className="group gradient-border-card">
       <button
         onClick={() => toggleSection("balances")}
-        className="card-inner p-6 sm:p-8 w-full"
+        className="card-inner p-4 sm:p-6 w-full"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 sm:gap-4">
             <div className="icon-wrapper">
               <FiBarChart2 className="h-5 w-5 text-cyan-400" />
             </div>
-            <h2 className="text-lg sm:text-xl font-bold text-white text-left">
+            <h2 className="text-base sm:text-lg font-bold text-white text-left">
               Balance Changes
             </h2>
           </div>
@@ -41,15 +41,18 @@ export default function BalanceChanges({
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.3 }}
-          className="card-inner p-6 sm:p-8 pt-0 sm:pt-0"
+          className="card-inner p-4 sm:p-6 pt-0 sm:pt-0"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Sender */}
             <div className="gradient-border-card">
               <div className="card-inner p-6 sm:p-8">
-                <h3 className="text-base sm:text-lg font-bold text-white mb-4">
-                  Sender
-                </h3>
+                <div className="flex items-center gap-3 mb-4">
+                  <FiUpload className="h-5 w-5 text-red-400" />
+                  <h3 className="text-sm sm:text-base font-bold text-white mb-4">
+                    Sender
+                  </h3>
+                </div>
                 <div className="space-y-3">
                   {[
                     {
@@ -97,9 +100,12 @@ export default function BalanceChanges({
             {/* Recipient */}
             <div className="gradient-border-card">
               <div className="card-inner p-6 sm:p-8">
-                <h3 className="text-base sm:text-lg font-bold text-white mb-4">
-                  Recipient
-                </h3>
+                <div className="flex items-center gap-3 mb-4">
+                  <FiDownload className="h-5 w-5 text-emerald-400" />
+                  <h3 class="text-sm sm:text-base font-bold text-white mb-4">
+                    Recipient
+                  </h3>
+                </div>
                 <div className="space-y-3">
                   {[
                     {

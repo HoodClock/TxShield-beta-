@@ -131,7 +131,7 @@ function keyMatrics({
           whileHover={{ y: -4, scale: 1.02 }}
           className={gradientBorderCard}
         >
-          <div className={innerContent + " p-6"}>
+          <div className={innerContent + " p-4"}>
             <div className="flex items-center justify-between mb-4">
               <div className={`p-3 rounded-xl ${theme.iconBg1}`}>
                 <FiShield className={`h-6 w-6 ${theme.iconText1}`} />
@@ -141,7 +141,7 @@ function keyMatrics({
             <h3 className="text-sm font-medium text-slate-400 mb-1">
               Risk Level
             </h3>
-            <p className={`text-2xl font-bold ${theme.textColor1}`}>{riskLevel}</p>
+            <p className={`text-xl font-bold ${theme.textColor1}`}>{riskLevel}</p>
           </div>
         </motion.div>
 
@@ -150,7 +150,7 @@ function keyMatrics({
           whileHover={{ y: -4, scale: 1.02 }}
           className={gradientBorderCard}
         >
-          <div className={innerContent + " p-6"}>
+          <div className={innerContent + " p-4"}>
           <div className="flex items-center justify-between mb-4">
             <div className={`p-3 rounded-xl ${theme.iconBg2}`}>
               <FiTarget className={`h-6 w-6 ${theme.iconText2}`} />
@@ -163,7 +163,7 @@ function keyMatrics({
             <span className="text-xs text-slate-500">{zoneName}</span>
           </h3>
 
-          <p className={`text-2xl font-bold ${theme.textColor2}`}>{total}/60</p>
+          <p className={`text-xl font-bold ${theme.textColor2}`}>{total}/60</p>
 
           {/* Dynamic Progress Bar */}
           <div className="mt-3 h-2 bg-slate-700 rounded-full overflow-hidden">
@@ -196,7 +196,7 @@ function keyMatrics({
           whileHover={{ y: -4, scale: 1.02 }}
           className={gradientBorderCard}
         >
-          <div className={innerContent + " p-6"}>
+          <div className={innerContent + " p-4"}>
             <div className="flex items-center justify-between mb-4">
               <div className={`p-3 rounded-xl ${theme.iconBg3}`}>
                 <FiCheck className={`h-6 w-6 ${theme.iconText3}`} />
@@ -204,7 +204,7 @@ function keyMatrics({
               <div className={`h-2 w-2 rounded-full ${theme.pulseColor3} animate-pulse`} />
             </div>
             <h3 className="text-sm font-medium text-slate-400 mb-1">Honeypot Pass Rate</h3>
-            <p className={`text-2xl font-bold ${theme.textColor3}`}>{passRate}</p>
+            <p className={`text-xl font-bold ${theme.textColor3}`}>{passRate}</p>
             <p className="text-sm text-slate-500 mt-1">
               {ratioText} checks passed
             </p>
