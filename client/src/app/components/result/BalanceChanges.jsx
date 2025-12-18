@@ -102,7 +102,7 @@ export default function BalanceChanges({
               <div className="card-inner p-6 sm:p-8">
                 <div className="flex items-center gap-3 mb-4">
                   <FiDownload className="h-5 w-5 text-emerald-400" />
-                  <h3 class="text-sm sm:text-base font-bold text-white mb-4">
+                  <h3 className="text-sm sm:text-base font-bold text-white mb-4">
                     Recipient
                   </h3>
                 </div>
