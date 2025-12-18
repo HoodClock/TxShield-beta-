@@ -157,13 +157,25 @@ export default function ResultsDashboard({
         }
 
         .gradient-border-card {
+          position: relative;
           padding: 1px;
           border-radius: 16px;
           background: linear-gradient(135deg, rgba(${t.rgbPrimary}, 0.5), rgba(${t.rgbSecondary}, 0.5));
+          isolation: isolate;
         }
-        .gradient-border-card:hover {
-          background: linear-gradient(135deg, rgba(${t.rgbPrimary}, 0.7), rgba(${t.rgbSecondary}, 0.7));
-          transition: all 0.3s ease;
+        .gradient-border-card::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          z-index: -1;
+          background: linear-gradient(135deg, rgba(${t.rgbPrimary}, 0.4), rgba(${t.rgbSecondary}, 0.4));
+          filter: blur(35px);
+          opacity: 0;
+          transition: opacity 0.5s ease;
+          border-radius: 16px;
+        }
+        .gradient-border-card:hover::before {
+          opacity: 0.35;
         }
         .card-inner {
           border-radius: 14px;
@@ -171,10 +183,7 @@ export default function ResultsDashboard({
           backdrop-filter: blur(10px);
           border: 1px solid rgba(${t.rgbPrimary}, 0.3);
           box-shadow: 0 14px 50px rgba(18, 24, 40, 0.4), inset 0 0 40px rgba(${t.rgbPrimary}, 0.02);
-          transition: background 0.3s ease, transform 0.3s ease;
-        }
-        .gradient-border-card:hover .card-inner {
-          background: rgba(10, 10, 15, 0.6);
+          transition: transform 0.3s ease;
         }
         .icon-wrapper {
           width: 48px;
