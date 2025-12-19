@@ -1,14 +1,14 @@
 const { isContract, getByteCode } = require("../../externals/etherscanService");
 const { decideChains } = require("../../../config/provider");
 const { ethers } = require("ethers");
-const {analyzeByteCode} = require("../simulation/index");
-const aiService = require("../../services/aiServices"); // an ai service which accepts the prompt (Deepseek R-1)
+const { analyzeByteCode } = require("../simulation/index");
+const aiService = require("../../externals/aiServices"); // an ai service which accepts the prompt (Deepseek R-1)
 
 const detectMaliciousProxy = async (_recepientAddress, currencySymbol) => {
-  
+
   const provider = decideChains(currencySymbol);
   const contractAddress = await isContract(_recepientAddress, currencySymbol);
-  
+
   if (!contractAddress)
     return {
       isProxy: false,

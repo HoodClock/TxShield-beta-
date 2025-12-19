@@ -1,4 +1,4 @@
-const callAiModel = require("../services/aiServices");
+const callAiModel = require("../../services/externals/aiServices");
 
 const generateRecommendataions = async (req, res) => {
   try {

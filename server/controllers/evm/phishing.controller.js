@@ -17,7 +17,7 @@ const MasterPhishingController = async (req, res) => {
 
     const [approveScam, etherForwarding, proxyScam, permitCheck, domainCheck] = await Promise.all([
       detectApprovalScam(normalUserAddress, normalContractAddress, currencySymbol),
-      detectEtherForwarding(normalContractAddress),
+      detectEtherForwarding(normalContractAddress, currencySymbol),
       detectMaliciousProxy(normalContractAddress, currencySymbol),
       detectPermitPhishing(normalContractAddress, currencySymbol),
       detectPhishingDomainLink(normalContractAddress, currencySymbol),

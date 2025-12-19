@@ -47,7 +47,7 @@ const detectEtherForwarding = async (checkSumRecepientAddress, currencySymbol) =
       checks: {
         callOpcodeCount: occurrences,
       },
-      address: recepientAddress,
+      address: checkSumRecepientAddress,
     };
   } catch (error) {
     console.error("Ether forwarding detection failed:", error);

@@ -1,4 +1,4 @@
-const { decideChains } = require("../../config/provider");
+const { decideChains } = require("../../../config/provider");
 const { getAddress } = require("ethers");
 
 const analyzeBytecode = async (_recipientAddress, _currencySymbol) => {
