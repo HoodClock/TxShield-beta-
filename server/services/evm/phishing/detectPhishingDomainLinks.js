@@ -1,6 +1,6 @@
 const { ethers } = require('ethers')
-const { getAbi, getByteCode } = require('../../services/etherscanService')
-const callAimodel = require('../../services/aiServices')
+const { getAbi, getByteCode } = require('../../externals/etherscanService')
+const callAimodel = require('../../externals/aiServices')
 const { decideChains } = require('../../../config/provider')
 const { extractStringsFromBytecode, extractUrls, safeFetch, parseAiResponse } = require('../../../utils/PhishingUtilities')
 const MAX_URLS_BATCH = 50;

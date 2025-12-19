@@ -15,7 +15,7 @@ const generateChacheKey = (payload) => {
     const stablePayloadString = sortedKey.map(key => `${key}: ${payload[key]}`).join('|');
 
     // using sha-256 to hash stablePayloadString
-    const hash = crypto.createHash('sha256').update(stablePayloadString()).digest('hex')
+    const hash = crypto.createHash('sha256').update(stablePayloadString).digest('hex')
 
     // return {prefix + hash}
     return `sim_tx${hash}`;

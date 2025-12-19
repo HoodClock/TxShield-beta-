@@ -1,7 +1,7 @@
-const { decideChains } = require("../../config/provider");
+const { decideChains } = require("../../../config/provider");
 const { ethers, recoverAddress } = require("ethers");
-const { isContract } = require("../../services/etherscanService");
-const { getTokenMeta } = require("../../services/getTokenMetaService");
+const { isContract } = require("../../externals/etherscanService");
+const { getTokenMeta } = require("../../externals/getTokenMetaService");
 const axios = require("axios");
 require("dotenv").config();
 const redisClient = require("../../../config/redisClient")
@@ -56,7 +56,7 @@ const _runSimulation = async (userAddress, recipientAddress, amount, currency) =
       transferType = "erc20";
     }
 
-    const recipientIsContract = await isContract(recipientAddress);
+    const recipientIsContract = await isContract(recipientAddress, currency);
     if (!tokenContract && recipientIsContract && currency !== "ETH") {
       tokenContract = new ethers.Contract(recipientAddress, [
         "function balanceOf(address) view returns (uint256)",

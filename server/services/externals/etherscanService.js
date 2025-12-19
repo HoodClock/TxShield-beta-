@@ -38,6 +38,8 @@ const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 const getAbi = async (address, chain) => {
 
   const checkSumAddress = getAddress(address);
+
+
   // generating formatted key
   const cacheKey = generateContractKey(chain, address, "abi")
 
@@ -78,6 +80,8 @@ const getAbi = async (address, chain) => {
 const getSourceCode = async (address, chain) => {
 
   const checkSumAddress = getAddress(address);
+
+
   const cacheKey = generateContractKey(chain, address, "sourcecode")
 
   const cacheSourcecode = await redisClient.get(cacheKey);
@@ -151,6 +155,7 @@ const getByteCode = async (address, chain) => {
 // check address -> contract or not (also apply the redis wrapper) 
 const isContract = async (address, chain) => {
   const checkSumAddress = getAddress(address);
+
   // formatted cache key
   const cacheKey = generateContractKey(chain, address, "isContract")
 

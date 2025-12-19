@@ -18,7 +18,7 @@ const honeypotMasterController = async (req, res) => {
     } = req.body;
 
     // check if it is really a contract
-    const contract_address = await isContract(contractAddress);
+    const contract_address = await isContract(contractAddress, currencySymbol);
 
     if (!contract_address) {
       return res.status(200).json({
@@ -27,6 +27,7 @@ const honeypotMasterController = async (req, res) => {
         verdict: "ℹ️ This is a wallet address. No contract risks detected.",
       });
     }
+
 
     // payload for normilizing addresses
     const addressesTobeNormalized = {
@@ -37,8 +38,15 @@ const honeypotMasterController = async (req, res) => {
     }
 
     const normalizedAddresses = normalizesAddresses(addressesTobeNormalized);
-
-    const validityOfPayload = evmHoneypotValidator(normalizedAddresses)
+    
+    // payload for validation
+    const validationPayload = {
+      ...normalizedAddresses,
+      value,
+      currencySymbol
+    }
+    // call the validator
+    const validityOfPayload = evmHoneypotValidator(validationPayload)
 
     if (!validityOfPayload.success) {
       return res.status(401).json(validityOfPayload.message);
