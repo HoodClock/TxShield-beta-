@@ -126,7 +126,7 @@ export default function HoneypotChecks({ isVisible, data, chain = "EVM" }) {
             <span className="w-2 h-2 bg-emerald-400 rounded-full mr-2"></span>
             <span className="text-xs font-medium">
               {
-                Object.values(checks).filter((c) => c?.data?.risk === false)
+                Object.values(checks).filter((c) => c?.risk === false)
                   .length
               }{" "}
               Secure
@@ -136,7 +136,7 @@ export default function HoneypotChecks({ isVisible, data, chain = "EVM" }) {
             <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
             <span className="text-xs font-medium">
               {
-                Object.values(checks).filter((c) => c?.data?.risk === true)
+                Object.values(checks).filter((c) => c?.risk === true)
                   .length
               }{" "}
               Vulnerable
@@ -148,9 +148,9 @@ export default function HoneypotChecks({ isVisible, data, chain = "EVM" }) {
       {/* Checks grid with severity indicators */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {Object.entries(checks).map(([key, result]) => {
-          const passed = result?.data ? !result.data.risk : false;
+          const passed = result ? !result.risk : false;
           const message =
-            result?.data?.message || result?.message || "Check completed";
+            result?.message || "Check completed";
 
           // Color mapping based on status
           const colors = passed
@@ -193,16 +193,16 @@ export default function HoneypotChecks({ isVisible, data, chain = "EVM" }) {
                   <p className="text-sm mt-1 text-white/70">{message}</p>
 
                   {/* Optional progress bar for checks with scores */}
-                  {result?.data?.score && (
+                  {result?.score && (
                     <div className="mt-2">
                       <div className="flex justify-between text-xs text-white/50 mb-1">
                         <span>Security score</span>
-                        <span>{result.data.score} {result.data.totalScore}</span>
+                        <span>{result.score} {result.totalScore}</span>
                       </div>
                       <div className="w-full bg-white/10 h-1 rounded-full overflow-hidden">
                         <div
                           className={`h-full ${colors.dot}`}
-                          style={{ width: `${result.data.score}%` }}
+                          style={{ width: `${result.score}%` }}
                         />
                       </div>
                     </div>

@@ -29,7 +29,9 @@ function StatsSection() {
 			title: 'Honeypot Scams',
 			value: 12.7,
 			suffix: 'M',
-			meta: '3,200+ cases'
+			meta: '3,200+ cases',
+            trend: "M0 25 C30 20, 60 28, 90 15 S150 5, 200 10",
+            color: "#EF4444" // red-500
 		},
 		{
 			id: 2,
@@ -37,7 +39,9 @@ function StatsSection() {
 			title: 'Advanced Threats',
 			value: 23.4,
 			suffix: 'M',
-			meta: '5,800+ cases'
+			meta: '5,800+ cases',
+            trend: "M0 28 C40 25, 80 15, 120 20 S180 5, 200 2",
+            color: "#F59E0B" // amber-500
 		},
 		{
 			id: 3,
@@ -45,7 +49,9 @@ function StatsSection() {
 			title: 'Revert Transactions',
 			value: 8.2,
 			suffix: 'M',
-			meta: 'ongoing'
+			meta: 'ongoing',
+            trend: "M0 20 C50 25, 100 15, 150 22 S190 8, 200 12",
+            color: "#3B82F6" // blue-500
 		}
 	]
 
@@ -70,30 +76,50 @@ function StatsSection() {
 				<motion.div variants={container} initial="hidden" animate={isInView ? 'show' : 'hidden'} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
 					{stats.map(s => (
 						<motion.div key={s.id} variants={card}>
-							<TiltedCard className="group rounded-xl bg-gradient-to-br from-white/5 via-white/4 to-white/3 border border-white/6 p-6 backdrop-blur-sm flex flex-col gap-4 h-full hover:border-purple-400/50 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300 relative overflow-hidden">
+							<TiltedCard className="group rounded-xl bg-gradient-to-br from-white/5 via-white/4 to-white/3 border border-white/6 p-6 backdrop-blur-sm flex flex-col justify-between h-full hover:border-purple-400/50 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300 relative overflow-hidden">
 								{/* Animated gradient overlay on hover */}
 								<div className="absolute inset-0 bg-gradient-to-br from-purple-500/0 via-cyan-500/0 to-purple-500/0 group-hover:from-purple-500/10 group-hover:via-cyan-500/10 group-hover:to-purple-500/10 transition-all duration-500"></div>
 								
-								<div className="flex items-center justify-between relative z-10">
-									<div className="inline-flex items-center gap-3">
-										<div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500/20 via-cyan-500/20 to-purple-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 relative">
-											{/* Glow effect */}
-											<div className="absolute inset-0 rounded-lg bg-gradient-to-br from-purple-400/30 to-cyan-400/30 opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-300"></div>
-											<div className="relative z-10">{s.icon}</div>
-										</div>
-										<div>
-											<div className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors">{s.title}</div>
-											<div className="text-xs text-gray-500">{s.meta}</div>
-										</div>
+								<div className="relative z-10 mb-4">
+									<div className="flex items-center justify-between mb-4">
+                                        <div className="inline-flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500/20 via-cyan-500/20 to-purple-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 relative">
+                                                {/* Glow effect */}
+                                                <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-purple-400/30 to-cyan-400/30 opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-300"></div>
+                                                <div className="relative z-10">{s.icon}</div>
+                                            </div>
+                                            <div>
+                                                <div className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors">{s.title}</div>
+                                                <div className="text-xs text-gray-500">{s.meta}</div>
+                                            </div>
+                                        </div>
 									</div>
-									<div className="text-right">
-										<div className="text-2xl font-bold bg-gradient-to-r from-white via-cyan-200 to-white bg-clip-text text-transparent group-hover:from-purple-300 group-hover:via-cyan-300 group-hover:to-purple-300 transition-all duration-300">
-											$<CountUp end={s.value} decimals={1} duration={1.8} />{s.suffix}
-										</div>
+									<div className="text-3xl font-bold bg-gradient-to-r from-white via-cyan-200 to-white bg-clip-text text-transparent group-hover:from-purple-300 group-hover:via-cyan-300 group-hover:to-purple-300 transition-all duration-300">
+										$<CountUp end={s.value} decimals={1} duration={1.8} />{s.suffix}
 									</div>
 								</div>
 
-								<div className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors relative z-10">Concise context copy that explains the metric and why it matters — short and unobtrusive.</div>
+                                {/* Trend Graph */}
+                                <div className="h-10 w-full relative z-10 opacity-60 group-hover:opacity-100 transition-opacity duration-300">
+                                    <svg viewBox="0 0 200 30" className="w-full h-full overflow-visible">
+                                        <defs>
+                                            <linearGradient id={`grad-${s.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
+                                                <stop offset="0%" stopColor={s.color} stopOpacity="0" />
+                                                <stop offset="100%" stopColor={s.color} stopOpacity="1" />
+                                            </linearGradient>
+                                        </defs>
+                                        <path 
+                                            d={s.trend} 
+                                            fill="none" 
+                                            stroke={`url(#grad-${s.id})`} 
+                                            strokeWidth="2" 
+                                            strokeLinecap="round"
+                                            className="drop-shadow-[0_0_4px_rgba(255,255,255,0.3)]"
+                                        />
+                                    </svg>
+                                </div>
+
+								<div className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors relative z-10 mt-2">Concise context copy that explains the metric and why it matters.</div>
 							</TiltedCard>
 						</motion.div>
 					))}

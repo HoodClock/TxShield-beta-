@@ -26,15 +26,15 @@ export default function SimulationForm({ onSimulateAll, backButtonHandler, onSwi
       recepientAddress: contractAddress,
       amount: amount,
       currencySymbol: currency,
+      currency: currency
     };
 
     // credentials for honeypot
     const honeypotData = {
-      address: contractAddress,
-      userAddress,
-      contractAddress,
-      tokenAddress: contractAddress,
-      recepientAddress: contractAddress,
+      normalAddress: userAddress,
+      normalcontractAddress: contractAddress,
+      normaltokenAddress: contractAddress,
+      normalrecepientAddress: contractAddress,
       value: amount,
       currencySymbol: currency,
     };
