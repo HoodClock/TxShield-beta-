@@ -104,41 +104,45 @@ function AnalysisSection() {
                     </p>
                 </motion.div>
 
-                {/* Dropdown playbook selector */}
-                <div className="max-w-3xl mx-auto mb-8 sm:mb-10 px-4 sm:px-6">
-                    <div className="relative">
-                        <button
-                            onClick={() => setOpen(!open)}
-                            className="w-full flex items-center justify-between gap-4 px-4 sm:px-5 py-3 rounded-xl bg-gradient-to-br from-white/5 via-white/4 to-white/3 border border-white/6 backdrop-blur-sm fancy-gradient-border subtle hover:border-purple-400/50 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300 group"
-                        >
-                            <div className="text-left flex-1 min-w-0">
-                                <div className="text-xs sm:text-sm text-gray-400 group-hover:text-gray-300 transition-colors">Select Playbook</div>
-                                <div className="text-base sm:text-lg font-semibold text-white truncate group-hover:text-cyan-200 transition-colors">{selectedPlaybook.title}</div>
-                            </div>
-                            <div className="text-gray-400 flex-shrink-0 group-hover:text-purple-400 transition-colors transform group-hover:scale-110 transition-transform">{open ? '▴' : '▾'}</div>
-                        </button>
-
-                        <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={open ? 'show' : 'hidden'}
-                            variants={panelVariants}
-                            className="absolute left-0 right-0 mt-3 z-20 fancy-dropdown"
-                        >
-                            <div className="fancy-inner rounded-xl bg-white/4 border border-white/6 backdrop-blur-sm shadow-md">
-                                {playbooks.map(pb => (
-                                    <button
-                                        key={pb.id}
-                                        onClick={() => { setSelected(pb.id); setOpen(false); }}
-                                        className={`w-full text-left px-4 py-3 rounded-md mb-2 transition fancy-gradient-border subtle ${selected === pb.id ? 'bg-white/6 border-white/10' : 'hover:bg-white/5'}`}
-                                    >
-                                        <div className="flex items-center justify-between">
-                                            <div className="text-sm text-gray-300">{pb.title}</div>
-                                            <div className="text-xs text-gray-400">{pb.id === 'honeypot' ? '4 step process' : '4 step process'}</div>
-                                        </div>
-                                    </button>
-                                ))}
-                            </div>
-                        </motion.div>
+                {/* Tab Switcher */}
+                <div className="flex justify-center mb-8 sm:mb-10 px-4">
+                    <div className="bg-white/5 p-1 rounded-xl border border-white/10 flex items-center gap-1 backdrop-blur-sm">
+                        {playbooks.map((pb) => (
+                            <button
+                                key={pb.id}
+                                onClick={() => setSelected(pb.id)}
+                                className={`relative px-6 py-2.5 rounded-lg text-sm sm:text-base font-medium transition-all duration-300 ${
+                                    selected === pb.id
+                                        ? "text-white shadow-lg"
+                                        : "text-gray-400 hover:text-white hover:bg-white/5"
+                                }`}
+                            >
+                                {selected === pb.id && (
+                                    <motion.div
+                                        layoutId="activeTab"
+                                        className={`absolute inset-0 rounded-lg bg-gradient-to-r ${
+                                            pb.id === 'honeypot' 
+                                            ? 'from-red-600/20 to-orange-600/20 border border-red-500/50' 
+                                            : 'from-blue-600/20 to-cyan-600/20 border border-blue-500/50'
+                                        }`}
+                                        initial={false}
+                                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                                    />
+                                )}
+                                <span className="relative z-10 flex items-center gap-2">
+                                    {pb.id === 'honeypot' ? (
+                                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                        </svg>
+                                    ) : (
+                                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                                        </svg>
+                                    )}
+                                    {pb.title}
+                                </span>
+                            </button>
+                        ))}
                     </div>
                 </div>
 
@@ -154,7 +158,7 @@ function AnalysisSection() {
                             <div className="flex-1 w-full">
                                 <div className="text-xs sm:text-sm text-gray-400 mb-1">{selectedPlaybook.title}</div>
                                 <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3">Overview</h3>
-                                <p className="text-gray-400 mb-4 text-sm sm:text-base">A concise breakdown of the main stages. Expand the dropdown to switch playbooks.</p>
+                                <p className="text-gray-400 mb-4 text-sm sm:text-base">A concise breakdown of the main stages. Switch between playbooks above to see different attack vectors.</p>
 
                                 <div className="space-y-3 sm:space-y-4">
                                     {(selectedPlaybook.steps || []).map((step, i) => (
