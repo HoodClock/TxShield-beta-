@@ -40,30 +40,8 @@ const TiltedCard = ({ children, className = "" }) => {
       }}
       className={`relative ${className}`}
     >
-      {/* Chroma Grid Background */}
-      <div
-        className="absolute inset-0 rounded-xl overflow-hidden pointer-events-none"
-        style={{
-          background: `
-            linear-gradient(90deg, rgba(34, 211, 238, 0.1) 1px, transparent 1px),
-            linear-gradient(rgba(34, 211, 238, 0.1) 1px, transparent 1px)
-          `,
-          backgroundSize: '50px 50px',
-          animation: 'chromaGrid 20s linear infinite',
-        }}
-      />
-
-      {/* Gradient Border Light */}
-      <div
-        className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        style={{
-          background: `radial-gradient(500px circle at 50% 50%, rgba(34, 211, 238, 0.1), transparent 80%)`,
-          pointerEvents: 'none',
-        }}
-      />
-
       {/* Content */}
-      <div className="relative z-10">
+      <div className="relative z-10 h-full">
         {children}
       </div>
     </div>
