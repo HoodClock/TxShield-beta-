@@ -910,3 +910,32 @@ div > section:first-child {
     padding: 1.5rem;
   }
 }
+
+@keyframes draw-line {
+  0% { stroke-dashoffset: 1000; }
+  100% { stroke-dashoffset: 0; }
+}
+
+.animate-draw {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: draw-line 4s linear infinite;
+}
+
+@keyframes graph-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-graph-scroll {
+  animation: graph-scroll 10s linear infinite;
+}
+
+@keyframes graph-scroll-triple {
+  0% { transform: translateX(-33.3333%); }
+  100% { transform: translateX(-66.6666%); }
+}
+
+.animate-graph-scroll-triple {
+  animation: graph-scroll-triple 10s linear infinite;
+}

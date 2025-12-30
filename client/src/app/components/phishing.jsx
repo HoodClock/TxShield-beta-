@@ -55,7 +55,9 @@ const PhishingAnalysis = ({ data, chain = "EVM" }) => {
     transition-all duration-300
   `;
 
-  const { checks, phishingVerdict } = data;
+  const { checks: oldChecks, phishingVerdict: oldVerdict, details, riskSummery } = data;
+  const checks = details || oldChecks || {};
+  const phishingVerdict = riskSummery || oldVerdict;
 
   // Safely parse the verdict
   let verdict = phishingVerdict;
@@ -78,11 +80,14 @@ const PhishingAnalysis = ({ data, chain = "EVM" }) => {
     }
   }
 
-  const { phishingScore = 0, riskLevel = "unknown", keyFindings = [], recommendedActions = [] } = verdict;
+  const { phishingScore = 0, riskLevel = "unknown", keyFindings = [], recommendedActions = [] } = verdict || {};
 
   // Process all security checks
   const securityChecks = Object.entries(checks).map(([checkName, check]) => {
-    if (!check.success) return null;
+    // If check has a success flag and it's false, skip? 
+    // New backend doesn't seem to wrap in success flag for individual checks, 
+    // but let's keep the check if it exists.
+    if (check.success === false) return null;
 
     const formattedName = checkName
       .replace(/([A-Z])/g, ' $1')
@@ -91,11 +96,11 @@ const PhishingAnalysis = ({ data, chain = "EVM" }) => {
 
     return {
       name: formattedName,
-      isScam: check.data?.isScam || false,
-      confidence: check.data?.confidence || "none",
-      reason: check.data?.reason || "No issues found",
-      details: check.data?.checks || null,
-      address: check.data?.address || null
+      isScam: check.isScam !== undefined ? check.isScam : (check.data?.isScam || false),
+      confidence: check.confidence || check.data?.confidence || "none",
+      reason: check.reason || check.data?.reason || "No issues found",
+      details: check.details || check.data?.checks || null,
+      address: check.address || check.data?.address || null
     };
   }).filter(Boolean);
 
