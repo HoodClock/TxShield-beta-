@@ -211,7 +211,9 @@ const getSimulate = async (userAddress, recipientAddress, amount, currency) => {
 
   // setting cache only if successful
   if (simResult && simResult.success) {
-    await redisClient.set(cacheKey, JSON.stringify(simResult), 'EX', Number(EXPIRY_SECONDS))
+    await redisClient.set(cacheKey, JSON.stringify(simResult), {
+      'EX': parseInt(EXPIRY_SECONDS)
+    })
   }
 
   return simResult

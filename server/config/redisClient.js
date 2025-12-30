@@ -16,6 +16,7 @@ client.on('connect', () => {
     console.log(`[Redis] Connected successfully to DB ${REDIS_DB}`);
 });
 
+
 client.on('error', (err) => {
     console.error('[Redis] Connection Error:', err.message);
     // In a production environment, degrade service here

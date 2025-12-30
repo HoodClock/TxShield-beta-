@@ -66,7 +66,9 @@ const getAbi = async (address, chain) => {
       const abi = JSON.parse(response.data.result);
 
       // saving the response to redis and returning it
-      await redisClient.set(cacheKey, JSON.stringify(abi), 'EX', REDIS_EXPIRY_SECONDS)
+      await redisClient.set(cacheKey, JSON.stringify(abi), {
+        'EX': parseInt(REDIS_EXPIRY_SECONDS)
+      })
       return abi
     }
     return null
@@ -103,7 +105,9 @@ const getSourceCode = async (address, chain) => {
       const sourceCode = response.data.result;
 
       // saving it to redis
-      await redisClient.set(cacheKey, JSON.stringify(sourceCode), 'EX', REDIS_EXPIRY_SECONDS);
+      await redisClient.set(cacheKey, JSON.stringify(sourceCode), {
+        'EX': parseInt(REDIS_EXPIRY_SECONDS)
+      });
       return sourceCode
     }
     return null
@@ -144,7 +148,9 @@ const getByteCode = async (address, chain) => {
     const byteCode = response.data?.result || "";
 
     // saving this bytecode to redis
-    await redisClient.set(cacheKey, JSON.stringify(byteCode), 'EX', REDIS_EXPIRY_SECONDS)
+    await redisClient.set(cacheKey, JSON.stringify(byteCode), {
+      'EX': parseInt(REDIS_EXPIRY_SECONDS)
+    })
     return byteCode
   } catch (err) {
     console.error("Error fetching bytecode:", err.message);
@@ -169,7 +175,9 @@ const isContract = async (address, chain) => {
     const result = code && code != "0x";
 
     // now save to redis
-    await redisClient.set(cacheKey, String(result), 'EX', REDIS_EXPIRY_SECONDS)
+    await redisClient.set(cacheKey, String(result), {
+      'EX': parseInt(REDIS_EXPIRY_SECONDS)
+    })
     return result
   } catch (err) {
     console.error("Error checking contract:", err.message);
