@@ -33,16 +33,25 @@ function HeroSection() {
                                     className="flex items-center justify-center mb-6 sm:mb-8 pointer-events-auto"
                                     style={{ margin: '0 auto' }}
                                 >
-                                    <div className="relative h-24 sm:h-28 md:h-32 w-auto flex items-center justify-center transition-all duration-300">
+                                    <motion.div 
+                                        className="relative h-24 sm:h-28 md:h-32 w-auto flex items-center justify-center transition-all duration-300"
+                                        animate={{ scale: [1, 1.05, 1] }}
+                                        transition={{ 
+                                            duration: 4, 
+                                            repeat: Infinity, 
+                                            ease: "easeInOut" 
+                                        }}
+                                    >
+                                        <div className="absolute inset-0 bg-cyan-500/20 blur-3xl rounded-full opacity-50 animate-pulse"></div>
                                         <img
                                             src="/Images/logo.png"
                                             alt="Shield Logo"
-                                            className="h-full w-auto object-contain"
+                                            className="h-full w-auto object-contain relative z-10 drop-shadow-[0_0_15px_rgba(6,182,212,0.5)]"
                                         />
-                                    </div>
+                                    </motion.div>
                                 </Link>
                 <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold mb-4 sm:mb-6 tracking-tight px-2">
-                    <span className="bg-clip-text text-transparent grad-word ">
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 animate-gradient-x">
                         SHIELD
                     </span>
                     <br />

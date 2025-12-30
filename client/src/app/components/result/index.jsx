@@ -86,10 +86,9 @@ export default function ResultsDashboard({
   const riskStyle = getRiskStyle(riskLevel);
 
   // --- Simulation Data ---
-  const simulateTxData = finalSimulation?.checks?.simulateTx || {};
-  const simulateData = simulateTxData.data || {};
-  const byteData = finalSimulation?.checks?.byteCode?.data || {};
-  const txHistoryData = finalSimulation?.checks?.transactionHistory?.data || {};
+  const simulateData = finalSimulation?.checks?.simulateResult || {};
+  const byteData = finalSimulation?.checks?.byteCodeResult || {};
+  const txHistoryData = finalSimulation?.checks?.transactionHistoryResult || {};
 
   const executionSuccess = simulateData.success ?? false;
   const executionMessage = executionSuccess
