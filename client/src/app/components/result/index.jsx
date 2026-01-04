@@ -14,6 +14,7 @@ import Recommendations from "../recomendations";
 import HeroStatus from "./HeroStatus";
 import TransactionDetails from "./TransactionDetails";
 import BalanceChanges from "./BalanceChanges";
+import BackToSimulate from "./BackToSimulate";
 import RecentTransfers from "./RecentTransfers";
 import TransactionSummary from "./TransactionSummary";
 import BytecodeAnalysis from "./BytecodeAnalysis";

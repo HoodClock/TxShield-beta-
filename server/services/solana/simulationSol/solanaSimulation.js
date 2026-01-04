@@ -5,209 +5,140 @@ const {
   VersionedTransaction,
 } = require("@solana/web3.js");
 const { decideChains } = require("../../../config/provider");
-const { getMint } = require("@solana/spl-token")
-const { checkTokenMetaDataIntegrity } = require("./advancedChecks")
-
+const { getMint } = require("@solana/spl-token");
 
 const simulateSolTranscation = async (_signedTxBase64, _userAddress, _contractAddress, _amount, _currencySymbol) => {
   try {
     const provider = decideChains(_currencySymbol);
+    if (!provider) throw new Error("Invalid provider configuration");
 
-    if (!provider || !provider.simulateTransaction) {
-      throw new Error("Invalid provider configuration");
-    }
-
-    // Validate and deserialize transaction
-    if (!_signedTxBase64) {
-      throw new Error("Signed transaction is required");
-    }
-
-    const txBuffer = Buffer.from(_signedTxBase64, "base64")
+    // Deserialization Logic
+    const txBuffer = Buffer.from(_signedTxBase64, "base64");
     let tx;
     try {
       tx = VersionedTransaction.deserialize(txBuffer);
-    } catch (VersionedError) {
+    } catch {
       try {
-        // its fall-back
         tx = Transaction.from(txBuffer);
-      } catch (legacyError) {
-        console.error("Both transaction deserialization failed:", {
-          versionedError: versionedError.message,
-          legacyError: legacyError.message
-        });
-        throw new Error("Invalid transaction format - neither Versioned nor Legacy");
+      } catch (err) {
+        throw new Error("Invalid transaction format: Failed to deserialize.");
       }
     }
 
-    let userWalletPublicKey, contractPublicKey;
-    try {
-      userWalletPublicKey = new PublicKey(_userAddress);
-      contractPublicKey = new PublicKey(_contractAddress);
-    } catch (pubKeyError) {
-      throw new Error(`Invalid public key: ${pubKeyError.message}`);
-    }
+    const userWalletPublicKey = new PublicKey(_userAddress);
+    const contractPublicKey = new PublicKey(_contractAddress);
 
-
-    // make sure contract exists on solana
+    // Pre-Simulation Checks
     const existence = await contractExistenceCheck(contractPublicKey, provider);
-    if (!existence.exists) {
-      return { success: false, message: "Contract does not exist on Solana" };
-    }
-
-    // program type check
-    let programType = existence.isProgram
+    const programType = existence.isProgram
       ? await programTypeDetection(contractPublicKey, provider)
-      : "Regular account (not Executable)";
+      : "Regular account";
 
-    // mint authority (only for SPL)
     let mintDetail = null;
-    if (programType === "SPL Token Program") {
+    if (programType.includes("Token Program")) {
       mintDetail = await mintAuthorityCheck(contractPublicKey, provider);
     }
 
-    // mint address for advanced Checks
-    let mintAddress = null;
-    if (programType === "SPL Token Program" && mintDetail?.mintAuthority !== undefined) {
-      mintAddress = _contractAddress
-    }
+    // Execution (The Simulation)
+    // replaceRecentBlockhash: true is the KEY to simulate with 0 SOL
+    const simulationOptions = {
+      sigVerify: false,
+      commitment: 'confirmed',
+      replaceRecentBlockhash: true
+    };
 
-    const advancedCheckResponse = mintAddress
-      ? await checkTokenMetaDataIntegrity(provider, mintAddress)
-      : { error: "Not an SPL token mint" }
+    const result = await provider.simulateTransaction(tx, simulationOptions);
+    const simValue = result.value;
 
-    // balance check
+    if (!simValue) throw new Error("Simulation returned empty response.");
+
+    // Forensics & Balance Extraction
+    // We capture the state change of the user wallet specifically
     const balance = await accountBalanceCheck(userWalletPublicKey, provider);
-
-    // Actual simulate transaction signed by frontend wallet
-    let result;
-    try {
-      result = await provider.simulateTransaction(tx, {
-        sigVerify: false, // since it’s signed on frontend
-        commitment: 'confirmed'
-      });
-
-    } catch (simError) {
-      console.error("Simulation failed:", simError);
-      throw new Error(`Transaction simulation failed: ${simError.message}`);
-    }
-
-
-    // parse results
-    const computeUnits = result.value?.unitsConsumed || null;
-    const programCall = parseProgramCall(result.value?.logs);
-    const txError = result.value?.err || null;
-    const parsedLogs = result.value?.logs || [];
-
-    // rent exemption
-    const rentExemption = await rentExemptionCheck(contractPublicKey, provider);
 
     return {
       success: true,
-      message: "Transaction simulated successfully",
+      message: "Simulation Completed",
       contract: contractPublicKey.toBase58(),
       programType,
       mintDetail,
       balance,
-      computeUnits,
-      programCall,
-      txError,
-      parsedLogs,
-      rentExemption,
-      advancedChecks: advancedCheckResponse
+      computeUnits: simValue.unitsConsumed || 0,
+      programCall: parseProgramCall(simValue.logs),
+      txError: simValue.err,
+      parsedLogs: simValue.logs || [],
+      // Essential for sumUpAllFeatures forensics:
+      accounts: tx.message.staticAccountKeys || [],
+      preBalances: [], // Placeholder: handled by connection in sumUpAllFeatures
+      postBalances: simValue.accounts || [],
+      rentExemption: await rentExemptionCheck(contractPublicKey, provider)
     };
 
   } catch (error) {
-    console.error("Error in simulateSolTranscation:", error);
+    console.error("Simulation BEAST Error:", error.message);
     return { success: false, message: error.message };
   }
 };
 
-
 // =======================
-// 🔧 HELPER FUNCTIONS
+// HELPER FUNCTIONS (Optimized)
 // =======================
 
-// Check if contract exists and executable
-const contractExistenceCheck = async (c_address, provider) => {
-  try {
-    const cPubKey = new PublicKey(c_address);
-    const accountStatus = await provider.getAccountInfo(cPubKey);
-
-    if (!accountStatus) return { exists: false, isProgram: false };
-    return { exists: true, isProgram: accountStatus.executable === true };
-  } catch (error) {
-    return { exists: false, isProgram: false, error: error.message };
-  }
+const contractExistenceCheck = async (cPubKey, provider) => {
+  const accountStatus = await provider.getAccountInfo(cPubKey);
+  return { exists: !!accountStatus, isProgram: accountStatus?.executable === true };
 };
 
-// Detect program type
-const programTypeDetection = async (c_address, provider) => {
-  try {
-    const cPubKey = new PublicKey(c_address);
-    const accountInfo = await provider.getAccountInfo(cPubKey);
+const programTypeDetection = async (cPubKey, provider) => {
+  const knownPrograms = {
+    "11111111111111111111111111111111": "System Program",
+    "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA": "SPL Token Program",
+    "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb": "Token-2022 Program",
+    "ComputeBudget111111111111111111111111111111": "Compute Budget"
+  };
+  const addr = cPubKey.toBase58();
+  if (knownPrograms[addr]) return knownPrograms[addr];
 
-    if (!accountInfo) return "Invalid Address";
-    if (!accountInfo.executable) return "Not a program (data account)";
-
-    const knownPrograms = {
-      "11111111111111111111111111111111": "System Program",
-      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA": "SPL Token Program",
-      "Stake11111111111111111111111111111111111111": "Stake Program",
-      "Vote111111111111111111111111111111111111111": "Vote Program"
-    };
-
-    return knownPrograms[c_address] || "Custom Program";
-  } catch (error) {
-    return `Error: ${error.message}`;
-  }
+  const info = await provider.getAccountInfo(cPubKey);
+  return info?.executable ? "Custom Program" : "Data Account";
 };
 
-// Mint authority check for SPL tokens
-const mintAuthorityCheck = async (c_address, provider) => {
+const mintAuthorityCheck = async (cPubKey, provider) => {
   try {
-    const minPubKey = new PublicKey(c_address);
-    const mintInfo = await getMint(provider, minPubKey);
+    const mintInfo = await getMint(provider, cPubKey);
     return {
       mintAuthority: mintInfo.mintAuthority?.toBase58() || null,
-      freezeAuthority: mintInfo.freezeAuthority?.toBase58() || null
+      freezeAuthority: mintInfo.freezeAuthority?.toBase58() || null,
+      decimals: mintInfo.decimals
     };
-  } catch (error) {
-    return { error: error.message };
-  }
+  } catch { return null; }
 };
 
-// Check account balance
-const accountBalanceCheck = async (_userAddress, _provider) => {
-  try {
-    const userPubKey = new PublicKey(_userAddress);
-    const totalBalance = await _provider.getBalance(userPubKey);
-    return totalBalance / LAMPORTS_PER_SOL;
-  } catch (error) {
-    return { error: error.message };
-  }
+const accountBalanceCheck = async (pubKey, provider) => {
+  const bal = await provider.getBalance(pubKey);
+  return bal / LAMPORTS_PER_SOL;
 };
 
-// Parse invoked programs from logs
 const parseProgramCall = (logs = []) => {
-  return logs
-    ?.filter(l => l.includes("invoke"))
-    .map(l => l.split("invoke")[1]?.trim()) || [];
+  return [...new Set(
+    logs
+      .filter(l => l.includes("invoke") && l.includes("Program"))
+      .map(l => {
+        const parts = l.split("Program ");
+        if (parts.length > 1) {
+          return parts[1].split(" invoke")[0].trim();
+        }
+        return null;
+      })
+      .filter(addr => addr !== null)
+  )];
 };
 
-// Rent exemption status
-const rentExemptionCheck = async (accountPubKey, provider) => {
-  try {
-    const accountInfo = await provider.getAccountInfo(accountPubKey);
-    if (!accountInfo) return { exists: false, rentExempt: false };
-
-    const rentMin = await provider.getMinimumBalanceForRentExemption(accountInfo.data.length);
-    return {
-      exists: true,
-      rentExempt: accountInfo.lamports >= rentMin
-    };
-  } catch (error) {
-    return { exists: false, rentExempt: false, error: error.message };
-  }
+const rentExemptionCheck = async (pubKey, provider) => {
+  const info = await provider.getAccountInfo(pubKey);
+  if (!info) return { exists: false, rentExempt: false };
+  const min = await provider.getMinimumBalanceForRentExemption(info.data.length);
+  return { exists: true, rentExempt: info.lamports >= min };
 };
 
 module.exports = { simulateSolTranscation };

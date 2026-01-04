@@ -1,3 +1,4 @@
+
 module.exports = {
-    solSimualtion: require('./solanaSimulation')
+    sumUpAllFeatures: require('./sumUpallFeatures')
 }
