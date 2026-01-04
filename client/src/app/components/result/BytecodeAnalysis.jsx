@@ -8,9 +8,12 @@ export default function BytecodeAnalysis({
   toggleSection,
   expandedSections,
   isContract,
+  byteData,
   warnings,
   t,
 }) {
+  const { isScam, confidence, reason } = byteData || {};
+
   return (
     <motion.div variants={itemVariants} className="group gradient-border-card">
       <button
@@ -41,32 +44,58 @@ export default function BytecodeAnalysis({
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.3 }}
-          className="card-inner p-4 sm:p-6 pt-0 space-y-2"
+          className="card-inner p-4 sm:p-6 pt-0 space-y-4"
         >
           {isContract ? (
-            warnings.length > 0 ? (
-              warnings.map((warning, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, x: 10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.05 }}
-                  className="flex items-start gap-3 p-3 bg-red-500/10 border border-red-500/20 rounded-lg hover:border-red-500/40 hover:bg-red-500/15 transition-all duration-200"
-                >
-                  <FiAlertTriangle className="h-4 w-4 text-red-400 mt-0.5 flex-shrink-0" />
-                  <span className="text-red-300 text-xs sm:text-sm">
-                    {warning}
+            <>
+              {/* Verdict Summary */}
+              <div className={`p-4 rounded-xl border ${isScam ? 'bg-red-500/10 border-red-500/30' : 'bg-emerald-500/10 border-emerald-500/30'}`}>
+                <div className="flex justify-between items-center mb-2">
+                  <span className={`text-sm font-bold ${isScam ? 'text-red-400' : 'text-emerald-400'}`}>
+                    {isScam ? 'POTENTIAL SCAM DETECTED' : 'CLEAN CONTRACT'}
                   </span>
-                </motion.div>
-              ))
-            ) : (
-              <div className="flex items-center gap-3 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg hover:border-emerald-500/40 hover:bg-emerald-500/15 transition-all duration-200">
-                <FiCheck className="h-4 w-4 text-emerald-400 flex-shrink-0" />
-                <span className="text-emerald-300 text-xs sm:text-sm">
-                  No dangerous opcodes detected
-                </span>
+                  {confidence && (
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase font-bold ${
+                      confidence.toLowerCase() === 'high' ? 'bg-red-500/20 text-red-400' : 
+                      confidence.toLowerCase() === 'medium' ? 'bg-yellow-500/20 text-yellow-400' : 
+                      'bg-emerald-500/20 text-emerald-400'
+                    }`}>
+                      {confidence} Confidence
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-gray-300 leading-relaxed">
+                  {reason || 'No suspicious patterns found in bytecode analysis.'}
+                </p>
               </div>
-            )
+
+              {/* Detailed Warnings */}
+              <div className="space-y-2">
+                {warnings.length > 0 ? (
+                  warnings.map((warning, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, x: 10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.05 }}
+                      className="flex items-start gap-3 p-3 bg-white/5 border border-white/10 rounded-lg hover:border-white/20 transition-all duration-200"
+                    >
+                      <FiAlertTriangle className="h-4 w-4 text-amber-400 mt-0.5 flex-shrink-0" />
+                      <span className="text-gray-300 text-xs sm:text-sm">
+                        {warning}
+                      </span>
+                    </motion.div>
+                  ))
+                ) : (
+                  <div className="flex items-center gap-3 p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-lg">
+                    <FiCheck className="h-4 w-4 text-emerald-400 flex-shrink-0" />
+                    <span className="text-emerald-300 text-xs sm:text-sm">
+                      No dangerous opcodes detected
+                    </span>
+                  </div>
+                )}
+              </div>
+            </>
           ) : (
             <div className="flex items-center gap-3 p-4 bg-slate-700/30 border border-slate-600/50 rounded-lg hover:border-slate-600/80 hover:bg-slate-700/40 transition-all duration-200">
               <FiInfo className="h-4 w-4 text-slate-400 flex-shrink-0" />
