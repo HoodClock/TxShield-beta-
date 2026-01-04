@@ -17,7 +17,8 @@ import BalanceChanges from "./BalanceChanges";
 import RecentTransfers from "./RecentTransfers";
 import TransactionSummary from "./TransactionSummary";
 import BytecodeAnalysis from "./BytecodeAnalysis";
-import BackToSimulate from "./BackToSimulate";
+import SolanaDetails from "./SolanaDetails";
+import SolanaLogs from "./SolanaLogs";
 import { mockSimulation, mockHoneypot, mockPhishing, getRiskStyle, themes } from "./utils";
 
 export default function ResultsDashboard({
@@ -25,6 +26,7 @@ export default function ResultsDashboard({
   simulation,
   honeypot,
   phishing,
+  solSimulation,
   onGenerateRecommendation,
   recommendationData,
   chain = "EVM",
@@ -40,6 +42,7 @@ export default function ResultsDashboard({
   const finalSimulation = simulation;
   const finalHoneypot = honeypot;
   const finalPhishing = phishing;
+  const finalSolSimulation = solSimulation;
 
   const [expandedSections, setExpandedSections] = useState({
     txDetails: true,
@@ -65,11 +68,11 @@ export default function ResultsDashboard({
     }));
   };
 
-  if (!isVisible && !finalSimulation && !finalHoneypot && !finalPhishing) return null;
+  if (!isVisible && !finalSimulation && !finalHoneypot && !finalPhishing && !finalSolSimulation) return null;
 
   const t = themes[chain] || themes.EVM;
 
-  // --- Honeypot Data ---
+  // --- EVM Data Processing ---
   const {
     totalScore = "0",
     passRate = "0%",
@@ -81,17 +84,15 @@ export default function ResultsDashboard({
   const passedChecks = Object.values(checks).filter(
     (chk) => chk?.data?.risk === false
   ).length;
-  const ratioText = `${passedChecks}/${totalChecks}`;
-
+  const evmRatioText = `${passedChecks}/${totalChecks}`;
   const riskStyle = getRiskStyle(riskLevel);
 
-  // --- Simulation Data ---
   const simulateData = finalSimulation?.checks?.simulateResult || {};
   const byteData = finalSimulation?.checks?.byteCodeResult || {};
   const txHistoryData = finalSimulation?.checks?.transactionHistoryResult || {};
 
-  const executionSuccess = simulateData.success ?? false;
-  const executionMessage = executionSuccess
+  const evmExecutionSuccess = simulateData.success ?? false;
+  const evmExecutionMessage = evmExecutionSuccess
     ? "Transaction executed successfully"
     : simulateData.warnings?.join(", ") || "Transaction would fail";
 
@@ -104,10 +105,38 @@ export default function ResultsDashboard({
   const summary = txHistoryData.summary || {};
   const recentTransfers = txHistoryData.recentTransfers || [];
 
-  // Gas analysis
-  const gasEstimated = simulateData?.gas?.estimated || 0;
-  const GAS_CAP = 200000;
-  const gasPercent = Math.min(100, Math.round((gasEstimated / GAS_CAP) * 100));
+  const rawGasEstimated = simulateData?.gas?.estimated || "0";
+  const evmGasEstimated = typeof rawGasEstimated === 'string' 
+    ? parseInt(rawGasEstimated.replace(/,/g, ''), 10) 
+    : rawGasEstimated;
+    
+  const EVM_GAS_CAP = 200000;
+  const evmGasPercent = Math.min(100, Math.round((evmGasEstimated / EVM_GAS_CAP) * 100));
+
+
+  // --- Solana Data Processing ---
+  const {
+      success: solSuccess,
+      message: solMessage,
+      computeUnits,
+      txError: solTxError
+  } = finalSolSimulation || {};
+
+  const solExecutionSuccess = solSuccess && !solTxError;
+  const solExecutionMessage = solExecutionSuccess
+      ? "Transaction simulated successfully"
+      : (typeof solTxError === 'object' ? JSON.stringify(solTxError) : solTxError) || solMessage;
+  
+  const SOL_COMPUTE_CAP = 200000; 
+  const solGasPercent = Math.min(100, Math.round(((computeUnits || 0) / SOL_COMPUTE_CAP) * 100));
+
+
+  // --- Unified Status Props ---
+  const executionSuccess = chain === 'SOL' ? solExecutionSuccess : evmExecutionSuccess;
+  const executionMessage = chain === 'SOL' ? solExecutionMessage : evmExecutionMessage;
+  const gasPercent = chain === 'SOL' ? solGasPercent : evmGasPercent;
+  const ratioText = chain === 'SOL' ? "N/A" : evmRatioText;
+
 
   // Animation variants
   const containerVariants = {
@@ -262,99 +291,133 @@ export default function ResultsDashboard({
         />
 
         {/* === MAIN GRID === */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 sm:gap-12">
-          {/* Left Column */}
-          <div className="xl:col-span-2 space-y-8 sm:space-y-12">
-            <TransactionDetails 
-              itemVariants={itemVariants}
-              toggleSection={toggleSection}
-              expandedSections={expandedSections}
-              simulateData={simulateData}
-              gasPercent={gasPercent}
-              gasEstimated={gasEstimated}
-              chain={chain}
-            />
+        <div className={`grid grid-cols-1 ${chain === 'EVM' ? 'xl:grid-cols-3' : 'xl:grid-cols-2'} gap-8 sm:gap-12`}>
+          
+          {chain === 'EVM' ? (
+            /* ================= EVM LAYOUT ================= */
+            <>
+                {/* Left Column */}
+                <div className="xl:col-span-2 space-y-8 sm:space-y-12">
+                    <TransactionDetails 
+                    itemVariants={itemVariants}
+                    toggleSection={toggleSection}
+                    expandedSections={expandedSections}
+                    simulateData={simulateData}
+                    gasPercent={evmGasPercent}
+                    gasEstimated={evmGasEstimated}
+                    chain={chain}
+                    />
 
-            <BalanceChanges 
-              itemVariants={itemVariants}
-              toggleSection={toggleSection}
-              expandedSections={expandedSections}
-              simulateData={simulateData}
-            />
+                    <BalanceChanges 
+                    itemVariants={itemVariants}
+                    toggleSection={toggleSection}
+                    expandedSections={expandedSections}
+                    simulateData={simulateData}
+                    />
 
-            <RecentTransfers 
-              itemVariants={itemVariants}
-              toggleSection={toggleSection}
-              expandedSections={expandedSections}
-              recentTransfers={recentTransfers}
-            />
-          </div>
+                    <RecentTransfers 
+                    itemVariants={itemVariants}
+                    toggleSection={toggleSection}
+                    expandedSections={expandedSections}
+                    recentTransfers={recentTransfers}
+                    />
+                </div>
 
-          {/* Right Column */}
-          <div className="space-y-8 sm:space-y-12">
-            <TransactionSummary 
-              itemVariants={itemVariants}
-              txHistoryData={txHistoryData}
-              summary={summary}
-            />
-          </div>
+                {/* Right Column */}
+                <div className="space-y-8 sm:space-y-12">
+                    <TransactionSummary 
+                    itemVariants={itemVariants}
+                    txHistoryData={txHistoryData}
+                    summary={summary}
+                    />
+                </div>
+            </>
+          ) : (
+            /* ================= SOLANA LAYOUT ================= */
+            <>
+                 {/* Left Column: Details & Advanced */}
+                <div className="space-y-8 sm:space-y-12">
+                    <SolanaDetails 
+                        itemVariants={itemVariants}
+                        chain={chain}
+                        data={finalSolSimulation}
+                    />
+                </div>
+
+                {/* Right Column: Logs */}
+                <div className="space-y-8 sm:space-y-12">
+                    <SolanaLogs 
+                         itemVariants={itemVariants}
+                         chain={chain}
+                         data={finalSolSimulation}
+                    />
+                </div>
+            </>
+          )}
+
         </div>
 
         {/* Connector */}
         <div className="connector-line my-4"></div>
 
-        {/* Phishing Analysis */}
-        <motion.div variants={itemVariants} className="mt-8 sm:mt-12 max-w-7xl mx-auto">
-          <Phishing data={finalPhishing} chain={chain} />
-        </motion.div>
+        {/* ================= EVM ONLY SECTIONS ================= */}
+        {chain === 'EVM' && (
+            <>
+                {/* Phishing Analysis */}
+                <motion.div variants={itemVariants} className="mt-8 sm:mt-12 max-w-7xl mx-auto">
+                <Phishing data={finalPhishing} chain={chain} />
+                </motion.div>
 
-        {/* Connector */}
-        <div className="connector-line my-4"></div>
+                {/* Connector */}
+                <div className="connector-line my-4"></div>
 
-        {/* === HONEYPOT & SECURITY ANALYSIS === */}
-        <motion.div
-          variants={itemVariants}
-          className="max-w-7xl mx-auto space-y-8 sm:space-y-12 mt-12"
-        >
-            <div className="text-center">
-              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
-                <span className="grad-word">Honeypot & Security</span> Analysis
-              </h2>
-            </div>
+                {/* === HONEYPOT & SECURITY ANALYSIS === */}
+                <motion.div
+                variants={itemVariants}
+                className="max-w-7xl mx-auto space-y-8 sm:space-y-12 mt-12"
+                >
+                    <div className="text-center">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
+                        <span className="grad-word">Honeypot & Security</span> Analysis
+                    </h2>
+                    </div>
 
-            {/* Key Metrics */}
-            <KeyMatrics
-              itemVariants={itemVariants}
-              riskStyle={riskStyle}
-              totalScore={totalScore}
-              passRate={passRate}
-              riskLevel={riskLevel}
-              ratioText={ratioText}
-              isVisible={isVisible}
-              data={finalHoneypot}
-              chain={chain}
-            />
+                    {/* Key Metrics */}
+                    <KeyMatrics
+                    itemVariants={itemVariants}
+                    riskStyle={riskStyle}
+                    totalScore={totalScore}
+                    passRate={passRate}
+                    riskLevel={riskLevel}
+                    ratioText={ratioText}
+                    isVisible={isVisible}
+                    data={finalHoneypot}
+                    chain={chain}
+                    />
 
-            {/* Bytecode Analysis */}
-            <BytecodeAnalysis 
-              itemVariants={itemVariants}
-              toggleSection={toggleSection}
-              expandedSections={expandedSections}
-              isContract={isContract}
-              warnings={warnings}
-              t={t}
-            />
-        </motion.div>
+                    {/* Bytecode Analysis */}
+                    <BytecodeAnalysis 
+                    itemVariants={itemVariants}
+                    toggleSection={toggleSection}
+                    expandedSections={expandedSections}
+                    isContract={isContract}
+                    byteData={byteData}
+                    warnings={warnings}
+                    t={t}
+                    />
+                </motion.div>
 
-        {/* Detailed Honeypot Checks */}
-        <motion.div variants={itemVariants} className="max-w-7xl mx-auto mt-8 sm:mt-12">
-          <HoneypotChecks isVisible={isVisible} data={honeypot} chain={chain} />
-        </motion.div>
+                {/* Detailed Honeypot Checks */}
+                <motion.div variants={itemVariants} className="max-w-7xl mx-auto mt-8 sm:mt-12">
+                <HoneypotChecks isVisible={isVisible} data={honeypot} chain={chain} />
+                </motion.div>
+            </>
+        )}
 
-        {/* AI Recommendations */}
+        {/* AI Recommendations - Common for both if data available */}
         <motion.div variants={itemVariants} className="max-w-7xl mx-auto mt-8 sm:mt-12">
           <Recommendations
-            simulationData={simulation}
+            simulationData={chain === 'EVM' ? simulation : solSimulation}
             honeypotData={honeypot}
             onGenerate={onGenerateRecommendation}
             recommendation={recommendationData}

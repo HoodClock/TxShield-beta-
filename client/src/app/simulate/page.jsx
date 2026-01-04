@@ -221,6 +221,7 @@ export default function App() {
                 chain={chain}
                 isVisible={showResults}
                 simulation={simulationData}
+                solSimulation={solSimulationData}
                 honeypot={honeypotData}
                 phishing={phishingData}
                 onGenerateRecommendation={handleRecommendation}

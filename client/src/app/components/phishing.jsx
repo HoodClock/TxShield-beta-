@@ -57,37 +57,54 @@ const PhishingAnalysis = ({ data, chain = "EVM" }) => {
 
   const { checks: oldChecks, phishingVerdict: oldVerdict, details, riskSummery } = data;
   const checks = details || oldChecks || {};
-  const phishingVerdict = riskSummery || oldVerdict;
+  
+  // Safely parse the verdict/summary
+  let verdict = riskSummery || oldVerdict;
 
-  // Safely parse the verdict
-  let verdict = phishingVerdict;
-
-  if (typeof phishingVerdict === "string") {
+  if (typeof verdict === "string") {
     try {
-      verdict = JSON.parse(phishingVerdict);
+      verdict = JSON.parse(verdict);
     } catch (e) {
-      const jsonMatch = phishingVerdict.match(/```json\n([\s\S]*?)\n```/);
+      const jsonMatch = verdict.match(/```json\n([\s\S]*?)\n```/);
       if (jsonMatch) {
         verdict = JSON.parse(jsonMatch[1]);
       } else {
+        // Fallback or legacy structure
         verdict = {
-          phishingScore: 0,
-          riskLevel: "unknown",
-          keyFindings: [],
-          recommendedActions: []
+          totalScore: 0,
+          riskLevel: "Unknown",
+          verdict: "Unable to parse verdict"
         };
       }
     }
   }
 
-  const { phishingScore = 0, riskLevel = "unknown", keyFindings = [], recommendedActions = [] } = verdict || {};
+  // normalize fields from different response structures
+  const phishingScore = verdict?.totalScore ?? verdict?.phishingScore ?? 0;
+  let riskLevel = verdict?.riskLevel ?? "unknown";
+  const summaryText = verdict?.verdict ?? "No summary available";
+  
+  // Normalize risk level for styling
+  const normalizedRisk = riskLevel.toLowerCase();
+  let riskColorClass = "green"; // default
+
+  if (normalizedRisk.includes("safe") || normalizedRisk.includes("low")) {
+      riskColorClass = "green";
+  } else if (normalizedRisk.includes("medium")) {
+      riskColorClass = "yellow";
+  } else if (normalizedRisk.includes("high")) {
+      riskColorClass = "orange";
+  } else if (normalizedRisk.includes("critical")) {
+      riskColorClass = "red";
+  }
+
+  const keyFindings = verdict?.keyFindings || []; // Legacy
+  const recommendedActions = verdict?.recommendedActions || []; // Legacy
 
   // Process all security checks
   const securityChecks = Object.entries(checks).map(([checkName, check]) => {
     // If check has a success flag and it's false, skip? 
-    // New backend doesn't seem to wrap in success flag for individual checks, 
-    // but let's keep the check if it exists.
-    if (check.success === false) return null;
+    if (check && check.success === false) return null;
 
     const formattedName = checkName
       .replace(/([A-Z])/g, ' $1')
@@ -99,7 +116,7 @@ const PhishingAnalysis = ({ data, chain = "EVM" }) => {
       isScam: check.isScam !== undefined ? check.isScam : (check.data?.isScam || false),
       confidence: check.confidence || check.data?.confidence || "none",
       reason: check.reason || check.data?.reason || "No issues found",
-      details: check.details || check.data?.checks || null,
+      details: check.details || check.checks || check.data?.checks || null,
       address: check.address || check.data?.address || null
     };
   }).filter(Boolean);
@@ -145,12 +162,14 @@ const PhishingAnalysis = ({ data, chain = "EVM" }) => {
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text'
               }}>
-                {phishingScore}%
+                {phishingScore}/100
               </div>
+              <p className="text-gray-400 text-sm mt-2 italic">"{summaryText}"</p>
             </div>
-            <div className={`px-4 py-2 rounded-full text-sm sm:text-base font-bold whitespace-nowrap ${riskLevel === "critical" ? "bg-red-500/20 text-red-400 border border-red-500/40" :
-                riskLevel === "high" ? "bg-orange-500/20 text-orange-400 border border-orange-500/40" :
-                  riskLevel === "medium" ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500/40" :
+            <div className={`px-4 py-2 rounded-full text-sm sm:text-base font-bold whitespace-nowrap 
+                ${riskColorClass === "red" ? "bg-red-500/20 text-red-400 border border-red-500/40" :
+                  riskColorClass === "orange" ? "bg-orange-500/20 text-orange-400 border border-orange-500/40" :
+                  riskColorClass === "yellow" ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500/40" :
                     "bg-green-500/20 text-green-400 border border-green-500/40"
               }`}>
               {riskLevel.toUpperCase()}
@@ -173,10 +192,10 @@ const PhishingAnalysis = ({ data, chain = "EVM" }) => {
 
           <div className="flex justify-between text-xs sm:text-sm text-gray-400 mt-4 pt-4 border-t border-white/10">
             <span className="flex items-center gap-1">
-              <span className="text-red-400 font-bold">{scamCount}</span> malicious patterns
+              <span className="text-red-400 font-bold">{scamCount}</span> suspicious
             </span>
             <span className="flex items-center gap-1">
-              <span className="text-green-400 font-bold">{cleanCount}</span> clean checks
+              <span className="text-green-400 font-bold">{cleanCount}</span> clean
             </span>
           </div>
         </div>
@@ -207,11 +226,12 @@ const PhishingAnalysis = ({ data, chain = "EVM" }) => {
                         {check.name}
                       </h4>
                       {check.confidence !== "none" && (
-                        <span className={`text-xs px-3 py-1 rounded-full font-semibold whitespace-nowrap ${check.confidence === "high" ? "bg-red-500/20 text-red-400 border border-red-500/40" :
-                            check.confidence === "medium" ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500/40" :
+                        <span className={`text-xs px-3 py-1 rounded-full font-semibold whitespace-nowrap capitalize ${
+                            check.confidence.toLowerCase() === "high" ? "bg-red-500/20 text-red-400 border border-red-500/40" :
+                            check.confidence.toLowerCase() === "medium" ? "bg-yellow-500/20 text-yellow-400 border border-yellow-500/40" :
                               "bg-green-500/20 text-green-400 border border-green-500/40"
                           }`}>
-                          {check.confidence}
+                          {check.confidence} Confidence
                         </span>
                       )}
                     </div>
@@ -227,6 +247,12 @@ const PhishingAnalysis = ({ data, chain = "EVM" }) => {
                           </div>
                         ))}
                       </div>
+                    )}
+                    
+                    {check.address && (
+                        <div className="mt-2 text-xs font-mono bg-gray-900/50 p-1.5 rounded border border-white/5 break-all text-gray-400">
+                            Address: {check.address}
+                        </div>
                     )}
                   </div>
                 </div>
