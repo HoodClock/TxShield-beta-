@@ -2,7 +2,6 @@
 
 const evmHoneypotValidator = (payload) => {
     const { normalAddress, normalcontractAddress, normaltokenAddress, normalrecepientAddress, value, currencySymbol } = payload
-
     try {
         if (!normalAddress || !normalcontractAddress || !normaltokenAddress || !normalrecepientAddress || !value || !currencySymbol) {
             return {

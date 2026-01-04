@@ -31,10 +31,11 @@ export default function SimulationForm({ onSimulateAll, backButtonHandler, onSwi
 
     // credentials for honeypot
     const honeypotData = {
-      normalAddress: userAddress,
-      normalcontractAddress: contractAddress,
-      normaltokenAddress: contractAddress,
-      normalrecepientAddress: contractAddress,
+      address: contractAddress,
+      userAddress: userAddress,
+      contractAddress: contractAddress,
+      tokenAddress: contractAddress,
+      recepientAddress: contractAddress,
       value: amount,
       currencySymbol: currency,
     };
