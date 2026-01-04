@@ -1,10 +1,10 @@
-const { solSimualtion } = require("../../services/solana/simulationSol/index")
+const { sumUpAllFeatures } = require("../../services/solana/simulationSol/sumUpallFeatures")
 
 const simulateSOLTransactionController = async (req, res) => {
   try {
     const { signedTxBase64, userAddress, recepientAddress, amount, currencySymbol } = req.body;
 
-    const result = await solSimualtion(
+    const result = await sumUpAllFeatures(
       signedTxBase64,
       userAddress,
       recepientAddress,
@@ -13,11 +13,11 @@ const simulateSOLTransactionController = async (req, res) => {
     );
 
     if (!result.success) {
-      return res.status(400).json({ success: false, message: result.message || result.error });
+      return res.status(400).json({ success: false, message: result.message });
     }
 
-    res.status(200).json({ success: true, data: result.data });
-    
+    res.status(200).json({ success: true, data: result });
+
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

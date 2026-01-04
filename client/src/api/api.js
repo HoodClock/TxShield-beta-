@@ -1,13 +1,13 @@
 import axios from "axios";
 
 // for local.
-const BASE_URL = "http://localhost:5000";
+// const BASE_URL = "http://localhost:5000";
 
 // for testing.
 // const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 // for prod
-// const BASE_URL = process.env.NEXT_PUBLIC_PROD_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_PROD_BASE_URL;
 
 
 // eth api's
