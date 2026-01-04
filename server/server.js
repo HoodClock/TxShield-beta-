@@ -24,6 +24,7 @@ app.use(
     origin: [
       "http://localhost:3000", // for local 
       "https://tx-shield-beta.vercel.app", // for testing vps
+      "tx-shield-beta-4muv8h91e-hoodclocks-projects.vercel.app",
       "https://txshield.xyz", // for prod
       "https://www.txshield.xyz"], // for prod
     credentials: true,
