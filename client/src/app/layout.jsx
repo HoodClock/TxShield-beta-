@@ -16,6 +16,9 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "TxShield",
   description: "Simulate Ethereum transactions securely",
+  icons: {
+    icon: '/Images/logo.png',
+  },
 };
 
 export default function RootLayout({ children }) {
