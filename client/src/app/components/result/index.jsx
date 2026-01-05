@@ -76,16 +76,23 @@ export default function ResultsDashboard({
   // --- EVM Data Processing ---
   const {
     totalScore = "0",
-    passRate = "0%",
+    passRate: rawPassRate = "0%",
     riskLevel = "Unknown",
     checks = {},
   } = finalHoneypot || {};
 
   const totalChecks = Object.keys(checks).length;
   const passedChecks = Object.values(checks).filter(
-    (chk) => chk?.data?.risk === false
+    (chk) => chk?.risk === false || chk?.data?.risk === false
   ).length;
   const evmRatioText = `${passedChecks}/${totalChecks}`;
+  
+  const calculatedPassRate = totalChecks > 0 
+    ? `${Math.round((passedChecks / totalChecks) * 100)}%` 
+    : "0%";
+    
+  const passRate = rawPassRate !== "0%" ? rawPassRate : calculatedPassRate;
+  
   const riskStyle = getRiskStyle(riskLevel);
 
   const simulateData = finalSimulation?.checks?.simulateResult || {};
@@ -116,20 +123,22 @@ export default function ResultsDashboard({
 
 
   // --- Solana Data Processing ---
-  const {
-      success: solSuccess,
-      message: solMessage,
-      computeUnits,
-      txError: solTxError
-  } = finalSolSimulation || {};
+  const solData = finalSolSimulation?.data || {};
+  const solSimulationData = solData.simulation || {};
+  const solVerdict = solData.verdict || {};
 
-  const solExecutionSuccess = solSuccess && !solTxError;
+  // Check if simulation status is SUCCESS (case-insensitive if needed)
+  const solExecutionSuccess = solSimulationData.status === "SUCCESS";
+  
+  // Use humanReason for failure message if available, otherwise fallback
   const solExecutionMessage = solExecutionSuccess
       ? "Transaction simulated successfully"
-      : (typeof solTxError === 'object' ? JSON.stringify(solTxError) : solTxError) || solMessage;
+      : solVerdict.humanReason || solData.message || "Transaction failed";
+  
+  const solComputeUnits = solSimulationData.computeUnits || 0;
   
   const SOL_COMPUTE_CAP = 200000; 
-  const solGasPercent = Math.min(100, Math.round(((computeUnits || 0) / SOL_COMPUTE_CAP) * 100));
+  const solGasPercent = Math.min(100, Math.round((solComputeUnits / SOL_COMPUTE_CAP) * 100));
 
 
   // --- Unified Status Props ---

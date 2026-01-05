@@ -6,10 +6,12 @@ import { themes } from "./utils";
 export default function SolanaLogs({
   itemVariants,
   chain,
-  data,
+  data: rawData,
 }) {
   const t = themes[chain] || themes.SOL;
-  const { programCall, parsedLogs } = data;
+  const data = rawData?.data || {};
+  const { simulation } = data;
+  const { programsInvoked, logs } = simulation || {};
 
   return (
     <motion.div variants={itemVariants} className="gradient-border-card p-[1px] h-full">
@@ -26,25 +28,34 @@ export default function SolanaLogs({
         </div>
 
         <div className="flex-grow space-y-4">
-          {programCall && programCall.length > 0 && (
+          {programsInvoked && programsInvoked.length > 0 && (
             <div className="mb-4">
               <h4 className="text-gray-400 text-sm mb-2 uppercase tracking-wide">Invoked Programs</h4>
               <div className="flex flex-wrap gap-2">
-                {programCall.map((prog, idx) => (
-                  <span key={idx} className={`px-2 py-1 rounded-md text-xs font-mono border border-${t.primary}-500/30 bg-${t.primary}-500/10 text-${t.primary}-300`}>
-                    {prog}
-                  </span>
+                {programsInvoked.map((prog, idx) => (
+                  <div key={idx} className={`flex flex-col px-3 py-1.5 rounded-md border border-${t.primary}-500/30 bg-${t.primary}-500/10`}>
+                     <span className={`text-xs font-bold text-${t.primary}-300`}>{prog.name || "Unknown Program"}</span>
+                     <span className={`text-[10px] font-mono text-${t.primary}-400/70`}>{prog.address}</span>
+                  </div>
                 ))}
               </div>
             </div>
           )}
 
           <div className="bg-black/40 rounded-xl border border-gray-800 p-4 font-mono text-xs text-gray-300 h-96 overflow-y-auto no-scrollbar">
-            {parsedLogs && parsedLogs.length > 0 ? (
-              parsedLogs.map((log, i) => (
-                <div key={i} className="mb-1 hover:bg-white/5 px-1 rounded">
-                  <span className="text-gray-600 mr-2">{i + 1}</span>
-                  <span className={log.includes("Error") || log.includes("failed") ? "text-red-400" : "text-gray-300"}>
+            {logs && logs.length > 0 ? (
+              logs.map((log, i) => (
+                <div key={i} className="mb-1 hover:bg-white/5 px-1 rounded break-all">
+                  <span className="text-gray-600 mr-2 select-none">{i + 1}</span>
+                  <span className={
+                      log.toLowerCase().includes("error") || 
+                      log.toLowerCase().includes("failed") ||
+                      log.toLowerCase().includes("instruction changed the balance of a read-only account") 
+                      ? "text-red-400" 
+                      : log.includes("invoke") 
+                      ? "text-blue-300"
+                      : "text-gray-300"
+                  }>
                     {log}
                   </span>
                 </div>
