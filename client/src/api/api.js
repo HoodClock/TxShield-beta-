@@ -6,7 +6,7 @@ import axios from "axios";
 // for testing.
 // const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-// for prod
+// for prod-envoirnment
 const BASE_URL = process.env.NEXT_PUBLIC_PROD_BASE_URL;
 
 
