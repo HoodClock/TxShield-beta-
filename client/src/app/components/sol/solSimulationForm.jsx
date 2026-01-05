@@ -24,7 +24,10 @@ export default function SimulationForm({ onSolSimulateAll, backButtonHandler, on
 
         const { Connection, SystemProgram, Transaction, PublicKey } = await import("@solana/web3.js")
 
-        const connection = new Connection(process.env.NEXT_PUBLIC_SOL_MAINNET_RPC || "https://api.mainnet-beta.solana.com");
+        const rpcDevnetURL = process.env.NEXT_PUBLIC_SOL_DEVNET_RPC;
+        const rpcMainnetURL = process.env.NEXT_PUBLIC_SOL_MAINNET_RPC;
+
+        const connection = new Connection(rpcMainnetURL);
         const recepientPubKey = new PublicKey(contractAddress);
 
         // building dummy tx
