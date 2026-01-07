@@ -1,20 +1,29 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 const ScrollProgressBar = () => {
   const [scroll, setScroll] = useState(0);
-
-  const onScroll = () => {
-    const scrollY = window.scrollY;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const scrollPercent = (scrollY / docHeight) * 100;
-    setScroll(scrollPercent);
-  };
+  const ticking = useRef(false);
 
   useEffect(() => {
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
+    const handle = () => {
+      if (!ticking.current) {
+        ticking.current = true;
+        requestAnimationFrame(() => {
+          const scrollY = window.scrollY;
+          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+          const scrollPercent = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
+          setScroll(scrollPercent);
+          ticking.current = false;
+        });
+      }
+    };
+
+    window.addEventListener('scroll', handle, { passive: true });
+    // initialize
+    handle();
+    return () => window.removeEventListener('scroll', handle);
   }, []);
 
   return (
