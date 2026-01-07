@@ -2,209 +2,257 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useWallet } from "@solana/wallet-adapter-react"
+import { useWallet } from "@solana/wallet-adapter-react";
 
-export default function SimulationForm({ onSolSimulateAll, backButtonHandler, onSwitchChain }) {
-    const [contractAddress, setContractAddress] = useState("");
-    const [amount, setAmount] = useState("");
-    const [currency, setCurrency] = useState("SOL");
-    const { publicKey } = useWallet()
+export default function SimulationForm({
+  onSolSimulateAll,
+  backButtonHandler,
+  onSwitchChain,
+}) {
+  const [contractAddress, setContractAddress] = useState("");
+  const [amount, setAmount] = useState("");
+  const [currency, setCurrency] = useState("SOL");
+  const { publicKey } = useWallet();
 
-    const handleSimulate = async () => {
+  const handleSimulate = async () => {
+    if (!contractAddress || !amount) {
+      alert("Please enter both contract address and amount.");
+      return;
+    }
 
-        if (!contractAddress || !amount) {
-            alert("Please enter both contract address and amount.");
-            return;
-        }
+    if (!publicKey) {
+      alert("Please connect your wallet first.");
+      return;
+    }
 
-        if (!publicKey) {
-            alert("Please connect your wallet first.");
-            return
-        }
+    const { Connection, SystemProgram, Transaction, PublicKey } =
+      await import("@solana/web3.js");
 
-        const { Connection, SystemProgram, Transaction, PublicKey } = await import("@solana/web3.js")
+    const rpcDevnetURL = process.env.NEXT_PUBLIC_SOL_DEVNET_RPC;
+    const rpcMainnetURL = process.env.NEXT_PUBLIC_SOL_MAINNET_RPC;
 
-        const rpcDevnetURL = process.env.NEXT_PUBLIC_SOL_DEVNET_RPC;
-        const rpcMainnetURL = process.env.NEXT_PUBLIC_SOL_MAINNET_RPC;
+    const connection = new Connection(rpcMainnetURL);
+    const targetPubKey = new PublicKey(contractAddress);
 
-        const connection = new Connection(rpcMainnetURL);
-        const recepientPubKey = new PublicKey(contractAddress);
+    const tx = new Transaction();
 
-        // building dummy tx
-        const tx = new Transaction().add(
-            SystemProgram.transfer({
-                fromPubkey: publicKey,
-                toPubkey: recepientPubKey,
-                lamports: Number(amount) * 1_000_000_000, // conversion in lamports
-            })
-        )
+    // building dummy tx
+    tx.add(
+      SystemProgram.transfer({
+        fromPubkey: publicKey,
+        toPubkey: targetPubKey,
+        lamports: Math.floor(Number(amount)), // conversion in lamports
+      }),
+    );
 
-        // feePayer & recent blockhash
-        tx.feePayer = publicKey;
-        const { blockhash } = await connection.getLatestBlockhash();
-        tx.recentBlockhash = blockhash;
+    // feePayer & recent blockhash
+    tx.feePayer = publicKey;
+    const { blockhash } = await connection.getLatestBlockhash("confirmed");
+    tx.recentBlockhash = blockhash;
 
-        // signing our {tx} with wallet
-        const signedTx = await window.solana.signTransaction(tx);
+    // signing our {tx} with wallet
+    const signedTx = await window.solana.signTransaction(tx);
 
-        // convert to base64 for the backend payload 
-        const serelizedTx = signedTx.serialize();
-        const base64Tx = Buffer.from(serelizedTx).toString("base64");
+    // convert to base64 for the backend payload
+    const base64Tx = Buffer.from(signedTx.serialize()).toString("base64");
 
-        // builiding payload
-        const solSimulationData = {
-            signedTxBase64: base64Tx,
-            userAddress: publicKey.toBase58(),
-            recepientAddress: contractAddress,
-            amount: amount,
-            currencySymbol: currency
-        }
-
-
-        onSolSimulateAll({ solSimulationData })
+    // builiding and sending payload
+    const solSimulationData = {
+      signedTxBase64: base64Tx,
+      userAddress: publicKey.toBase58(),
+      recepientAddress: contractAddress,
+      amount: amount,
+      currencySymbol: currency,
     };
 
-    return (
-        <>
-            <style jsx>{`
-              .sol-btn-glow {
-                box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
-              }
-              .sol-btn-glow:hover {
-                box-shadow: 0 0 40px rgba(168, 85, 247, 0.8);
-              }
-              .sol-input-gradient {
-                background: linear-gradient(90deg, rgba(168, 85, 247, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%);
-              }
-              /* Remove arrows/spinners from number inputs */
-              input::-webkit-outer-spin-button,
-              input::-webkit-inner-spin-button {
-                -webkit-appearance: none;
-                margin: 0;
-              }
-              input[type='number'] {
-                -moz-appearance: textfield;
-              }
-            `}</style>
-                  <motion.div 
-                    initial={{ opacity: 0, x: 50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 50 }}
-                    transition={{ duration: 0.4, ease: "easeInOut" }}
-                    className="relative p-1 rounded-3xl bg-gradient-to-br from-purple-500/30 via-purple-600/10 to-pink-400/5 max-w-2xl mx-auto shadow-2xl"
-                  >
-                    <div className="relative bg-black/90 backdrop-blur-xl rounded-[22px] p-6 md:p-8 overflow-hidden">
-                        {/* Ambient Background */}
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-purple-600/20 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-                        <div className="absolute bottom-0 left-0 w-64 h-64 bg-pink-600/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
-            
-                        <button
-                        onClick={backButtonHandler}
-                        className="absolute top-5 left-5 p-2 rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all duration-300 z-20 group"
-                        title="Go Back"
-                        >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                            />
-                        </svg>
-                        </button>
+    onSolSimulateAll({ solSimulationData });
+  };
 
-                        {/* Switch Chain Button (Ethereum Logo) */}
-                        <button
-                          onClick={onSwitchChain}
-                          className="absolute top-5 right-5 p-1.5 rounded-full bg-white/5 hover:bg-blue-500/20 border border-white/10 hover:border-blue-500/50 transition-all duration-300 z-20 group"
-                          title="Switch to EVM Simulation"
-                        >
-                          <img 
-                            src="https://assets.coingecko.com/coins/images/279/small/ethereum.png" 
-                            alt="Switch to EVM" 
-                            className="w-6 h-6 rounded-full group-hover:scale-110 transition-transform duration-300"
-                          />
-                        </button>
-            
-                        <div className="relative z-10">                        <div className="text-center mb-8">
-                            <div className="inline-flex items-center justify-center p-3 mb-3 rounded-2xl bg-purple-500/10 border border-purple-500/20 shadow-inner shadow-purple-500/10">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                              </svg>
-                            </div>
-                            <h2 className="text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight">
-                            Solana <span className="text-purple-500">Simulation</span>
-                            </h2>
-                            <p className="text-gray-400 text-sm max-w-md mx-auto">
-                            Securely simulate Solana transactions before you sign.
-                            </p>
-                        </div>
-            
-                        <div className="space-y-5 max-w-lg mx-auto">
-                            <div>
-                            <label className="block text-purple-300/80 text-[10px] font-bold uppercase tracking-wider mb-1.5 ml-1">
-                                Program / Wallet Address
-                            </label>
-                            <div className="relative group">
-                                <input
-                                type="text"
-                                placeholder="Enter Solana address..."
-                                className="w-full px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:bg-purple-500/5 focus:ring-1 focus:ring-purple-500/50 transition-all duration-300 font-mono text-sm shadow-inner"
-                                value={contractAddress}
-                                onChange={(e) => setContractAddress(e.target.value)}
-                                />
-                                <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                </div>
-                            </div>
-                            </div>
-            
-                            <div>
-                            <label className="block text-purple-300/80 text-[10px] font-bold uppercase tracking-wider mb-1.5 ml-1">
-                                Amount (SOL)
-                            </label>
-                            <div className="relative group">
-                                <input
-                                type="number"
-                                placeholder="0.0"
-                                className="w-full px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:bg-purple-500/5 focus:ring-1 focus:ring-purple-500/50 transition-all duration-300 font-mono text-sm shadow-inner"
-                                value={amount}
-                                onChange={(e) => setAmount(e.target.value)}
-                                />
-                                 <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold text-[10px] bg-white/10 px-2 py-0.5 rounded">
-                                    SOL
-                                </div>
-                            </div>
-                            </div>
-            
-                            <div className="pt-2">
-                                <motion.button
-                                onClick={handleSimulate}
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 text-white font-bold text-base shadow-lg sol-btn-glow relative overflow-hidden group"
-                                >
-                                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
-                                <span className="relative z-10 flex items-center justify-center gap-2">
-                                    Simulate Transaction
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                    </svg>
-                                </span>
-                                </motion.button>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                  </motion.div>        </>
-    );
+  return (
+    <>
+      <style jsx>{`
+        .sol-btn-glow {
+          box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+        }
+        .sol-btn-glow:hover {
+          box-shadow: 0 0 40px rgba(168, 85, 247, 0.8);
+        }
+        .sol-input-gradient {
+          background: linear-gradient(
+            90deg,
+            rgba(168, 85, 247, 0.05) 0%,
+            rgba(147, 51, 234, 0.05) 100%
+          );
+        }
+        /* Remove arrows/spinners from number inputs */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        input[type="number"] {
+          -moz-appearance: textfield;
+        }
+      `}</style>
+      <motion.div
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: 50 }}
+        transition={{ duration: 0.4, ease: "easeInOut" }}
+        className="relative p-1 rounded-3xl bg-gradient-to-br from-purple-500/30 via-purple-600/10 to-pink-400/5 max-w-2xl mx-auto shadow-2xl"
+      >
+        <div className="relative bg-black/90 backdrop-blur-xl rounded-[22px] p-6 md:p-8 overflow-hidden">
+          {/* Ambient Background */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-purple-600/20 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-pink-600/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
+
+          <button
+            onClick={backButtonHandler}
+            className="absolute top-5 left-5 p-2 rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all duration-300 z-20 group"
+            title="Go Back"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
+            </svg>
+          </button>
+
+          {/* Switch Chain Button (Ethereum Logo) */}
+          <button
+            onClick={onSwitchChain}
+            className="absolute top-5 right-5 p-1.5 rounded-full bg-white/5 hover:bg-blue-500/20 border border-white/10 hover:border-blue-500/50 transition-all duration-300 z-20 group"
+            title="Switch to EVM Simulation"
+          >
+            <img
+              src="https://assets.coingecko.com/coins/images/279/small/ethereum.png"
+              alt="Switch to EVM"
+              className="w-6 h-6 rounded-full group-hover:scale-110 transition-transform duration-300"
+            />
+          </button>
+
+          <div className="relative z-10">
+            {" "}
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center p-3 mb-3 rounded-2xl bg-purple-500/10 border border-purple-500/20 shadow-inner shadow-purple-500/10">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-purple-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
+                </svg>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight">
+                Solana <span className="text-purple-500">Simulation</span>
+              </h2>
+              <p className="text-gray-400 text-sm max-w-md mx-auto">
+                Securely simulate Solana transactions before you sign.
+              </p>
+            </div>
+            <div className="space-y-5 max-w-lg mx-auto">
+              <div>
+                <label className="block text-purple-300/80 text-[10px] font-bold uppercase tracking-wider mb-1.5 ml-1">
+                  Program / Wallet Address
+                </label>
+                <div className="relative group">
+                  <input
+                    type="text"
+                    placeholder="Enter Solana address..."
+                    className="w-full px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:bg-purple-500/5 focus:ring-1 focus:ring-purple-500/50 transition-all duration-300 font-mono text-sm shadow-inner"
+                    value={contractAddress}
+                    onChange={(e) => setContractAddress(e.target.value)}
+                  />
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-purple-300/80 text-[10px] font-bold uppercase tracking-wider mb-1.5 ml-1">
+                  Amount (SOL)
+                </label>
+                <div className="relative group">
+                  <input
+                    type="number"
+                    placeholder="0.0"
+                    className="w-full px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:bg-purple-500/5 focus:ring-1 focus:ring-purple-500/50 transition-all duration-300 font-mono text-sm shadow-inner"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                  />
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold text-[10px] bg-white/10 px-2 py-0.5 rounded">
+                    SOL
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <motion.button
+                  onClick={handleSimulate}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 text-white font-bold text-base shadow-lg sol-btn-glow relative overflow-hidden group"
+                >
+                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    Simulate Transaction
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 group-hover:translate-x-1 transition-transform"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M14 5l7 7m0 0l-7 7m7-7H3"
+                      />
+                    </svg>
+                  </span>
+                </motion.button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>{" "}
+    </>
+  );
 }
