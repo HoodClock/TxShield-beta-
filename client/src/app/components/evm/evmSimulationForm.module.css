@@ -1,0 +1,19 @@
+/* EVM Simulation Form Styles */
+.evm-btn-glow {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+}
+.evm-btn-glow:hover {
+  box-shadow: 0 0 40px rgba(59, 130, 246, 0.8);
+}
+.evm-input-gradient {
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.05) 0%, rgba(37, 99, 235, 0.05) 100%);
+}
+/* Remove arrows/spinners from number inputs */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}

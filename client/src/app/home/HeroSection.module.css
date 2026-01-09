@@ -190,6 +190,19 @@ body {
   animation-delay: 1s;
 }
 
+/* Disable continuous animations on mobile for better performance */
+@media (max-width: 768px) {
+  .stats-card-2023, .stats-card-2024, .stats-card-revert {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stats-card-2023, .stats-card-2024, .stats-card-revert {
+    animation: none;
+  }
+}
+
 /* analytical section */
 
 /* Cyberpunk grid animation */
@@ -210,9 +223,9 @@ body {
   100% { transform: translateY(-200px) translateX(0); opacity: 0; }
 }
 
-/* Glow effect */
+/* Glow effect - use box-shadow instead of filter for better performance */
 .glow {
-  filter: drop-shadow(0 0 8px currentColor);
+  text-shadow: 0 0 8px currentColor;
 }
 
 /* Custom scrollbar */
