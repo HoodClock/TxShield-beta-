@@ -12,6 +12,7 @@ import { motion } from "framer-motion";
 import Confetti from "react-dom-confetti";
 import Head from "next/head";
 import ScrollProgressBar from "../components/ScrollProgressBar";
+import "./page.module.css";
 
 const Header = lazy(() => import("../components/header"));
 const Footer = lazy(() => import("../components/footer"));
@@ -229,40 +230,6 @@ function ApiRefPage() {
 
   return (
     <div className="bg-black text-white min-h-screen font-sans overflow-x-hidden relative">
-       <style>{`
-        /* For Webkit browsers (Chrome, Safari, Edge) */
-        .overflow-x-auto::-webkit-scrollbar {
-          height: 8px; /* height of horizontal scrollbar */
-        }
-
-        .overflow-x-auto::-webkit-scrollbar-track {
-          background: #2d2d2d; /* color of the tracking area */
-          border-radius: 10px;
-        }
-
-        .overflow-x-auto::-webkit-scrollbar-thumb {
-          background-color: #555; /* color of the scroll thumb */
-          border-radius: 10px; /* roundness of the scroll thumb */
-          border: 2px solid #2d2d2d; /* creates padding around scroll thumb */
-        }
-
-        /* For Firefox */
-        .overflow-x-auto {
-          scrollbar-width: thin; /* "auto" or "thin" */
-          scrollbar-color: #555 #2d2d2d; /* thumb and track color */
-        }
-
-        .glass-morphism {
-          background: rgba(255, 255, 255, 0.05);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .gradient-border {
-          background: linear-gradient(black, black) padding-box,
-                      linear-gradient(45deg, rgba(30, 30, 30, 0.8), white, rgba(30, 30, 30, 0.8)) border-box;
-          border: 1px solid transparent;
-        }
-      `}</style>
       <Head>
         <title>TxShield - API Reference</title>
       </Head>

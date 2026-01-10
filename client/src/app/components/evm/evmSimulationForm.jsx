@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { serialize, useAccount } from "wagmi";
 import { motion } from "framer-motion";
+import "./evmSimulationForm.module.css";
 
 
 export default function SimulationForm({ onSimulateAll, backButtonHandler, onSwitchChain }) {
@@ -45,26 +46,6 @@ export default function SimulationForm({ onSimulateAll, backButtonHandler, onSwi
 
   return (
     <>
-      <style jsx>{`
-        .evm-btn-glow {
-          box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
-        }
-        .evm-btn-glow:hover {
-          box-shadow: 0 0 40px rgba(59, 130, 246, 0.8);
-        }
-        .evm-input-gradient {
-          background: linear-gradient(90deg, rgba(59, 130, 246, 0.05) 0%, rgba(37, 99, 235, 0.05) 100%);
-        }
-        /* Remove arrows/spinners from number inputs */
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-          -webkit-appearance: none;
-          margin: 0;
-        }
-        input[type=number] {
-          -moz-appearance: textfield;
-        }
-      `}</style>
       <motion.div 
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0 }}
