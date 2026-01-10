@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import DarkVeil from './components/backgrounds/DarkVeil';
 
 export default function ClientLayout({ children }) {
   const [queryClient] = useState(() => 
@@ -24,6 +25,15 @@ export default function ClientLayout({ children }) {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <DarkVeil 
+        hueShift={0}
+        noiseIntensity={0.05}
+        scanlineIntensity={0.1}
+        speed={0.5}
+        scanlineFrequency={2}
+        warpAmount={0.3}
+        resolutionScale={1}
+      />
       {children}
     </QueryClientProvider>
   );

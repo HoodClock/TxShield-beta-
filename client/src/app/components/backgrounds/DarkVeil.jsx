@@ -126,7 +126,6 @@ export default function DarkVeil({
     let frame = 0;
 
     const loop = () => {
-
       program.uniforms.uTime.value = ((performance.now() - start) / 1000) * speed;
       program.uniforms.uHueShift.value = hueShift;
       program.uniforms.uNoise.value = noiseIntensity;
@@ -136,7 +135,9 @@ export default function DarkVeil({
       renderer.render({ scene: mesh });
       frame = requestAnimationFrame(loop);
     };
-     
+
+    loop();
+
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener('resize', resize);
