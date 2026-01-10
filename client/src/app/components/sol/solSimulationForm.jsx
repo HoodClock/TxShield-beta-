@@ -31,7 +31,7 @@ export default function SimulationForm({
     const rpcDevnetURL = process.env.NEXT_PUBLIC_SOL_DEVNET_RPC;
     const rpcMainnetURL = process.env.NEXT_PUBLIC_SOL_MAINNET_RPC;
 
-    const connection = new Connection(rpcMainnetURL);
+    const connection = new Connection(rpcDevnetURL);
     const targetPubKey = new PublicKey(contractAddress);
 
     const tx = new Transaction();
