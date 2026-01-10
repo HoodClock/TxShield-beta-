@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { motion } from "framer-motion";
+import "./SimulateHeroSection.module.css";
 
 function SimulateHeroSection({ onChainSelect }) {
     return (
@@ -12,13 +13,6 @@ function SimulateHeroSection({ onChainSelect }) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
             >
-                <style jsx>{`
-                  .logo-spin { transition: transform 0.8s cubic-bezier(.2,.9,.2,1); transform-origin: 50% 50%; }
-                  .simulate-chain-btn .logo-spin { transform: rotate(0deg); }
-                  .simulate-chain-btn:hover .logo-spin { transform: rotate(360deg); }
-                  .simulate-chain-btn { will-change: transform; }
-                  .simulate-btn-shine { pointer-events: none; mix-blend-mode: screen; }
-                `}</style>
                 {/* Heading and Description */}
                 <div className="text-center mb-12 sm:mb-16 max-w-4xl mx-auto">
                     <div className="flex items-center justify-center gap-3 mb-4">

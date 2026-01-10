@@ -55,36 +55,6 @@ function HomePage() {
 
   return (
     <div className="bg-black text-white min-h-screen font-sans overflow-x-hidden relative" style={{ fontFamily: "'ClashDisplay-Bold', sans-serif", margin: 0, padding: 0, border: 'none', borderTop: 'none', position: 'relative' }}>
-      <style>{`
-        @font-face {
-          font-family: 'ClashDisplay-Bold';
-          src: url('/fonts/ClashDisplay-Bold.woff2') format('woff2');
-          font-weight: bold;
-          font-display: swap;
-        }
-        :root {
-          --primary-black: #000000;
-          --elevated-black: #0A0A0A;
-          --surface-black: #111111;
-          --pure-white: #FFFFFF;
-          --text-primary: #F5F5F5;
-          --text-secondary: #A3A3A3;
-          --accent-glow: rgba(255, 255, 255, 0.1);
-        }
-        .glass-morphism {
-          background: rgba(255, 255, 255, 0.05);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .gradient-border {
-          background: linear-gradient(black, black) padding-box,
-                      linear-gradient(45deg, transparent, white, transparent) border-box;
-          border: 1px solid transparent;
-        }
-        * {
-          font-family: 'Space Grotesk', sans-serif;
-        }
-      `}</style>
       <div id="smooth-wrapper" style={{ margin: 0, padding: 0, border: 'none', borderTop: 'none' }}>
         <div id="smooth-content" style={{ margin: 0, padding: 0, border: 'none', borderTop: 'none' }}>
           <Header />
@@ -95,7 +65,8 @@ function HomePage() {
           {/* Beautiful Section Divider */}
           <div className="section-divider"></div>
 
-          <div className="orb-bg section-merge">
+          {/* Below-the-fold sections with content-visibility optimization */}
+          <div className="orb-bg section-merge content-visibility-auto contain-intrinsic-stats">
             <div className="orb orb-1" aria-hidden="true"></div>
             <div className="orb orb-2" aria-hidden="true"></div>
             <div className="orb orb-3" aria-hidden="true"></div>
@@ -105,7 +76,7 @@ function HomePage() {
           {/* Beautiful Section Divider */}
           <div className="section-divider"></div>
 
-          <div className="orb-bg section-merge">
+          <div className="orb-bg section-merge content-visibility-auto contain-intrinsic-analysis">
             <div className="orb orb-1" aria-hidden="true"></div>
             <div className="orb orb-2" aria-hidden="true"></div>
             <div className="orb orb-3" aria-hidden="true"></div>
@@ -115,28 +86,28 @@ function HomePage() {
           {/* Beautiful Section Divider */}
           <div className="section-divider"></div>
 
-          <div className="orb-bg section-merge">
+          <div className="orb-bg section-merge content-visibility-auto contain-intrinsic-chain">
             <div className="orb orb-1" aria-hidden="true"></div>
             <div className="orb orb-2" aria-hidden="true"></div>
             <div className="orb orb-3" aria-hidden="true"></div>
             <ChainSection />
           </div>
 
-          <div className="orb-bg section-merge">
+          <div className="orb-bg section-merge content-visibility-auto contain-intrinsic-testimonial">
             <div className="orb orb-1" aria-hidden="true"></div>
             <div className="orb orb-2" aria-hidden="true"></div>
             <div className="orb orb-3" aria-hidden="true"></div>
             <TestimonialSection />
           </div>
 
-          <div className="orb-bg section-merge">
+          <div className="orb-bg section-merge content-visibility-auto contain-intrinsic-contact">
             <div className="orb orb-1" aria-hidden="true"></div>
             <div className="orb orb-2" aria-hidden="true"></div>
             <div className="orb orb-3" aria-hidden="true"></div>
             <ContactUs />
           </div>
 
-          <div className="orb-bg section-merge">
+          <div className="orb-bg section-merge content-visibility-auto contain-intrinsic-footer">
             <div className="orb orb-1" aria-hidden="true"></div>
             <div className="orb orb-2" aria-hidden="true"></div>
             <div className="orb orb-3" aria-hidden="true"></div>
