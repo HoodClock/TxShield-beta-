@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useWallet } from "@solana/wallet-adapter-react";
+import "./solSimulationForm.module.css";
 
 export default function SimulationForm({
   onSolSimulateAll,
@@ -70,30 +71,6 @@ export default function SimulationForm({
 
   return (
     <>
-      <style jsx>{`
-        .sol-btn-glow {
-          box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
-        }
-        .sol-btn-glow:hover {
-          box-shadow: 0 0 40px rgba(168, 85, 247, 0.8);
-        }
-        .sol-input-gradient {
-          background: linear-gradient(
-            90deg,
-            rgba(168, 85, 247, 0.05) 0%,
-            rgba(147, 51, 234, 0.05) 100%
-          );
-        }
-        /* Remove arrows/spinners from number inputs */
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-          -webkit-appearance: none;
-          margin: 0;
-        }
-        input[type="number"] {
-          -moz-appearance: textfield;
-        }
-      `}</style>
       <motion.div
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}

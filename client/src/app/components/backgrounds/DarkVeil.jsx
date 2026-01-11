@@ -123,15 +123,9 @@ export default function DarkVeil({
     resize();
 
     const start = performance.now();
-    let rafId = null;
+    let frame = 0;
 
-    const renderFrame = () => {
-      // Skip rendering while page is hidden to save CPU/GPU
-      if (document.hidden) {
-        rafId = null;
-        return;
-      }
-
+    const loop = () => {
       program.uniforms.uTime.value = ((performance.now() - start) / 1000) * speed;
       program.uniforms.uHueShift.value = hueShift;
       program.uniforms.uNoise.value = noiseIntensity;
@@ -139,46 +133,14 @@ export default function DarkVeil({
       program.uniforms.uScanFreq.value = scanlineFrequency;
       program.uniforms.uWarp.value = warpAmount;
       renderer.render({ scene: mesh });
-      rafId = requestAnimationFrame(renderFrame);
+      frame = requestAnimationFrame(loop);
     };
 
-    const startLoop = () => {
-      if (rafId) return;
-      rafId = requestAnimationFrame(renderFrame);
-    };
-
-    const stopLoop = () => {
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-        rafId = null;
-      }
-    };
-
-    // Pause rendering when page is hidden to reduce CPU/GPU usage
-    const onVisibility = () => {
-      if (document.hidden) stopLoop();
-      else startLoop();
-    };
-
-    startLoop();
-    document.addEventListener('visibilitychange', onVisibility, false);
+    loop();
 
     return () => {
-      // Stop RAF
-      stopLoop();
-      // Remove listeners
+      cancelAnimationFrame(frame);
       window.removeEventListener('resize', resize);
-      document.removeEventListener('visibilitychange', onVisibility, false);
-      // Try to release GL context to free GPU resources
-      try {
-        const gl = renderer && renderer.gl;
-        if (gl && typeof gl.getExtension === 'function') {
-          const lose = gl.getExtension && (gl.getExtension('WEBGL_lose_context') || gl.getExtension('MOZ_WEBGL_lose_context') || gl.getExtension('WEBKIT_WEBGL_lose_context'));
-          if (lose && typeof lose.loseContext === 'function') lose.loseContext();
-        }
-      } catch (e) {
-        // swallow errors during cleanup
-      }
     };
   }, [hueShift, noiseIntensity, scanlineIntensity, speed, scanlineFrequency, warpAmount, resolutionScale]);
   return <canvas ref={ref} className="darkveil-canvas" />;
