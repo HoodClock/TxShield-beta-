@@ -348,11 +348,10 @@ h1, h2, h3 {
 .orb-bg .orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(20px);
   opacity: 0.12;
   pointer-events: none;
   transform: translate3d(0,0,0);
-  /* will-change removed - only apply during actual animation via JS */
+  will-change: transform;
 }
 .orb-bg .orb.orb-1 {
   width: 420px;
