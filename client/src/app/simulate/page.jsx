@@ -1,22 +1,36 @@
 "use client";
 
-import { useState, Suspense, lazy, useCallback, useRef, useEffect } from "react";
+import {
+  useState,
+  Suspense,
+  lazy,
+  useCallback,
+  useRef,
+  useEffect,
+} from "react";
 import { AnimatePresence } from "framer-motion";
 import Head from "next/head";
 
 // all the components of Simualtion forms
-const Header = lazy(() => import("../components/header"))
-const SimulateHeroSection = lazy(() => import("../components/SimulateHeroSection"))
+const Header = lazy(() => import("../components/header"));
+const SimulateHeroSection = lazy(
+  () => import("../components/SimulateHeroSection"),
+);
 const ConnectWallet = lazy(() => import("../components/connectWallet"));
 const ResultsDashboard = lazy(() => import("../components/result/index"));
 const Footer = lazy(() => import("../components/footer"));
 const LoadingState = lazy(() => import("../components/loading"));
 
-
 // wallet providers & EVM/SOL-Components imports
-const WalletProviderWrapper = lazy(() => import("../components/WalletProviderWrapper"))
-const EvmSimulationForm = lazy(() => import("../components/evm/evmSimulationForm"))
-const SolSimulationForm = lazy(() => import("../components/sol/solSimulationForm"))
+const WalletProviderWrapper = lazy(
+  () => import("../components/WalletProviderWrapper"),
+);
+const EvmSimulationForm = lazy(
+  () => import("../components/evm/evmSimulationForm"),
+);
+const SolSimulationForm = lazy(
+  () => import("../components/sol/solSimulationForm"),
+);
 
 import {
   honeypotChecks as runHoneypotChecks,
@@ -52,72 +66,78 @@ export default function App() {
   }, []);
 
   // for simulation when currency => ETH
-  const handleSimulateAll = useCallback(async ({ honeypotData: hpData, simulationData: simData }) => {
-    if (!mounted.current) return;
+  const handleSimulateAll = useCallback(
+    async ({ honeypotData: hpData, simulationData: simData }) => {
+      if (!mounted.current) return;
 
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-    abortControllerRef.current = new AbortController();
-
-    setIsLoading(true);
-    setShowResults(false);
-
-    try {
-      const [simulationRes, honeypotRes, phishingRes] = await Promise.all([
-        runSimulateTx(simData),
-        runHoneypotChecks(hpData),
-        runPhishing(simData),
-      ]);
-
-      if (mounted.current) {
-        setSimulationData(simulationRes.data);
-        setHoneypotData(honeypotRes.data);
-        setPhishingData(phishingRes.data);
-        setShowResults(true);
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
       }
-    } catch (err) {
-      if (err.name !== 'AbortError') {
-        console.error("Simulation Error:", err);
+      abortControllerRef.current = new AbortController();
+
+      setIsLoading(true);
+      setShowResults(false);
+
+      try {
+        const [simulationRes, honeypotRes, phishingRes] = await Promise.all([
+          runSimulateTx(simData),
+          runHoneypotChecks(hpData),
+          runPhishing(simData),
+        ]);
+
+        if (mounted.current) {
+          setSimulationData(simulationRes.data);
+          setHoneypotData(honeypotRes.data);
+          setPhishingData(phishingRes.data);
+          setShowResults(true);
+        }
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          console.error("Simulation Error:", err);
+        }
+      } finally {
+        if (mounted.current) {
+          setIsLoading(false);
+        }
       }
-    } finally {
-      if (mounted.current) {
-        setIsLoading(false);
-      }
-    }
-  }, []);
+    },
+    [],
+  );
 
   // for simulation when currency => SOL
-  const handleSolSimulation = useCallback(async ({ solSimulationData: solData }) => {
-    if (!mounted.current) return;
+  const handleSolSimulation = useCallback(
+    async ({ solSimulationData: solData }) => {
+      if (!mounted.current) return;
 
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-    abortControllerRef.current = new AbortController();
-
-    setIsLoading(true);
-    setShowResults(false);
-
-    try {
-      const [solSimulationRes] = await Promise.all([
-        runSolSimulation(solData),
-      ]);
-
-      if (mounted.current) {
-        setSolSimulationData(solSimulationRes.data);
-        setShowResults(true);
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
       }
-    } catch (err) {
-      if (err.name !== 'AbortError') {
-        console.error("Simulation Error:", err);
+      abortControllerRef.current = new AbortController();
+
+      setIsLoading(true);
+      setShowResults(false);
+
+      try {
+        const [solSimulationRes] = await Promise.all([
+          runSolSimulation(solData),
+        ]);
+
+        if (mounted.current) {
+          setSolSimulationData(solSimulationRes.data);
+          setShowResults(true);
+        }
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          console.error("Simulation Error:", err);
+        }
+      } finally {
+        if (mounted.current) {
+          setIsLoading(false);
+        }
       }
-    } finally {
-      if (mounted.current) {
-        setIsLoading(false);
-      }
-    }
-  }, []);
+    },
+    [],
+  );
 
   const handleRecommendation = useCallback(async () => {
     if (!mounted.current) return;
@@ -165,7 +185,9 @@ export default function App() {
       {/* Show Hero Section only when no chain is selected */}
       {!chain && !showResults && (
         <Suspense fallback={<div className="h-auto bg-black"></div>}>
-          <SimulateHeroSection onChainSelect={(selectedChain) => setChain(selectedChain)} />
+          <SimulateHeroSection
+            onChainSelect={(selectedChain) => setChain(selectedChain)}
+          />
         </Suspense>
       )}
 
@@ -184,18 +206,18 @@ export default function App() {
               >
                 <AnimatePresence mode="wait">
                   {chain === "EVM" && (
-                    <EvmSimulationForm 
+                    <EvmSimulationForm
                       key="evm-form"
-                      onSimulateAll={handleSimulateAll} 
+                      onSimulateAll={handleSimulateAll}
                       backButtonHandler={() => setChain(null)}
                       onSwitchChain={() => setChain("SOL")}
                     />
                   )}
                   {chain === "SOL" && (
-                    <SolSimulationForm 
+                    <SolSimulationForm
                       key="sol-form"
-                      onSolSimulateAll={handleSolSimulation} 
-                      backButtonHandler={() => setChain(null)} 
+                      onSolSimulateAll={handleSolSimulation}
+                      backButtonHandler={() => setChain(null)}
                       onSwitchChain={() => setChain("EVM")}
                     />
                   )}

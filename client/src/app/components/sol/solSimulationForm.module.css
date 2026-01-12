@@ -1,23 +1,14 @@
 /* Solana Simulation Form Styles */
 .sol-btn-glow {
-  box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
 }
 .sol-btn-glow:hover {
-  box-shadow: 0 0 40px rgba(168, 85, 247, 0.8);
+    box-shadow: 0 0 40px rgba(168, 85, 247, 0.8);
 }
 .sol-input-gradient {
-  background: linear-gradient(
-    90deg,
-    rgba(168, 85, 247, 0.05) 0%,
-    rgba(147, 51, 234, 0.05) 100%
-  );
-}
-/* Remove arrows/spinners from number inputs */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-input[type="number"] {
-  -moz-appearance: textfield;
+    background: linear-gradient(
+        90deg,
+        rgba(168, 85, 247, 0.05) 0%,
+        rgba(147, 51, 234, 0.05) 100%
+    );
 }
