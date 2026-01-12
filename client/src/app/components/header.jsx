@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 export default function Header() {
   const pathname = usePathname();
   const isApiRefPage = pathname === '/ApiRef' || pathname === '/ApiRef/';
-  const isHomePage = pathname === '/';
+  const isHomePage = pathname === '/' || pathname === '/home' || pathname === '/home/';
 
   return (
     <>

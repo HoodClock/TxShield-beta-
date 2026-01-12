@@ -1,48 +1,52 @@
 "use client";
 
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 
 const TiltedCard = ({ children, className = "" }) => {
-  const [rotateX, setRotateX] = useState(0);
-  const [rotateY, setRotateY] = useState(0);
   const cardRef = useRef(null);
+  const containerRef = useRef(null);
 
   const handleMouseMove = (e) => {
-    if (!cardRef.current) return;
+    if (!cardRef.current || !containerRef.current) return;
 
-    const rect = cardRef.current.getBoundingClientRect();
+    const rect = containerRef.current.getBoundingClientRect();
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    const rotationX = (y - centerY) / 10;
-    const rotationY = (centerX - x) / 10;
+    const rotationX = ((y - centerY) / centerY) * 10;
+    const rotationY = ((centerX - x) / centerX) * 10;
 
-    setRotateX(rotationX);
-    setRotateY(rotationY);
+    cardRef.current.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
   };
 
   const handleMouseLeave = () => {
-    setRotateX(0);
-    setRotateY(0);
+    if (!cardRef.current) return;
+    cardRef.current.style.transform = `rotateX(0deg) rotateY(0deg)`;
   };
 
   return (
     <div
-      ref={cardRef}
+      ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={{
-        transformStyle: 'preserve-3d',
-        transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
-        transition: 'transform 0.1s ease-out',
-      }}
       className={`relative ${className}`}
+      style={{ perspective: '1000px' }}
     >
-      {/* Content */}
-      <div className="relative z-10 h-full">
-        {children}
+      <div
+        ref={cardRef}
+        style={{
+          transformStyle: 'preserve-3d',
+          transition: 'transform 0.1s ease-out',
+          height: '100%',
+          width: '100%'
+        }}
+      >
+        {/* Content */}
+        <div className="relative z-10 h-full">
+          {children}
+        </div>
       </div>
     </div>
   );
