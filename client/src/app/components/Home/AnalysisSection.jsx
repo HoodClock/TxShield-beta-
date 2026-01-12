@@ -69,15 +69,15 @@ function AnalysisSection() {
     return (
         <section ref={sectionRef} className="relative py-16 px-4 sm:px-6 overflow-hidden bg-black">
             {/* Animated Background */}
-            <div className="absolute inset-0">
-                <div className="absolute top-0 left-0 w-72 h-72 bg-red-500/5 rounded-full blur-3xl animate-pulse"></div>
-                <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute top-0 left-0 w-72 h-72 bg-red-500/5 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl"></div>
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-black to-black"></div>
             </div>
 
             {/* Binary Code Animation */}
-            <div className="absolute inset-0 opacity-10 overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(90deg,transparent_50%,rgba(255,255,255,0.03)_50%)] bg-[length:50px_50px] animate-pulse"></div>
+            <div className="absolute inset-0 opacity-10 overflow-hidden pointer-events-none">
+                <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(90deg,transparent_50%,rgba(255,255,255,0.03)_50%)] bg-[length:50px_50px]"></div>
             </div>
 
             <div className="max-w-7xl mx-auto relative z-10">
