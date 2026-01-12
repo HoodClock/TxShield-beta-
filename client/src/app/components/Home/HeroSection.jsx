@@ -4,20 +4,25 @@ import React from 'react'
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { MdArrowRightAlt } from "react-icons/md";
-import DarkVeil from '../backgrounds/DarkVeil';
+import LightPillar from '../backgrounds/LightPillar';
 
 function HeroSection() {
     return (
         <section className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{ border: 'none', borderTop: 'none', marginTop: 0, paddingTop: 0 }}>
-            {/* Dark Veil Background */}
+            {/* Light Pillar Background */}
             <div className="absolute inset-0 z-0">
-                <DarkVeil 
-                    hueShift={0}
-                    noiseIntensity={0.02}
-                    scanlineIntensity={0}
-                    speed={0.5}
-                    scanlineFrequency={0}
-                    warpAmount={0.3}
+                <LightPillar 
+                    topColor="#5227FF"
+                    bottomColor="#FF9FFC"
+                    intensity={1.0}
+                    rotationSpeed={0.3}
+                    glowAmount={0.005}
+                    pillarWidth={3.0}
+                    pillarHeight={0.4}
+                    noiseIntensity={0.5}
+                    pillarRotation={0}
+                    interactive={false}
+                    mixBlendMode="normal"
                 />
             </div>
 
@@ -35,23 +40,20 @@ function HeroSection() {
                                 >
                                     <motion.div 
                                         className="relative h-24 sm:h-28 md:h-32 w-auto flex items-center justify-center transition-all duration-300"
-                                        animate={{ scale: [1, 1.05, 1] }}
-                                        transition={{ 
-                                            duration: 4, 
-                                            repeat: Infinity, 
-                                            ease: "easeInOut" 
-                                        }}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        transition={{ duration: 1 }}
                                     >
-                                        <div className="absolute inset-0 bg-cyan-500/20 blur-3xl rounded-full opacity-50 animate-pulse"></div>
+                                        <div className="absolute inset-0 bg-cyan-500/10 blur-3xl rounded-full opacity-50"></div>
                                         <img
                                             src="/Images/logo.png"
                                             alt="Shield Logo"
-                                            className="h-full w-auto object-contain relative z-10 drop-shadow-[0_0_15px_rgba(6,182,212,0.5)]"
+                                            className="h-full w-auto object-contain relative z-10"
                                         />
                                     </motion.div>
                                 </Link>
                 <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold mb-4 sm:mb-6 tracking-tight px-2">
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 animate-gradient-x">
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#6B3BFF] via-[#FF1493] to-[#FF69B4] animate-gradient-x">
                         SHIELD
                     </span>
                     <br />

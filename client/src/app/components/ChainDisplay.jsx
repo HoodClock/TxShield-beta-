@@ -8,16 +8,16 @@ function ChainDisplay() {
 
     // Chain logos using CoinGecko CDN for reliable logo sources
     const chains = [
-        { id: 'eth', label: 'Ethereum', logo: 'https://assets.coingecko.com/coins/images/279/small/ethereum.png' },
-        { id: 'bnb', label: 'BNB Smart Chain', logo: 'https://assets.coingecko.com/coins/images/825/small/bnb-icon2_2x.png' },
-        { id: 'avax', label: 'Avalanche', logo: 'https://assets.coingecko.com/coins/images/12559/small/avalanche-avax-logo.png', fallback: 'https://cryptologos.cc/logos/avalanche-avax-logo.png' },
-        { id: 'matic', label: 'Polygon', logo: 'https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png' },
-        { id: 'arb', label: 'Arbitrum', logo: 'https://assets.coingecko.com/coins/images/16547/small/arbitrum.png', fallback: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png' },
-        { id: 'op', label: 'Optimism', logo: 'https://assets.coingecko.com/coins/images/25244/small/Optimism.png' },
-        { id: 'ftm', label: 'Fantom', logo: 'https://assets.coingecko.com/coins/images/4001/small/Fantom.png' },
-        { id: 'celo', label: 'Celo', logo: 'https://assets.coingecko.com/coins/images/11090/small/InjXBNx9_400x400.jpg' },
-        { id: 'aurora', label: 'Aurora', logo: 'https://assets.coingecko.com/coins/images/20582/small/aurora.jpeg' },
-        { id: 'sol', label: 'Solana', logo: 'https://assets.coingecko.com/coins/images/4128/small/solana.png' }
+        { id: 'eth', label: 'Ethereum', logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png' },
+        { id: 'bnb', label: 'BNB Smart Chain', logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png' },
+        { id: 'avax', label: 'Avalanche', logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/avalanchec/info/logo.png' },
+        { id: 'matic', label: 'Polygon', logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png' },
+        { id: 'arb', label: 'Arbitrum', logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/arbitrum/info/logo.png' },
+        { id: 'op', label: 'Optimism', logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/optimism/info/logo.png' },
+        { id: 'ftm', label: 'Fantom', logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/fantom/info/logo.png' },
+        { id: 'celo', label: 'Celo', logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/celo/info/logo.png' },
+        { id: 'aurora', label: 'Aurora', logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/aurora/info/logo.png' },
+        { id: 'sol', label: 'Solana', logo: 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/solana/info/logo.png' }
     ];
 
     return (
@@ -73,11 +73,11 @@ function ChainDisplay() {
                                             <div className="flex flex-col items-center p-2 sm:p-3 rounded-xl bg-gradient-to-br from-white/3 via-white/2 to-white/1 border border-white/5 hover:border-purple-400/50 hover:bg-white/8 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300 group/chain">
                                                 <div className="relative mb-1.5 sm:mb-2">
                                                     <div className="p-[2px] rounded-full bg-gradient-to-br from-purple-500 via-indigo-600 to-cyan-400 group-hover/chain:from-purple-400 group-hover/chain:via-cyan-400 group-hover/chain:to-purple-400 transition-all duration-300" style={{ boxShadow: '0 4px 15px rgba(79,70,229,0.12)' }}>
-                                                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#0B0B0B] flex items-center justify-center p-1 sm:p-1.5 group-hover/chain:scale-110 transition-transform duration-300">
+                                                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#0B0B0B] flex items-center justify-center p-1 sm:p-1.5 group-hover/chain:scale-110 transition-transform duration-300 overflow-hidden">
                                                             <img 
                                                                 src={chain.logo} 
                                                                 alt={chain.label}
-                                                                className="w-full h-full object-contain"
+                                                                className="w-full h-full object-cover rounded-full"
                                                                 onError={(e) => {
                                                                     // Try fallback logo if available
                                                                     if (chain.fallback && e.target.src !== chain.fallback) {
