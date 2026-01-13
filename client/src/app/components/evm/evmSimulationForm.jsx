@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { serialize, useAccount } from "wagmi";
 import { motion } from "framer-motion";
-import "./evmSimulationForm.module.css";
+import styles from "./evmSimulationForm.module.css";
 
 
 export default function SimulationForm({ onSimulateAll, backButtonHandler, onSwitchChain }) {
@@ -51,12 +51,12 @@ export default function SimulationForm({ onSimulateAll, backButtonHandler, onSwi
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -50 }}
         transition={{ duration: 0.4, ease: "easeInOut" }}
-        className="relative p-1 rounded-3xl bg-gradient-to-br from-blue-500/30 via-blue-600/10 to-blue-400/5 max-w-2xl mx-auto shadow-2xl"
+        className="relative p-1 rounded-3xl max-w-2xl mx-auto shadow-2xl"
       >
         <div className="relative bg-black/90 backdrop-blur-xl rounded-[22px] p-6 md:p-8 overflow-hidden">
-            {/* Ambient Background */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-600/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
+            {/* Blue Light Pillar Background */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/15 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-600/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
 
             <button
             onClick={backButtonHandler}
@@ -137,7 +137,7 @@ export default function SimulationForm({ onSimulateAll, backButtonHandler, onSwi
                     <input
                     type="number"
                     placeholder="0.0"
-                    className="w-full px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:bg-blue-500/5 focus:ring-1 focus:ring-blue-500/50 transition-all duration-300 font-mono text-sm shadow-inner"
+                    className={`w-full px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:bg-blue-500/5 focus:ring-1 focus:ring-blue-500/50 transition-all duration-300 font-mono text-sm shadow-inner ${styles.noSpinner}`}
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     />
@@ -152,7 +152,7 @@ export default function SimulationForm({ onSimulateAll, backButtonHandler, onSwi
                     onClick={handleSimulate}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold text-base shadow-lg evm-btn-glow relative overflow-hidden group"
+                    className={`w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold text-base shadow-lg relative overflow-hidden group ${styles['evm-btn-glow']}`}
                     >
                     <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
                     <span className="relative z-10 flex items-center justify-center gap-2">
