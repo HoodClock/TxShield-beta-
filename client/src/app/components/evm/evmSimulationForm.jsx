@@ -3,10 +3,8 @@
 import { useState } from "react";
 import { serialize, useAccount } from "wagmi";
 import { motion } from "framer-motion";
-<<<<<<< HEAD
-=======
+
 import styles from "./evmSimulationForm.module.css";
->>>>>>> 527297aa58800fcba955f6dbe089391f84f213ed
 
 export default function SimulationForm({
   onSimulateAll,
@@ -59,15 +57,13 @@ export default function SimulationForm({
         className="relative p-1 rounded-3xl max-w-2xl mx-auto shadow-2xl"
       >
         <div className="relative bg-black/90 backdrop-blur-xl rounded-[22px] p-6 md:p-8 overflow-hidden">
-<<<<<<< HEAD
           {/* Ambient Background */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-600/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
-=======
-            {/* Blue Light Pillar Background */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/15 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-600/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
->>>>>>> 527297aa58800fcba955f6dbe089391f84f213ed
+
+          {/* Blue Light Pillar Background */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/15 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-600/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
 
           <button
             onClick={backButtonHandler}
@@ -185,7 +181,6 @@ export default function SimulationForm({
                 </div>
               </div>
 
-<<<<<<< HEAD
               <div className="pt-2">
                 <motion.button
                   onClick={handleSimulate}
@@ -213,34 +208,32 @@ export default function SimulationForm({
                   </span>
                 </motion.button>
               </div>
-=======
-                <div className="pt-2">
-                    <motion.button
-                      onClick={handleSimulate}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className={`w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold text-base shadow-lg relative overflow-hidden group ${styles['evm-btn-glow']}`}
+              <div className="pt-2">
+                <motion.button
+                  onClick={handleSimulate}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold text-base shadow-lg relative overflow-hidden group ${styles["evm-btn-glow"]}`}
+                >
+                  <span className="flex items-center justify-center gap-2">
+                    Simulate Transaction
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
                     >
-                      <span className="flex items-center justify-center gap-2">
-                        Simulate Transaction
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M14 5l7 7m0 0l-7 7m7-7H3"
-                          />
-                        </svg>
-                      </span>
-                    </motion.button>
-                </div>
->>>>>>> 527297aa58800fcba955f6dbe089391f84f213ed
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M14 5l7 7m0 0l-7 7m7-7H3"
+                      />
+                    </svg>
+                  </span>
+                </motion.button>
+              </div>
             </div>
           </div>
         </div>
