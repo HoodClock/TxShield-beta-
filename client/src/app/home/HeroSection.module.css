@@ -229,14 +229,14 @@ body {
 }
 
 /* Custom scrollbar */
-::-webkit-scrollbar {
+:global(::-webkit-scrollbar) {
   width: 8px;
   height: 8px;
 }
-::-webkit-scrollbar-track {
+:global(::-webkit-scrollbar-track) {
   background: #0A0A0A;
 }
-::-webkit-scrollbar-thumb {
+:global(::-webkit-scrollbar-thumb) {
   background: linear-gradient(to bottom, #22d3ee, #6366f1);
   border-radius: 10px;
 }

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import LightPillar from './components/backgrounds/LightPillar';
+
 
 export default function ClientLayout({ children }) {
   const [queryClient] = useState(() => 
@@ -25,19 +25,7 @@ export default function ClientLayout({ children }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <LightPillar 
-        topColor="#5227FF"
-        bottomColor="#FF9FFC"
-        intensity={1.0}
-        rotationSpeed={0.3}
-        glowAmount={0.005}
-        pillarWidth={3.0}
-        pillarHeight={0.4}
-        noiseIntensity={0.5}
-        pillarRotation={0}
-        interactive={false}
-        mixBlendMode="normal"
-      />
+
       {children}
     </QueryClientProvider>
   );
