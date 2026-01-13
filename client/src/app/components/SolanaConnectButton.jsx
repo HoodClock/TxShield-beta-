@@ -34,7 +34,8 @@ export default function SolanaConnectButton() {
                         whileTap={{ scale: 0.95 }}
                         onClick={handleConnectClick}
                         type="button"
-                        className="px-6 py-3 bg-gradient-to-r from-purple-500 to-cyan-500 text-white font-bold rounded-lg hover:from-purple-600 hover:to-cyan-600 transition-all duration-300 shadow-lg shadow-purple-500/40 flex items-center justify-center"
+                        className="px-6 py-3 bg-gradient-to-r from-purple-500 to-cyan-500 text-white font-bold rounded-lg hover:from-purple-600 hover:to-cyan-600 transition-all duration-300 shadow-lg shadow-purple-500/40 flex items-center justify-center !visible !block !opacity-100"
+                        style={{ visibility: 'visible', display: 'block', opacity: 1, zIndex: 10 }}
                     >
                         Connect Solana Wallet
                     </motion.button>
