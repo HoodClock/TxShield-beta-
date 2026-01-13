@@ -1,9 +1,9 @@
 /* Solana Simulation Form Styles */
 .sol-btn-glow {
-  box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
 }
 .sol-btn-glow:hover {
-  box-shadow: 0 0 40px rgba(168, 85, 247, 0.8);
+    box-shadow: 0 0 40px rgba(168, 85, 247, 0.8);
 }
 .sol-input-gradient {
   background: linear-gradient(
@@ -20,4 +20,5 @@
 }
 .noSpinner {
   -moz-appearance: textfield;
+  appearance: textfield;
 }

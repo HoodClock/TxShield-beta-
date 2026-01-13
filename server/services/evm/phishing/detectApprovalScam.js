@@ -8,10 +8,14 @@ const { getTransactionHistory } = require("../simulation/index");
 
 // keywords that signal phishing patterns
 const SUSPICIOUS_FUNCTIONS = ["approve", "transferFrom"];
-const MAX_UINT = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
+const MAX_UINT =
+  "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
 
-const detectApprovalScam = async (userAddress, recepientAddress, currencySymbol) => {
-
+const detectApprovalScam = async (
+  userAddress,
+  recepientAddress,
+  currencySymbol,
+) => {
   const isSmartContract = await isContract(recepientAddress, currencySymbol);
 
   if (!isSmartContract) {
@@ -45,8 +49,7 @@ const detectApprovalScam = async (userAddress, recepientAddress, currencySymbol)
   }
 
   // Check source code for suspicious patterns (like owner-only drain logic)
-  if (sourceCodeObj && typeof sourceCodeObj === 'string') {
-
+  if (sourceCodeObj && typeof sourceCodeObj === "string") {
     const lowerCode = sourceCodeObj.toLowerCase();
 
     if (
@@ -66,7 +69,8 @@ const detectApprovalScam = async (userAddress, recepientAddress, currencySymbol)
       return (
         tx.method?.toLowerCase().includes("transferfrom") &&
         tx.from?.toLowerCase() !== userAddress.toLowerCase() &&
-        tx.value && Number(tx.value) > 0
+        tx.value &&
+        Number(tx.value) > 0
       );
     });
 
@@ -79,9 +83,10 @@ const detectApprovalScam = async (userAddress, recepientAddress, currencySymbol)
   if (suspiciousAbi || suspiciousSource || suspiciousHistory) {
     return {
       isScam: true,
-      confidence: suspiciousAbi && suspiciousSource && suspiciousHistory
-        ? "high"
-        : "medium",
+      confidence:
+        suspiciousAbi && suspiciousSource && suspiciousHistory
+          ? "high"
+          : "medium",
       reason: "Contract shows suspicious approval logic and draining behavior.",
     };
   }
@@ -89,7 +94,8 @@ const detectApprovalScam = async (userAddress, recepientAddress, currencySymbol)
   return {
     isScam: false,
     confidence: "medium",
-    reason: "No strong phishing patterns detected in ABI or transaction history.",
+    reason:
+      "No strong phishing patterns detected in ABI or transaction history.",
   };
 };
 

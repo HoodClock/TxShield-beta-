@@ -16,4 +16,5 @@
 }
 .noSpinner {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
