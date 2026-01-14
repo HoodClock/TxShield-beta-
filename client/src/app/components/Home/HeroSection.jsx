@@ -1,36 +1,32 @@
 "use client"
 
-import React from 'react'
+import React, { Suspense } from 'react'
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { MdArrowRightAlt } from "react-icons/md";
-import LightPillar from '../backgrounds/LightPillar';
+import dynamic from 'next/dynamic';
+
+const LightPillar = dynamic(() => import('../backgrounds/LightPillar'), {
+    loading: () => <div className="absolute inset-0 bg-gradient-to-b from-purple-900/50 to-black" />,
+    ssr: false
+});
 
 function HeroSection() {
     return (
         <section className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{ border: 'none', borderTop: 'none', marginTop: 0, paddingTop: 0 }}>
             {/* Light Pillar Background */}
-            <div className="absolute inset-0 z-0">
-                <LightPillar 
-                    topColor="#5227FF"
-                    bottomColor="#FF9FFC"
-                    intensity={1.0}
-                    rotationSpeed={0.3}
-                    glowAmount={0.005}
-                    pillarWidth={3.0}
-                    pillarHeight={0.4}
-                    noiseIntensity={0.5}
-                    pillarRotation={0}
-                    interactive={false}
-                    mixBlendMode="normal"
-                />
-            </div>
+            <Suspense fallback={<div className="absolute inset-0 bg-gradient-to-b from-purple-900/50 to-black" />}>
+                <div className="absolute inset-0 z-0">
+                    <LightPillar />
+                </div>
+            </Suspense>
 
             <motion.div
                 className="text-center px-4 sm:px-6 md:px-8 max-w-4xl mx-auto relative z-10 pt-8 sm:pt-12 md:pt-16"
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1 }}
+                transition={{ duration: 0.8 }}
+                style={{ willChange: 'transform, opacity' }}
             >
                 {/* Centered Logo above SHIELD */}
                                 <Link
@@ -44,11 +40,15 @@ function HeroSection() {
                                         animate={{ opacity: 1 }}
                                         transition={{ duration: 1 }}
                                     >
-                                        <div className="absolute inset-0 bg-cyan-500/10 blur-3xl rounded-full opacity-50"></div>
+                                        <div className="absolute inset-0 bg-cyan-500/10 rounded-full opacity-50 max-sm:hidden" style={{filter: 'blur(48px)'}}></div>
                                         <img
                                             src="/Images/logo.png"
                                             alt="Shield Logo"
                                             className="h-full w-auto object-contain relative z-10"
+                                            loading="eager"
+                                            decoding="async"
+                                            width={128}
+                                            height={128}
                                         />
                                     </motion.div>
                                 </Link>
@@ -74,8 +74,8 @@ function HeroSection() {
                     >
                         {/* Gradient background */}
                         <div className="absolute inset-0 bg-gradient-to-r from-white via-gray-100 to-white"></div>
-                        {/* Shimmer effect */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                        {/* Shimmer effect - hidden on mobile for performance */}
+                        <div className="hidden sm:block absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                         {/* Text */}
                         <span className="relative z-10 text-black flex items-center justify-center">
                             Start Protecting
@@ -89,8 +89,8 @@ function HeroSection() {
                         rel="noopener noreferrer"
                         className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-medium text-center relative overflow-hidden hero-secondary-btn group border border-white/30 hover:border-white/50 transition-all duration-300"
                     >
-                        {/* Animated gradient border glow on hover */}
-                        <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-purple-500/50 via-cyan-500/50 to-purple-500/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm -z-10"></div>
+                        {/* Animated gradient border glow on hover - hidden on mobile for performance */}
+                        <div className="hidden sm:block absolute inset-0 rounded-lg bg-gradient-to-r from-purple-500/50 via-cyan-500/50 to-purple-500/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" style={{filter: 'blur(8px)'}}></div>
                         {/* Text */}
                         <span className="relative z-10 text-white">
                             Learn More
