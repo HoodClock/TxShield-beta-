@@ -208,32 +208,6 @@ export default function SimulationForm({
                   </span>
                 </motion.button>
               </div>
-              <div className="pt-2">
-                <motion.button
-                  onClick={handleSimulate}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold text-base shadow-lg relative overflow-hidden group ${styles["evm-btn-glow"]}`}
-                >
-                  <span className="flex items-center justify-center gap-2">
-                    Simulate Transaction
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M14 5l7 7m0 0l-7 7m7-7H3"
-                      />
-                    </svg>
-                  </span>
-                </motion.button>
-              </div>
             </div>
           </div>
         </div>
