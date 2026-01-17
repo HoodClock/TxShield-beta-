@@ -1,8 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap");
 @import "tailwindcss";
 
 @import "@rainbow-me/rainbowkit/styles.css";
 @import "@solana/wallet-adapter-react-ui/styles.css";
 @import "tw-animate-css";
+
+@font-face {
+    font-family: "ClashDisplay-Bold";
+    src: url("/fonts/ClashDisplay-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
 
 /* @custom-variant removed: define custom variants in tailwind.config.js if needed */
 
@@ -32,14 +41,6 @@ input[type="number"] {
 /* Make sure buttons are interactive */
 .rainbowkit-connect-wrapper button {
     cursor: pointer !important;
-}
-
-@font-face {
-    font-family: "ClashDisplay-Bold";
-    src: url("/fonts/ClashDisplay-Bold.woff2") format("woff2");
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
 }
 
 body {
