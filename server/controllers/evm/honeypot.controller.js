@@ -1,8 +1,23 @@
-const { evmHoneypotValidator } = require("../../validators/evm/evmHoneypot.validator");
-const { getAbi, isContract } = require("../../services/externals/etherscanService");
-const { normalizesAddresses } = require("../../utils/normalizeAddresses")
-const { calculateRisks } = require("../../utils/calculateHoneypotRisks.utils")
-const { detectBlackList, detectDisableTransfer, detectFakeBalance, detectGasTrap, detectHiddenOwnerFuncs, detectHighSellTax, detectHoneypotBuySellTrap, detectMintAccess, detectTradingControl } = require('../../services/evm/honeypot/index')
+const {
+  evmHoneypotValidator,
+} = require("../../validators/evm/evmHoneypot.validator");
+const {
+  getAbi,
+  isContract,
+} = require("../../services/externals/etherscanService");
+const { normalizesAddresses } = require("../../utils/normalizeAddresses");
+const { calculateRisks } = require("../../utils/calculateHoneypotRisks.utils");
+const {
+  detectBlackList,
+  detectDisableTransfer,
+  detectFakeBalance,
+  detectGasTrap,
+  detectHiddenOwnerFuncs,
+  detectHighSellTax,
+  detectHoneypotBuySellTrap,
+  detectMintAccess,
+  detectTradingControl,
+} = require("../../services/evm/honeypot/index");
 
 // master controllers of Honeypot Services
 const honeypotMasterController = async (req, res) => {
@@ -28,33 +43,34 @@ const honeypotMasterController = async (req, res) => {
       });
     }
 
-
     // payload for normilizing addresses
     const addressesTobeNormalized = {
       address,
       contractAddress,
       tokenAddress,
-      recepientAddress
-    }
+      recepientAddress,
+    };
 
     const normalizedAddresses = normalizesAddresses(addressesTobeNormalized);
-    
+
     // payload for validation
     const validationPayload = {
       ...normalizedAddresses,
       value,
-      currencySymbol
-    }
+      currencySymbol,
+    };
     // call the validator
-    const validityOfPayload = evmHoneypotValidator(validationPayload)
+    const validityOfPayload = evmHoneypotValidator(validationPayload);
 
     if (!validityOfPayload.success) {
       return res.status(401).json(validityOfPayload.message);
     }
 
-
     // ✅ Fetch ABI once only
-    const abi = await getAbi(normalizedAddresses.normalrecepientAddress, currencySymbol);
+    const abi = await getAbi(
+      normalizedAddresses.normalrecepientAddress,
+      currencySymbol,
+    );
 
     // Build context to gather all the payload we need in all honeypot detectors (normalized_one's)
     const context = {
@@ -67,7 +83,6 @@ const honeypotMasterController = async (req, res) => {
       currencySymbol,
       fromAddress: normalizedAddresses.normalAddress,
     };
-
 
     const [
       blackList,
@@ -83,10 +98,24 @@ const honeypotMasterController = async (req, res) => {
       detectBlackList(context.contractAddress, context.abi),
       detectDisableTransfer(context.contractAddress, context.abi),
       detectFakeBalance(context.contractAddress, context.abi),
-      detectGasTrap(context.contractAddress, context.userAddress, context.value, context.currencySymbol),
+      detectGasTrap(
+        context.contractAddress,
+        context.userAddress,
+        context.value,
+        context.currencySymbol,
+      ),
       detectHiddenOwnerFuncs(context.contractAddress, context.abi),
-      detectHighSellTax(context.contractAddress, context.abi, context.currencySymbol),
-      detectHoneypotBuySellTrap(context.contractAddress, context.userAddress, context.value, context.currencySymbol),
+      detectHighSellTax(
+        context.contractAddress,
+        context.abi,
+        context.currencySymbol,
+      ),
+      detectHoneypotBuySellTrap(
+        context.contractAddress,
+        context.userAddress,
+        context.value,
+        context.currencySymbol,
+      ),
       detectMintAccess(context.contractAddress, context.abi),
       detectTradingControl(context.abi),
     ]);
@@ -104,7 +133,7 @@ const honeypotMasterController = async (req, res) => {
     ];
 
     const totalWeightedSum = allChecks.reduce((sum, check) => {
-      return sum + (check?.risk ? (check?.score || 0) : 0);
+      return sum + (check?.risk ? check?.score || 0 : 0);
     }, 0);
 
     const riskSummeryWithScoring = calculateRisks(totalWeightedSum);
