@@ -1,5 +1,6 @@
 const { isAddress } = require("ethers");
 const { ethers } = require("ethers");
+const { decideChains } = require("../../config/provider");
 const {
   evmSimulateValidator,
 } = require("../../validators/evm/evmSimulation.validator");
@@ -19,27 +20,43 @@ const masterSimulationController = async (req, res) => {
     // call the validator
     evmSimulateValidator(req.body);
 
-    // preparing simulation Parameters
-    let txData = "0x";
-    let valueInWei = "0";
-    let tokenAddress = ethers.ZeroAddress;
-    let watchToken = WATCH_TOKEN_USDT;
+    // getting provider
+    const provider = decideChains(currencySymbol);
 
     const cleanAddress = recepientAddress.toLowerCase();
     if (!isAddress(cleanAddress)) {
       throw new Error("Invalid Ethereum Address format");
     }
 
-    // handles both cases (if someone sending ETH to contract or user sending token to ERC20)
+    let txTo;
+    let txData;
+    let txValue;
+    let tokenAddress = ethers.ZeroAddress;
+
     if (currencySymbol === "ETH") {
-      valueInWei = ethers.parseEther(amount.toString()).toString();
+      txTo = cleanAddress;
+      const weiBigInt = ethers.parseEther(amount.toString());
+      txValue = ethers.toBeHex(weiBigInt);
       txData = "0x";
-      tokenAddress = ethers.ZeroAddress;
     } else {
-      valueInWei = "0";
-      tokenAddress = cleanAddress;
-      txData = getErc20TransferData(amount);
+      tokenAddress =
+        WATCH_TOKENS_DELTAS[currencySymbol] || req.body.tokenAddress;
+      if (!tokenAddress)
+        throw new Error(`Unknown Token Symbol: ${currencySymbol}`);
+
+      txTo = tokenAddress;
+      txValue = "0x0";
+
+      txData = await getErc20TransferData(
+        provider,
+        tokenAddress,
+        cleanAddress,
+        amount,
+      );
     }
+
+    // preparing simulation Parameters
+    let watchToken = WATCH_TOKEN_USDT;
 
     // preparing the expected amount for tax-checking
     const expectedAmount = ethers.parseUnits(amount.toString(), 18).toString();
@@ -49,12 +66,12 @@ const masterSimulationController = async (req, res) => {
       await Promise.all([
         getSimulate(
           userAddress,
-          cleanAddress,
+          txTo,
           tokenAddress,
           watchToken,
           WATCH_TOKENS_DELTAS,
           txData,
-          valueInWei,
+          txValue,
           expectedAmount,
         ),
         analyzeByteCode(cleanAddress, currencySymbol),
@@ -76,15 +93,25 @@ const masterSimulationController = async (req, res) => {
 };
 
 // utility function to generate ERC20 transfer data
-const getErc20TransferData = (amountStr) => {
-  const erc20Abi = ["function transfer(address to, uint256 amount)"];
-  const iface = new ethers.Interface(erc20Abi);
+const getErc20TransferData = async (
+  provider,
+  tokenAddress,
+  recipient,
+  amountStr,
+) => {
+  const erc20Abi = [
+    "function transfer(address to, uint256 amount)",
+    "function decimals() view returns(uint8)",
+  ];
+  const tokenContract = new ethers.Contract(tokenAddress, erc20Abi, provider);
 
-  // simulate transferring to a 'Dead' address just to test the token logic
-  const deadAddress = "0x000000000000000000000000000000000000dEaD";
-  const amountWei = ethers.parseUnits(amountStr.toString(), 18);
+  const decimals = await tokenContract.decimals();
+  const amountWei = ethers.parseUnits(amountStr.toString(), decimals);
 
-  return iface.encodeFunctionData("transfer", [deadAddress, amountWei]);
+  return tokenContract.interface.encodeFunctionData("transfer", [
+    recipient,
+    amountWei,
+  ]);
 };
 
 // utility array for the hardcoded-big4-tokens to check MULTI_CHAIN_CHANGE_Tracking
