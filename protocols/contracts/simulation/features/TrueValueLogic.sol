@@ -10,14 +10,56 @@ abstract contract TrueValueLogic is SimulationBase {
     function _getRevertMsg(
         bytes memory _returnData
     ) internal pure returns (string memory) {
-        // if the response length is < 68, then tx failed siliently (without no reason)
-        if (_returnData.length < 68) return "Transaction reverted siliently";
-        // slicing of hash
+        if (_returnData.length < 4) return "Transaction reverted silently";
+
+        bytes4 selector;
         assembly {
-            _returnData := add(_returnData, 0x04)
+            selector := mload(add(_returnData, 0x20))
         }
 
-        return abi.decode(_returnData, (string));
+        // standard error
+        if (selector == 0x08c379a0) {
+            assembly {
+                _returnData := add(_returnData, 0x04)
+            }
+            return abi.decode(_returnData, (string));
+        }
+
+        // panic error
+        if (selector == 0x4e487b71) {
+            if (_returnData.length >= 36) {
+                uint256 panicCode;
+                assembly {
+                    panicCode := mload(add(_returnData, 0x24))
+                }
+                if (panicCode == 0x01) return "Panic: Assertion Failed";
+                if (panicCode == 0x11) return "Panic: Math Overflow/Underflow";
+                if (panicCode == 0x12) return "Panic: Division by Zero";
+                if (panicCode == 0x21) return "Panic: Enum Conversion Error";
+                if (panicCode == 0x22) return "Panic: Storage Encoding Error";
+                if (panicCode == 0x31) return "Panic: Empty Array Pop";
+                if (panicCode == 0x32) return "Panic: Array Out of Bounds";
+                if (panicCode == 0x41) return "Panic: Out of Memory";
+                if (panicCode == 0x51) return "Panic: Internal Function Type";
+                return "Panic: Unknown Code";
+            }
+        }
+
+        // custom error
+        return string(abi.encodePacked("Custom Error: ", _toHex(selector)));
+    }
+
+    // helper funciton to convert byte4 -> string hex
+    function _toHex(bytes4 data) internal pure returns (string memory) {
+        bytes memory alphabet = "0123456789abcdef";
+        bytes memory str = new bytes(10);
+        str[0] = "0";
+        str[1] = "x";
+        for (uint256 i = 0; i < 4; i++) {
+            str[2 + i * 2] = alphabet[uint8(data[i] >> 4)];
+            str[3 + i * 2] = alphabet[uint8(data[i] & 0x0f)];
+        }
+        return string(str);
     }
 
     // helper function to check if the address is a contract or not
@@ -115,6 +157,24 @@ abstract contract TrueValueLogic is SimulationBase {
             delta.watchedTokensDeltas[i] = int256(
                 endsWatchBalances[i] - startWatchBalances[i]
             );
+        }
+
+        // checking honeypot: bought & send/move 1_wei so to check if user can move its token or not
+        if (
+            delta.success &&
+            delta.tokenDelta > 0 &&
+            tokenAddress != address(this)
+        ) {
+            try
+                IERC20(tokenAddress).transfer(
+                    address(0x000000000000000000000000000000000000dEaD),
+                    1
+                )
+            {
+                delta.isHoneypot = false; // our token can be moved after interacting with the our tokenAddress
+            } catch {
+                delta.isHoneypot = true; // can buy but can't be sell
+            }
         }
 
         return (delta, returnData);

@@ -13,6 +13,8 @@ contract SimulationBase {
         uint256 allowanceDelta;
         string errorReason;
         bytes returnData;
+        bool reentrancyDetected;
+        bool isHoneypot;
         uint256 esitmatedTaxBps;
         uint256 gasUsed;
     }

@@ -10,6 +10,9 @@ contract TxShieldSimulator is
     SideEffectsAllowance,
     ReturnDataLogic
 {
+    bool private _isExecuting;
+    bool private _reentrancyFlag;
+
     function simulateTransaction(
         address targetContract,
         address tokenAddress,
@@ -18,6 +21,10 @@ contract TxShieldSimulator is
         uint256 expectedAmount,
         bytes calldata data
     ) external payable returns (BalanceDelta memory) {
+        // locking bool value to capture the reentrancy
+        _reentrancyFlag = false;
+        _isExecuting = true; // this will lock the simulation phase
+
         // catching before tx gas value
         uint256 stateZeroGas = gasleft();
 
@@ -33,6 +40,10 @@ contract TxShieldSimulator is
                 additionalTokens,
                 msg.value
             );
+
+        // unlocking bool value
+        _isExecuting = false;
+        result.reentrancyDetected = _reentrancyFlag;
 
         // tax logic to check if the recieved amount is as it is or is it changed
         if (result.success && expectedAmount > 0 && result.tokenDelta > 0) {
@@ -57,5 +68,11 @@ contract TxShieldSimulator is
         return result;
     }
 
-    receive() external payable {}
+    // checking for trap(reentrancy) & make it payable
+
+    receive() external payable {
+        if (_isExecuting) {
+            _reentrancyFlag = true;
+        }
+    }
 }
