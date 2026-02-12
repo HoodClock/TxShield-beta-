@@ -20,16 +20,15 @@ abstract contract BlacklistLogic is HoneypotBase {
     // reads => tries to read the list
     bytes4[] private _readSelectors = [
         bytes4(0xfe575a87), // isBlacklisted(address)
+        bytes4(0xe47d6060), // isBlackListed(address)
         bytes4(0x40c10f19), // isBanned(address)
         bytes4(0x9a84d642), // isLocked(address)
         bytes4(0x56a6552a), // isFrozen(address)
-        bytes4(0x893d390a) // isDenied(address)
+        bytes4(0x893d390a), // isDenied(address)
+        bytes4(0x59bf1abe) // getBlackListStatus(address)
     ];
 
-    function _isBlacklist(
-        address target,
-        address owner
-    ) internal returns (bool) {
+    function _isBlacklist(address target) internal returns (bool) {
         address dummy = address(0xDEAD);
 
         // bruteforcing => writes
