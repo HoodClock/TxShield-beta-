@@ -3,7 +3,6 @@ pragma solidity ^0.8.20;
 
 import "./honeypot/base/HoneypotBase.sol";
 import "./honeypot/features/BlacklistLogic.sol";
-import "./honeypot/features/MintAccessLogic.sol";
 import "./honeypot/features/TradingControlLogic.sol";
 import "./honeypot/features/HighTaxLogic.sol";
 
@@ -15,7 +14,6 @@ import "./honeypot/features/HighTaxLogic.sol";
 contract TxShieldHoneypot is
     HoneypotBase,
     BlacklistLogic,
-    MintAccessLogic,
     TradingControlLogic,
     HighTaxLogic
 {
@@ -43,14 +41,6 @@ contract TxShieldHoneypot is
 
         if (result.isBlackListDetected) {
             result.riskScore += 10; // Increment risk score if a blacklist is detected.
-        }
-
-        // Evaluate if the target contract has minting capabilities that could be exploited.
-        bool isMintable = _checkMint(targetContract);
-
-        if (isMintable) {
-            result.riskScore += 5; // Increment risk score if mint access is detected.
-            result.isMintable = true;
         }
 
         // Evaluation of target contract if the dev have the seceret swith for trading control

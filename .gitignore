@@ -1,0 +1,5 @@
+
+# Foundry dependencies - never commit these
+protocols/lib/
+protocols/out/
+protocols/cache/
