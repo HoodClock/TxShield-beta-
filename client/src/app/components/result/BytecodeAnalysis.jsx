@@ -18,7 +18,7 @@ export default function BytecodeAnalysis({
     <motion.div variants={itemVariants} className="group gradient-border-card">
       <button
         onClick={() => toggleSection("bytecode")}
-        className="card-inner p-4 sm:p-6 w-full"
+        className="card-inner p-4 sm:p-6 w-full glitch-hover"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 sm:gap-4">
@@ -55,11 +55,10 @@ export default function BytecodeAnalysis({
                     {isScam ? 'POTENTIAL SCAM DETECTED' : 'CLEAN CONTRACT'}
                   </span>
                   {confidence && (
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase font-bold ${
-                      confidence.toLowerCase() === 'high' ? 'bg-red-500/20 text-red-400' : 
-                      confidence.toLowerCase() === 'medium' ? 'bg-yellow-500/20 text-yellow-400' : 
-                      'bg-emerald-500/20 text-emerald-400'
-                    }`}>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase font-bold ${confidence.toLowerCase() === 'high' ? 'bg-red-500/20 text-red-400' :
+                        confidence.toLowerCase() === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
+                          'bg-emerald-500/20 text-emerald-400'
+                      }`}>
                       {confidence} Confidence
                     </span>
                   )}

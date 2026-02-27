@@ -111,17 +111,17 @@ function AnalysisSection() {
                             <button
                                 key={pb.id}
                                 onClick={() => setSelected(pb.id)}
-                                className={`relative px-6 py-2.5 rounded-lg text-sm sm:text-base font-medium transition-all duration-300 ${selected === pb.id
-                                        ? "text-white shadow-lg"
-                                        : "text-gray-400 hover:text-white hover:bg-white/5"
+                                className={`relative px-6 py-2.5 rounded-lg text-sm sm:text-base font-medium transition-all duration-300 glitch-hover ${selected === pb.id
+                                    ? "text-white shadow-lg"
+                                    : "text-gray-400 hover:text-white hover:bg-white/5"
                                     }`}
                             >
                                 {selected === pb.id && (
                                     <motion.div
                                         layoutId="activeTab"
                                         className={`absolute inset-0 rounded-lg bg-gradient-to-r ${pb.id === 'honeypot'
-                                                ? 'from-red-600/20 to-orange-600/20 border border-red-500/50'
-                                                : 'from-blue-600/20 to-cyan-600/20 border border-blue-500/50'
+                                            ? 'from-red-600/20 to-orange-600/20 border border-red-500/50'
+                                            : 'from-blue-600/20 to-cyan-600/20 border border-blue-500/50'
                                             }`}
                                         initial={false}
                                         transition={{ type: "spring", stiffness: 500, damping: 30 }}

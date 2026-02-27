@@ -25,7 +25,7 @@ export default function HeroBackground({ className = "" }) {
                 y: Math.random() * height,
                 vx: (Math.random() - 0.5) * 0.5,
                 vy: (Math.random() - 0.5) * 0.5,
-                radius: Math.random() * 2 + 0.5
+                radius: Math.random() * 3 + 1.5 // Increased from * 2 + 0.5
             });
         }
 
@@ -42,7 +42,7 @@ export default function HeroBackground({ className = "" }) {
             ctx.clearRect(0, 0, width, height);
 
             ctx.fillStyle = "rgba(168, 85, 247, 0.8)"; // Tailwind purple-500
-            ctx.lineWidth = 0.5;
+            ctx.lineWidth = 1.2; // Increased from 0.5
 
             for (let i = 0; i < particleCount; i++) {
                 const p = particles[i];
@@ -66,9 +66,9 @@ export default function HeroBackground({ className = "" }) {
                     const dy = p.y - p2.y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
 
-                    if (dist < 120) {
+                    if (dist < 180) { // Increased from 120
                         ctx.beginPath();
-                        ctx.strokeStyle = `rgba(168, 85, 247, ${0.4 * (1 - dist / 120)})`;
+                        ctx.strokeStyle = `rgba(168, 85, 247, ${0.4 * (1 - dist / 180)})`;
                         ctx.moveTo(p.x, p.y);
                         ctx.lineTo(p2.x, p2.y);
                         ctx.stroke();
@@ -79,9 +79,9 @@ export default function HeroBackground({ className = "" }) {
                 const dxMouse = p.x - mouse.x;
                 const dyMouse = p.y - mouse.y;
                 const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
-                if (distMouse < 150) {
+                if (distMouse < 220) { // Increased from 150
                     ctx.beginPath();
-                    ctx.strokeStyle = `rgba(192, 132, 252, ${0.5 * (1 - distMouse / 150)})`; // tailwind purple-400
+                    ctx.strokeStyle = `rgba(192, 132, 252, ${0.6 * (1 - distMouse / 220)})`; // tailwind purple-400
                     ctx.moveTo(p.x, p.y);
                     ctx.lineTo(mouse.x, mouse.y);
                     ctx.stroke();

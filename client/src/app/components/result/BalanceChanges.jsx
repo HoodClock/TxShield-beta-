@@ -15,7 +15,7 @@ export default function BalanceChanges({
     <motion.div variants={itemVariants} className="group gradient-border-card">
       <button
         onClick={() => toggleSection("balances")}
-        className="card-inner p-4 sm:p-6 w-full"
+        className="card-inner p-4 sm:p-6 w-full glitch-hover"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 sm:gap-4">

@@ -50,19 +50,23 @@ function HeroSection() {
                         SHIELD
                     </span>
                     <span className="text-white text-2xl sm:text-3xl md:text-5xl lg:text-5xl font-mono leading-tight">
-                        <ScrambleText text="Every Transaction" duration={2000} loop={true} loopDelay={3000} />
+                        <ScrambleText text="Every Transaction" duration={3000} loop={false} />
                     </span>
                 </h1>
 
                 <p className="text-gray-400 text-base sm:text-lg md:text-xl mb-6 sm:mb-8 max-w-2xl font-mono mx-auto px-4 mt-2">
-                    Enterprise-grade security for your blockchain transactions.
-                    Protecting against scams, honeypots, and malicious contracts.
+                    <ScrambleText
+                        text="Enterprise-grade security for your blockchain transactions. Protecting against scams, honeypots, and malicious contracts."
+                        duration={4000}
+                        delay={0.3}
+                        loop={false}
+                    />
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-4">
                     <Link
                         href="/simulate"
-                        className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-medium group text-center relative overflow-hidden hero-primary-btn"
+                        className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-medium group text-center relative overflow-hidden hero-primary-btn glitch-hover"
                     >
                         {/* Gradient background */}
                         <div className="absolute inset-0 bg-gradient-to-r from-white via-gray-100 to-white"></div>
@@ -79,7 +83,7 @@ function HeroSection() {
                         href="https://txshield.gitbook.io/txshield-docs/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-medium text-center relative overflow-hidden hero-secondary-btn group border border-white/30 hover:border-white/50 transition-all duration-300"
+                        className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-medium text-center relative overflow-hidden hero-secondary-btn group border border-white/30 hover:border-white/50 transition-all duration-300 glitch-hover"
                     >
                         {/* Animated gradient border glow on hover - hidden on mobile for performance */}
                         <div className="hidden sm:block absolute inset-0 rounded-lg bg-gradient-to-r from-purple-500/50 via-cyan-500/50 to-purple-500/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" style={{ filter: 'blur(8px)' }}></div>
