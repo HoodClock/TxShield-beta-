@@ -3,10 +3,19 @@ const nextConfig = {
     experimental: {
         optimizePackageImports: ['@rainbow-me/rainbowkit', '@solana/wallet-adapter-react', 'wagmi'],
     },
-    webpack: (config) => {
+    webpack: (config, { webpack }) => {
         config.cache = {
             type: 'filesystem',
         };
+        config.resolve.fallback = {
+            ...config.resolve.fallback,
+            ws: false,
+        };
+        config.plugins.push(
+            new webpack.IgnorePlugin({
+                resourceRegExp: /^ws$/,
+            })
+        );
         return config;
     },
     // Enable React strict mode for better error detection

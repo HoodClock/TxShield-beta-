@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { serialize, useAccount } from "wagmi";
 import { motion } from "framer-motion";
+import ScrambleText from "../ScrambleText";
+import DataFlowBackground from "../DataFlowBackground";
 
 import styles from "./evmSimulationForm.module.css";
 
@@ -57,6 +59,7 @@ export default function SimulationForm({
         className="relative p-1 rounded-3xl max-w-2xl mx-auto shadow-2xl"
       >
         <div className="relative bg-black/90 backdrop-blur-xl rounded-[22px] p-6 md:p-8 overflow-hidden">
+          <DataFlowBackground className="opacity-10 z-0" />
           {/* Ambient Background */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-600/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
@@ -118,7 +121,7 @@ export default function SimulationForm({
                 </svg>
               </div>
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight">
-                EVM <span className="text-blue-500">Simulation</span>
+                <ScrambleText text="EVM" className="inline-block" /> <span className="text-blue-500">Simulation</span>
               </h2>
               <p className="text-gray-400 text-sm max-w-md mx-auto">
                 Securely simulate Ethereum transactions before you sign.

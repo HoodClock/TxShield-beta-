@@ -5,21 +5,11 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { MdArrowRightAlt } from "react-icons/md";
 import dynamic from 'next/dynamic';
-
-const LightPillar = dynamic(() => import('../backgrounds/LightPillar'), {
-    loading: () => <div className="absolute inset-0 bg-gradient-to-b from-purple-900/50 to-black" />,
-    ssr: false
-});
+import ScrambleText from '../ScrambleText';
 
 function HeroSection() {
     return (
         <section className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{ border: 'none', borderTop: 'none', marginTop: 0, paddingTop: 0 }}>
-            {/* Light Pillar Background */}
-            <Suspense fallback={<div className="absolute inset-0 bg-gradient-to-b from-purple-900/50 to-black" />}>
-                <div className="absolute inset-0 z-0">
-                    <LightPillar />
-                </div>
-            </Suspense>
 
             <motion.div
                 className="text-center px-4 sm:px-6 md:px-8 max-w-4xl mx-auto relative z-10 pt-8 sm:pt-12 md:pt-16"
@@ -29,36 +19,35 @@ function HeroSection() {
                 style={{ willChange: 'transform, opacity' }}
             >
                 {/* Centered Logo above SHIELD */}
-                                <Link
-                                    href="/home"
-                                    className="flex items-center justify-center mb-6 sm:mb-8 pointer-events-auto"
-                                    style={{ margin: '0 auto' }}
-                                >
-                                    <motion.div 
-                                        className="relative h-24 sm:h-28 md:h-32 w-auto flex items-center justify-center transition-all duration-300"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        transition={{ duration: 1 }}
-                                    >
-                                        <div className="absolute inset-0 bg-cyan-500/10 rounded-full opacity-50 max-sm:hidden" style={{filter: 'blur(48px)'}}></div>
-                                        <img
-                                            src="/Images/logo.png"
-                                            alt="Shield Logo"
-                                            className="h-full w-auto object-contain relative z-10"
-                                            loading="eager"
-                                            decoding="async"
-                                            width={128}
-                                            height={128}
-                                        />
-                                    </motion.div>
-                                </Link>
-                <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold mb-4 sm:mb-6 tracking-tight px-2">
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#6B3BFF] via-[#FF1493] to-[#FF69B4] animate-gradient-x">
+                <Link
+                    href="/home"
+                    className="flex items-center justify-center mb-0 sm:mb-2 pointer-events-auto"
+                    style={{ margin: '0 auto' }}
+                >
+                    <motion.div
+                        className="relative h-16 sm:h-20 w-auto flex items-center justify-center transition-all duration-300"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 1 }}
+                    >
+                        <div className="absolute inset-0 bg-cyan-500/10 rounded-full opacity-50 max-sm:hidden" style={{ filter: 'blur(48px)' }}></div>
+                        <img
+                            src="/Images/logo.png"
+                            alt="Shield Logo"
+                            className="h-full w-auto object-contain relative z-10"
+                            loading="eager"
+                            decoding="async"
+                            width={128}
+                            height={128}
+                        />
+                    </motion.div>
+                </Link>
+                <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold mb-4 sm:mb-6 tracking-tight px-2 flex flex-col items-center gap-1 sm:gap-2">
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#6B3BFF] via-[#FF1493] to-[#FF69B4] animate-gradient-x leading-none">
                         SHIELD
                     </span>
-                    <br />
-                    <span className="text-white text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-mono">
-                        Every Transaction
+                    <span className="text-white text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-mono leading-tight">
+                        <ScrambleText text="Every Transaction" />
                     </span>
                 </h1>
 
@@ -90,7 +79,7 @@ function HeroSection() {
                         className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-medium text-center relative overflow-hidden hero-secondary-btn group border border-white/30 hover:border-white/50 transition-all duration-300"
                     >
                         {/* Animated gradient border glow on hover - hidden on mobile for performance */}
-                        <div className="hidden sm:block absolute inset-0 rounded-lg bg-gradient-to-r from-purple-500/50 via-cyan-500/50 to-purple-500/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" style={{filter: 'blur(8px)'}}></div>
+                        <div className="hidden sm:block absolute inset-0 rounded-lg bg-gradient-to-r from-purple-500/50 via-cyan-500/50 to-purple-500/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" style={{ filter: 'blur(8px)' }}></div>
                         {/* Text */}
                         <span className="relative z-10 text-white">
                             Learn More
@@ -98,7 +87,7 @@ function HeroSection() {
                     </Link>
                 </div>
             </motion.div>
-        </section>
+        </section >
     )
 }
 export default HeroSection
