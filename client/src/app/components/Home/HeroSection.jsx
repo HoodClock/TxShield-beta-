@@ -45,16 +45,16 @@ function HeroSection() {
                         />
                     </motion.div>
                 </Link>
-                <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold mb-4 sm:mb-6 tracking-tight px-2 flex flex-col items-center gap-1 sm:gap-2">
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#6B3BFF] via-[#FF1493] to-[#FF69B4] animate-gradient-x leading-none">
+                <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-7xl font-bold mb-4 sm:mb-6 tracking-tight px-2 flex flex-col items-center gap-1 sm:gap-2">
+                    <span className="grad-word leading-none">
                         SHIELD
                     </span>
-                    <span className="text-white text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-mono leading-tight">
-                        <ScrambleText text="Every Transaction" />
+                    <span className="text-white text-2xl sm:text-3xl md:text-5xl lg:text-5xl font-mono leading-tight">
+                        <ScrambleText text="Every Transaction" duration={2000} loop={true} loopDelay={3000} />
                     </span>
                 </h1>
 
-                <p className="text-gray-400 text-base sm:text-lg md:text-xl mb-6 sm:mb-8 max-w-2xl font-mono mx-auto px-4">
+                <p className="text-gray-400 text-base sm:text-lg md:text-xl mb-6 sm:mb-8 max-w-2xl font-mono mx-auto px-4 mt-2">
                     Enterprise-grade security for your blockchain transactions.
                     Protecting against scams, honeypots, and malicious contracts.
                 </p>
