@@ -80,7 +80,7 @@ export default function SimulationForm({
         transition={{ duration: 0.4, ease: "easeInOut" }}
         className="relative p-1 rounded-3xl max-w-2xl mx-auto shadow-2xl"
       >
-        <div className="relative bg-black/90 backdrop-blur-xl rounded-[22px] p-6 md:p-8 overflow-hidden">
+        <div className="relative bg-black/40 border border-white/10 backdrop-blur-2xl rounded-[32px] p-8 md:p-10 overflow-hidden shadow-[0_0_50px_-12px_rgba(0,0,0,0.8)]">
           <DataFlowBackground className="opacity-10 z-0" />
           {/* Purple Light Pillar Background */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/15 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
@@ -152,10 +152,11 @@ export default function SimulationForm({
                   Program / Wallet Address
                 </label>
                 <div className="relative group">
+                  <div className="absolute inset-0 bg-black/40 rounded-xl shadow-inner pointer-events-none"></div>
                   <input
                     type="text"
                     placeholder="Enter Solana address..."
-                    className="w-full px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:bg-purple-500/5 focus:ring-1 focus:ring-purple-500/50 transition-all duration-300 font-mono text-sm shadow-inner"
+                    className="relative z-10 w-full px-5 py-3.5 rounded-xl bg-transparent border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:bg-purple-500/10 focus:ring-2 focus:ring-purple-500/20 transition-all duration-300 font-mono text-sm"
                     value={contractAddress}
                     onChange={(e) => setContractAddress(e.target.value)}
                   />
@@ -189,10 +190,11 @@ export default function SimulationForm({
                   Amount (SOL)
                 </label>
                 <div className="relative group">
+                  <div className="absolute inset-0 bg-black/40 rounded-xl shadow-inner pointer-events-none"></div>
                   <input
                     type="number"
                     placeholder="0.0"
-                    className={`w-full px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:bg-purple-500/5 focus:ring-1 focus:ring-purple-500/50 transition-all duration-300 font-mono text-sm shadow-inner ${styles.noSpinner}`}
+                    className={`relative z-10 w-full px-5 py-3.5 rounded-xl bg-transparent border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500/50 focus:bg-purple-500/10 focus:ring-2 focus:ring-purple-500/20 transition-all duration-300 font-mono text-sm ${styles.noSpinner}`}
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                   />
@@ -202,12 +204,12 @@ export default function SimulationForm({
                 </div>
               </div>
 
-              <div className="pt-2">
+              <div className="pt-4">
                 <motion.button
                   onClick={handleSimulate}
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  className={`w-full py-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 text-white font-bold text-base shadow-lg relative overflow-hidden group ${styles['sol-btn-glow']}`}
+                  className={`w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 border border-purple-400/30 text-white font-bold tracking-wide shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_10px_20px_-10px_rgba(147,51,234,0.8)] relative overflow-hidden group ${styles['sol-btn-glow']}`}
                 >
                   <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
                   <span className="relative z-10 flex items-center justify-center gap-2">

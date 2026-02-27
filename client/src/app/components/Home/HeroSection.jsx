@@ -6,10 +6,13 @@ import { motion } from "framer-motion";
 import { MdArrowRightAlt } from "react-icons/md";
 import dynamic from 'next/dynamic';
 import ScrambleText from '../ScrambleText';
+import HeroBackground from '../backgrounds/HeroBackground';
 
 function HeroSection() {
     return (
-        <section className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{ border: 'none', borderTop: 'none', marginTop: 0, paddingTop: 0 }}>
+        <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-black" style={{ border: 'none', borderTop: 'none', marginTop: 0, paddingTop: 0 }}>
+            {/* High-Performance Crypto Background */}
+            <HeroBackground className="z-0" />
 
             <motion.div
                 className="text-center px-4 sm:px-6 md:px-8 max-w-4xl mx-auto relative z-10 pt-8 sm:pt-12 md:pt-16"
