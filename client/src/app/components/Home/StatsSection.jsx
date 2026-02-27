@@ -162,19 +162,19 @@ function StatsSection() {
 
 				>
 
-					<div className="inline-flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/5 border border-white/6 mb-3 sm:mb-4">
+					<div className="inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white/5 border border-white/10 mb-4 sm:mb-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-md">
 						<div className="relative flex h-2 w-2">
 							<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-							<span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+							<span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]"></span>
 						</div>
-						<span className="text-xs sm:text-sm text-gray-300 uppercase">Security Alert</span>
+						<span className="text-xs sm:text-sm font-semibold tracking-wider text-gray-300 uppercase">Security Alert</span>
 					</div>
 
 
 
-					<h3 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white mb-2 px-4"><span className="grad-word">Threats</span> at a glance</h3>
+					<h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white tracking-tight mb-3 px-4"><span className="grad-word">Threats</span> at a glance</h3>
 
-					<p className="text-gray-400 max-w-2xl mx-auto text-sm sm:text-base px-4">Key indicators condensed into clear, actionable metrics.</p>
+					<p className="text-gray-400 max-w-2xl mx-auto text-sm sm:text-base md:text-lg px-4 font-medium tracking-wide">Key indicators condensed into clear, actionable metrics.</p>
 
 				</motion.div>
 
@@ -240,15 +240,15 @@ function StatsSection() {
 
 									{/* 1. Glow Layer (Behind the card face) */}
 
-									<div className="absolute inset-0 rounded-xl bg-purple-500/0 group-hover:bg-purple-500/20 transition-all duration-500 blur-2xl -z-10 translate-y-4 opacity-0 group-hover:opacity-100"></div>
+									<div className="absolute inset-0 rounded-3xl bg-purple-500/0 group-hover:bg-purple-500/10 transition-all duration-500 blur-[40px] -z-10 translate-y-4 opacity-0 group-hover:opacity-100 pointer-events-none"></div>
 
 
 
 									{/* 2. Card Face */}
 
-									<div className="relative z-10 h-full rounded-xl bg-white/5 border border-white/10 p-6 backdrop-blur-sm flex flex-col justify-between overflow-hidden">
+									<div className="relative z-10 h-full rounded-3xl bg-white/[0.03] border border-white/10 p-8 backdrop-blur-xl flex flex-col justify-between overflow-hidden shadow-2xl">
 
-										<div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+										<div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
 
 
 
@@ -276,7 +276,7 @@ function StatsSection() {
 
 											</div>
 
-											<div className="text-3xl font-bold bg-gradient-to-r from-white via-gray-200 to-white bg-clip-text text-transparent group-hover:text-white transition-all duration-300">
+											<div className="text-4xl sm:text-5xl font-bold tracking-tighter bg-gradient-to-br from-white via-gray-100 to-gray-400 bg-clip-text text-transparent group-hover:text-white transition-all duration-300 drop-shadow-sm font-mono mt-2">
 
 												$<CountUp end={s.value} decimals={1} duration={1.8} />{s.suffix}
 
@@ -363,9 +363,10 @@ function StatsSection() {
 
 				</motion.div>
 
-				<div className="mt-6 sm:mt-8 text-center px-4">
-					<a href="/simulate" className="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-lg bg-white/10 text-white font-medium text-sm sm:text-base shadow-lg hover:bg-white/20 transition-all duration-300 w-full sm:w-auto justify-center">
-						<span className="relative z-10">Run a quick scan</span>
+				<div className="mt-10 sm:mt-12 text-center px-4 relative z-10">
+					<a href="/simulate" className="inline-flex items-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl bg-white/5 border border-white/10 text-white font-semibold text-sm sm:text-base shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_10px_30px_-10px_rgba(0,0,0,0.5)] hover:bg-white/10 hover:border-white/20 transition-all duration-300 backdrop-blur-md w-full sm:w-auto justify-center group overflow-hidden">
+						<div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+						<span className="relative z-10 font-mono tracking-tight">RUN SCAN →</span>
 					</a>
 				</div>
 			</div>

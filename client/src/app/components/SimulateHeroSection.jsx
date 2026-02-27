@@ -15,11 +15,7 @@ function SimulateHeroSection({ onChainSelect }) {
             >
                 {/* Heading and Description */}
                 <div className="text-center mb-12 sm:mb-16 max-w-4xl mx-auto">
-                    <div className="flex items-center justify-center gap-3 mb-4">
-                        <div className="h-1 w-12 bg-gradient-to-r from-transparent to-[#627EEA]"></div>
-                        <span className="text-xs sm:text-sm font-semibold text-gray-400 uppercase tracking-wider">TRANSACTION SIMULATOR</span>
-                        <div className="h-1 w-12 bg-gradient-to-l from-transparent to-[#9945FF]"></div>
-                    </div>
+
                     <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
                         <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#627EEA] via-white to-[#9945FF]">
                             Test Before You Execute
@@ -44,7 +40,7 @@ function SimulateHeroSection({ onChainSelect }) {
                             {/* Ambient Backgrounds */}
                             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/20 rounded-full blur-[40px] -translate-y-1/2 translate-x-1/2 pointer-events-none group-hover:bg-blue-600/30 transition-all duration-500"></div>
                             <div className="absolute bottom-0 left-0 w-32 h-32 bg-cyan-600/10 rounded-full blur-[40px] translate-y-1/2 -translate-x-1/2 pointer-events-none group-hover:bg-cyan-600/20 transition-all duration-500"></div>
-                            
+
                             {/* Shine Effect */}
                             <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 bg-gradient-to-r from-white/10 via-white/20 to-white/10"></div>
 
@@ -77,7 +73,7 @@ function SimulateHeroSection({ onChainSelect }) {
                             {/* Ambient Backgrounds */}
                             <div className="absolute top-0 right-0 w-32 h-32 bg-purple-600/20 rounded-full blur-[40px] -translate-y-1/2 translate-x-1/2 pointer-events-none group-hover:bg-purple-600/30 transition-all duration-500"></div>
                             <div className="absolute bottom-0 left-0 w-32 h-32 bg-pink-600/10 rounded-full blur-[40px] translate-y-1/2 -translate-x-1/2 pointer-events-none group-hover:bg-pink-600/20 transition-all duration-500"></div>
-                            
+
                             {/* Shine Effect */}
                             <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 bg-gradient-to-r from-white/10 via-white/20 to-white/10"></div>
 
