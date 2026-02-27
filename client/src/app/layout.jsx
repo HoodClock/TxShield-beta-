@@ -1,4 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import "@solana/wallet-adapter-react-ui/styles.css";
 import "./globals.css";
 import ClientLayout from "./clientLayout";
 import ScrollProgressBar from "./components/ScrollProgressBar";

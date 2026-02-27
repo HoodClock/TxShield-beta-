@@ -16,7 +16,7 @@ export default function TransactionDetails({
     <motion.div variants={itemVariants} className="group gradient-border-card">
       <button
         onClick={() => toggleSection("txDetails")}
-        className="card-inner p-4 sm:p-6 w-full"
+        className="card-inner p-4 sm:p-6 w-full glitch-hover"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 sm:gap-4">
@@ -66,11 +66,11 @@ export default function TransactionDetails({
                 mono: true,
                 icon: <FiUser className="h-4 w-4 text-gray-400 group-hover/item:text-gray-300 transition-colors" />,
               },
-              { 
-                label: "To", 
-                value: simulateData.to, 
+              {
+                label: "To",
+                value: simulateData.to,
                 mono: true,
-                icon: <FiUserCheck className="h-4 w-4 text-gray-400 group-hover/item:text-gray-300 transition-colors" />, 
+                icon: <FiUserCheck className="h-4 w-4 text-gray-400 group-hover/item:text-gray-300 transition-colors" />,
               },
             ].map((item, idx) => (
               <motion.div
@@ -87,9 +87,8 @@ export default function TransactionDetails({
                   </label>
                 </div>
                 <p
-                  className={`text-white font-semibold mt-1 pl-6 ${
-                    item.mono ? "font-mono text-xs sm:text-sm break-all" : ""
-                  } group-hover/item:text-cyan-200 transition-colors`}
+                  className={`text-white font-semibold mt-1 pl-6 ${item.mono ? "font-mono text-xs sm:text-sm break-all" : ""
+                    } group-hover/item:text-cyan-200 transition-colors`}
                 >
                   {item.value}
                 </p>

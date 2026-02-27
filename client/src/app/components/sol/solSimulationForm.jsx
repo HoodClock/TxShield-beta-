@@ -88,7 +88,7 @@ export default function SimulationForm({
 
           <button
             onClick={backButtonHandler}
-            className="absolute top-5 left-5 p-2 rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all duration-300 z-20 group"
+            className="absolute top-5 left-5 p-2 rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all duration-300 z-20 group glitch-hover"
             title="Go Back"
           >
             <svg
@@ -110,7 +110,7 @@ export default function SimulationForm({
           {/* Switch Chain Button (Ethereum Logo) */}
           <button
             onClick={onSwitchChain}
-            className="absolute top-5 right-5 p-1.5 rounded-full bg-white/5 hover:bg-blue-500/20 border border-white/10 hover:border-blue-500/50 transition-all duration-300 z-20 group"
+            className="absolute top-5 right-5 p-1.5 rounded-full bg-white/5 hover:bg-blue-500/20 border border-white/10 hover:border-blue-500/50 transition-all duration-300 z-20 group glitch-hover"
             title="Switch to EVM Simulation"
           >
             <img
@@ -209,7 +209,7 @@ export default function SimulationForm({
                   onClick={handleSimulate}
                   whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  className={`w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 border border-purple-400/30 text-white font-bold tracking-wide shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_10px_20px_-10px_rgba(147,51,234,0.8)] relative overflow-hidden group ${styles['sol-btn-glow']}`}
+                  className={`w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 border border-purple-400/30 text-white font-bold tracking-wide shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_10px_20px_-10px_rgba(147,51,234,0.8)] relative overflow-hidden group glitch-hover ${styles['sol-btn-glow']}`}
                 >
                   <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
                   <span className="relative z-10 flex items-center justify-center gap-2">

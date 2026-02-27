@@ -1,9 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap");
+@import "@rainbow-me/rainbowkit/styles.css";
+@import "tw-animate-css";
+
 @import "tailwindcss";
 
-@import "@rainbow-me/rainbowkit/styles.css";
-@import "@solana/wallet-adapter-react-ui/styles.css";
-@import "tw-animate-css";
 
 @font-face {
     font-family: "ClashDisplay-Bold";
@@ -600,6 +600,154 @@ h3 {
         transform: translate(0) skewX(0);
         clip-path: inset(0 0 0 0);
         text-shadow: none;
+    }
+}
+
+/* =========================================
+   Watch Dogs Cyber Glitch Hover Effect
+   ========================================= */
+.glitch-hover {
+    position: relative;
+    overflow: hidden;
+    /* Hardware acceleration for crisp slices */
+    transform: translateZ(0);
+}
+
+/* The physical button doesn't move, preventing the "fluttering" feeling */
+.glitch-hover:hover {
+    animation: none;
+}
+
+/* Create two overlay copies of the button for the Red/Blue chromatic split */
+.glitch-hover::before,
+.glitch-hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    border-radius: inherit;
+    opacity: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Cyan/Blue slice */
+.glitch-hover::before {
+    background-color: rgba(59, 130, 246, 0.4);
+    /* Tailwind blue-500 */
+    box-shadow: -2px 0 0 #3b82f6;
+}
+
+/* Purple slice */
+.glitch-hover::after {
+    background-color: rgba(168, 85, 247, 0.4);
+    /* Tailwind purple-500 */
+    box-shadow: 2px 0 0 #a855f7;
+}
+
+/* Trigger the aggressive slice animations on hover to loop infinitely */
+.glitch-hover:hover::before {
+    animation: cyberSlice1 2.5s infinite linear;
+}
+
+.glitch-hover:hover::after {
+    animation: cyberSlice2 2.5s infinite linear;
+}
+
+@keyframes cyberSlice1 {
+
+    /* 0-15% is the active glitch */
+    0% {
+        opacity: 0;
+        clip-path: inset(10% 0 80% 0);
+        transform: translateX(-4px);
+    }
+
+    3% {
+        opacity: 1;
+        clip-path: inset(50% 0 10% 0);
+        transform: translateX(4px);
+    }
+
+    6% {
+        opacity: 1;
+        clip-path: inset(20% 0 60% 0);
+        transform: translateX(-2px);
+    }
+
+    9% {
+        opacity: 1;
+        clip-path: inset(80% 0 5% 0);
+        transform: translateX(6px);
+    }
+
+    12% {
+        opacity: 1;
+        clip-path: inset(15% 0 70% 0);
+        transform: translateX(-6px);
+    }
+
+    15% {
+        opacity: 0;
+        clip-path: inset(0 0 0 0);
+        transform: translateX(0);
+    }
+
+    /* 16-100% is the pause interval doing nothing */
+    100% {
+        opacity: 0;
+        clip-path: inset(0 0 0 0);
+        transform: translateX(0);
+    }
+}
+
+@keyframes cyberSlice2 {
+
+    /* 0-15% is the active glitch */
+    0% {
+        opacity: 0;
+        clip-path: inset(80% 0 5% 0);
+        transform: translateX(4px);
+    }
+
+    3% {
+        opacity: 1;
+        clip-path: inset(10% 0 60% 0);
+        transform: translateX(-4px);
+    }
+
+    6% {
+        opacity: 1;
+        clip-path: inset(60% 0 20% 0);
+        transform: translateX(2px);
+    }
+
+    9% {
+        opacity: 1;
+        clip-path: inset(5% 0 80% 0);
+        transform: translateX(-6px);
+    }
+
+    12% {
+        opacity: 1;
+        clip-path: inset(70% 0 15% 0);
+        transform: translateX(6px);
+    }
+
+    15% {
+        opacity: 0;
+        clip-path: inset(0 0 0 0);
+        transform: translateX(0);
+    }
+
+    /* 16-100% is the pause interval doing nothing */
+    100% {
+        opacity: 0;
+        clip-path: inset(0 0 0 0);
+        transform: translateX(0);
     }
 }
 

@@ -28,34 +28,18 @@ export default function ScrambleText({ text, className = "", delay = 0, duration
                 const progress = timestamp - start;
                 const percentage = Math.min(progress / duration, 1);
 
-                // We split the animation into two halves:
-                // First 50%: Encrypting (losing characters from right to left)
-                // Last 50%: Decrypting (revealing characters from left to right)
-
-                let isEncrypting = percentage < 0.5;
-
-                // Normalize percentage for the current phase (0.0 to 1.0)
-                const phasePercentage = isEncrypting ? (percentage / 0.5) : ((percentage - 0.5) / 0.5);
-
-                // How many real characters should we show right now?
-                let realCount;
-                if (isEncrypting) {
-                    // Encrypting: start with all real characters, and lose them as phase progresses
-                    realCount = Math.floor(length * (1 - phasePercentage));
-                } else {
-                    // Decrypting: start with 0 real characters, and gain them as phase progresses
-                    realCount = Math.floor(length * phasePercentage);
-                }
+                // How many characters should be firmly revealed by now
+                const revealCount = Math.floor(length * percentage);
 
                 let scrambledArray = [];
                 for (let i = 0; i < length; i++) {
                     if (targetText[i] === " ") {
                         scrambledArray.push(" "); // always keep spaces as spaces
-                    } else if (i < realCount) {
-                        // Show the actual character
+                    } else if (i < revealCount) {
+                        // Reveal actual character
                         scrambledArray.push(targetText[i]);
                     } else {
-                        // Keep scrambling the obscured portion
+                        // Keep scrambling
                         scrambledArray.push(CHARACTERS[Math.floor(Math.random() * CHARACTERS.length)]);
                     }
                 }
@@ -67,7 +51,7 @@ export default function ScrambleText({ text, className = "", delay = 0, duration
                 } else {
                     setDisplayText(targetText);
                     if (loop) {
-                        // Schedule the next encrypt/decrypt cycle
+                        // Schedule the next encryption/decryption cycle
                         timeoutId = setTimeout(startAnimation, loopDelay);
                     }
                 }
@@ -88,7 +72,7 @@ export default function ScrambleText({ text, className = "", delay = 0, duration
     return (
         <motion.span
             ref={ref}
-            className={`inline-flex whitespace-pre ${className}`}
+            className={`inline-block whitespace-pre-wrap word-break break-words ${className}`}
             style={{
                 // Apply monospace specifically for the animation to lock character widths, 
                 // ensuring the total span width doesn't jitter left/right as characters shuffle.
