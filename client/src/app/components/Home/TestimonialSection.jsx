@@ -46,9 +46,7 @@ function TestimonialSection() {
                     className="text-center mb-16"
                 >
                     <h2 className="text-4xl md:text-5xl font-bold mb-6" style={{ fontFamily: "'ClashDisplay-Bold', sans-serif" }}>
-                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400">
-                            Community Feedback
-                        </span>
+                        <span className="grad-word">Community Feedback</span>
                     </h2>
                     <p className="text-gray-400 text-lg max-w-2xl mx-auto">
                         See what developers, traders, and security experts are saying about TxShield.
@@ -68,11 +66,11 @@ function TestimonialSection() {
                         >
                             {/* Gradient Border Background */}
                             <div className="absolute inset-0 rounded-[24px] bg-gradient-to-br from-blue-600 via-purple-600 to-blue-600 opacity-50 group-hover:opacity-100 transition-opacity duration-300 blur-[1px]"></div>
-                            
+
                             {/* Card Content */}
                             <div className="relative h-full bg-black rounded-[23px] p-1 m-[1px] flex flex-col">
                                 <div className="bg-[#050505] rounded-[22px] p-8 h-full flex flex-col border border-white/5 group-hover:bg-[#0a0a0a] transition-colors duration-300">
-                                    
+
                                     {/* Quote Icon */}
                                     <div className="mb-6">
                                         <svg className="w-10 h-10 text-purple-500/30" fill="currentColor" viewBox="0 0 32 32">
@@ -99,14 +97,14 @@ function TestimonialSection() {
                                                     }}
                                                 />
                                             ) : null}
-                                            <div 
+                                            <div
                                                 className="w-full h-full bg-gradient-to-br from-blue-900 to-purple-900 flex items-center justify-center text-white font-bold"
                                                 style={{ display: testimonial.image ? 'none' : 'flex' }}
                                             >
                                                 {testimonial.initials}
                                             </div>
                                         </div>
-                                        
+
                                         <div>
                                             <h4 className="font-bold text-white group-hover:text-blue-400 transition-colors">
                                                 {testimonial.name}
@@ -117,10 +115,10 @@ function TestimonialSection() {
                                         </div>
 
                                         {testimonial.linkedin !== "#" && (
-                                            <a 
-                                                href={testimonial.linkedin} 
-                                                target="_blank" 
-                                                rel="noopener noreferrer" 
+                                            <a
+                                                href={testimonial.linkedin}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
                                                 className="ml-auto text-gray-600 hover:text-[#0077b5] transition-colors"
                                             >
                                                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
