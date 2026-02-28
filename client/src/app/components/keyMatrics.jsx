@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import React from "react";
 import { FiCheck, FiShield, FiTarget } from "react-icons/fi";
 
@@ -122,12 +122,12 @@ function keyMatrics({
 
   return (
     <div>
-      <motion.div
+      <m.div
         variants={itemVariants}
         className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"
       >
         {/* Risk Level */}
-        <motion.div
+        <m.div
           whileHover={{ y: -4, scale: 1.02 }}
           className={gradientBorderCard}
         >
@@ -143,10 +143,10 @@ function keyMatrics({
             </h3>
             <p className={`text-xl font-bold ${theme.textColor1}`}>{riskLevel}</p>
           </div>
-        </motion.div>
+        </m.div>
 
         {/* Total Score */}
-        <motion.div
+        <m.div
           whileHover={{ y: -4, scale: 1.02 }}
           className={gradientBorderCard}
         >
@@ -167,7 +167,7 @@ function keyMatrics({
 
           {/* Dynamic Progress Bar */}
           <div className="mt-3 h-2 bg-slate-700 rounded-full overflow-hidden">
-            <motion.div
+            <m.div
               className={`h-full ${zoneColor}`}
               initial={{ width: 0 }}
               animate={{ width: `${(total / 60) * 100}%` }}
@@ -189,10 +189,10 @@ function keyMatrics({
             </div>
           </div>
           </div>
-        </motion.div>
+        </m.div>
 
         {/* Pass Rate */}
-        <motion.div
+        <m.div
           whileHover={{ y: -4, scale: 1.02 }}
           className={gradientBorderCard}
         >
@@ -209,8 +209,8 @@ function keyMatrics({
               {ratioText} checks passed
             </p>
           </div>
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
     </div>
   );
 }

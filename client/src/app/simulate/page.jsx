@@ -2,35 +2,40 @@
 
 import {
   useState,
-  Suspense,
-  lazy,
   useCallback,
   useRef,
   useEffect,
 } from "react";
+import dynamic from "next/dynamic";
 import { AnimatePresence } from "framer-motion";
 import Head from "next/head";
 
-// all the components of Simualtion forms
-const Header = lazy(() => import("../components/header"));
-const SimulateHeroSection = lazy(
-  () => import("../components/SimulateHeroSection"),
-);
-const ConnectWallet = lazy(() => import("../components/connectWallet"));
-const ResultsDashboard = lazy(() => import("../components/result/index"));
-const Footer = lazy(() => import("../components/footer"));
-const LoadingState = lazy(() => import("../components/loading"));
+// UI Components (SSR enabled)
+const Header = dynamic(() => import("../components/header"), {
+  loading: () => <div className="h-16 bg-black"></div>
+});
+const SimulateHeroSection = dynamic(() => import("../components/SimulateHeroSection"), {
+  loading: () => <div className="h-auto bg-black"></div>
+});
+const ResultsDashboard = dynamic(() => import("../components/result/index"), {
+  loading: () => <div className="h-64 bg-gray-900 rounded-xl animate-pulse"></div>
+});
+const Footer = dynamic(() => import("../components/footer"), {
+  loading: () => <div className="h-20 bg-black"></div>
+});
+const LoadingState = dynamic(() => import("../components/loading"));
 
-// wallet providers & EVM/SOL-Components imports
-const WalletProviderWrapper = lazy(
-  () => import("../components/WalletProviderWrapper"),
-);
-const EvmSimulationForm = lazy(
-  () => import("../components/evm/evmSimulationForm"),
-);
-const SolSimulationForm = lazy(
-  () => import("../components/sol/solSimulationForm"),
-);
+// Web3 & Simulation Components (Strictly Client-Side, SSR disabled)
+const ConnectWallet = dynamic(() => import("../components/connectWallet"), { ssr: false });
+const WalletProviderWrapper = dynamic(() => import("../components/WalletProviderWrapper"), { ssr: false });
+const EvmSimulationForm = dynamic(() => import("../components/evm/evmSimulationForm"), {
+  ssr: false,
+  loading: () => <div className="h-64 bg-gray-900 rounded-xl animate-pulse"></div>
+});
+const SolSimulationForm = dynamic(() => import("../components/sol/solSimulationForm"), {
+  ssr: false,
+  loading: () => <div className="h-64 bg-gray-900 rounded-xl animate-pulse"></div>
+});
 
 import {
   honeypotChecks as runHoneypotChecks,
@@ -178,17 +183,13 @@ export default function App() {
         />
       </Head>
 
-      <Suspense fallback={<div className="h-16 bg-black"></div>}>
-        <Header />
-      </Suspense>
+      <Header />
 
       {/* Show Hero Section only when no chain is selected */}
       {!chain && !showResults && (
-        <Suspense fallback={<div className="h-auto bg-black"></div>}>
-          <SimulateHeroSection
-            onChainSelect={(selectedChain) => setChain(selectedChain)}
-          />
-        </Suspense>
+        <SimulateHeroSection
+          onChainSelect={(selectedChain) => setChain(selectedChain)}
+        />
       )}
 
       <main className="flex-grow">
@@ -199,34 +200,28 @@ export default function App() {
               <div className="flex justify-center my-6">
                 <ConnectWallet chain={chain} />
               </div>
-              <Suspense
-                fallback={
-                  <div className="h-64 bg-gray-900 rounded-xl animate-pulse"></div>
-                }
-              >
-                <AnimatePresence mode="wait">
-                  {chain === "EVM" && (
-                    <EvmSimulationForm
-                      key="evm-form"
-                      onSimulateAll={handleSimulateAll}
-                      backButtonHandler={() => setChain(null)}
-                      onSwitchChain={() => setChain("SOL")}
-                    />
-                  )}
-                  {chain === "SOL" && (
-                    <SolSimulationForm
-                      key="sol-form"
-                      onSolSimulateAll={handleSolSimulation}
-                      backButtonHandler={() => setChain(null)}
-                      onSwitchChain={() => setChain("EVM")}
-                    />
-                  )}
-                </AnimatePresence>
-              </Suspense>
+              <AnimatePresence mode="wait">
+                {chain === "EVM" && (
+                  <EvmSimulationForm
+                    key="evm-form"
+                    onSimulateAll={handleSimulateAll}
+                    backButtonHandler={() => setChain(null)}
+                    onSwitchChain={() => setChain("SOL")}
+                  />
+                )}
+                {chain === "SOL" && (
+                  <SolSimulationForm
+                    key="sol-form"
+                    onSolSimulateAll={handleSolSimulation}
+                    backButtonHandler={() => setChain(null)}
+                    onSwitchChain={() => setChain("EVM")}
+                  />
+                )}
+              </AnimatePresence>
             </WalletProviderWrapper>
 
             {isLoading && (
-              <LoadingState isLoading={true} onComplete={() => {}} />
+              <LoadingState isLoading={true} onComplete={() => { }} />
             )}
           </section>
         )}
@@ -234,29 +229,21 @@ export default function App() {
         {/* Results Section */}
         {showResults && (
           <section className="container mx-auto px-4 py-12 space-y-8">
-            <Suspense
-              fallback={
-                <div className="h-64 bg-gray-900 rounded-xl animate-pulse"></div>
-              }
-            >
-              <ResultsDashboard
-                chain={chain}
-                isVisible={showResults}
-                simulation={simulationData}
-                solSimulation={solSimulationData}
-                honeypot={honeypotData}
-                phishing={phishingData}
-                onGenerateRecommendation={handleRecommendation}
-                recommendationData={recommendation}
-              />
-            </Suspense>
+            <ResultsDashboard
+              chain={chain}
+              isVisible={showResults}
+              simulation={simulationData}
+              solSimulation={solSimulationData}
+              honeypot={honeypotData}
+              phishing={phishingData}
+              onGenerateRecommendation={handleRecommendation}
+              recommendationData={recommendation}
+            />
           </section>
         )}
       </main>
 
-      <Suspense fallback={<div className="h-20 bg-black"></div>}>
-        <Footer />
-      </Suspense>
+      <Footer />
     </div>
   );
 }

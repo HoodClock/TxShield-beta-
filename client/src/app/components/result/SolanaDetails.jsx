@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { FiAlertTriangle, FiCheckCircle, FiShield, FiAlertOctagon } from "react-icons/fi";
 import { themes } from "./utils";
 
@@ -37,7 +37,7 @@ export default function SolanaDetails({
     <div className="space-y-8 sm:space-y-12">
       
       {/* SECURITY VERDICT CARD */}
-      <motion.div variants={itemVariants} className="gradient-border-card p-[1px]">
+      <m.div variants={itemVariants} className="gradient-border-card p-[1px]">
         <div className="card-inner p-6 h-full">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
@@ -87,10 +87,10 @@ export default function SolanaDetails({
             )}
           </div>
         </div>
-      </motion.div>
+      </m.div>
 
       {/* TRANSACTION DETAILS CARD */}
-      <motion.div variants={itemVariants} className="gradient-border-card p-[1px]">
+      <m.div variants={itemVariants} className="gradient-border-card p-[1px]">
         <div className="card-inner p-6 h-full">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
@@ -140,7 +140,7 @@ export default function SolanaDetails({
             )}
           </div>
         </div>
-      </motion.div>
+      </m.div>
     </div>
   );
 }

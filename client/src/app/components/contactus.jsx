@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Send } from "lucide-react";
 import { contactApi } from "@/api/api";
 
@@ -43,7 +43,7 @@ export default function ContactForm() {
     <section className="py-12 sm:py-16 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
         {/* Left side - Contact info */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
@@ -65,10 +65,10 @@ export default function ContactForm() {
               <span className="grad-word">TxShield</span>@proton.me
             </p>
           </div>
-        </motion.div>
+        </m.div>
 
         {/* Right side - Form */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, x: 30 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
@@ -117,7 +117,7 @@ export default function ContactForm() {
             </div>
 
             <div>
-              <motion.button
+              <m.button
                 type="submit"
                 disabled={isSubmitting}
                 whileHover={{ scale: 1.02 }}
@@ -145,13 +145,13 @@ export default function ContactForm() {
                     </>
                   )}
                 </div>
-              </motion.button>
+              </m.button>
             </div>
           </form>
 
           <AnimatePresence>
             {submitStatus === "success" && (
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
@@ -173,10 +173,10 @@ export default function ContactForm() {
                   </svg>
                   <span>Message sent successfully!</span>
                 </div>
-              </motion.div>
+              </m.div>
             )}
           </AnimatePresence>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

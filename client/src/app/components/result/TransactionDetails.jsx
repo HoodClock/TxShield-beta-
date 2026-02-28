@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { FiGitBranch, FiChevronDown, FiZap, FiType, FiHash, FiUser, FiUserCheck, FiTrendingUp, FiDollarSign } from "react-icons/fi";
 
 export default function TransactionDetails({
@@ -13,7 +13,7 @@ export default function TransactionDetails({
   chain,
 }) {
   return (
-    <motion.div variants={itemVariants} className="group gradient-border-card">
+    <m.div variants={itemVariants} className="group gradient-border-card">
       <button
         onClick={() => toggleSection("txDetails")}
         className="card-inner p-4 sm:p-6 w-full glitch-hover"
@@ -27,17 +27,17 @@ export default function TransactionDetails({
               Transaction Details
             </h2>
           </div>
-          <motion.div
+          <m.div
             animate={{ rotate: expandedSections.txDetails ? 180 : 0 }}
             transition={{ duration: 0.3 }}
           >
             <FiChevronDown className="h-5 w-5 text-slate-400" />
-          </motion.div>
+          </m.div>
         </div>
       </button>
 
       {expandedSections.txDetails && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
@@ -73,7 +73,7 @@ export default function TransactionDetails({
                 icon: <FiUserCheck className="h-4 w-4 text-gray-400 group-hover/item:text-gray-300 transition-colors" />,
               },
             ].map((item, idx) => (
-              <motion.div
+              <m.div
                 key={idx}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -92,7 +92,7 @@ export default function TransactionDetails({
                 >
                   {item.value}
                 </p>
-              </motion.div>
+              </m.div>
             ))}
           </div>
 
@@ -109,7 +109,7 @@ export default function TransactionDetails({
               </div>
 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-6 items-center">
-                <motion.div
+                <m.div
                   className="gauge-circle"
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -123,7 +123,7 @@ export default function TransactionDetails({
                       {gasEstimated} gas
                     </div>
                   </div>
-                </motion.div>
+                </m.div>
 
                 <div className="space-y-3 col-span-1">
                   <div className="flex flex-col">
@@ -157,8 +157,8 @@ export default function TransactionDetails({
               </div>
             </div>
           </div>
-        </motion.div>
+        </m.div>
       )}
-    </motion.div>
+    </m.div>
   );
 }

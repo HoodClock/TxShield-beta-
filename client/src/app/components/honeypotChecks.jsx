@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 export default function HoneypotChecks({ isVisible, data, chain = "EVM" }) {
   if (!isVisible || !data) return null;
@@ -164,7 +164,7 @@ export default function HoneypotChecks({ isVisible, data, chain = "EVM" }) {
               };
 
           return (
-            <motion.div
+            <m.div
               key={key}
               className={gradientBorderCard}
             >
@@ -210,7 +210,7 @@ export default function HoneypotChecks({ isVisible, data, chain = "EVM" }) {
                 </div>
               </div>
               </div>
-            </motion.div>
+            </m.div>
           );
         })}
       </div>   

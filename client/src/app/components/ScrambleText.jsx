@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { m, useInView } from "framer-motion";
 
 const CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
 
@@ -70,7 +70,7 @@ export default function ScrambleText({ text, className = "", delay = 0, duration
     }, [text, isInView, delay, duration, loop, loopDelay]);
 
     return (
-        <motion.span
+        <m.span
             ref={ref}
             className={`inline-block whitespace-pre-wrap word-break break-words ${className}`}
             style={{
@@ -83,6 +83,6 @@ export default function ScrambleText({ text, className = "", delay = 0, duration
             transition={{ duration: 0.3, delay }}
         >
             {displayText}
-        </motion.span>
+        </m.span>
     );
 }

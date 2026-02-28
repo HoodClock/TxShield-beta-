@@ -1,7 +1,19 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
+import withBundleAnalyzer from '@next/bundle-analyzer';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     experimental: {
         optimizePackageImports: ['@rainbow-me/rainbowkit', '@solana/wallet-adapter-react', 'wagmi', 'lucide-react', 'react-icons', '@web3icons/react', 'framer-motion'],
+    },
+    turbopack: {
+        resolveAlias: {
+            ws: './empty-module.js',
+        },
     },
     webpack: (config, { webpack }) => {
         config.cache = {
@@ -26,4 +38,8 @@ const nextConfig = {
     },
 };
 
-export default nextConfig;
+const bundleAnalyzer = withBundleAnalyzer({
+    enabled: process.env.ANALYZE === 'true',
+});
+
+export default bundleAnalyzer(nextConfig);

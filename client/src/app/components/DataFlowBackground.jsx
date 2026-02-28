@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 export default function DataFlowBackground({ className = "" }) {
     // SVG drawing of a stylized data circuit
@@ -22,7 +22,7 @@ export default function DataFlowBackground({ className = "" }) {
                 </defs>
 
                 {/* Horizontal Line 1 */}
-                <motion.line
+                <m.line
                     x1="-200"
                     y1="20%"
                     x2="100%"
@@ -44,7 +44,7 @@ export default function DataFlowBackground({ className = "" }) {
                 />
 
                 {/* Horizontal Line 2 */}
-                <motion.line
+                <m.line
                     x1="-200"
                     y1="70%"
                     x2="100%"
@@ -66,7 +66,7 @@ export default function DataFlowBackground({ className = "" }) {
                 />
 
                 {/* Vertical Line 1 */}
-                <motion.line
+                <m.line
                     x1="30%"
                     y1="-200"
                     x2="30%"
@@ -88,7 +88,7 @@ export default function DataFlowBackground({ className = "" }) {
                 />
 
                 {/* Vertical Line 2 */}
-                <motion.line
+                <m.line
                     x1="80%"
                     y1="-200"
                     x2="80%"
