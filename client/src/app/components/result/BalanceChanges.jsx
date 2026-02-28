@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { FiBarChart2, FiChevronDown, FiArrowRight, FiUpload, FiDownload } from "react-icons/fi";
 
 export default function BalanceChanges({
@@ -12,7 +12,7 @@ export default function BalanceChanges({
   if (!simulateData.balances) return null;
 
   return (
-    <motion.div variants={itemVariants} className="group gradient-border-card">
+    <m.div variants={itemVariants} className="group gradient-border-card">
       <button
         onClick={() => toggleSection("balances")}
         className="card-inner p-4 sm:p-6 w-full glitch-hover"
@@ -26,17 +26,17 @@ export default function BalanceChanges({
               Balance Changes
             </h2>
           </div>
-          <motion.div
+          <m.div
             animate={{ rotate: expandedSections.balances ? 180 : 0 }}
             transition={{ duration: 0.3 }}
           >
             <FiChevronDown className="h-5 w-5 text-slate-400" />
-          </motion.div>
+          </m.div>
         </div>
       </button>
 
       {expandedSections.balances && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
@@ -70,7 +70,7 @@ export default function BalanceChanges({
                   ]
                     .filter(Boolean)
                     .map((item, idx) => (
-                      <motion.div
+                      <m.div
                         key={idx}
                         initial={{ opacity: 0, y: 5 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -91,7 +91,7 @@ export default function BalanceChanges({
                             {item.after || `0 ${item.symbol}`}
                           </span>
                         </div>
-                      </motion.div>
+                      </m.div>
                     ))}
                 </div>
               </div>
@@ -123,7 +123,7 @@ export default function BalanceChanges({
                   ]
                     .filter(Boolean)
                     .map((item, idx) => (
-                      <motion.div
+                      <m.div
                         key={idx}
                         initial={{ opacity: 0, y: 5 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -144,14 +144,14 @@ export default function BalanceChanges({
                             {item.after || `0 ${item.symbol}`}
                           </span>
                         </div>
-                      </motion.div>
+                      </m.div>
                     ))}
                 </div>
               </div>
             </div>
           </div>
-        </motion.div>
+        </m.div>
       )}
-    </motion.div>
+    </m.div>
   );
 }

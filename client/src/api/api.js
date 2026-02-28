@@ -72,11 +72,18 @@ export const suggestionApi = async (formData) => {
 };
 
 export const authConnect = async (formData) => {
-  return await axios.post(`${BASE_URL}/auth/connect`, formData);
+  return await axios.post(`${BASE_URL}/auth/connect`, formData, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true,
+  });
 };
 
 export const authGetAPI = async (connectedAddress) => {
-  return await axios.get(`${BASE_URL}/auth/apiKey/${connectedAddress}`);
+  return await axios.get(`${BASE_URL}/auth/apiKey/${connectedAddress}`, {
+    withCredentials: true,
+  });
 };
 
 // Solana api's

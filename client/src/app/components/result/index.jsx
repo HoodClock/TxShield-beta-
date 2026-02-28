@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
@@ -273,14 +273,14 @@ export default function ResultsDashboard({
       `}</style>
 
       {/* Back Button / Header */}
-      <motion.div
+      <m.div
         initial="hidden"
         animate="show"
         variants={containerVariants}
         className="max-w-7xl mx-auto space-y-12"
       >
         {/* Header */}
-        <motion.div variants={itemVariants} className="text-center mb-12 sm:mb-16">
+        <m.div variants={itemVariants} className="text-center mb-12 sm:mb-16">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
             <span className="grad-word">Security Analysis</span>
             <br />
@@ -289,7 +289,7 @@ export default function ResultsDashboard({
           <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-3xl mx-auto px-4">
             Comprehensive blockchain transaction and contract security assessment
           </p>
-        </motion.div>
+        </m.div>
 
         {/* === HERO STATUS SECTION === */}
         <HeroStatus 
@@ -374,15 +374,15 @@ export default function ResultsDashboard({
         {chain === 'EVM' && (
             <>
                 {/* Phishing Analysis */}
-                <motion.div variants={itemVariants} className="mt-8 sm:mt-12 max-w-7xl mx-auto">
+                <m.div variants={itemVariants} className="mt-8 sm:mt-12 max-w-7xl mx-auto">
                 <Phishing data={finalPhishing} chain={chain} />
-                </motion.div>
+                </m.div>
 
                 {/* Connector */}
                 <div className="connector-line my-4"></div>
 
                 {/* === HONEYPOT & SECURITY ANALYSIS === */}
-                <motion.div
+                <m.div
                 variants={itemVariants}
                 className="max-w-7xl mx-auto space-y-8 sm:space-y-12 mt-12"
                 >
@@ -415,17 +415,17 @@ export default function ResultsDashboard({
                     warnings={warnings}
                     t={t}
                     />
-                </motion.div>
+                </m.div>
 
                 {/* Detailed Honeypot Checks */}
-                <motion.div variants={itemVariants} className="max-w-7xl mx-auto mt-8 sm:mt-12">
+                <m.div variants={itemVariants} className="max-w-7xl mx-auto mt-8 sm:mt-12">
                 <HoneypotChecks isVisible={isVisible} data={honeypot} chain={chain} />
-                </motion.div>
+                </m.div>
             </>
         )}
 
         {/* AI Recommendations - Common for both if data available */}
-        <motion.div variants={itemVariants} className="max-w-7xl mx-auto mt-8 sm:mt-12">
+        <m.div variants={itemVariants} className="max-w-7xl mx-auto mt-8 sm:mt-12">
           <Recommendations
             simulationData={chain === 'EVM' ? simulation : solSimulation}
             honeypotData={honeypot}
@@ -433,7 +433,7 @@ export default function ResultsDashboard({
             recommendation={recommendationData}
             chain={chain}
           />
-        </motion.div>
+        </m.div>
 
         {/* Back to Simulate Button */}
         <BackToSimulate 
@@ -441,7 +441,7 @@ export default function ResultsDashboard({
           t={t}
           chain={chain}
         />
-      </motion.div>
+      </m.div>
     </div>
   );
 }

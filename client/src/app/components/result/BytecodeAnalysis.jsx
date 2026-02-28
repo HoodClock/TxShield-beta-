@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { FiCode, FiChevronDown, FiAlertTriangle, FiCheck, FiInfo } from "react-icons/fi";
 
 export default function BytecodeAnalysis({
@@ -15,7 +15,7 @@ export default function BytecodeAnalysis({
   const { isScam, confidence, reason } = byteData || {};
 
   return (
-    <motion.div variants={itemVariants} className="group gradient-border-card">
+    <m.div variants={itemVariants} className="group gradient-border-card">
       <button
         onClick={() => toggleSection("bytecode")}
         className="card-inner p-4 sm:p-6 w-full glitch-hover"
@@ -29,17 +29,17 @@ export default function BytecodeAnalysis({
               Bytecode Analysis
             </h2>
           </div>
-          <motion.div
+          <m.div
             animate={{ rotate: expandedSections.bytecode ? 180 : 0 }}
             transition={{ duration: 0.3 }}
           >
             <FiChevronDown className="h-5 w-5 text-slate-400" />
-          </motion.div>
+          </m.div>
         </div>
       </button>
 
       {expandedSections.bytecode && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
@@ -72,7 +72,7 @@ export default function BytecodeAnalysis({
               <div className="space-y-2">
                 {warnings.length > 0 ? (
                   warnings.map((warning, idx) => (
-                    <motion.div
+                    <m.div
                       key={idx}
                       initial={{ opacity: 0, x: 10 }}
                       animate={{ opacity: 1, x: 0 }}
@@ -83,7 +83,7 @@ export default function BytecodeAnalysis({
                       <span className="text-gray-300 text-xs sm:text-sm">
                         {warning}
                       </span>
-                    </motion.div>
+                    </m.div>
                   ))
                 ) : (
                   <div className="flex items-center gap-3 p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-lg">
@@ -103,8 +103,8 @@ export default function BytecodeAnalysis({
               </span>
             </div>
           )}
-        </motion.div>
+        </m.div>
       )}
-    </motion.div>
+    </m.div>
   );
 }
