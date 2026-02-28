@@ -1,10 +1,10 @@
-require('module-alias/register');
+require("module-alias/register");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
 // middlewares
-const authMiddleware = require("./middlewares/auth.middleware")
+const authMiddleware = require("./middlewares/auth.middleware");
 
 // all routes path
 const simulateRouter = require("./routes/simulation/simulation.routes");
@@ -13,7 +13,7 @@ const phishingRouter = require("./routes/phishing/phishing.routes");
 const contactRouter = require("./routes/contact/contact.routes");
 const suggestionRouter = require("./routes/aiModel/aiModel.routes");
 const authRouter = require("./routes/auth/auth");
-const solSimulateRouter = require("./routes/simulation/sol-simulation.routes")
+const solSimulateRouter = require("./routes/simulation/sol-simulation.routes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -25,27 +25,28 @@ const allowedOrigins = [
   "http://localhost:3001",
   "https://txshield.xyz",
   "https://www.txshield.xyz",
-  /\.vercel\.app$/  // This Regex allows ANY Vercel preview or production branch
+  /\.vercel\.app$/, // This Regex allows ANY Vercel preview or production branch
 ];
 
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl)
-    if (!origin) return callback(null, true);
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl)
+      if (!origin) return callback(null, true);
 
-    const isAllowed = allowedOrigins.some((allowed) => {
-      if (allowed instanceof RegExp) return allowed.test(origin);
-      return allowed === origin;
-    });
+      const isAllowed = allowedOrigins.some((allowed) => {
+        if (allowed instanceof RegExp) return allowed.test(origin);
+        return allowed === origin;
+      });
 
-    if (isAllowed) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-})
+      if (isAllowed) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  }),
 );
 app.use(express.json());
 
