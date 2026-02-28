@@ -99,7 +99,7 @@ function AnalysisSection() {
                         <span className="text-white">Playbook</span>
                     </h1>
                     <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">
-                        Understanding how attackers operate is the first step in building effective protection. 
+                        Understanding how attackers operate is the first step in building effective protection.
                         Here's how modern crypto scams unfold.
                     </p>
                 </motion.div>
@@ -111,20 +111,18 @@ function AnalysisSection() {
                             <button
                                 key={pb.id}
                                 onClick={() => setSelected(pb.id)}
-                                className={`relative px-6 py-2.5 rounded-lg text-sm sm:text-base font-medium transition-all duration-300 ${
-                                    selected === pb.id
-                                        ? "text-white shadow-lg"
-                                        : "text-gray-400 hover:text-white hover:bg-white/5"
-                                }`}
+                                className={`relative px-6 py-2.5 rounded-lg text-sm sm:text-base font-medium transition-all duration-300 glitch-hover ${selected === pb.id
+                                    ? "text-white shadow-lg"
+                                    : "text-gray-400 hover:text-white hover:bg-white/5"
+                                    }`}
                             >
                                 {selected === pb.id && (
                                     <motion.div
                                         layoutId="activeTab"
-                                        className={`absolute inset-0 rounded-lg bg-gradient-to-r ${
-                                            pb.id === 'honeypot' 
-                                            ? 'from-red-600/20 to-orange-600/20 border border-red-500/50' 
+                                        className={`absolute inset-0 rounded-lg bg-gradient-to-r ${pb.id === 'honeypot'
+                                            ? 'from-red-600/20 to-orange-600/20 border border-red-500/50'
                                             : 'from-blue-600/20 to-cyan-600/20 border border-blue-500/50'
-                                        }`}
+                                            }`}
                                         initial={false}
                                         transition={{ type: "spring", stiffness: 500, damping: 30 }}
                                     />
@@ -147,17 +145,20 @@ function AnalysisSection() {
                 </div>
 
                 {/* Playbook details panel */}
-                <div className="max-w-4xl mx-auto px-4 sm:px-6">
+                <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
                     <motion.div
                         variants={panelVariants}
                         initial="show"
                         animate={isInView ? 'show' : 'hidden'}
-                        className="rounded-2xl fancy-gradient-border subtle bg-gradient-to-br from-white/5 via-white/4 to-white/3 border border-white/6 p-4 sm:p-6 backdrop-blur-sm mb-8 hover:border-purple-400/30 hover:shadow-xl hover:shadow-purple-500/10 transition-all duration-300"
+                        className="rounded-[2rem] bg-black/40 backdrop-blur-2xl border border-white/10 p-6 sm:p-10 mb-8 hover:border-purple-500/30 hover:shadow-[0_0_40px_-10px_rgba(168,85,247,0.2)] transition-all duration-500 overflow-hidden shadow-2xl relative"
                     >
-                        <div className="flex flex-col lg:flex-row items-start gap-4 sm:gap-6">
+                        {/* Subtly masked inner glow */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none"></div>
+
+                        <div className="flex flex-col lg:flex-row items-start gap-6 sm:gap-10 relative z-10">
                             <div className="flex-1 w-full">
-                                <div className="text-xs sm:text-sm text-gray-400 mb-1">{selectedPlaybook.title}</div>
-                                <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3">Overview</h3>
+                                <div className="text-xs sm:text-sm text-gray-400 font-mono tracking-widest uppercase mb-2">{selectedPlaybook.title}</div>
+                                <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-white mb-3 sm:mb-4">Overview</h3>
                                 <p className="text-gray-400 mb-4 text-sm sm:text-base">A concise breakdown of the main stages. Switch between playbooks above to see different attack vectors.</p>
 
                                 <div className="space-y-3 sm:space-y-4">

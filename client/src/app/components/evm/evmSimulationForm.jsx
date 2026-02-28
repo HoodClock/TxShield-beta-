@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { serialize, useAccount } from "wagmi";
 import { motion } from "framer-motion";
+import ScrambleText from "../ScrambleText";
+import DataFlowBackground from "../DataFlowBackground";
 
 import styles from "./evmSimulationForm.module.css";
 
@@ -56,7 +58,8 @@ export default function SimulationForm({
         transition={{ duration: 0.4, ease: "easeInOut" }}
         className="relative p-1 rounded-3xl max-w-2xl mx-auto shadow-2xl"
       >
-        <div className="relative bg-black/90 backdrop-blur-xl rounded-[22px] p-6 md:p-8 overflow-hidden">
+        <div className="relative bg-black/40 border border-white/10 backdrop-blur-2xl rounded-[32px] p-8 md:p-10 overflow-hidden shadow-[0_0_50px_-12px_rgba(0,0,0,0.8)]">
+          <DataFlowBackground className="opacity-10 z-0" />
           {/* Ambient Background */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-600/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
@@ -67,7 +70,7 @@ export default function SimulationForm({
 
           <button
             onClick={backButtonHandler}
-            className="absolute top-5 left-5 p-2 rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all duration-300 z-20 group"
+            className="absolute top-5 left-5 p-2 rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all duration-300 z-20 group glitch-hover"
             title="Go Back"
           >
             <svg
@@ -89,7 +92,7 @@ export default function SimulationForm({
           {/* Switch Chain Button (Solana Logo) */}
           <button
             onClick={onSwitchChain}
-            className="absolute top-5 right-5 p-1.5 rounded-full bg-white/5 hover:bg-purple-500/20 border border-white/10 hover:border-purple-500/50 transition-all duration-300 z-20 group"
+            className="absolute top-5 right-5 p-1.5 rounded-full bg-white/5 hover:bg-purple-500/20 border border-white/10 hover:border-purple-500/50 transition-all duration-300 z-20 group glitch-hover"
             title="Switch to Solana Simulation"
           >
             <img
@@ -118,7 +121,7 @@ export default function SimulationForm({
                 </svg>
               </div>
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight">
-                EVM <span className="text-blue-500">Simulation</span>
+                <ScrambleText text="EVM" className="inline-block" /> <span className="text-blue-500">Simulation</span>
               </h2>
               <p className="text-gray-400 text-sm max-w-md mx-auto">
                 Securely simulate Ethereum transactions before you sign.
@@ -131,10 +134,11 @@ export default function SimulationForm({
                   Contract / Address
                 </label>
                 <div className="relative group">
+                  <div className="absolute inset-0 bg-black/40 rounded-xl shadow-inner pointer-events-none"></div>
                   <input
                     type="text"
                     placeholder="0x..."
-                    className="w-full px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:bg-blue-500/5 focus:ring-1 focus:ring-blue-500/50 transition-all duration-300 font-mono text-sm shadow-inner"
+                    className="relative z-10 w-full px-5 py-3.5 rounded-xl bg-transparent border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:bg-blue-500/10 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300 font-mono text-sm"
                     value={contractAddress}
                     onChange={(e) => setContractAddress(e.target.value)}
                   />
@@ -168,10 +172,11 @@ export default function SimulationForm({
                   Amount (ETH)
                 </label>
                 <div className="relative group">
+                  <div className="absolute inset-0 bg-black/40 rounded-xl shadow-inner pointer-events-none"></div>
                   <input
                     type="number"
                     placeholder="0.0"
-                    className={`w-full px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:bg-blue-500/5 focus:ring-1 focus:ring-blue-500/50 transition-all duration-300 font-mono text-sm shadow-inner ${styles.noSpinner}`}
+                    className={`relative z-10 w-full px-5 py-3.5 rounded-xl bg-transparent border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:bg-blue-500/10 focus:ring-2 focus:ring-blue-500/20 transition-all duration-300 font-mono text-sm ${styles.noSpinner}`}
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                   />
@@ -181,12 +186,12 @@ export default function SimulationForm({
                 </div>
               </div>
 
-              <div className="pt-2">
+              <div className="pt-4">
                 <motion.button
                   onClick={handleSimulate}
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold text-base shadow-lg evm-btn-glow relative overflow-hidden group"
+                  className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 border border-blue-400/30 text-white font-bold tracking-wide shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_10px_20px_-10px_rgba(37,99,235,0.8)] relative overflow-hidden group glitch-hover"
                 >
                   <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
                   <span className="relative z-10 flex items-center justify-center gap-2">
