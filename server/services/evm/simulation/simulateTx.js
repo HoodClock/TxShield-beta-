@@ -1,224 +1,283 @@
-const { decideChains } = require("../../../config/provider");
-const { ethers, recoverAddress } = require("ethers");
-const { isContract } = require("../../externals/etherscanService");
-const { getTokenMeta } = require("../../externals/getTokenMetaService");
+const { ethers } = require("ethers");
+const { Network, Alchemy } = require("alchemy-sdk");
 const axios = require("axios");
 require("dotenv").config();
-const redisClient = require("../../../config/redisClient")
-const { generateChacheKey } = require("../../../utils/cache")
-const EXPIRY_SECONDS = process.env.REDIS_EXPIRY_SECONDS || 3600
+const redisClient = require("../../../config/redisClient");
+const { generateChacheKey } = require("../../../utils/cache");
 
-const coinkGeckoUsd = process.env.COINGECKO_API_USD;
+const EXPIRY_SECONDS = process.env.REDIS_EXPIRY_SECONDS || 3600;
+const ALCHEMY_URL = process.env.ETH_MAINNET_NET_URL;
 
-async function fetchPrices(ids = ["ethereum"], vs = ["usd"]) {
-  if (!coinkGeckoUsd) throw new Error("COINGECKO_API_USD is missing!");
-  const resp = await axios.get(coinkGeckoUsd, {
-    params: { ids: ids.join(","), vs_currencies: vs.join(",") },
-  });
-  return resp.data;
-}
+const PHANTOM_ADDRESS = "0x0000000000000000000000000000000000008888";
 
-const fmt = (val, decimals = 6) => {
-  if (typeof val === "bigint") val = val.toString();
-  const num = parseFloat(val);
-  if (isNaN(num)) return val.toString();
-  if (num === 0) return "0";
-  if (num < 0.000001) return "< 0.000001";
-  return Number(num.toFixed(decimals)).toLocaleString();
-};
+const SIMULATOR_BYTECODE =
+  "0x6080604052600436106100225760003560e01c8063dc21d0e91461004957600080fd5b366100445760005460ff1615610042576000805461ff0019166101001790555b005b600080fd5b61005c610057366004610edb565b610072565b6040516100699190611087565b60405180910390f35b61007a610dfd565b6000805461ffff191660011781555a90506000610097898c6101a5565b90506000806100de8d8d89898e8e8080602002602001604051908101604052809392919081815260200183836020028082843760009201919091525034925061024f915050565b6000805460ff191690819055610100900460ff16151561014083015260a0820151919350915080156101105750600088115b8015610120575060008260200151135b1561016e5760208201518881101561016357600061013e828b6111b2565b90508961014d826103e86111c5565b61015791906111dc565b6101808501525061016c565b60006101808401525b505b6101788183610654565b610184838c8f8561066b565b5a61018f90856111b2565b6101a0830152509b9a5050505050505050505050565b60006001600160a01b03831615806101c557506001600160a01b0383163b155b156101d257506000610249565b604051636eb1769f60e11b81523060048201526001600160a01b03838116602483015284169063dd62ed3e90604401602060405180830381865afa92505050801561023a575060408051601f3d908101601f19168201909252610237918101906111fe565b60015b61024657506000610249565b90505b92915050565b610257610dfd565b6060610261610dfd565b60408101859052600061027485476111b2565b905060006001600160a01b038a161580159061029957506001600160a01b038a163b15155b1561030d576040516370a0823160e01b81523060048201526001600160a01b038b16906370a0823190602401602060405180830381865afa9250505080156102fe575060408051601f3d908101601f191682019092526102fb918101906111fe565b60015b61030a5750600061030d565b90505b600061031888610747565b90506000808d6001600160a01b0316348d8d604051610338929190611217565b60006040518083038185875af1925050503d8060008114610375576040519150601f19603f3d011682016040523d82523d6000602084013e61037a565b606091505b5081151560a08901529092509050816103ed5760008151116103d9576040518060400160405280601781526020017f556e6b6e6f776e20526576657274202853696c656e742900000000000000000081525086610100018190526103eb565b6103e2816108dc565b86610100018190525b505b476103f88682611227565b8088526000131560808801526001600160a01b038e161580159061042557506001600160a01b038e163b15155b156104ab576040516370a0823160e01b81523060048201526001600160a01b038f16906370a0823190602401602060405180830381865afa92505050801561048a575060408051601f3d908101601f19168201909252610487918101906111fe565b60015b61049a57600060208801526104ab565b6104a48682611227565b6020890152505b60006104b68c610747565b90508b5167ffffffffffffffff8111156104d2576104d2611247565b6040519080825280602002602001820160405280156104fb578160200160208202803683370190505b50606089015260005b8c518110156105745785818151811061051f5761051f61125d565b60200260200101518282815181106105395761053961125d565b602002602001015161054b91906111b2565b896060015182815181106105615761056161125d565b6020908102919091010152600101610504565b508760a00151801561058a575060008860200151135b801561059f57506001600160a01b038f163014155b1561063f578e6001600160a01b031663a9059cbb61dead60016040518363ffffffff1660e01b81526004016105e99291906001600160a01b03929092168252602082015260400190565b6020604051808303816000875af1925050508015610624575060408051601f3d908101601f1916820190925261062191810190611273565b60015b61063557600161016089015261063f565b5060006101608901525b50959e909d509b505050505050505050505050565b8060a00151156106675761012081018290525b5050565b6001600160a01b038316158061068957506001600160a01b0383163b155b61074157604051636eb1769f60e11b81523060048201526001600160a01b0383811660248301526000919085169063dd62ed3e90604401602060405180830381865afa9250505080156106f9575060408051601f3d908101601f191682019092526106f6918101906111fe565b60015b6107035750610741565b905084811461073f57600160c08301528481111561072f5761072585826111b2565b60e083015261073f565b61073981866111b2565b60e08301525b505b50505050565b60606000825167ffffffffffffffff81111561076557610765611247565b60405190808252806020026020018201604052801561078e578160200160208202803683370190505b50905060005b83518110156108d55760006001600160a01b03168482815181106107ba576107ba61125d565b60200260200101516001600160a01b03161415801561080057506108008482815181106107e9576107e961125d565b60200260200101516001600160a01b03163b151590565b156108cd578381815181106108175761081761125d565b60209081029190910101516040516370a0823160e01b81523060048201526001600160a01b03909116906370a0823190602401602060405180830381865afa925050508015610883575060408051601f3d908101601f19168201909252610880918101906111fe565b60015b6108ac57600082828151811061089b5761089b61125d565b6020026020010181815250506108cd565b808383815181106108bf576108bf61125d565b602002602001018181525050505b600101610794565b5092915050565b606060048251101561092157505060408051808201909152601d81527f5472616e73616374696f6e2072657665727465642073696c656e746c79000000602082015290565b60208201516001600160e01b0319811662461bcd60e51b0361095e57600483019250828060200190518101906109579190611295565b9392505050565b6001600160e01b03198116634e487b7160e01b03610c0b576024835110610c0b57602483015160018190036109c957505060408051808201909152601781527f50616e69633a20417373657274696f6e204661696c6564000000000000000000602082015292915050565b80601103610a0d57505060408051808201909152601e81527f50616e69633a204d617468204f766572666c6f772f556e646572666c6f770000602082015292915050565b80601203610a5157505060408051808201909152601781527f50616e69633a204469766973696f6e206279205a65726f000000000000000000602082015292915050565b80602103610a9557505060408051808201909152601c81527f50616e69633a20456e756d20436f6e76657273696f6e204572726f7200000000602082015292915050565b80602203610ad957505060408051808201909152601d81527f50616e69633a2053746f7261676520456e636f64696e67204572726f72000000602082015292915050565b80603103610b16575050604080518082019091526016815275050616e69633a20456d70747920417272617920506f760541b602082015292915050565b80603203610b5a57505060408051808201909152601a81527f50616e69633a204172726179204f7574206f6620426f756e6473000000000000602082015292915050565b80604103610b9557505060408051808201909152601481527350616e69633a204f7574206f66204d656d6f727960601b602082015292915050565b80605103610bd957505060408051808201909152601d81527f50616e69633a20496e7465726e616c2046756e6374696f6e2054797065000000602082015292915050565b505060408051808201909152601381527250616e69633a20556e6b6e6f776e20436f646560681b602082015292915050565b610c1481610c3b565b604051602001610c24919061134a565b604051602081830303815290604052915050919050565b604080518082018252601081526f181899199a1a9b1b9c1cb0b131b232b360811b60208201528151600a80825281840190935260609260009190602082018180368337019050509050600360fc1b81600081518110610c9c57610c9c61125d565b60200101906001600160f81b031916908160001a905350600f60fb1b81600181518110610ccb57610ccb61125d565b60200101906001600160f81b031916908160001a90535060005b6004811015610df557826004868360048110610d0357610d0361125d565b1a60f81b6001600160f81b031916901c60f81c60ff1681518110610d2957610d2961125d565b01602001516001600160f81b03191682610d448360026111c5565b610d4f906002611380565b81518110610d5f57610d5f61125d565b60200101906001600160f81b031916908160001a90535082858260048110610d8957610d8961125d565b825191901a600f16908110610da057610da061125d565b01602001516001600160f81b03191682610dbb8360026111c5565b610dc6906003611380565b81518110610dd657610dd661125d565b60200101906001600160f81b031916908160001a905350600101610ce5565b509392505050565b604051806101c001604052806000815260200160008152602001606081526020016060815260200160001515815260200160001515815260200160001515815260200160008152602001606081526020016060815260200160001515815260200160001515815260200160008152602001600081525090565b80356001600160a01b0381168114610e8d57600080fd5b919050565b60008083601f840112610ea457600080fd5b50813567ffffffffffffffff811115610ebc57600080fd5b602083019150836020828501011115610ed457600080fd5b9250929050565b60008060008060008060008060c0898b031215610ef757600080fd5b610f0089610e76565b9750610f0e60208a01610e76565b9650610f1c60408a01610e76565b9550606089013567ffffffffffffffff811115610f3857600080fd5b8901601f81018b13610f4957600080fd5b803567ffffffffffffffff811115610f6057600080fd5b8b60208260051b8401011115610f7557600080fd5b602091909101955093506080890135925060a089013567ffffffffffffffff811115610fa057600080fd5b610fac8b828c01610e92565b999c989b5096995094979396929594505050565b600081518084526020840193506020830160005b82811015610ffb5781516001600160a01b0316865260209586019590910190600101610fd4565b5093949350505050565b600081518084526020840193506020830160005b82811015610ffb578151865260209586019590910190600101611019565b60005b8381101561105257818101518382015260200161103a565b50506000910152565b60008151808452611073816020860160208601611037565b601f01601f19169290920160200192915050565b602081528151602082015260208201516040820152600060408301516101c060608401526110b96101e0840182610fc0565b90506060840151601f198483030160808501526110d68282611005565b91505060808401516110ec60a085018215159052565b5060a084015180151560c08501525060c084015180151560e08501525060e0840151610100840152610100840151601f1984830301610120850152611131828261105b565b915050610120840151601f1984830301610140850152611151828261105b565b91505061014084015161116961016085018215159052565b50610160840151801515610180850152506101808401516101a08401526101a08401516101c08401528091505092915050565b634e487b7160e01b600052601160045260246000fd5b818103818111156102495761024961119c565b80820281158282048414176102495761024961119c565b6000826111f957634e487b7160e01b600052601260045260246000fd5b500490565b60006020828403121561121057600080fd5b5051919050565b8183823760009101908152919050565b81810360008312801583831316838312821617156108d5576108d561119c565b634e487b7160e01b600052604160045260246000fd5b634e487b7160e01b600052603260045260246000fd5b60006020828403121561128557600080fd5b8151801515811461095757600080fd5b6000602082840312156112a757600080fd5b815167ffffffffffffffff8111156112be57600080fd5b8201601f810184136112cf57600080fd5b805167ffffffffffffffff8111156112e9576112e9611247565b604051601f8201601f19908116603f0116810167ffffffffffffffff8111828210171561131857611318611247565b60405281815282820160200186101561133057600080fd5b611341826020830160208601611037565b95945050505050565b6d021bab9ba37b69022b93937b91d160951b81526000825161137381600e850160208701611037565b91909101600e0192915050565b808201808211156102495761024961119c56fea264697066735822122027929314a9121e10a60fc9ff08ed230ce7af30faf973d0f9c442e486426810cb64736f6c634300081c0033";
 
-const safeJson = (obj) =>
-  JSON.parse(JSON.stringify(obj, (_, v) => (typeof v === 'bigint' ? v.toString() : v)));
-
-const _runSimulation = async (userAddress, recipientAddress, amount, currency) => {
-  try {
-    const provider = decideChains(currency)
-
-    if (!ethers.isAddress(userAddress)) throw new Error("Invalid user address");
-    if (!ethers.isAddress(recipientAddress)) throw new Error("Invalid recipient address");
-    if (isNaN(parseFloat(amount))) throw new Error("Invalid amount");
-
-    let transferType = "eth";
-    let tokenContract = null;
-    let decimals = 18;
-    let tokenId = "ethereum";
-
-    if (currency && currency !== "ETH") {
-      tokenContract = new ethers.Contract(currency, [
-        "function balanceOf(address) view returns (uint256)",
-        "function symbol() view returns (string)",
-        "function decimals() view returns (uint8)",
-        "function transfer(address,uint256) returns (bool)"
-      ], provider);
-      const meta = await getTokenMeta(currency);
-      decimals = Number(meta.decimals);
-      tokenId = meta.symbol.toLowerCase();
-      transferType = "erc20";
-    }
-
-    const recipientIsContract = await isContract(recipientAddress, currency);
-    if (!tokenContract && recipientIsContract && currency !== "ETH") {
-      tokenContract = new ethers.Contract(recipientAddress, [
-        "function balanceOf(address) view returns (uint256)",
-        "function symbol() view returns (string)",
-        "function decimals() view returns (uint8)",
-        "function transfer(address,uint256) returns (bool)"
-      ], provider);
-      const meta = await getTokenMeta(recipientAddress);
-      decimals = Number(meta.decimals);
-      tokenId = meta.symbol.toLowerCase();
-      transferType = "erc20";
-    }
-
-    const value = ethers.parseUnits(amount, decimals);
-
-    const tx = {
-      from: userAddress,
-      to: recipientAddress,
-      value: transferType === "eth" ? value : 0n,
-      data: transferType === "erc20"
-        ? tokenContract.interface.encodeFunctionData("transfer", [recipientAddress, value])
-        : "0x"
-    };
-
-    const [gasEstimate, feeData, senderBalance, recipientBalance] = await Promise.all([
-      provider.estimateGas(tx).catch(() => (transferType === "eth" ? 21000n : 100000n)),
-      provider.getFeeData(),
-      provider.getBalance(userAddress),
-      provider.getBalance(recipientAddress)
-    ]);
-
-    const gasPrice = feeData.gasPrice || feeData.maxFeePerGas || 0n;
-    const gasCost = gasEstimate * gasPrice;
-
-    const sufficientEth = senderBalance >= (transferType === "eth" ? value + gasCost : gasCost);
-    const tokenBalance = transferType === "erc20"
-      ? await tokenContract.balanceOf(userAddress)
-      : 0n;
-    const recipientTokenBalance = transferType === "erc20"
-      ? await tokenContract.balanceOf(recipientAddress)
-      : 0n;
-    const sufficientTokens = transferType !== "erc20" || tokenBalance >= value;
-
-    const ids = ["ethereum"];
-    if (tokenId !== "ethereum") ids.push(tokenId);
-    const prices = await fetchPrices(ids, ["usd"]);
-
-    const ethUsd = prices["ethereum"]?.usd ?? 0;
-    const tokenUsd = tokenId !== "ethereum" ? prices[tokenId]?.usd ?? 0 : 0;
-
-    const result = {
-      success: sufficientEth && sufficientTokens,
-      transferType,
-      from: userAddress,
-      to: recipientAddress,
-      amount: `${fmt(ethers.formatUnits(value, decimals))} ${transferType === "erc20" ? tokenId.toUpperCase() : "ETH"}`,
-      gas: {
-        estimated: fmt(gasEstimate),
-        priceGwei: fmt(ethers.formatUnits(gasPrice, "gwei")),
-        costEth: fmt(ethers.formatUnits(gasCost, "ether")),
-        costUsd: fmt(Number(ethers.formatUnits(gasCost, "ether")) * ethUsd),
+const SIMULATOR_ABI = [
+  {
+    name: "simulateTransaction",
+    type: "function",
+    stateMutability: "payable",
+    inputs: [
+      { name: "targetContract", type: "address" },
+      { name: "tokenAddress", type: "address" },
+      { name: "watchToken", type: "address" },
+      { name: "additionalTokens", type: "address[]" },
+      { name: "expectedAmount", type: "uint256" },
+      { name: "data", type: "bytes" },
+    ],
+    outputs: [
+      {
+        name: "result",
+        type: "tuple",
+        components: [
+          { name: "ethDelta", type: "int256" },
+          { name: "tokenDelta", type: "int256" },
+          { name: "watchedTokens", type: "address[]" },
+          { name: "watchedTokensDeltas", type: "int256[]" },
+          { name: "isProfit", type: "bool" },
+          { name: "success", type: "bool" },
+          { name: "allowanceChanged", type: "bool" },
+          { name: "allowanceDelta", type: "uint256" },
+          { name: "errorReason", type: "string" },
+          { name: "returnData", type: "bytes" },
+          { name: "reentrancyDetected", type: "bool" },
+          { name: "isHoneypot", type: "bool" },
+          { name: "estimatedTaxBps", type: "uint256" },
+          { name: "gasUsed", type: "uint256" },
+        ],
       },
-      balances: {
-        sender: {
-          before: {
-            eth: fmt(ethers.formatEther(senderBalance)),
-            ethUsd: fmt(parseFloat(ethers.formatEther(senderBalance)) * ethUsd),
-            token: transferType === "erc20"
-              ? fmt(ethers.formatUnits(tokenBalance, decimals))
-              : null,
-            tokenUsd: transferType === "erc20"
-              ? fmt(parseFloat(ethers.formatUnits(tokenBalance, decimals)) * tokenUsd)
-              : null
-          },
-          after: {
-            eth: fmt(ethers.formatEther(senderBalance - (transferType === "eth" ? value + gasCost : gasCost))),
-            ethUsd: fmt(parseFloat(ethers.formatEther(senderBalance - (transferType === "eth" ? value + gasCost : gasCost))) * ethUsd),
-            token: transferType === "erc20"
-              ? fmt(ethers.formatUnits(tokenBalance - value, decimals))
-              : null,
-            tokenUsd: transferType === "erc20"
-              ? fmt(parseFloat(ethers.formatUnits(tokenBalance - value, decimals)) * tokenUsd)
-              : null
-          }
+    ],
+  },
+];
+
+const iface = new ethers.Interface(SIMULATOR_ABI);
+
+/**
+ * @param {*} userAddress
+ * @param {*} data
+ * @param {*} recipientAddress
+ * @param {*} amount
+ * @param {*} tokenAddress
+ * @param {*} watchToken
+ * @call_to_alchemyNode `eth_call` which siliently call our Phantom_Contract
+ * @call_to_alchemy_simulateExecution `which makes the call to simulateTransaction
+ * @returns Json response
+ */
+
+const _runSimulation = async (
+  userAddress,
+  txTo,
+  tokenAddress,
+  watchToken,
+  watchList,
+  txData,
+  valueInWeiHex,
+  expectedAmount,
+) => {
+  // prepareing the data & handling the empty data
+  const token = tokenAddress || ethers.ZeroAddress;
+  const watch = watchToken || ethers.ZeroAddress;
+  // to normalize amount
+  const normalizeHex = (hex) => {
+    if (!hex || hex === "0x") return "0x0";
+    return "0x" + BigInt(hex).toString(16);
+  };
+  const value = normalizeHex(valueInWeiHex);
+
+  const checksumAddress = ethers.getAddress(userAddress);
+
+  // senitizing alchemy payload for txData
+  const txObj = {
+    from: checksumAddress,
+    to: txTo,
+    value: "0x0",
+    gas: "0xF4240",
+    gasPrice: "0x0",
+  };
+  // only add txData when it got some value not "0x"
+  if (txData && txData !== "0x") {
+    txObj.data = txData;
+  }
+
+  // using stateOverride here to dodge the insufficient_gas_error
+  const stateOverride = {
+    [checksumAddress]: { balance: "0xffffffffffffffffffffffff" },
+  };
+
+  /**
+   * @constructs [Transaction, block, stateOverride] => @method [simulateExecution, simulateAssetChange]
+   */
+
+  const payloadSimulateExec = {
+    id: 1,
+    jsonrpc: "2.0",
+    method: "alchemy_simulateExecution",
+    params: [txObj, "latest", stateOverride],
+  };
+
+  // calling our phantom_contract function
+  const phantomCallData = iface.encodeFunctionData("simulateTransaction", [
+    txTo,
+    token,
+    watch,
+    watchList,
+    expectedAmount,
+    txData,
+  ]);
+
+  // creating payload for the eth_call
+  const phantomPayload = {
+    id: 1,
+    jsonrpc: "2.0",
+    method: "eth_call",
+    params: [
+      {
+        from: checksumAddress,
+        to: PHANTOM_ADDRESS,
+        data: phantomCallData,
+        value: value,
+        gas: "0xF4240",
+      },
+      "latest",
+      {
+        // state_overrides for our Contract
+        [PHANTOM_ADDRESS]: {
+          code: SIMULATOR_BYTECODE,
         },
-        recipient: {
-          before: {
-            eth: fmt(ethers.formatEther(recipientBalance)),
-            ethUsd: fmt(parseFloat(ethers.formatEther(recipientBalance)) * ethUsd),
-            token: transferType === "erc20"
-              ? fmt(ethers.formatUnits(recipientTokenBalance, decimals))
-              : null,
-            tokenUsd: transferType === "erc20"
-              ? fmt(parseFloat(ethers.formatUnits(recipientTokenBalance, decimals)) * tokenUsd)
-              : null
-          },
-          after: {
-            eth: fmt(ethers.formatEther(recipientBalance + (transferType === "eth" ? value : 0n))),
-            ethUsd: fmt(parseFloat(ethers.formatEther(recipientBalance + (transferType === "eth" ? value : 0n))) * ethUsd),
-            token: transferType === "erc20"
-              ? fmt(ethers.formatUnits(recipientTokenBalance + value, decimals))
-              : null,
-            tokenUsd: transferType === "erc20"
-              ? fmt(parseFloat(ethers.formatUnits(recipientTokenBalance + value, decimals)) * tokenUsd)
-              : null
-          }
-        }
+        // state_overrides for userAddress
+        [checksumAddress]: {
+          balance: "0xffffffffffffffffffffffff",
+        },
       },
-      warnings: []
+    ],
+  };
+
+  // -------for alchemy_simulateExecution simulation-------
+  try {
+    // execution of [Alchemy simulationExecution, PhantomContractSimulation]
+    let simulationExec = { data: { error: { message: "Not Executed" } } };
+    let phantomExec;
+
+    // 1.simulateExecution
+    try {
+      simulationExec = await axios.post(ALCHEMY_URL, payloadSimulateExec);
+    } catch (e) {
+      simulationExec = { data: { error: e.response?.data || e } };
+      console.warn("⚠️ Alchemy Exec Failed:", e.message);
+    }
+
+    // 3. Phantom_SmartContract_simulation
+    phantomExec = await axios.post(ALCHEMY_URL, phantomPayload, {
+      timeout: 10000,
+    });
+
+    // --------------------RESULTS--------------------
+    // handling Alchemy_related_results & Errors (simulationExecution, AssetChange)
+
+    let simulateExecutionCalls = [];
+    let simulateExecutionLogs = [];
+
+    if (simulationExec.data && simulationExec.data.result) {
+      simulateExecutionCalls = simulationExec.data.result.calls;
+      simulateExecutionLogs = simulationExec.data.result.logs;
+      console.log("✅ Alchemy Execution: Success");
+    } else {
+      const errMsg = simulationExec.data?.error?.message || "Unknown Error";
+      console.warn("⚠️ Alchemy Exec Failed:", errMsg);
+    }
+
+    // handling Phantom_contract_results & Error
+    if (phantomExec.data.error) {
+      throw new Error(
+        `Phantom Simulation Failed: ${phantomExec.data.error.message}`,
+      );
+    }
+
+    const decoded = iface.decodeFunctionResult(
+      "simulateTransaction",
+      phantomExec.data.result,
+    );
+
+    const resultData = decoded[0];
+
+    // formatted final response
+    const result = {
+      success: resultData.success,
+      ethDelta: resultData.ethDelta.toString(),
+      tokenDelta: resultData.tokenDelta.toString(),
+      isProfit: resultData.isProfit,
+      allowanceChanged: resultData.allowanceChanged,
+      allowanceDelta: resultData.allowanceDelta.toString(),
+      errorReason: resultData.errorReason,
+      returnData: resultData.returnData,
+      simulatedAt: new Date().toISOString(),
+      estimatedTax: resultData.estimatedTaxBps.toString(),
+      gasUsed: resultData.gasUsed.toString(),
+      watchedTokens: resultData.watchedTokens.toString(),
+      watchedTokensDeltas: resultData.watchedTokensDeltas.toString(),
+      isReentrancy: resultData.reentrancyDetected,
+      isHoneypot: resultData.isHoneypot,
+      simulation: {
+        calls: simulateExecutionCalls,
+        logs: simulateExecutionLogs,
+      },
     };
 
-    if (!sufficientEth) result.warnings.push("Insufficient ETH for gas + transfer");
-    if (!sufficientTokens) result.warnings.push("Insufficient token balance");
-    if (recipientAddress === ethers.ZeroAddress) result.warnings.push("Transfer to zero address");
-
-    return safeJson(result);
-
-  } catch (error) {
-    return {
-      success: false,
-      error: error.message,
-      reason:
-        error.code === "INSUFFICIENT_FUNDS" ? "insufficient_balance" :
-          error.message.includes("revert") ? "contract_reverted" :
-            "simulation_error"
-    };
+    return result;
+  } catch (err) {
+    console.error(`Simulation Fatal Error: ${err.message}`);
+    throw err;
   }
 };
 
-// exporting function with cached response
-const getSimulate = async (userAddress, recipientAddress, amount, currency) => {
-
-  // make the cache key
+// for caching the response
+const getSimulate = async (
+  userAddress,
+  txTo,
+  tokenAddress,
+  watchToken,
+  watchList,
+  txData,
+  valueInWei,
+  expectedAmount,
+) => {
   const cachePayload = {
     userAddress: userAddress.toLowerCase(),
-    recoverAddress: recipientAddress.toLowerCase(),
-    amount: amount,
-    currency: currency.toUpperCase()
-  }
+    txTo: txTo.toLowerCase(),
+    tokenAddress: tokenAddress.toLowerCase(),
+    watchToken: watchToken.toLowerCase(),
+    watchList: watchList,
+    txData: txData.toString(),
+    valueInWei: valueInWei.toString(),
+    expectedAmount: expectedAmount.toString(),
+  };
 
-  // calling the cache function
-  const cacheKey = generateChacheKey(cachePayload)
+  const cacheKey = generateChacheKey(cachePayload);
 
-  // crossCheck cache key from redisClient
-  const cachedData = await redisClient.get(cacheKey)
+  const cachedData = await redisClient.get(cacheKey);
   if (cachedData) {
-    return JSON.parse(cachedData)
+    return JSON.parse(cachedData);
   }
 
-  // In case of !cache
-  const simResult = await _runSimulation(userAddress, recipientAddress, amount, currency)
+  const simResult = await _runSimulation(
+    userAddress,
+    txTo,
+    tokenAddress,
+    watchToken,
+    watchList,
+    txData,
+    valueInWei,
+    expectedAmount,
+  );
 
-  // setting cache only if successful
-  if (simResult && simResult.success) {
+  // Only cache if not a system error
+  if (simResult && simResult.reason !== "simulation_infrastructure_error") {
     await redisClient.set(cacheKey, JSON.stringify(simResult), {
-      'EX': parseInt(EXPIRY_SECONDS)
-    })
+      EX: parseInt(EXPIRY_SECONDS),
+    });
   }
+  return simResult;
+};
 
-  return simResult
-
-}
-
-// now when controller calls this redis-cached based simulation of evm
-module.exports = getSimulate 
+module.exports = getSimulate;
