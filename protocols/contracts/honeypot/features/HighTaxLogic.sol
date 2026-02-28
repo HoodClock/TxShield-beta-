@@ -63,10 +63,7 @@ abstract contract HighTaxLogic is HoneypotBase {
         sellPath[0] = token;
         sellPath[1] = weth;
 
-        uint256[] memory expectedOutSell = dexRouter.getAmountsOut(
-            expectedBuy[1],
-            sellPath
-        );
+        dexRouter.getAmountsOut(expectedBuy[1], sellPath);
 
         return (buyTax, sellTax);
     }
