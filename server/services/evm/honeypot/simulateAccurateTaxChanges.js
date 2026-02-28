@@ -20,18 +20,18 @@ const routerABI = [
   "function WETH() external pure returns (address)",
 ];
 
-const anvilProvider = new ethers.JsonRpcProvider(ANVIL_URL, 1, {
-  staticNetwork: true,
-});
+async function _simulateAccurateTax(token, router, activeRpcUrl) {
+  const provider = new ethers.JsonRpcProvider(activeRpcUrl, undefined, {
+    staticNetwork: true,
+  });
 
-async function _simulateAccurateTax(token, router) {
   // 1. Setup the Whale (Payer)
-  await anvilProvider.send("anvil_impersonateAccount", [RICH_WHALE]);
-  await anvilProvider.send("anvil_setBalance", [
+  await provider.send("anvil_impersonateAccount", [RICH_WHALE]);
+  await provider.send("anvil_setBalance", [
     RICH_WHALE,
     "0x100000000000000000000000000",
   ]);
-  const signer = await anvilProvider.getSigner(RICH_WHALE);
+  const signer = await provider.getSigner(RICH_WHALE);
 
   // 2. Setup a "Clean" Recipient (Receiver)
   // We send profits here so Gas costs don't mess up the math
@@ -40,7 +40,7 @@ async function _simulateAccurateTax(token, router) {
   const weth = await new ethers.Contract(
     router,
     ["function WETH() view returns (address)"],
-    anvilProvider,
+    provider,
   ).WETH();
   const routerContract = new ethers.Contract(router, routerABI, signer);
   const tokenContract = new ethers.Contract(
@@ -94,7 +94,7 @@ async function _simulateAccurateTax(token, router) {
 
   // Check the Clean Bucket's balance.
   // Since it paid no gas, this is the PURE ETH received.
-  const ethReceived = await anvilProvider.getBalance(RECIPIENT);
+  const ethReceived = await provider.getBalance(RECIPIENT);
 
   const expectedSell = await routerContract.getAmountsOut(tokensReceived, [
     token,
