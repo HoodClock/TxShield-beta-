@@ -1,5 +1,5 @@
 import React from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 const PhishingAnalysis = ({ data, chain = "EVM" }) => {
   if (!data) {
@@ -126,7 +126,7 @@ const PhishingAnalysis = ({ data, chain = "EVM" }) => {
   const cleanCount = securityChecks.filter(c => !c.isScam).length;
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
@@ -143,7 +143,7 @@ const PhishingAnalysis = ({ data, chain = "EVM" }) => {
       </div>
 
       {/* Risk Score Card */}
-      <motion.div
+      <m.div
         initial={{ y: -10, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         className={gradientBorderCard}
@@ -178,7 +178,7 @@ const PhishingAnalysis = ({ data, chain = "EVM" }) => {
 
           <div className="mt-6">
             <div className="w-full bg-slate-700/30 rounded-full h-2">
-              <motion.div
+              <m.div
                 initial={{ width: 0 }}
                 animate={{ width: `${phishingScore}%` }}
                 transition={{ duration: 1.2 }}
@@ -199,14 +199,14 @@ const PhishingAnalysis = ({ data, chain = "EVM" }) => {
             </span>
           </div>
         </div>
-      </motion.div>
+      </m.div>
 
       {/* Security Checks */}
       <div className="space-y-4">
         <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider pl-2">Detailed Analysis</h3>
         <div className="space-y-3">
           {securityChecks.map((check, index) => (
-            <motion.div
+            <m.div
               key={index}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -257,14 +257,14 @@ const PhishingAnalysis = ({ data, chain = "EVM" }) => {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           ))}
         </div>
       </div>
 
       {/* Key Findings */}
       {keyFindings.length > 0 && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
@@ -274,7 +274,7 @@ const PhishingAnalysis = ({ data, chain = "EVM" }) => {
             <h3 className="text-sm font-semibold text-amber-400 uppercase tracking-wider mb-4">Critical Findings</h3>
             <ul className="space-y-3">
               {keyFindings.map((finding, index) => (
-                <motion.li
+                <m.li
                   key={index}
                   initial={{ x: -10, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
@@ -283,16 +283,16 @@ const PhishingAnalysis = ({ data, chain = "EVM" }) => {
                 >
                   <span className="text-amber-400 font-bold mt-0.5 flex-shrink-0">•</span>
                   <span>{finding}</span>
-                </motion.li>
+                </m.li>
               ))}
             </ul>
           </div>
-        </motion.div>
+        </m.div>
       )}
 
       {/* Recommended Actions */}
       {recommendedActions.length > 0 && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
@@ -302,7 +302,7 @@ const PhishingAnalysis = ({ data, chain = "EVM" }) => {
             <h3 className="text-sm font-semibold text-red-400 uppercase tracking-wider mb-4">Recommended Actions</h3>
             <ul className="space-y-3">
               {recommendedActions.map((action, index) => (
-                <motion.li
+                <m.li
                   key={index}
                   initial={{ x: -10, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
@@ -311,13 +311,13 @@ const PhishingAnalysis = ({ data, chain = "EVM" }) => {
                 >
                   <span className="text-red-400 font-bold mt-0.5 flex-shrink-0">→</span>
                   <span>{action}</span>
-                </motion.li>
+                </m.li>
               ))}
             </ul>
           </div>
-        </motion.div>
+        </m.div>
       )}
-    </motion.div>
+    </m.div>
   );
 };
 

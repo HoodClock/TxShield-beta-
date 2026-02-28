@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { FiRadio, FiChevronDown, FiExternalLink, FiHash, FiArrowRight, FiArrowLeft, FiDollarSign, FiCalendar, FiLink } from "react-icons/fi";
 
 export default function RecentTransfers({
@@ -12,7 +12,7 @@ export default function RecentTransfers({
   if (!recentTransfers || recentTransfers.length === 0) return null;
 
   return (
-    <motion.div variants={itemVariants} className="group gradient-border-card">
+    <m.div variants={itemVariants} className="group gradient-border-card">
       <button
         onClick={() => toggleSection("transfers")}
         className="card-inner p-4 sm:p-6 w-full glitch-hover"
@@ -26,17 +26,17 @@ export default function RecentTransfers({
               Recent Transfers
             </h2>
           </div>
-          <motion.div
+          <m.div
             animate={{ rotate: expandedSections.transfers ? 180 : 0 }}
             transition={{ duration: 0.3 }}
           >
             <FiChevronDown className="h-5 w-5 text-slate-400" />
-          </motion.div>
+          </m.div>
         </div>
       </button>
 
       {expandedSections.transfers && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
@@ -68,7 +68,7 @@ export default function RecentTransfers({
             </thead>
             <tbody>
               {recentTransfers.slice(0, 5).map((tx, idx) => (
-                <motion.tr
+                <m.tr
                   key={`${tx.hash}-${idx}`}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -110,12 +110,12 @@ export default function RecentTransfers({
                       <FiExternalLink className="h-4 w-4" />
                     </a>
                   </td>
-                </motion.tr>
+                </m.tr>
               ))}
             </tbody>
           </table>
-        </motion.div>
+        </m.div>
       )}
-    </motion.div>
+    </m.div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { FiEye, FiRepeat, FiClock, FiPieChart } from "react-icons/fi";
 
 export default function TransactionSummary({
@@ -11,7 +11,7 @@ export default function TransactionSummary({
   if (!txHistoryData.success) return null;
 
   return (
-    <motion.div variants={itemVariants} className="group gradient-border-card">
+    <m.div variants={itemVariants} className="group gradient-border-card">
       <div className="card-inner p-4 sm:p-6">
         <div className="flex items-center gap-3 sm:gap-4 mb-6">
           <div className="icon-wrapper">
@@ -38,7 +38,7 @@ export default function TransactionSummary({
               icon: <FiPieChart className="h-4 w-4 text-slate-400 group-hover/summary:text-cyan-200 transition-colors" />,
             },
           ].map((item, idx) => (
-            <motion.div
+            <m.div
               key={idx}
               initial={{ opacity: 0, x: 10 }}
               animate={{ opacity: 1, x: 0 }}
@@ -54,10 +54,10 @@ export default function TransactionSummary({
               <span className="text-white font-semibold text-xs sm:text-sm group-hover/summary:text-cyan-200 transition-colors">
                 {item.value}
               </span>
-            </motion.div>
+            </m.div>
           ))}
         </div>
       </div>
-    </motion.div>
+    </m.div>
   );
 }

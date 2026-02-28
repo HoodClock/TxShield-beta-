@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 
@@ -28,19 +28,19 @@ export default function PhishingLoader({ isLoading }) {
   if (!isLoading) return null;
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="fixed inset-0 bg-gray-950/90 backdrop-blur-sm z-[9999] flex items-center justify-center"
     >
-      <motion.div 
+      <m.div 
         className="w-full max-w-md p-8 text-center"
         initial={{ y: 20 }}
         animate={{ y: 0 }}
       >
         {/* Animated scanning orb */}
-        <motion.div
+        <m.div
           className="relative mx-auto mb-6 w-24 h-24"
           animate={{
             scale: [1, 1.05, 1],
@@ -53,7 +53,7 @@ export default function PhishingLoader({ isLoading }) {
           }}
         >
           <div className="absolute inset-0 rounded-full bg-blue-500/10 blur-md" />
-          <motion.div
+          <m.div
             className="w-full h-full rounded-full border-2 border-blue-400/30 flex items-center justify-center"
             animate={{
               background: [
@@ -69,11 +69,11 @@ export default function PhishingLoader({ isLoading }) {
             }}
           >
             <Loader2 className="w-8 h-8 text-blue-400 animate-spin" />
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
 
         {/* Progress text */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="mb-6"
@@ -86,11 +86,11 @@ export default function PhishingLoader({ isLoading }) {
               ? "Finalizing security report..."
               : "Checking for malicious patterns..."}
           </p>
-        </motion.div>
+        </m.div>
 
         {/* Minimal progress bar */}
         <div className="h-1.5 bg-gray-800 rounded-full overflow-hidden mb-2">
-          <motion.div
+          <m.div
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
             className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full"
@@ -98,9 +98,9 @@ export default function PhishingLoader({ isLoading }) {
         </div>
         
         {/* Animated scanning dots */}
-        <motion.div className="flex justify-center gap-1">
+        <m.div className="flex justify-center gap-1">
           {[...Array(3)].map((_, i) => (
-            <motion.div
+            <m.div
               key={i}
               className="w-1.5 h-1.5 rounded-full bg-blue-400/50"
               animate={{
@@ -114,8 +114,8 @@ export default function PhishingLoader({ isLoading }) {
               }}
             />
           ))}
-        </motion.div>
-      </motion.div>
-    </motion.div>
+        </m.div>
+      </m.div>
+    </m.div>
   );
 }

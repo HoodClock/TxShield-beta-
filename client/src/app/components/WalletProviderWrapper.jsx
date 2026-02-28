@@ -1,10 +1,24 @@
 "use client"
 
-import { Suspense, lazy } from "react"
+import dynamic from "next/dynamic"
 
+const EvmProvider = dynamic(() => import("./evm/EvmProvider"), {
+    ssr: false,
+    loading: () => (
+        <div className="flex justify-center py-4">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+        </div>
+    )
+})
 
-const EvmProvider = lazy(() => import("./evm/EvmProvider"))
-const SolProvider = lazy(() => import("./sol/SolProvider"))
+const SolProvider = dynamic(() => import("./sol/SolProvider"), {
+    ssr: false,
+    loading: () => (
+        <div className="flex justify-center py-4">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+        </div>
+    )
+})
 
 export default function WalletProviderWrapper({ chain, children }) {
     if (!chain) {
@@ -14,16 +28,8 @@ export default function WalletProviderWrapper({ chain, children }) {
     const Provider = chain === "EVM" ? EvmProvider : SolProvider;
 
     return (
-        <Suspense
-            fallback={
-                <div className="flex justify-center py-4">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-                </div>
-            }
-        >
-            <Provider>
-                {children}
-            </Provider>
-        </Suspense>
+        <Provider>
+            {children}
+        </Provider>
     )
 }

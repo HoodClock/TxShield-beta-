@@ -1,11 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { FiArrowLeft } from "react-icons/fi";
 
 export default function BackToSimulate({ itemVariants, t, chain }) {
   return (
-    <motion.div
+    <m.div
       variants={itemVariants}
       className="max-w-7xl mx-auto flex justify-center mt-12 sm:mt-16 pb-12"
     >
@@ -28,6 +28,6 @@ export default function BackToSimulate({ itemVariants, t, chain }) {
           Back to Simulate
         </span>
       </button>
-    </motion.div>
+    </m.div>
   );
 }
