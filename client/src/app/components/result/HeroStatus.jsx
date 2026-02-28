@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { FiCheckCircle, FiXCircle, FiActivity, FiShield } from "react-icons/fi";
 
 export default function HeroStatus({ 
@@ -11,7 +11,7 @@ export default function HeroStatus({
   ratioText 
 }) {
   return (
-    <motion.div variants={itemVariants} className="group gradient-border-card">
+    <m.div variants={itemVariants} className="group gradient-border-card">
       <div className="card-inner p-6 sm:p-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Overall Status */}
@@ -21,7 +21,7 @@ export default function HeroStatus({
             </h2>
             <div className="space-y-4">
               {/* Execution Status */}
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5 }}
@@ -54,13 +54,13 @@ export default function HeroStatus({
                     {executionMessage}
                   </p>
                 </div>
-              </motion.div>
+              </m.div>
             </div>
           </div>
 
           {/* Quick Stats */}
           <div className="grid grid-cols-2 gap-4">
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
@@ -77,9 +77,9 @@ export default function HeroStatus({
                   {gasPercent}%
                 </p>
               </div>
-            </motion.div>
+            </m.div>
 
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25 }}
@@ -96,10 +96,10 @@ export default function HeroStatus({
                   {ratioText}
                 </p>
               </div>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </div>
-    </motion.div>
+    </m.div>
   );
 }

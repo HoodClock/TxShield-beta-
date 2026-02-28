@@ -2,7 +2,7 @@
 
 import React, { Suspense } from 'react'
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { MdArrowRightAlt } from "react-icons/md";
 import dynamic from 'next/dynamic';
 import ScrambleText from '../ScrambleText';
@@ -14,7 +14,7 @@ function HeroSection() {
             {/* High-Performance Crypto Background */}
             <HeroBackground className="z-0" />
 
-            <motion.div
+            <m.div
                 className="text-center px-4 sm:px-6 md:px-8 max-w-4xl mx-auto relative z-10 pt-8 sm:pt-12 md:pt-16"
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -27,7 +27,7 @@ function HeroSection() {
                     className="flex items-center justify-center mb-0 sm:mb-2 pointer-events-auto"
                     style={{ margin: '0 auto' }}
                 >
-                    <motion.div
+                    <m.div
                         className="relative h-16 sm:h-20 w-auto flex items-center justify-center transition-all duration-300"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -43,7 +43,7 @@ function HeroSection() {
                             width={128}
                             height={128}
                         />
-                    </motion.div>
+                    </m.div>
                 </Link>
                 <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-7xl font-bold mb-4 sm:mb-6 tracking-tight px-2 flex flex-col items-center gap-1 sm:gap-2">
                     <span className="grad-word leading-none">
@@ -93,7 +93,7 @@ function HeroSection() {
                         </span>
                     </Link>
                 </div>
-            </motion.div>
+            </m.div>
         </section >
     )
 }

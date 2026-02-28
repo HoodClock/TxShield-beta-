@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { themes } from "./utils";
 
 export default function SolanaLogs({
@@ -14,7 +14,7 @@ export default function SolanaLogs({
   const { programsInvoked, logs } = simulation || {};
 
   return (
-    <motion.div variants={itemVariants} className="gradient-border-card p-[1px] h-full">
+    <m.div variants={itemVariants} className="gradient-border-card p-[1px] h-full">
       <div className="card-inner p-6 h-full flex flex-col">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
@@ -66,6 +66,6 @@ export default function SolanaLogs({
           </div>
         </div>
       </div>
-    </motion.div>
+    </m.div>
   );
 }

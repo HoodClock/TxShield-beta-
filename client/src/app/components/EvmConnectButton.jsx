@@ -1,7 +1,7 @@
 "use client"
 
 import '@rainbow-me/rainbowkit/styles.css'
-import { motion } from "framer-motion"; // Import motion for animations
+import { m } from "framer-motion"; // Import motion for animations
 
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 
@@ -42,7 +42,7 @@ export default function EvmConnectButton() {
                             {(() => {
                                 if (!connected) {
                                     return (
-                                        <motion.button
+                                        <m.button
                                             whileHover={{ scale: 1.05 }}
                                             whileTap={{ scale: 0.95 }}
                                             onClick={openConnectModal}
@@ -50,13 +50,13 @@ export default function EvmConnectButton() {
                                             className="px-6 py-3 bg-gradient-to-r from-[#627EEA] to-[#8C52FF] text-white font-bold rounded-lg hover:from-[#506ACC] hover:to-[#7A42E0] transition-all duration-300 shadow-lg shadow-[#627EEA]/40 flex items-center justify-center"
                                         >
                                             Connect EVM Wallet
-                                        </motion.button>
+                                        </m.button>
                                     );
                                 }
 
                                 if (chain.unsupported) {
                                     return (
-                                        <motion.button
+                                        <m.button
                                             whileHover={{ scale: 1.05 }}
                                             whileTap={{ scale: 0.95 }}
                                             onClick={openChainModal}
@@ -64,13 +64,13 @@ export default function EvmConnectButton() {
                                             className="px-6 py-3 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 transition-all duration-300 shadow-lg shadow-red-500/40 flex items-center justify-center"
                                         >
                                             Wrong network
-                                        </motion.button>
+                                        </m.button>
                                     );
                                 }
 
                                 return (
                                     <div style={{ display: 'flex', gap: 12 }}>
-                                        <motion.button
+                                        <m.button
                                             whileHover={{ scale: 1.05 }}
                                             whileTap={{ scale: 0.95 }}
                                             onClick={openChainModal}
@@ -86,9 +86,9 @@ export default function EvmConnectButton() {
                                                 />
                                             )}
                                             {chain.name}
-                                        </motion.button>
+                                        </m.button>
 
-                                        <motion.button
+                                        <m.button
                                             whileHover={{ scale: 1.05 }}
                                             whileTap={{ scale: 0.95 }}
                                             onClick={openAccountModal}
@@ -103,7 +103,7 @@ export default function EvmConnectButton() {
                                             {account.displayBalance
                                                 ? ` (${account.displayBalance})`
                                                 : ''}
-                                        </motion.button>
+                                        </m.button>
                                     </div>
                                 );
                             })()}

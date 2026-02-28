@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { m, useInView, AnimatePresence } from "framer-motion";
 import CountUp from "react-countup";
 import { FiShield, FiAlertTriangle, FiZap } from 'react-icons/fi'
 import TiltedCard from '../TiltedCard'
@@ -135,7 +135,7 @@ function StatsSection() {
 
 		<section ref={ref} className="relative py-12 sm:py-20 px-4 sm:px-6 overflow-hidden">
 			<div className="max-w-6xl mx-auto">
-				<motion.div
+				<m.div
 					initial={{ opacity: 0, y: 12 }}
 					animate={isInView ? { opacity: 1, y: 0 } : {}}
 					transition={{ duration: 0.6 }}
@@ -151,7 +151,7 @@ function StatsSection() {
 
 					<h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight mb-3 px-4"><span className="grad-word">Threats</span> at a glance</h3>
 					<p className="text-gray-400 max-w-2xl mx-auto text-base sm:text-lg md:text-xl px-4 font-medium tracking-wide">Key indicators condensed into clear, actionable metrics.</p>
-				</motion.div>
+				</m.div>
 
 
 
@@ -217,7 +217,7 @@ function StatsSection() {
 							const endX = -(endPointIndex / (totalPoints - 1)) * 100;
 
 							return (
-								<motion.div
+								<m.div
 									key={s.id}
 									onClick={() => !isActive && setActiveIndex(index)}
 									className={`absolute w-full max-w-sm sm:max-w-md cursor-pointer ${isActive ? 'cursor-default' : ''}`}
@@ -266,7 +266,7 @@ function StatsSection() {
 
 											{/* Scrolling Area Chart */}
 											<div className="h-20 w-full relative z-10 overflow-hidden rounded-b-xl -mx-2 px-2 -mb-2 pb-2">
-												<motion.div
+												<m.div
 													className="h-full flex"
 													style={{ width: `${numCycles * 100}%`, filter: `drop-shadow(0px 4px 8px ${s.color}60)` }}
 													animate={{ x: [`${startX}%`, `${endX}%`] }}
@@ -305,7 +305,7 @@ function StatsSection() {
 															style={{ opacity: isActive ? 1 : 0.5 }}
 														/>
 													</svg>
-												</motion.div>
+												</m.div>
 											</div>
 
 											<div className={`text-sm mt-4 font-medium leading-relaxed transition-colors relative z-20 ${isActive ? 'text-gray-300' : 'text-gray-500'}`}>
@@ -313,7 +313,7 @@ function StatsSection() {
 											</div>
 										</div>
 									</TiltedCard>
-								</motion.div>
+								</m.div>
 							)
 						})}
 					</AnimatePresence>

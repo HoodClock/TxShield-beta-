@@ -3,7 +3,7 @@
 import { Suspense, lazy } from 'react'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'; // Import useWalletModal
-import { motion } from "framer-motion"; // Import motion for animations
+import { m } from "framer-motion"; // Import motion for animations
 
 const WalletMultiButton = lazy(() =>
     import('@solana/wallet-adapter-react-ui').then(module => ({
@@ -29,7 +29,7 @@ export default function SolanaConnectButton() {
             <div className="flex flex-col items-center gap-2">
                 {/* Hide default WalletMultiButton and use our custom one */}
                 {!connected && !connecting && (
-                    <motion.button
+                    <m.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={handleConnectClick}
@@ -38,7 +38,7 @@ export default function SolanaConnectButton() {
                         style={{ visibility: 'visible', display: 'block', opacity: 1, zIndex: 10 }}
                     >
                         Connect Solana Wallet
-                    </motion.button>
+                    </m.button>
                 )}
 
                 {/* Show connected status if connected */}
