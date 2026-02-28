@@ -1,9 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap");
+@import "@rainbow-me/rainbowkit/styles.css";
+@import "tw-animate-css";
+
 @import "tailwindcss";
 
-@import "@rainbow-me/rainbowkit/styles.css";
-@import "@solana/wallet-adapter-react-ui/styles.css";
-@import "tw-animate-css";
 
 @font-face {
     font-family: "ClashDisplay-Bold";
@@ -105,10 +105,12 @@ h3 {
 
 /* recommendations styling */
 @keyframes pulse-slow {
+
     0%,
     100% {
         transform: scale(1);
     }
+
     50% {
         transform: scale(1.05);
     }
@@ -118,6 +120,7 @@ h3 {
     from {
         transform: rotate(0deg);
     }
+
     to {
         transform: rotate(360deg);
     }
@@ -139,18 +142,22 @@ h3 {
 .loading-dots .dot:nth-child(1) {
     animation: fade 1.4s infinite;
 }
+
 .loading-dots .dot:nth-child(2) {
     animation: fade 1.4s infinite 0.2s;
 }
+
 .loading-dots .dot:nth-child(3) {
     animation: fade 1.4s infinite 0.4s;
 }
 
 @keyframes fade {
+
     0%,
     100% {
         opacity: 0;
     }
+
     50% {
         opacity: 1;
     }
@@ -182,12 +189,10 @@ h3 {
     left: -100% !important;
     width: 100% !important;
     height: 100% !important;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.4),
-        transparent
-    ) !important;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.4),
+            transparent) !important;
     animation: loadingFlash 1.5s infinite !important;
 }
 
@@ -195,6 +200,7 @@ h3 {
     0% {
         left: -100%;
     }
+
     100% {
         left: 100%;
     }
@@ -207,11 +213,13 @@ h3 {
             inset 0 1px 0 rgba(34, 211, 238, 0),
             inset 0 -1px 0 rgba(34, 211, 238, 0);
     }
+
     50% {
         box-shadow:
             inset 0 1px 0 rgba(34, 211, 238, 0.4),
             inset 0 -1px 0 rgba(34, 211, 238, 0.2);
     }
+
     100% {
         box-shadow:
             inset 0 1px 0 rgba(34, 211, 238, 0),
@@ -233,6 +241,7 @@ h3 {
             0 0,
             0 0;
     }
+
     100% {
         background-position:
             50px 50px,
@@ -257,10 +266,12 @@ h3 {
     0% {
         background-position: -200% 0;
     }
+
     100% {
         background-position: 200% 0;
     }
 }
+
 .animate-\[shimmer_2s_infinite\] {
     background-size: 200% auto;
     animation: shimmer 2s linear infinite;
@@ -271,6 +282,7 @@ h3 {
    Disable expensive effects on mobile devices
    ============================================ */
 @media (max-width: 768px) {
+
     /* Reduce/disable animations globally on mobile */
     .animate-pulse-slow,
     .animate-spin-slow,
@@ -294,6 +306,7 @@ h3 {
 
 /* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
+
     *,
     *::before,
     *::after {
@@ -341,7 +354,8 @@ h3 {
 .dark {
     /* Use near-black values to avoid blue tints in dark mode */
     --background: #000000;
-    --foreground: #e6eef6; /* light text */
+    --foreground: #e6eef6;
+    /* light text */
     --card: #000000;
     --card-foreground: #e6eef6;
     --popover: #000000;
@@ -378,6 +392,7 @@ h3 {
         border-color: var(--border);
         outline: none;
     }
+
     body {
         background: var(--background);
         color: var(--foreground);
@@ -389,6 +404,7 @@ h3 {
     position: relative;
     isolation: isolate;
 }
+
 .orb-bg .orb {
     position: absolute;
     border-radius: 50%;
@@ -397,50 +413,49 @@ h3 {
     transform: translate3d(0, 0, 0);
     will-change: transform;
 }
+
 .orb-bg .orb.orb-1 {
     width: 420px;
     height: 420px;
     right: 10%;
     top: -60px;
-    background: radial-gradient(
-        circle at 30% 30%,
-        rgba(124, 58, 237, 0.75),
-        rgba(124, 58, 237, 0.05) 50%,
-        transparent 70%
-    );
+    background: radial-gradient(circle at 30% 30%,
+            rgba(124, 58, 237, 0.75),
+            rgba(124, 58, 237, 0.05) 50%,
+            transparent 70%);
 }
+
 .orb-bg .orb.orb-2 {
     width: 340px;
     height: 340px;
     left: 6%;
     top: 10%;
-    background: radial-gradient(
-        circle at 40% 40%,
-        rgba(14, 165, 233, 0.7),
-        rgba(14, 165, 233, 0.03) 50%,
-        transparent 75%
-    );
+    background: radial-gradient(circle at 40% 40%,
+            rgba(14, 165, 233, 0.7),
+            rgba(14, 165, 233, 0.03) 50%,
+            transparent 75%);
 }
+
 .orb-bg .orb.orb-3 {
     width: 240px;
     height: 240px;
     left: 60%;
     bottom: -40px;
-    background: radial-gradient(
-        circle at 50% 50%,
-        rgba(236, 72, 153, 0.6),
-        rgba(236, 72, 153, 0.02) 50%,
-        transparent 75%
-    );
+    background: radial-gradient(circle at 50% 50%,
+            rgba(236, 72, 153, 0.6),
+            rgba(236, 72, 153, 0.02) 50%,
+            transparent 75%);
 }
 
 @keyframes orbFloat {
     0% {
         transform: translateY(0px) translateX(0px);
     }
+
     50% {
         transform: translateY(-10px) translateX(6px);
     }
+
     100% {
         transform: translateY(0px) translateX(0px);
     }
@@ -474,31 +489,32 @@ h3 {
     border-top: none !important;
     outline: none !important;
 }
-.section-merge > * {
+
+.section-merge>* {
     position: relative;
-    z-index: 2; /* content above orbs */
+    z-index: 2;
+    /* content above orbs */
 }
+
 .section-merge .orb {
-    z-index: 1; /* orbs behind content */
+    z-index: 1;
+    /* orbs behind content */
 }
+
 .section-merge {
     /* Use CSS masking to create a soft fade at top and bottom edges so sections blend smoothly.
      Masking fades the element's own pixels rather than overlaying a solid-colored pseudo-element,
      which avoids hard seams between sections caused by background-color mismatches. */
-    -webkit-mask-image: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0),
-        rgba(0, 0, 0, 1) 18%,
-        rgba(0, 0, 0, 1) 82%,
-        rgba(0, 0, 0, 0)
-    );
-    mask-image: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0),
-        rgba(0, 0, 0, 1) 18%,
-        rgba(0, 0, 0, 1) 82%,
-        rgba(0, 0, 0, 0)
-    );
+    -webkit-mask-image: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0),
+            rgba(0, 0, 0, 1) 18%,
+            rgba(0, 0, 0, 1) 82%,
+            rgba(0, 0, 0, 0));
+    mask-image: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0),
+            rgba(0, 0, 0, 1) 18%,
+            rgba(0, 0, 0, 1) 82%,
+            rgba(0, 0, 0, 0));
     -webkit-mask-size: 100% 100%;
     mask-size: 100% 100%;
 
@@ -526,13 +542,225 @@ h3 {
     }
 }
 
-/* Subtle purple-blue gradient utility used to highlight important words */
+/* Subtle purple-blue gradient utility with Watch Dogs Style Hacker Glitch */
+@keyframes hackerSlice {
+
+    /* 0% to 70% is the 1-second "pause" (1.3s total duration = ~0.9s pause) */
+    0%,
+    70% {
+        transform: translate(0) skewX(0);
+        clip-path: inset(0 0 0 0);
+        text-shadow: none;
+    }
+
+    /* 71% to 100% is the 0.3s glitch sequence */
+    71% {
+        transform: translate(-3px, 2px) skewX(4deg);
+        clip-path: inset(10% 0 80% 0);
+        text-shadow: 2px 0 #3b82f6, -2px 0 #a855f7;
+    }
+
+    75% {
+        transform: translate(4px, -3px) skewX(-8deg);
+        clip-path: inset(50% 0 30% 0);
+        text-shadow: -2px 0 #3b82f6, 2px 0 #a855f7;
+    }
+
+    79% {
+        transform: translate(-5px, 0) skewX(20deg);
+        clip-path: inset(30% 0 50% 0);
+        text-shadow: 3px 0 #3b82f6;
+    }
+
+    83% {
+        transform: translate(6px, 1px) skewX(-15deg);
+        clip-path: inset(80% 0 10% 0);
+        text-shadow: -3px 0 #a855f7;
+    }
+
+    87% {
+        transform: translate(-2px, -2px) skewX(5deg);
+        clip-path: inset(20% 0 60% 0);
+        text-shadow: 2px 0 #3b82f6, -1px 0 #a855f7;
+    }
+
+    91% {
+        transform: translate(3px, 3px) skewX(-3deg);
+        clip-path: inset(60% 0 20% 0);
+        text-shadow: -2px 0 #3b82f6, 2px 0 #a855f7;
+    }
+
+    95% {
+        transform: translate(-1px, -1px) skewX(1deg);
+        clip-path: inset(5% 0 90% 0);
+        text-shadow: none;
+    }
+
+    100% {
+        transform: translate(0) skewX(0);
+        clip-path: inset(0 0 0 0);
+        text-shadow: none;
+    }
+}
+
+/* =========================================
+   Watch Dogs Cyber Glitch Hover Effect
+   ========================================= */
+.glitch-hover {
+    position: relative;
+    overflow: hidden;
+    /* Hardware acceleration for crisp slices */
+    transform: translateZ(0);
+}
+
+/* The physical button doesn't move, preventing the "fluttering" feeling */
+.glitch-hover:hover {
+    animation: none;
+}
+
+/* Create two overlay copies of the button for the Red/Blue chromatic split */
+.glitch-hover::before,
+.glitch-hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    border-radius: inherit;
+    opacity: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Cyan/Blue slice */
+.glitch-hover::before {
+    background-color: rgba(59, 130, 246, 0.4);
+    /* Tailwind blue-500 */
+    box-shadow: -2px 0 0 #3b82f6;
+}
+
+/* Purple slice */
+.glitch-hover::after {
+    background-color: rgba(168, 85, 247, 0.4);
+    /* Tailwind purple-500 */
+    box-shadow: 2px 0 0 #a855f7;
+}
+
+/* Trigger the aggressive slice animations on hover to loop infinitely */
+.glitch-hover:hover::before {
+    animation: cyberSlice1 2.5s infinite linear;
+}
+
+.glitch-hover:hover::after {
+    animation: cyberSlice2 2.5s infinite linear;
+}
+
+@keyframes cyberSlice1 {
+
+    /* 0-15% is the active glitch */
+    0% {
+        opacity: 0;
+        clip-path: inset(10% 0 80% 0);
+        transform: translateX(-4px);
+    }
+
+    3% {
+        opacity: 1;
+        clip-path: inset(50% 0 10% 0);
+        transform: translateX(4px);
+    }
+
+    6% {
+        opacity: 1;
+        clip-path: inset(20% 0 60% 0);
+        transform: translateX(-2px);
+    }
+
+    9% {
+        opacity: 1;
+        clip-path: inset(80% 0 5% 0);
+        transform: translateX(6px);
+    }
+
+    12% {
+        opacity: 1;
+        clip-path: inset(15% 0 70% 0);
+        transform: translateX(-6px);
+    }
+
+    15% {
+        opacity: 0;
+        clip-path: inset(0 0 0 0);
+        transform: translateX(0);
+    }
+
+    /* 16-100% is the pause interval doing nothing */
+    100% {
+        opacity: 0;
+        clip-path: inset(0 0 0 0);
+        transform: translateX(0);
+    }
+}
+
+@keyframes cyberSlice2 {
+
+    /* 0-15% is the active glitch */
+    0% {
+        opacity: 0;
+        clip-path: inset(80% 0 5% 0);
+        transform: translateX(4px);
+    }
+
+    3% {
+        opacity: 1;
+        clip-path: inset(10% 0 60% 0);
+        transform: translateX(-4px);
+    }
+
+    6% {
+        opacity: 1;
+        clip-path: inset(60% 0 20% 0);
+        transform: translateX(2px);
+    }
+
+    9% {
+        opacity: 1;
+        clip-path: inset(5% 0 80% 0);
+        transform: translateX(-6px);
+    }
+
+    12% {
+        opacity: 1;
+        clip-path: inset(70% 0 15% 0);
+        transform: translateX(6px);
+    }
+
+    15% {
+        opacity: 0;
+        clip-path: inset(0 0 0 0);
+        transform: translateX(0);
+    }
+
+    /* 16-100% is the pause interval doing nothing */
+    100% {
+        opacity: 0;
+        clip-path: inset(0 0 0 0);
+        transform: translateX(0);
+    }
+}
+
 .grad-word {
-    background: linear-gradient(90deg, #7c3aed 0%, #4f46e5 50%, #0ea5e9 100%);
+    background: linear-gradient(90deg, #a855f7 0%, #3b82f6 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
     font-weight: 700;
+    display: inline-block;
+    position: relative;
+    /* 1.3s total duration: ~1s pause (0-70%), ~0.3s glitch (70-100%) */
+    animation: hackerSlice 1.3s infinite linear;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -547,13 +775,10 @@ h3 {
 .fancy-gradient-border {
     background:
         linear-gradient(var(--background), var(--background)) padding-box,
-        linear-gradient(
-                90deg,
-                rgba(124, 58, 237, 0.65),
-                rgba(79, 70, 229, 0.6),
-                rgba(14, 165, 233, 0.6)
-            )
-            border-box;
+        linear-gradient(90deg,
+            rgba(124, 58, 237, 0.65),
+            rgba(79, 70, 229, 0.6),
+            rgba(14, 165, 233, 0.6)) border-box;
     border: 1px solid transparent;
     box-shadow: 0 6px 30px rgba(79, 70, 229, 0.06);
 }
@@ -563,16 +788,15 @@ h3 {
 }
 
 .fancy-dropdown {
-    background: linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.02),
-        rgba(255, 255, 255, 0.01)
-    );
+    background: linear-gradient(180deg,
+            rgba(255, 255, 255, 0.02),
+            rgba(255, 255, 255, 0.01));
     border-radius: 0.75rem;
-    padding: 0.125rem; /* small padding so border gradient shows */
+    padding: 0.125rem;
+    /* small padding so border gradient shows */
 }
 
-.fancy-dropdown > .fancy-inner {
+.fancy-dropdown>.fancy-inner {
     border-radius: 0.625rem;
     background: rgba(11, 11, 11, 0.7);
     padding: 0.75rem;
@@ -585,15 +809,19 @@ h3 {
 .bg-white\/4 {
     background-color: rgba(255, 255, 255, 0.03) !important;
 }
+
 .bg-white\/5 {
     background-color: rgba(255, 255, 255, 0.025) !important;
 }
+
 .bg-white\/6 {
     background-color: rgba(255, 255, 255, 0.02) !important;
 }
+
 .bg-white\/8 {
     background-color: rgba(255, 255, 255, 0.012) !important;
 }
+
 .bg-white\/10 {
     background-color: rgba(255, 255, 255, 0.008) !important;
 }
@@ -602,6 +830,7 @@ h3 {
 .border-white\/6 {
     border-color: rgba(255, 255, 255, 0.04) !important;
 }
+
 .border-white\/10 {
     border-color: rgba(255, 255, 255, 0.02) !important;
 }
@@ -610,11 +839,13 @@ h3 {
 .hover\:bg-white\/5:hover {
     background-color: rgba(255, 255, 255, 0.03) !important;
 }
+
 .hover\:bg-white\/8:hover {
     background-color: rgba(255, 255, 255, 0.01) !important;
 }
 
 @media (prefers-reduced-transparency: reduce) {
+
     .bg-white\/4,
     .bg-white\/5,
     .bg-white\/6 {
@@ -629,6 +860,7 @@ h3 {
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
 }
+
 .feature-surface .rounded-lg {
     border-radius: 0.5rem;
 }
@@ -646,6 +878,7 @@ h3 {
 .feature-item {
     position: relative;
 }
+
 .feature-popup {
     position: absolute;
     left: 50%;
@@ -668,6 +901,7 @@ h3 {
         opacity 160ms ease,
         transform 160ms ease;
 }
+
 .feature-item:hover .feature-popup,
 .feature-item:focus-within .feature-popup {
     opacity: 1;
@@ -724,6 +958,7 @@ h3 {
     0% {
         transform: translateX(0);
     }
+
     /* use measured pixel distance when available; fallback to -50% */
     100% {
         transform: translateX(calc(var(--scroll-distance, -50%)));
@@ -745,8 +980,10 @@ h3 {
 /* Hide native scrollbars while keeping scrolling functional */
 html,
 body {
-    -ms-overflow-style: none; /* IE 10+ */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    /* IE 10+ */
+    scrollbar-width: none;
+    /* Firefox */
     margin: 0 !important;
     padding: 0 !important;
     border: none !important;
@@ -754,10 +991,13 @@ body {
     border-top: none !important;
     border-bottom: none !important;
 }
+
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
     display: none;
-} /* Chrome/Safari/Edge */
+}
+
+/* Chrome/Safari/Edge */
 
 /* Ensure no borders or lines at the top */
 html {
@@ -766,6 +1006,7 @@ html {
     box-shadow: none !important;
     border: none !important;
 }
+
 body {
     border-top: none !important;
     border-bottom: none !important;
@@ -791,7 +1032,7 @@ div[id="smooth-content"] {
 section,
 section:first-child,
 .section-merge:first-child,
-div > section:first-child {
+div>section:first-child {
     border: none !important;
     border-top: none !important;
     border-bottom: none !important;
@@ -827,6 +1068,7 @@ div > section:first-child {
     z-index: 9999;
     pointer-events: auto;
 }
+
 .section-indicator ul {
     display: flex;
     flex-direction: column;
@@ -835,9 +1077,11 @@ div > section:first-child {
     padding: 0;
     list-style: none;
 }
+
 .section-indicator li {
     list-style: none;
 }
+
 .section-indicator .dot {
     display: block;
     width: 12px;
@@ -848,10 +1092,12 @@ div > section:first-child {
     transition: all 180ms ease;
     box-shadow: inset 0 -4px 8px rgba(0, 0, 0, 0.45);
 }
+
 .section-indicator .dot:hover {
     transform: scale(1.08);
     background: rgba(255, 255, 255, 0.1);
 }
+
 .section-indicator .dot.active {
     width: 14px;
     height: 14px;
@@ -876,10 +1122,12 @@ div > section:first-child {
 
 /* Logo floating animation */
 @keyframes logoFloat {
+
     0%,
     100% {
         transform: translateY(0px);
     }
+
     50% {
         transform: translateY(-8px);
     }
@@ -900,6 +1148,7 @@ div > section:first-child {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }
@@ -909,6 +1158,7 @@ div > section:first-child {
     0% {
         transform: rotate(360deg);
     }
+
     100% {
         transform: rotate(0deg);
     }
@@ -928,6 +1178,7 @@ div > section:first-child {
 
 /* Pause rotating animations on mobile to save performance */
 @media (max-width: 768px) {
+
     .api-rotating-border-1,
     .api-rotating-border-2 {
         animation: none;
@@ -972,14 +1223,12 @@ div > section:first-child {
 .section-divider {
     position: relative;
     height: 1px;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(168, 85, 247, 0.3) 20%,
-        rgba(139, 92, 246, 0.5) 50%,
-        rgba(168, 85, 247, 0.3) 80%,
-        transparent
-    );
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(168, 85, 247, 0.3) 20%,
+            rgba(139, 92, 246, 0.5) 50%,
+            rgba(168, 85, 247, 0.3) 80%,
+            transparent);
     margin: 60px 0;
     overflow: hidden;
 }
@@ -991,12 +1240,10 @@ div > section:first-child {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(34, 211, 238, 0.5),
-        transparent
-    );
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(34, 211, 238, 0.5),
+            transparent);
     animation: divider-shimmer 4s ease-in-out infinite;
 }
 
@@ -1009,10 +1256,12 @@ div > section:first-child {
 }
 
 @keyframes divider-shimmer {
+
     0%,
     100% {
         left: -100%;
     }
+
     50% {
         left: 100%;
     }
@@ -1029,11 +1278,9 @@ div > section:first-child {
     inset: -2px;
     border-radius: inherit;
     padding: 2px;
-    background: linear-gradient(
-        135deg,
-        rgba(168, 85, 247, 0.5),
-        rgba(34, 211, 238, 0.5)
-    );
+    background: linear-gradient(135deg,
+            rgba(168, 85, 247, 0.5),
+            rgba(34, 211, 238, 0.5));
     -webkit-mask:
         linear-gradient(#fff 0 0) content-box,
         linear-gradient(#fff 0 0);
@@ -1049,6 +1296,7 @@ div > section:first-child {
 
 /* Responsive improvements */
 @media (max-width: 640px) {
+
     /* Reduce padding on small screens */
     .section-merge {
         padding-top: 40px !important;
@@ -1083,11 +1331,9 @@ div > section:first-child {
 
 /* EVM Form Gradient animations */
 .evm-form-gradient {
-    background: linear-gradient(
-        135deg,
-        rgba(98, 126, 234, 0.05) 0%,
-        rgba(74, 144, 226, 0.03) 100%
-    );
+    background: linear-gradient(135deg,
+            rgba(98, 126, 234, 0.05) 0%,
+            rgba(74, 144, 226, 0.03) 100%);
 }
 
 .evm-chain-card {
@@ -1104,11 +1350,9 @@ div > section:first-child {
 
 /* SOL Form Gradient animations */
 .sol-form-gradient {
-    background: linear-gradient(
-        135deg,
-        rgba(153, 69, 255, 0.05) 0%,
-        rgba(123, 63, 242, 0.03) 100%
-    );
+    background: linear-gradient(135deg,
+            rgba(153, 69, 255, 0.05) 0%,
+            rgba(123, 63, 242, 0.03) 100%);
 }
 
 .sol-chain-card {
@@ -1144,9 +1388,11 @@ div > section:first-child {
     0% {
         background-position: 0% center;
     }
+
     50% {
         background-position: 100% center;
     }
+
     100% {
         background-position: 0% center;
     }
@@ -1158,6 +1404,7 @@ div > section:first-child {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -1179,12 +1426,10 @@ div > section:first-child {
     inset: 0;
     border-radius: inherit;
     padding: 2px;
-    background: linear-gradient(
-        135deg,
-        transparent,
-        rgba(255, 255, 255, 0.2),
-        transparent
-    );
+    background: linear-gradient(135deg,
+            transparent,
+            rgba(255, 255, 255, 0.2),
+            transparent);
     -webkit-mask:
         linear-gradient(#fff 0 0) content-box,
         linear-gradient(#fff 0 0);
@@ -1200,6 +1445,7 @@ div > section:first-child {
 
 /* Responsive adjustments for simulate forms */
 @media (max-width: 768px) {
+
     .evm-chain-card,
     .sol-chain-card {
         width: 100%;
@@ -1215,6 +1461,7 @@ div > section:first-child {
     0% {
         stroke-dashoffset: 1000;
     }
+
     100% {
         stroke-dashoffset: 0;
     }
@@ -1230,6 +1477,7 @@ div > section:first-child {
     0% {
         transform: translateX(0);
     }
+
     100% {
         transform: translateX(-50%);
     }
@@ -1243,6 +1491,7 @@ div > section:first-child {
     0% {
         transform: translateX(-33.3333%);
     }
+
     100% {
         transform: translateX(-66.6666%);
     }

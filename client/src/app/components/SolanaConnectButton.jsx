@@ -17,7 +17,7 @@ export default function SolanaConnectButton() {
     const { setVisible } = useWalletModal(); // Get setVisible function
 
     const handleConnectClick = () => {
-      setVisible(true); // Open the wallet modal
+        setVisible(true); // Open the wallet modal
     };
 
     return (
@@ -44,14 +44,18 @@ export default function SolanaConnectButton() {
                 {/* Show connected status if connected */}
                 {connected && !disconnecting && (
                     <div className="flex items-center gap-2 px-4 py-2 bg-gray-700 text-white font-bold rounded-lg shadow-lg shadow-gray-700/40">
+                        <div className="relative flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                        </div>
                         <span className="text-sm">Connected: {publicKey.toBase58().slice(0, 4)}...{publicKey.toBase58().slice(-4)}</span>
                         {/* Optionally add a disconnect button here or rely on the modal for disconnect */}
                     </div>
                 )}
                 {connecting && (
-                  <div className="flex items-center gap-2 px-4 py-2 bg-gray-700 text-white font-bold rounded-lg shadow-lg shadow-gray-700/40">
-                    <span className="text-sm">Connecting...</span>
-                  </div>
+                    <div className="flex items-center gap-2 px-4 py-2 bg-gray-700 text-white font-bold rounded-lg shadow-lg shadow-gray-700/40">
+                        <span className="text-sm">Connecting...</span>
+                    </div>
                 )}
 
                 {/* The actual WalletMultiButton is still rendered but styled to be hidden or transparent
