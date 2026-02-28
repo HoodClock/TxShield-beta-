@@ -3,6 +3,7 @@ require("dotenv").config();
 const { decideChains } = require("../../../config/provider");
 const { _simulateAccurateTax } = require("./simulateAccurateTaxChanges");
 const { _mintAccess } = require("./mintaccessFunction");
+const { _timeTravelCheck } = require("./timeTravelFunction");
 
 const ANVIL_URL = "http://127.0.0.1:8545";
 const PHANTOM_ADDRESS = "0x0000000000000000000000000000000000008888";
@@ -54,6 +55,17 @@ const alchemyProvider = decideChains("ETH");
 
 const _runHoneypotCheck = async (targetContract, chainId = 1) => {
   try {
+    const isLocalTest = process.env.TXSHIELD_ENV === "local";
+
+    // dynamically selecting the provider (testing/production)[anvilRPC/MainnetRPC]
+    const activeProvider = isLocalTest
+      ? new ethers.JsonRpcProvider(ANVIL_URL)
+      : alchemyProvider;
+
+    const activeRpcUrl = isLocalTest
+      ? ANVIL_URL
+      : process.env.ETH_MAINNET_NET_URL;
+
     const dexRouterAddress = ROUTERS[chainId];
 
     const phantomContractCallData = iface.encodeFunctionData("checkContract", [
@@ -84,53 +96,90 @@ const _runHoneypotCheck = async (targetContract, chainId = 1) => {
       ],
     };
 
-    const phantomResult = await alchemyProvider.send(
-      phantomPayload.method,
-      phantomPayload.params,
-    );
-
-    const decoded = iface.decodeFunctionResult(
-      "checkContract",
-      phantomResult,
-    )[0];
-
-    const result = {
-      riskScore: Number(decoded.riskScore),
-      hasBlackListDetected: decoded.isBlackListDetected,
-      hasMintable: decoded.isMintable,
-      mintScore: decoded.mintScore,
-      mintReason: decoded.mintReason,
-      hasTradingControl: decoded.isTradingControl,
-      buyingTax: Number(decoded.buyTax),
-      sellingTax: Number(decoded.sellTax),
-      errorReason: decoded.errorReason,
+    // Initialize the default result response
+    let result = {
+      riskScore: 0,
+      hasBlackListDetected: false,
+      hasMintable: false,
+      mintScore: 0,
+      mintReason: "Not checked",
+      hasTradingControl: false,
+      buyingTax: 0,
+      sellingTax: 0,
+      errorReason: "",
+      isTimeHoneypot: false,
+      timeTravelScore: 0,
+      timeTravelReason: "",
     };
 
-    // tax override for anvil fork
     try {
-      const accurate = await _simulateAccurateTax(
-        targetContract,
-        dexRouterAddress,
+      const phantomResult = await activeProvider.send(
+        phantomPayload.method,
+        phantomPayload.params,
       );
-      result.buyingTax = accurate.buyTax;
-      result.sellingTax = accurate.sellTax;
-      // now adjusting riskScore according to what we get from buying/selling tax
-      if (accurate.buyTax > 20 || accurate.sellTax > 20) result.riskScore += 30;
-      if (accurate.buyTax > 90 || accurate.sellTax > 90) result.riskScore = 100;
-    } catch (taxError) {
-      throw new Error(`Honeypot Service Tax Error: ${taxError.message}`);
+
+      const decoded = iface.decodeFunctionResult(
+        "checkContract",
+        phantomResult,
+      )[0];
+
+      result.riskScore += Number(decoded.riskScore);
+      result.hasBlackListDetected = decoded.isBlackListDetected;
+      result.hasTradingControl = decoded.isTradingControl;
+      result.buyingTax = Number(decoded.buyTax);
+      result.sellingTax = Number(decoded.sellTax);
+      result.errorReason = decoded.errorReason;
+    } catch (phantomError) {
+      console.warn(
+        `[TxShield] Phantom Contract Reverted: ${phantomError.message}`,
+      );
+      result.errorReason =
+        "Tax simulation skipped: No Uniswap liquidity or contract missing on network.";
     }
 
-    // mint access check
+    // tax check
+    // try {
+    //   const accurate = await _simulateAccurateTax(
+    //     targetContract,
+    //     dexRouterAddress,
+    //     activeRpcUrl,
+    //   );
+    //   result.buyingTax = accurate.buyTax;
+    //   result.sellingTax = accurate.sellTax;
+    //   // now adjusting riskScore according to what we get from buying/selling tax
+    //   if (accurate.buyTax > 20 || accurate.sellTax > 20) result.riskScore += 30;
+    //   if (accurate.buyTax > 90 || accurate.sellTax > 90) result.riskScore = 100;
+    // } catch (taxError) {
+    //   throw new Error(`Honeypot Service Tax Error: ${taxError.message}`);
+    // }
 
+    // (mint & time-interval)
     try {
-      const RPC_URL = process.env.ETH_MAINNET_NET_URL || ANVIL_URL;
-      const mintResp = await _mintAccess(targetContract, ANVIL_URL);
+      const mintResp = await _mintAccess(targetContract, activeRpcUrl);
       result.hasMintable = mintResp.isMintable;
       result.mintScore = mintResp.riskScore;
       result.mintReason = mintResp.reason;
+
+      // Time Travel Check (24h, 7d, 30d)
+      const timeTravelResp = await _timeTravelCheck(
+        targetContract,
+        dexRouterAddress,
+        activeRpcUrl,
+      );
+      result.isTimeHoneypot = timeTravelResp.isTimeHoneypot;
+      result.timeTravelScore = timeTravelResp.riskScore;
+      result.timeTravelReason = timeTravelResp.reason;
+
+      if (result.isTimeHoneypot) {
+        result.riskScore = Math.max(result.riskScore, timeTravelResp.riskScore);
+        if (result.errorReason) {
+          result.errorReason += " | " + timeTravelResp.reason;
+        } else {
+          result.errorReason = timeTravelResp.reason;
+        }
+      }
     } catch (mintError) {
-      throw new Error(`Honeypot Service Mint Error: ${mintError.message}`);
+      throw new Error(`Honeypot Service Mint/Time Error: ${mintError.message}`);
     }
 
     return result;
