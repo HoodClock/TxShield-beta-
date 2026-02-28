@@ -24,11 +24,11 @@ function HeroSection() {
                 {/* Centered Logo above SHIELD */}
                 <Link
                     href="/home"
-                    className="flex items-center justify-center mb-0 sm:mb-2 pointer-events-auto"
+                    className="flex items-center justify-center mb-2 sm:mb-4 pointer-events-auto"
                     style={{ margin: '0 auto' }}
                 >
                     <m.div
-                        className="relative h-16 sm:h-20 w-auto flex items-center justify-center transition-all duration-300"
+                        className="relative h-24 sm:h-32 md:h-40 lg:h-48 w-auto flex items-center justify-center transition-all duration-300"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 1 }}
@@ -40,13 +40,13 @@ function HeroSection() {
                             className="h-full w-auto object-contain relative z-10"
                             loading="eager"
                             decoding="async"
-                            width={128}
-                            height={128}
+                            width={256}
+                            height={256}
                         />
                     </m.div>
                 </Link>
                 <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-7xl font-bold mb-4 sm:mb-6 tracking-tight px-2 flex flex-col items-center gap-1 sm:gap-2">
-                    <span className="grad-word leading-none">
+                    <span className="grad-word leading-tight py-2">
                         SHIELD
                     </span>
                     <span className="text-white text-2xl sm:text-3xl md:text-5xl lg:text-5xl font-mono leading-tight">
