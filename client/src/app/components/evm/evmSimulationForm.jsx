@@ -19,6 +19,13 @@ export default function SimulationForm({
   const [currency, setCurrency] = useState("ETH");
 
   const handleSimulate = async () => {
+    console.log("Submit button clicked!", { isConnected, userAddress, contractAddress, amount });
+
+    if (!isConnected || !userAddress) {
+      alert("Please connect your wallet first.");
+      return;
+    }
+
     if (!contractAddress || !amount) {
       alert("Please enter both contract address and amount.");
       return;
@@ -204,12 +211,12 @@ export default function SimulationForm({
                 </div>
               </div>
 
-              <div className="pt-6">
+              <div className="pt-6 relative z-50">
                 <m.button
                   onClick={handleSimulate}
                   whileHover={{ scale: 1.01, y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full py-4 rounded-xl bg-blue-600/20 border border-blue-500/50 text-white font-bold tracking-widest uppercase text-sm shadow-[0_0_20px_rgba(37,99,235,0.2)] hover:shadow-[0_0_40px_rgba(37,99,235,0.4)] hover:bg-blue-600/40 relative overflow-hidden group glitch-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-blue-500"
+                  className="w-full py-4 rounded-xl bg-blue-600/20 border border-blue-500/50 text-white font-bold tracking-widest uppercase text-sm shadow-[0_0_20px_rgba(37,99,235,0.2)] hover:shadow-[0_0_40px_rgba(37,99,235,0.4)] hover:bg-blue-600/40 relative overflow-hidden group glitch-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-blue-500 pointer-events-auto"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] transition-all"></div>
                   <span className="relative z-10 flex items-center justify-center gap-3">

@@ -60,8 +60,10 @@ export default function App() {
   const abortControllerRef = useRef(null);
   const mounted = useRef(true);
 
-  // Cleanup on unmount
+  // Track mounting state to prevent state updates on unmounted components
   useEffect(() => {
+    mounted.current = true;
+
     return () => {
       mounted.current = false;
       if (abortControllerRef.current) {
@@ -98,7 +100,8 @@ export default function App() {
         }
       } catch (err) {
         if (err.name !== "AbortError") {
-          console.error("Simulation Error:", err);
+          console.error("Simulation API Error:", err.response?.data || err);
+          alert(`Simulation failed: ${err.response?.data?.error || err.message || "Check console"}`);
         }
       } finally {
         if (mounted.current) {
@@ -133,7 +136,8 @@ export default function App() {
         }
       } catch (err) {
         if (err.name !== "AbortError") {
-          console.error("Simulation Error:", err);
+          console.error("Solana Simulation API Error:", err.response?.data || err);
+          alert(`Solana Simulation failed: ${err.response?.data?.error || err.message || "Check console"}`);
         }
       } finally {
         if (mounted.current) {
