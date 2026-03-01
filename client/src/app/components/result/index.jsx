@@ -20,7 +20,7 @@ import TransactionSummary from "./TransactionSummary";
 import BytecodeAnalysis from "./BytecodeAnalysis";
 import SolanaDetails from "./SolanaDetails";
 import SolanaLogs from "./SolanaLogs";
-import { mockSimulation, mockHoneypot, mockPhishing, getRiskStyle, themes } from "./utils";
+import { mockSimulation, mockHoneypot, mockPhishing, mockSolSimulation, getRiskStyle, themes } from "./utils";
 
 export default function ResultsDashboard({
   isVisible,
@@ -43,6 +43,7 @@ export default function ResultsDashboard({
   const finalSimulation = simulation;
   const finalHoneypot = honeypot;
   const finalPhishing = phishing;
+  // const finalSolSimulation = mockSolSimulation;
   const finalSolSimulation = solSimulation;
 
   const [expandedSections, setExpandedSections] = useState({
@@ -86,13 +87,13 @@ export default function ResultsDashboard({
     (chk) => chk?.risk === false || chk?.data?.risk === false
   ).length;
   const evmRatioText = `${passedChecks}/${totalChecks}`;
-  
-  const calculatedPassRate = totalChecks > 0 
-    ? `${Math.round((passedChecks / totalChecks) * 100)}%` 
+
+  const calculatedPassRate = totalChecks > 0
+    ? `${Math.round((passedChecks / totalChecks) * 100)}%`
     : "0%";
-    
+
   const passRate = rawPassRate !== "0%" ? rawPassRate : calculatedPassRate;
-  
+
   const riskStyle = getRiskStyle(riskLevel);
 
   const simulateData = finalSimulation?.checks?.simulateResult || {};
@@ -114,10 +115,10 @@ export default function ResultsDashboard({
   const recentTransfers = txHistoryData.recentTransfers || [];
 
   const rawGasEstimated = simulateData?.gas?.estimated || "0";
-  const evmGasEstimated = typeof rawGasEstimated === 'string' 
-    ? parseInt(rawGasEstimated.replace(/,/g, ''), 10) 
+  const evmGasEstimated = typeof rawGasEstimated === 'string'
+    ? parseInt(rawGasEstimated.replace(/,/g, ''), 10)
     : rawGasEstimated;
-    
+
   const EVM_GAS_CAP = 200000;
   const evmGasPercent = Math.min(100, Math.round((evmGasEstimated / EVM_GAS_CAP) * 100));
 
@@ -129,15 +130,15 @@ export default function ResultsDashboard({
 
   // Check if simulation status is SUCCESS (case-insensitive if needed)
   const solExecutionSuccess = solSimulationData.status === "SUCCESS";
-  
+
   // Use humanReason for failure message if available, otherwise fallback
   const solExecutionMessage = solExecutionSuccess
-      ? "Transaction simulated successfully"
-      : solVerdict.humanReason || solData.message || "Transaction failed";
-  
+    ? "Transaction simulated successfully"
+    : solVerdict.humanReason || solData.message || "Transaction failed";
+
   const solComputeUnits = solSimulationData.computeUnits || 0;
-  
-  const SOL_COMPUTE_CAP = 200000; 
+
+  const SOL_COMPUTE_CAP = 200000;
   const solGasPercent = Math.min(100, Math.round((solComputeUnits / SOL_COMPUTE_CAP) * 100));
 
 
@@ -173,14 +174,56 @@ export default function ResultsDashboard({
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-3 sm:p-4 lg:p-6 relative overflow-hidden">
-      {/* Animated Background Orbs */}
+    <div className="min-h-screen w-full bg-transparent text-white p-2 sm:p-4 relative overflow-hidden z-0">
+      {/* Animated Crypto Grid/Particle Background */}
+      <div className="absolute inset-0 -z-30 overflow-hidden bg-[#080B10]">
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,#000_70%,transparent_110%)]"></div>
+        {/* Animated vertical scanning line */}
+        <div className="absolute w-full h-1/2 bg-gradient-to-b from-transparent via-blue-500/10 to-transparent -translate-y-full animate-[scan_8s_ease-in-out_infinite]"></div>
+      </div>
+
+      {/* Animated Ambient Orbs based on Chain */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-20 right-1/4 w-96 h-96 bg-purple-500/15 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }}></div>
-        <div className="absolute bottom-1/4 left-1/3 w-full h-full bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 -right-20 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '2s' }}></div>
-        <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-indigo-500/12 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '7s', animationDelay: '0.5s' }}></div>
-        <div className="absolute top-1/3 right-1/3 w-72 h-72 bg-pink-500/8 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4.5s', animationDelay: '1.5s' }}></div>
+        {chain === 'EVM' ? (
+          <>
+            <div className="absolute top-20 right-1/4 w-96 h-96 bg-blue-600/15 rounded-full blur-[100px] animate-pulse" style={{ animationDuration: '4s' }}></div>
+            <div className="absolute bottom-1/4 left-1/3 w-full h-full bg-cyan-600/10 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }}></div>
+            <div className="absolute top-1/2 -right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] animate-pulse" style={{ animationDuration: '6s', animationDelay: '2s' }}></div>
+          </>
+        ) : (
+          <>
+            <div className="absolute top-20 right-1/4 w-96 h-96 bg-purple-600/15 rounded-full blur-[100px] animate-pulse" style={{ animationDuration: '4s' }}></div>
+            <div className="absolute bottom-1/4 left-1/3 w-full h-full bg-pink-600/10 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }}></div>
+            <div className="absolute top-1/2 -right-20 w-96 h-96 bg-purple-500/10 rounded-full blur-[100px] animate-pulse" style={{ animationDuration: '6s', animationDelay: '2s' }}></div>
+          </>
+        )}
+      </div>
+
+      {/* Floating Crypto Blocks */}
+      <div className="absolute inset-0 -z-[15] overflow-hidden pointer-events-none">
+        {[...Array(6)].map((_, i) => (
+          <m.div
+            key={i}
+            className={`absolute w-16 h-16 rounded-2xl border bg-black/40 backdrop-blur-md ${chain === 'EVM' ? 'border-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.1)]' : 'border-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.1)]'}`}
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -40, 0],
+              rotate: [0, 90, 180],
+              opacity: [0.1, 0.4, 0.1],
+            }}
+            transition={{
+              duration: 10 + Math.random() * 10,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          >
+            <div className={`absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-2xl`}></div>
+            <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full ${chain === 'EVM' ? 'bg-blue-500/20 shadow-[0_0_10px_rgba(59,130,246,0.5)]' : 'bg-purple-500/20 shadow-[0_0_10px_rgba(168,85,247,0.5)]'}`}></div>
+          </m.div>
+        ))}
       </div>
 
       <style jsx global>{`
@@ -192,6 +235,18 @@ export default function ResultsDashboard({
         .no-scrollbar {
           -ms-overflow-style: none;  /* IE and Edge */
           scrollbar-width: none;  /* Firefox */
+        }
+
+        @keyframes scan {
+          0% { transform: translateY(-100%); opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
+          100% { transform: translateY(200%); opacity: 0; }
+        }
+
+        .crypto-block {
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
         }
 
         .gradient-border-card {
@@ -240,7 +295,7 @@ export default function ResultsDashboard({
         }
         .connector-line {
           width: 2px;
-          height: 40px;
+          height: 24px;
           background: linear-gradient(to bottom, transparent, rgba(${t.rgbPrimary}, 0.5), transparent);
           margin: 0 auto;
         }
@@ -277,155 +332,154 @@ export default function ResultsDashboard({
         initial="hidden"
         animate="show"
         variants={containerVariants}
-        className="max-w-7xl mx-auto space-y-12"
+        className="max-w-7xl mx-auto space-y-4 sm:space-y-6"
       >
         {/* Header */}
-        <m.div variants={itemVariants} className="text-center mb-12 sm:mb-16">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
-            <span className="grad-word">Security Analysis</span>
-            <br />
-            <span className="text-white">Report</span>
+        <m.div variants={itemVariants} className="text-center mb-4 sm:mb-6">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold font-mono tracking-wider text-white mb-2">
+            <span className="grad-word">SECURITY ANALYSIS</span> <span className="text-white">REPORT</span>
           </h1>
-          <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-3xl mx-auto px-4">
-            Comprehensive blockchain transaction and contract security assessment
+          <p className="text-xs sm:text-sm text-gray-400 max-w-2xl mx-auto px-4 font-mono">
+            {chain} Forensics & Payload Inspection Complete
           </p>
         </m.div>
 
         {/* === HERO STATUS SECTION === */}
-        <HeroStatus 
+        <HeroStatus
           itemVariants={itemVariants}
           executionSuccess={executionSuccess}
           executionMessage={executionMessage}
           gasPercent={gasPercent}
           ratioText={ratioText}
+          chain={chain}
         />
 
         {/* === MAIN GRID === */}
-        <div className={`grid grid-cols-1 ${chain === 'EVM' ? 'xl:grid-cols-3' : 'xl:grid-cols-2'} gap-8 sm:gap-12`}>
-          
+        <div className={`grid grid-cols-1 ${chain === 'EVM' ? 'lg:grid-cols-3' : 'lg:grid-cols-2'} gap-4 sm:gap-6`}>
+
           {chain === 'EVM' ? (
             /* ================= EVM LAYOUT ================= */
             <>
-                {/* Left Column */}
-                <div className="xl:col-span-2 space-y-8 sm:space-y-12">
-                    <TransactionDetails 
-                    itemVariants={itemVariants}
-                    toggleSection={toggleSection}
-                    expandedSections={expandedSections}
-                    simulateData={simulateData}
-                    gasPercent={evmGasPercent}
-                    gasEstimated={evmGasEstimated}
-                    chain={chain}
-                    />
+              {/* Left Column */}
+              <div className="lg:col-span-2 space-y-4">
+                <TransactionDetails
+                  itemVariants={itemVariants}
+                  toggleSection={toggleSection}
+                  expandedSections={expandedSections}
+                  simulateData={simulateData}
+                  gasPercent={evmGasPercent}
+                  gasEstimated={evmGasEstimated}
+                  chain={chain}
+                />
 
-                    <BalanceChanges 
-                    itemVariants={itemVariants}
-                    toggleSection={toggleSection}
-                    expandedSections={expandedSections}
-                    simulateData={simulateData}
-                    />
+                <BalanceChanges
+                  itemVariants={itemVariants}
+                  toggleSection={toggleSection}
+                  expandedSections={expandedSections}
+                  simulateData={simulateData}
+                />
 
-                    <RecentTransfers 
-                    itemVariants={itemVariants}
-                    toggleSection={toggleSection}
-                    expandedSections={expandedSections}
-                    recentTransfers={recentTransfers}
-                    />
-                </div>
+                <RecentTransfers
+                  itemVariants={itemVariants}
+                  toggleSection={toggleSection}
+                  expandedSections={expandedSections}
+                  recentTransfers={recentTransfers}
+                />
+              </div>
 
-                {/* Right Column */}
-                <div className="space-y-8 sm:space-y-12">
-                    <TransactionSummary 
-                    itemVariants={itemVariants}
-                    txHistoryData={txHistoryData}
-                    summary={summary}
-                    />
-                </div>
+              {/* Right Column */}
+              <div className="space-y-4">
+                <TransactionSummary
+                  itemVariants={itemVariants}
+                  txHistoryData={txHistoryData}
+                  summary={summary}
+                />
+              </div>
             </>
           ) : (
             /* ================= SOLANA LAYOUT ================= */
             <>
-                 {/* Left Column: Details & Advanced */}
-                <div className="space-y-8 sm:space-y-12">
-                    <SolanaDetails 
-                        itemVariants={itemVariants}
-                        chain={chain}
-                        data={finalSolSimulation}
-                    />
-                </div>
+              {/* Left Column: Details & Advanced */}
+              <div className="space-y-4">
+                <SolanaDetails
+                  itemVariants={itemVariants}
+                  chain={chain}
+                  data={finalSolSimulation}
+                />
+              </div>
 
-                {/* Right Column: Logs */}
-                <div className="space-y-8 sm:space-y-12">
-                    <SolanaLogs 
-                         itemVariants={itemVariants}
-                         chain={chain}
-                         data={finalSolSimulation}
-                    />
-                </div>
+              {/* Right Column: Logs */}
+              <div className="space-y-4">
+                <SolanaLogs
+                  itemVariants={itemVariants}
+                  chain={chain}
+                  data={finalSolSimulation}
+                />
+              </div>
             </>
           )}
 
         </div>
 
         {/* Connector */}
-        <div className="connector-line my-4"></div>
+        <div className="connector-line my-2"></div>
 
         {/* ================= EVM ONLY SECTIONS ================= */}
         {chain === 'EVM' && (
-            <>
-                {/* Phishing Analysis */}
-                <m.div variants={itemVariants} className="mt-8 sm:mt-12 max-w-7xl mx-auto">
-                <Phishing data={finalPhishing} chain={chain} />
-                </m.div>
+          <>
+            {/* Phishing Analysis */}
+            <m.div variants={itemVariants} className="mt-4 sm:mt-6 max-w-7xl mx-auto">
+              <Phishing data={finalPhishing} chain={chain} />
+            </m.div>
 
-                {/* Connector */}
-                <div className="connector-line my-4"></div>
+            {/* Connector */}
+            <div className="connector-line my-2"></div>
 
-                {/* === HONEYPOT & SECURITY ANALYSIS === */}
-                <m.div
-                variants={itemVariants}
-                className="max-w-7xl mx-auto space-y-8 sm:space-y-12 mt-12"
-                >
-                    <div className="text-center">
-                    <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
-                        <span className="grad-word">Honeypot & Security</span> Analysis
-                    </h2>
-                    </div>
+            {/* === HONEYPOT & SECURITY ANALYSIS === */}
+            <m.div
+              variants={itemVariants}
+              className="max-w-7xl mx-auto space-y-4 sm:space-y-6 mt-4 sm:mt-6"
+            >
+              <div className="text-center">
+                <h2 className="text-xl sm:text-2xl font-bold font-mono tracking-wider text-white mb-2 uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">
+                  <span className="grad-word">Honeypot & Security</span> Analysis
+                </h2>
+              </div>
 
-                    {/* Key Metrics */}
-                    <KeyMatrics
-                    itemVariants={itemVariants}
-                    riskStyle={riskStyle}
-                    totalScore={totalScore}
-                    passRate={passRate}
-                    riskLevel={riskLevel}
-                    ratioText={ratioText}
-                    isVisible={isVisible}
-                    data={finalHoneypot}
-                    chain={chain}
-                    />
+              {/* Key Metrics */}
+              <KeyMatrics
+                itemVariants={itemVariants}
+                riskStyle={riskStyle}
+                totalScore={totalScore}
+                passRate={passRate}
+                riskLevel={riskLevel}
+                ratioText={ratioText}
+                isVisible={isVisible}
+                data={finalHoneypot}
+                chain={chain}
+              />
 
-                    {/* Bytecode Analysis */}
-                    <BytecodeAnalysis 
-                    itemVariants={itemVariants}
-                    toggleSection={toggleSection}
-                    expandedSections={expandedSections}
-                    isContract={isContract}
-                    byteData={byteData}
-                    warnings={warnings}
-                    t={t}
-                    />
-                </m.div>
+              {/* Bytecode Analysis */}
+              <BytecodeAnalysis
+                itemVariants={itemVariants}
+                toggleSection={toggleSection}
+                expandedSections={expandedSections}
+                isContract={isContract}
+                byteData={byteData}
+                warnings={warnings}
+                t={t}
+              />
+            </m.div>
 
-                {/* Detailed Honeypot Checks */}
-                <m.div variants={itemVariants} className="max-w-7xl mx-auto mt-8 sm:mt-12">
-                <HoneypotChecks isVisible={isVisible} data={honeypot} chain={chain} />
-                </m.div>
-            </>
+            {/* Detailed Honeypot Checks */}
+            <m.div variants={itemVariants} className="max-w-7xl mx-auto mt-4 sm:mt-6">
+              <HoneypotChecks isVisible={isVisible} data={honeypot} chain={chain} />
+            </m.div>
+          </>
         )}
 
         {/* AI Recommendations - Common for both if data available */}
-        <m.div variants={itemVariants} className="max-w-7xl mx-auto mt-8 sm:mt-12">
+        <m.div variants={itemVariants} className="max-w-7xl mx-auto mt-4 sm:mt-6">
           <Recommendations
             simulationData={chain === 'EVM' ? simulation : solSimulation}
             honeypotData={honeypot}
@@ -436,7 +490,7 @@ export default function ResultsDashboard({
         </m.div>
 
         {/* Back to Simulate Button */}
-        <BackToSimulate 
+        <BackToSimulate
           itemVariants={itemVariants}
           t={t}
           chain={chain}
