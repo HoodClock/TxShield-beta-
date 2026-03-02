@@ -1,101 +1,152 @@
 export const mockSimulation = {
+  success: true,
   checks: {
     simulateResult: {
       success: false,
-      amount: "1.5",
-      symbol: "ETH",
-      from: "0x742d35Cc6634C0532925a3b844Bc9e7595f1234a",
-      to: "0x8ba1f109551bD432803012645Ac136ddd64DBA72",
-      transferType: "eth",
-      gas: { estimated: 285000, priceGwei: "45.2", costUsd: "48.12" },
-      balances: {
-        sender: { before: { eth: "5.0" }, after: { eth: "3.5" } },
-        recipient: { before: { eth: "0.2" }, after: { eth: "1.7" } },
-      },
-      warnings: ["High gas consumption detected", "Transaction reverts under specific slippage conditions"],
+      ethDelta: "100000000000000",
+      tokenDelta: "0",
+      isProfit: true,
+      allowanceChanged: false,
+      allowanceDelta: "0",
+      errorReason: "Unknown Revert (Silent)",
+      returnData: "0x",
+      simulatedAt: "2026-03-01T09:58:55.981Z",
+      estimatedTax: "0",
+      gasUsed: "60020",
+      watchedTokens: "0xdAC17F958D2ee523a2206206994597C13D831ec7,0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48,0x6B175474E89094C44Da98b954EedeAC495271d0F,0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      watchedTokensDeltas: "0,0,0,0",
+      isReentrancy: false,
+      isHoneypot: false,
+      simulation: {
+        calls: [
+          {
+            type: "CALL",
+            from: "0x2d1468a9b827c6e1f5e91943dc3b0425d187993b",
+            to: "0x514910771af9ca656af840dff83e8264ecf986ca",
+            value: "0x0",
+            gas: "0xf4240",
+            gasUsed: "0x5233",
+            input: "0x",
+            error: "execution reverted"
+          }
+        ],
+        logs: []
+      }
     },
     byteCodeResult: {
       isContract: true,
+      isScam: true,
+      confidence: "high",
+      reason: "Multiple high-risk opcodes found (Opcode SELFDESTRUCT found 39 times, Opcode DELEGATECALL found 3 times, Opcode CALLCODE found 5 times, Opcode CREATE found 1 times, Opcode CALL found 10 times), indicates probable malicious intent.",
       warnings: [
-        "Unverified contract source code",
-        "Contains self-destruct function capability",
-        "Owner can mint infinite tokens",
+        "Opcode SELFDESTRUCT found 39 times",
+        "Opcode DELEGATECALL found 3 times",
+        "Opcode CALLCODE found 5 times",
+        "Opcode CREATE found 1 times",
+        "Opcode CALL found 10 times"
       ],
+      address: "0x514910771af9ca656af840dff83e8264ecf986ca"
     },
     transactionHistoryResult: {
+      success: true,
       summary: {
-        totalTransfers: 1420,
-        lastTransferDate: "Just now",
-        totalERC20Volume: "52,340.50",
+        totalTransfers: 10,
+        lastTransferDate: "2/25/2026, 7:22:23 AM",
+        totalERC20Volume: "5208010000000000000000"
       },
       recentTransfers: [
         {
-          hash: "0xabc123def4561234567890abcdef1234567890abc",
-          from: "0x742d...1234",
-          to: "0x8ba1...DBA72",
-          amount: "1.5",
-          symbol: "ETH",
-          date: "2 mins ago",
+          hash: "0x88c286869ea605211888fd078acadc4ad5c227748755b1a90d22c99f75ca5704",
+          from: "0x00e2b6d170740c15bf9fb01d0b6e77c0d4510e32",
+          to: "0x514910771af9ca656af840dff83e8264ecf986ca",
+          symbol: "DOG",
+          amount: "1000000000000000000",
+          date: "2/25/2026, 7:22:23 AM",
+          type: "ERC-20"
         },
         {
-          hash: "0xdef789ghi0129876543210fedcba09876543210fed",
-          from: "0x123a...bc456",
-          to: "0x789d...f0123",
-          amount: "0.75",
-          symbol: "ETH",
-          date: "15 mins ago",
+          hash: "0xff224c42f41acbd69902f97260ac42b36c633b682435869c413d33f706b99267",
+          from: "0x00e2b6d170740c15bf9fb01d0b6e77c0d4510e32",
+          to: "0x514910771af9ca656af840dff83e8264ecf986ca",
+          symbol: "DOG",
+          amount: "1000000000000000000",
+          date: "2/25/2026, 5:19:47 AM",
+          type: "ERC-20"
         },
         {
-          hash: "0x456jkl789mno5555555555555555555555555555",
-          from: "0x456x...z7890",
-          to: "0xabc1...f4567",
-          amount: "12.0",
-          symbol: "USDT",
-          date: "1 hour ago",
-        },
-      ],
-    },
+          hash: "0xd112aa05bd62a0b55cb6d651d95b8741937b49328ebcbab2f78b472edd761b00",
+          from: "0x5497b1ab5bb59b194e25764ea0b61871b122a43f",
+          to: "0x514910771af9ca656af840dff83e8264ecf986ca",
+          symbol: "SHIB",
+          amount: "1000000000000000000",
+          date: "2/22/2026, 3:07:47 AM",
+          type: "ERC-20"
+        }
+      ]
+    }
   },
+  requestData: {
+    amount: "1.0",
+    symbol: "ETH",
+    contractAddress: "0x514910771af9ca656af840dff83e8264ecf986ca",
+  }
 };
 
 export const mockHoneypot = {
-  totalScore: "15",
-  passRate: "50%",
-  riskLevel: "High",
-  checks: {
-    gasTrap: { data: { risk: true, description: "Gas cost exceeds absolute max threshold" } },
-    fakeBalance: { data: { risk: false, description: "Balances map correctly" } },
-    disableTransfer: { data: { risk: true, description: "Transfer function is paused by owner" } },
-    mintAccess: { data: { risk: true, description: "Owner can arbitrarily mint tokens" } },
-    tradingControl: { data: { risk: false, description: "No anti-whale limits detected" } },
-    highSellTax: { data: { risk: false, description: "Sell tax is 0%" } },
-  },
+  success: true,
+  honeypotResponse: {
+    riskScore: 30,
+    hasBlackListDetected: false,
+    hasMintable: true,
+    mintScore: 100,
+    mintReason: "Catastrophic simulation failure. Contract is highly suspicious or uses revert traps.",
+    hasTradingControl: false,
+    buyingTax: 0,
+    sellingTax: 0,
+    errorReason: "Time-travel simulation failed to execute.",
+    isTimeHoneypot: true,
+    timeTravelScore: 30,
+    timeTravelReason: "Time-travel simulation failed to execute."
+  }
 };
 
 export const mockPhishing = {
-  checks: {
-    approvalScam: {
-      success: true,
-      data: { isScam: true, confidence: "high", reason: "Requests infinite max approval to EOA address" }
-    },
-    etherForward: {
-      success: true,
-      data: { isScam: false, confidence: "low", reason: "Contract does not forward ether suspiciously" }
-    },
-    maliciousProxy: {
-      success: true,
-      data: { isScam: true, confidence: "high", reason: "Implementation logic can be replaced unverified" }
-    },
-    permitPhishing: {
-      success: true,
-      data: { isScam: false, confidence: "low", reason: "Permit signature is secure" }
-    }
+  success: true,
+  riskSummery: {
+    totalScore: 8,
+    riskLevel: "Safe Zone",
+    verdict: "✅ No immediate phishing threats detected."
   },
-  phishingVerdict: {
-    phishingScore: 82,
-    riskLevel: "High",
-    keyFindings: ["Suspicious infinite token allowance", "Proxy implementation can be rugged", "Unverified source code matching known scam signatures"],
-    recommendedActions: ["DO NOT SIGN THIS TRANSACTION", "Revoke any existing approvals to this contract", "Report address on block explorer"]
+  details: {
+    approveScam: {
+      isScam: true,
+      confidence: "medium",
+      reason: "Contract shows suspicious approval logic and draining behavior."
+    },
+    etherForwarding: {
+      isContract: true,
+      isScam: true,
+      confidence: "high",
+      reason: "Bytecode contains 10 CALL opcodes.",
+      checks: {
+        callOpcodeCount: 10
+      },
+      address: "0x514910771AF9Ca656af840dff83E8264EcF986CA"
+    },
+    proxyScam: {
+      isProxy: false,
+      reason: "No proxy pattern found in bytecode."
+    },
+    permitCheck: {
+      isProxy: false,
+      reason: "No permit signature found."
+    },
+    domainCheck: {
+      hasSuspiciousLinks: false,
+      foundLinks: [],
+      phishingMatches: [],
+      reason: "No URLs found."
+    }
   }
 };
 
@@ -172,7 +223,7 @@ export const themes = {
     border: "rgba(59, 130, 246, 0.3)", // blue-500
     shadow: "rgba(59, 130, 246, 0.2)",
     gradText: "bg-gradient-to-r from-blue-400 to-blue-400",
-    buttonGlow: "hover:shadow-[0_0_30px_rgba(59,130,246,0.3)]",
+    buttonGlow: "hover:bg-blue-500/10 transition-colors duration-200",
   },
   SOL: {
     primary: "purple",
@@ -186,6 +237,6 @@ export const themes = {
     border: "rgba(168, 85, 247, 0.3)", // purple-500
     shadow: "rgba(168, 85, 247, 0.2)",
     gradText: "bg-gradient-to-r from-purple-400 to-pink-400",
-    buttonGlow: "hover:shadow-[0_0_30px_rgba(168,85,247,0.3)]",
+    buttonGlow: "hover:bg-purple-500/10 transition-colors duration-200",
   }
 };

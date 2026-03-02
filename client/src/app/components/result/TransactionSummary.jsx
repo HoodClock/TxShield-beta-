@@ -13,21 +13,20 @@ export default function TransactionSummary({
   return (
     <m.div
       variants={itemVariants}
-      whileHover={{ y: -4, scale: 1.02 }}
-      className="relative group/summary overflow-hidden rounded-2xl border border-white/5 bg-black/40 shadow-[inset_0_2px_20px_rgba(0,0,0,0.8)] hover:border-blue-500/30 hover:bg-black/60 transition-all duration-300 transform-gpu"
+      className="relative bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-hidden"
     >
-      <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.25)_50%)] bg-[length:100%_4px] opacity-20 pointer-events-none"></div>
-      <div className={`absolute bottom-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent opacity-0 group-hover/summary:opacity-100 transition-opacity duration-500 blur-[1px]`}></div>
-
-      <div className="relative z-10 p-4 sm:p-5">
-        <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-5">
-          <div className="p-2 sm:p-2.5 rounded-xl border border-blue-500/20 bg-blue-500/10 shadow-[0_0_15px_rgba(59,130,246,0.15)] group-hover/summary:shadow-[0_0_25px_rgba(59,130,246,0.3)] transition-shadow">
-            <FiEye className="h-4 w-4 sm:h-5 sm:w-5 text-blue-400 group-hover/summary:animate-pulse drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
+      <div className="relative z-10 p-4 sm:p-5 w-full flex items-center justify-between border-b border-white/5">
+        <div className="flex items-center gap-4">
+          <div className="p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/10">
+            <FiEye className="h-4 w-4 sm:h-5 sm:w-5 text-gray-300" />
           </div>
-          <h2 className="text-sm sm:text-base font-bold font-mono tracking-widest uppercase text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">
+          <h2 className="text-sm sm:text-base font-bold text-white tracking-widest uppercase font-mono text-left">
             Summary
           </h2>
         </div>
+      </div>
+
+      <div className="relative z-10 p-4 sm:p-5 pt-4">
 
         <div className="space-y-3 sm:space-y-4">
           {[
@@ -52,17 +51,17 @@ export default function TransactionSummary({
               initial={{ opacity: 0, x: 10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: idx * 0.05 }}
-              className="flex justify-between items-center group/summaryRow pb-3 sm:pb-4 last:pb-0 border-b border-white/5 last:border-b-0 hover:border-blue-500/30 transition-colors"
+              className="flex justify-between items-center pb-3 sm:pb-4 last:pb-0 border-b border-white/5 last:border-b-0 hover:bg-white/5 px-2 -mx-2 rounded transition-colors"
             >
               <div className="flex items-center gap-3">
-                <div className="p-1.5 rounded bg-black/40 border border-white/5 group-hover/summaryRow:border-blue-500/30 group-hover/summaryRow:bg-blue-500/5 transition-colors">
+                <div className="p-1.5 rounded bg-black border border-white/5">
                   {item.icon}
                 </div>
-                <span className="text-slate-400 font-mono text-[10px] sm:text-xs tracking-widest uppercase group-hover/summaryRow:text-blue-300 transition-colors">
+                <span className="text-gray-400 font-mono text-[10px] sm:text-xs tracking-widest uppercase">
                   {item.label}
                 </span>
               </div>
-              <span className="text-white font-mono font-bold tracking-wider text-sm group-hover/summaryRow:text-blue-400 group-hover/summaryRow:drop-shadow-[0_0_5px_rgba(59,130,246,0.5)] transition-all">
+              <span className="text-white font-mono font-bold tracking-wider text-sm">
                 {item.value}
               </span>
             </m.div>

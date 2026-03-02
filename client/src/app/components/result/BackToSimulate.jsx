@@ -11,12 +11,8 @@ export default function BackToSimulate({ itemVariants, t, chain }) {
     >
       <button
         onClick={() => window.location.reload()}
-        className={`relative px-8 py-4 bg-black border ${t.border} rounded-xl flex items-center gap-3 overflow-hidden group transition-all duration-300 hover:border-${t.primary}-400 ${t.buttonGlow} glitch-hover`}
+        className={`relative px-8 py-4 bg-black border ${t.border} border-white/10 rounded-xl flex items-center gap-3 overflow-hidden group transition-all duration-300 ${t.buttonGlow}`}
       >
-        {/* Hover Gradient Background */}
-        <div
-          className={`absolute inset-0 bg-gradient-to-r from-${t.primary}-600/10 via-${t.secondary}-500/10 to-${t.primary}-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
-        />
 
         <FiArrowLeft
           className={`h-5 w-5 ${t.textPrimary} group-hover:${t.textSecondary} group-hover:-translate-x-1 transition-all duration-300 relative z-10`}

@@ -7,7 +7,8 @@ import axios from "axios";
 // const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 // for prod-envoirnment
-const BASE_URL = process.env.NEXT_PUBLIC_PROD_BASE_URL;
+const rawBaseUrl = process.env.NEXT_PUBLIC_PROD_BASE_URL || "";
+const BASE_URL = rawBaseUrl.endsWith("/") ? rawBaseUrl.slice(0, -1) : rawBaseUrl;
 
 // eth api's
 export const simulateTx = async (formData) => {
