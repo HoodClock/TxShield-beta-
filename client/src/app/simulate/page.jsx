@@ -53,6 +53,7 @@ export default function App() {
   const [phishingData, setPhishingData] = useState(null);
   const [recommendation, setRecommendation] = useState(null);
   const [solSimulationData, setSolSimulationData] = useState(null);
+  const [requestData, setRequestData] = useState(null); // stores user inputted amount, contractAddress, etc.
 
   // setting chain for wallet providers
   const [chain, setChain] = useState(null);
@@ -93,6 +94,7 @@ export default function App() {
         ]);
 
         if (mounted.current) {
+          setRequestData(simData);
           setSimulationData(simulationRes.data);
           setHoneypotData(honeypotRes.data);
           setPhishingData(phishingRes.data);
@@ -240,6 +242,7 @@ export default function App() {
               solSimulation={solSimulationData}
               honeypot={honeypotData}
               phishing={phishingData}
+              requestData={requestData}
               onGenerateRecommendation={handleRecommendation}
               recommendationData={recommendation}
             />

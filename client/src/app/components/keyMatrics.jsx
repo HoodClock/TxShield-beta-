@@ -135,10 +135,10 @@ function keyMatrics({
           <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.25)_50%)] bg-[length:100%_4px] opacity-20 pointer-events-none"></div>
           <div className={`absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-${theme.secondary}-500/50 to-transparent opacity-0 group-hover/metric:opacity-100 transition-opacity duration-500 blur-[1px]`}></div>
 
-          <div className="relative z-10 p-4 sm:p-5 flex flex-col h-full justify-between">
-            <div className="flex items-center justify-between mb-4 sm:mb-6">
-              <div className={`p-2.5 rounded-xl border border-${theme.secondary}-500/20 ${theme.iconBg1}`}>
-                <FiShield className={`h-6 w-6 ${theme.iconText1} drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]`} />
+          <div className="relative z-10 p-3 flex flex-col h-full justify-between">
+            <div className="flex items-center justify-between mb-2">
+              <div className={`p-2 rounded-xl border border-${theme.secondary}-500/20 ${theme.iconBg1}`}>
+                <FiShield className={`h-5 w-5 ${theme.iconText1} drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]`} />
               </div>
               <div className="relative flex h-3 w-3">
                 <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${theme.pulseColor1} opacity-75`}></span>
@@ -146,10 +146,10 @@ function keyMatrics({
               </div>
             </div>
             <div>
-              <h3 className="text-xs font-mono uppercase tracking-widest text-slate-500 mb-2">
+              <h3 className="text-[10px] font-mono uppercase tracking-widest text-slate-500 mb-1">
                 Threat Level Assessment
               </h3>
-              <p className={`text-2xl sm:text-3xl font-bold font-mono tracking-wide ${theme.textColor1} drop-shadow-[0_0_10px_rgba(6,182,212,0.4)]`}>
+              <p className={`text-xl sm:text-2xl font-bold font-mono tracking-wide ${theme.textColor1} drop-shadow-[0_0_10px_rgba(6,182,212,0.4)]`}>
                 {riskLevel}
               </p>
             </div>
@@ -164,10 +164,10 @@ function keyMatrics({
           <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.25)_50%)] bg-[length:100%_4px] opacity-20 pointer-events-none"></div>
           <div className={`absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-${theme.secondary}-500/50 to-transparent opacity-0 group-hover/metric:opacity-100 transition-opacity duration-500 blur-[1px]`}></div>
 
-          <div className="relative z-10 p-4 sm:p-5 flex flex-col h-full justify-between">
-            <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <div className={`p-2.5 rounded-xl border border-${theme.secondary}-500/20 ${theme.iconBg2}`}>
-                <FiTarget className={`h-6 w-6 ${theme.iconText2} drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]`} />
+          <div className="relative z-10 p-3 flex flex-col h-full justify-between">
+            <div className="flex items-center justify-between mb-2">
+              <div className={`p-2 rounded-xl border border-${theme.secondary}-500/20 ${theme.iconBg2}`}>
+                <FiTarget className={`h-5 w-5 ${theme.iconText2} drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]`} />
               </div>
               <div className="relative flex h-3 w-3">
                 <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${theme.pulseColor2} opacity-75`}></span>
@@ -176,17 +176,17 @@ function keyMatrics({
             </div>
 
             <div className="flex flex-col">
-              <div className="flex items-end justify-between mb-2">
-                <h3 className="text-xs font-mono uppercase tracking-widest text-slate-500">
+              <div className="flex items-end justify-between mb-1">
+                <h3 className="text-[10px] font-mono uppercase tracking-widest text-slate-500">
                   Suspicion Index
                 </h3>
-                <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500 bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
+                <span className="text-[9px] font-mono uppercase tracking-widest text-slate-500 bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700">
                   {zoneName}
                 </span>
               </div>
 
-              <p className={`text-2xl sm:text-3xl font-bold font-mono tracking-wide ${theme.textColor2} drop-shadow-[0_0_10px_rgba(6,182,212,0.4)]`}>
-                {total}<span className="text-lg text-slate-600">/60</span>
+              <p className={`text-xl sm:text-2xl font-bold font-mono tracking-wide ${theme.textColor2} drop-shadow-[0_0_10px_rgba(6,182,212,0.4)]`}>
+                {total}<span className="text-sm text-slate-600">/60</span>
               </p>
 
               {/* Dynamic Neon Progress Bar */}
@@ -223,10 +223,10 @@ function keyMatrics({
           <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.25)_50%)] bg-[length:100%_4px] opacity-20 pointer-events-none"></div>
           <div className={`absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-${theme.secondary}-500/50 to-transparent opacity-0 group-hover/metric:opacity-100 transition-opacity duration-500 blur-[1px]`}></div>
 
-          <div className="relative z-10 p-4 sm:p-5 flex flex-col h-full justify-between">
-            <div className="flex items-center justify-between mb-4 sm:mb-6">
-              <div className={`p-2.5 rounded-xl border border-${theme.secondary}-500/20 ${theme.iconBg3}`}>
-                <FiCheck className={`h-6 w-6 ${theme.iconText3} drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]`} />
+          <div className="relative z-10 p-3 flex flex-col h-full justify-between">
+            <div className="flex items-center justify-between mb-2">
+              <div className={`p-2 rounded-xl border border-${theme.secondary}-500/20 ${theme.iconBg3}`}>
+                <FiCheck className={`h-5 w-5 ${theme.iconText3} drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]`} />
               </div>
               <div className="relative flex h-3 w-3">
                 <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${theme.pulseColor3} opacity-75`}></span>
@@ -234,14 +234,14 @@ function keyMatrics({
               </div>
             </div>
             <div>
-              <h3 className="text-xs font-mono uppercase tracking-widest text-slate-500 mb-2">
+              <h3 className="text-[10px] font-mono uppercase tracking-widest text-slate-500 mb-1">
                 Validation Success
               </h3>
-              <p className={`text-2xl sm:text-3xl font-bold font-mono tracking-wide ${theme.textColor3} drop-shadow-[0_0_10px_rgba(16,185,129,0.4)]`}>
+              <p className={`text-xl sm:text-2xl font-bold font-mono tracking-wide ${theme.textColor3} drop-shadow-[0_0_10px_rgba(16,185,129,0.4)]`}>
                 {passRate}
               </p>
-              <p className="text-xs font-mono uppercase tracking-widest text-emerald-500/50 mt-1.5">
-                {ratioText} Signatures Verified
+              <p className="text-[9px] sm:text-[10px] font-mono uppercase tracking-widest text-emerald-500/50 mt-1">
+                {ratioText} Signatures
               </p>
             </div>
           </div>

@@ -107,7 +107,7 @@ const PhishingAnalysis = ({ data, chain = "EVM" }) => {
 
     return {
       name: formattedName,
-      isScam: check.isScam !== undefined ? check.isScam : (check.data?.isScam || false),
+      isScam: check.isScam ?? check.isProxy ?? check.hasSuspiciousLinks ?? check.data?.isScam ?? false,
       confidence: check.confidence || check.data?.confidence || "none",
       reason: check.reason || check.data?.reason || "No issues found",
       details: check.details || check.checks || check.data?.checks || null,
