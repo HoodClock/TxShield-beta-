@@ -9,6 +9,7 @@ import AnalysisSection from "../components/Home/AnalysisSection";
 import ChainSection from "../components/Home/ChainSection";
 import TestimonialSection from "../components/Home/TestimonialSection";
 import Footer from "../components/footer";
+import DataFlowBackground from "../components/DataFlowBackground";
 
 import { gsap } from "gsap";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
@@ -49,7 +50,7 @@ function HomePage() {
         smoother.current = null;
       }
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-      gsap.context(() => {}, document.body);
+      gsap.context(() => { }, document.body);
     };
   }, []);
 
@@ -58,7 +59,7 @@ function HomePage() {
       <div id="smooth-wrapper" style={{ margin: 0, padding: 0, border: 'none', borderTop: 'none' }}>
         <div id="smooth-content" style={{ margin: 0, padding: 0, border: 'none', borderTop: 'none' }}>
           <Header />
-          <div className="section-merge" style={{ border: 'none', borderTop: 'none', marginTop: 0, paddingTop: 0 }}>
+          <div className="section-merge relative" style={{ border: 'none', borderTop: 'none', marginTop: 0, paddingTop: 0 }}>
             <HeroSection />
           </div>
 
@@ -66,11 +67,14 @@ function HomePage() {
           <div className="section-divider"></div>
 
           {/* Below-the-fold sections with content-visibility optimization */}
-          <div className="orb-bg section-merge content-visibility-auto contain-intrinsic-stats">
+          <div className="orb-bg section-merge content-visibility-auto contain-intrinsic-stats relative">
+            <DataFlowBackground className="opacity-30 z-0" />
             <div className="orb orb-1" aria-hidden="true"></div>
             <div className="orb orb-2" aria-hidden="true"></div>
             <div className="orb orb-3" aria-hidden="true"></div>
-            <StatsSection />
+            <div className="relative z-10">
+              <StatsSection />
+            </div>
           </div>
 
           {/* Beautiful Section Divider */}

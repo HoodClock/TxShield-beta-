@@ -1,13 +1,14 @@
 import axios from "axios";
 
 // for local.
-const BASE_URL = "http://localhost:5000";
+// const BASE_URL = "http://localhost:5000";
 
 // for testing.
 // const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 // for prod-envoirnment
-// const BASE_URL = process.env.NEXT_PUBLIC_PROD_BASE_URL;
+const rawBaseUrl = process.env.NEXT_PUBLIC_PROD_BASE_URL || "";
+const BASE_URL = rawBaseUrl.endsWith("/") ? rawBaseUrl.slice(0, -1) : rawBaseUrl;
 
 // eth api's
 export const simulateTx = async (formData) => {
@@ -72,11 +73,18 @@ export const suggestionApi = async (formData) => {
 };
 
 export const authConnect = async (formData) => {
-  return await axios.post(`${BASE_URL}/auth/connect`, formData);
+  return await axios.post(`${BASE_URL}/auth/connect`, formData, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true,
+  });
 };
 
 export const authGetAPI = async (connectedAddress) => {
-  return await axios.get(`${BASE_URL}/auth/apiKey/${connectedAddress}`);
+  return await axios.get(`${BASE_URL}/auth/apiKey/${connectedAddress}`, {
+    withCredentials: true,
+  });
 };
 
 // Solana api's

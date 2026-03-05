@@ -4,8 +4,10 @@ import { useState, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 
+import { LazyMotion, domAnimation } from 'framer-motion';
+
 export default function ClientLayout({ children }) {
-  const [queryClient] = useState(() => 
+  const [queryClient] = useState(() =>
     new QueryClient({
       defaultOptions: {
         queries: {
@@ -25,8 +27,9 @@ export default function ClientLayout({ children }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-
-      {children}
+      <LazyMotion features={domAnimation}>
+        {children}
+      </LazyMotion>
     </QueryClientProvider>
   );
 }
