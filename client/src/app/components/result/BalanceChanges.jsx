@@ -1,157 +1,89 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { FiBarChart2, FiChevronDown, FiArrowRight, FiUpload, FiDownload } from "react-icons/fi";
+import { m } from "framer-motion";
+import { FiArrowRight, FiUpload, FiDownload } from "react-icons/fi";
 
 export default function BalanceChanges({
   itemVariants,
-  toggleSection,
-  expandedSections,
   simulateData,
 }) {
-  if (!simulateData.balances) return null;
+  if (!simulateData || (!simulateData.ethDelta && !simulateData.tokenDelta)) return null;
+
+  const ethDelta = parseFloat(simulateData.ethDelta || "0") / 1e18;
+  const tokenDelta = parseFloat(simulateData.tokenDelta || "0"); // Assuming decimals handled elsewhere or simplified here
+  const watchToken = simulateData.watchedTokens;
 
   return (
-    <motion.div variants={itemVariants} className="group gradient-border-card">
-      <button
-        onClick={() => toggleSection("balances")}
-        className="card-inner p-4 sm:p-6 w-full"
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 sm:gap-4">
-            <div className="icon-wrapper">
-              <FiBarChart2 className="h-5 w-5 text-cyan-400" />
-            </div>
-            <h2 className="text-base sm:text-lg font-bold text-white text-left">
-              Balance Changes
-            </h2>
+    <m.div
+      variants={itemVariants}
+      whileHover={{ y: -4, scale: 1.01 }}
+      className="relative bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-hidden mt-4"
+    >
+      <div className="relative z-10 p-4 sm:p-5 w-full flex items-center justify-between border-b border-white/5">
+        <div className="flex items-center gap-4">
+          <div className="p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/10">
+            <FiUpload className="h-4 w-4 sm:h-5 sm:w-5 text-gray-300" />
           </div>
-          <motion.div
-            animate={{ rotate: expandedSections.balances ? 180 : 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <FiChevronDown className="h-5 w-5 text-slate-400" />
-          </motion.div>
+          <h2 className="text-sm sm:text-base font-bold text-white tracking-widest uppercase font-mono text-left">
+            Asset Flow Pipeline
+          </h2>
         </div>
-      </button>
+      </div>
+      <div className="p-4 sm:p-5">
 
-      {expandedSections.balances && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.3 }}
-          className="card-inner p-4 sm:p-6 pt-0 sm:pt-0"
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Sender */}
-            <div className="gradient-border-card">
-              <div className="card-inner p-6 sm:p-8">
-                <div className="flex items-center gap-3 mb-4">
-                  <FiUpload className="h-5 w-5 text-red-400" />
-                  <h3 className="text-sm sm:text-base font-bold text-white mb-4">
-                    Sender
-                  </h3>
-                </div>
-                <div className="space-y-3">
-                  {[
-                    {
-                      symbol: "ETH",
-                      before: simulateData.balances.sender?.before?.eth,
-                      after: simulateData.balances.sender?.after?.eth,
-                      color: "text-red-400",
-                    },
-                    simulateData.transferType === "erc20" && {
-                      symbol: simulateData.symbol,
-                      before: simulateData.balances.sender?.before?.token,
-                      after: simulateData.balances.sender?.after?.token,
-                      color: "text-red-400",
-                    },
-                  ]
-                    .filter(Boolean)
-                    .map((item, idx) => (
-                      <motion.div
-                        key={idx}
-                        initial={{ opacity: 0, y: 5 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: idx * 0.05 }}
-                        className="flex items-center justify-between group/balance"
-                      >
-                        <span className="text-slate-400 text-xs sm:text-sm group-hover/balance:text-gray-300 transition-colors">
-                          {item.symbol}
-                        </span>
-                        <div className="flex items-center gap-2 text-xs sm:text-sm">
-                          <span className="text-slate-300">
-                            {item.before || `0 ${item.symbol}`}
-                          </span>
-                          <FiArrowRight className="h-3 w-3 text-slate-500" />
-                          <span
-                            className={`font-semibold ${item.color} group-hover/balance:brightness-125 transition-all`}
-                          >
-                            {item.after || `0 ${item.symbol}`}
-                          </span>
-                        </div>
-                      </motion.div>
-                    ))}
-                </div>
-              </div>
-            </div>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-2 px-2 sm:px-4">
 
-            {/* Recipient */}
-            <div className="gradient-border-card">
-              <div className="card-inner p-6 sm:p-8">
-                <div className="flex items-center gap-3 mb-4">
-                  <FiDownload className="h-5 w-5 text-emerald-400" />
-                  <h3 className="text-sm sm:text-base font-bold text-white mb-4">
-                    Recipient
-                  </h3>
-                </div>
-                <div className="space-y-3">
-                  {[
-                    {
-                      symbol: "ETH",
-                      before: simulateData.balances.recipient?.before?.eth,
-                      after: simulateData.balances.recipient?.after?.eth,
-                      color: "text-emerald-400",
-                    },
-                    simulateData.transferType === "erc20" && {
-                      symbol: simulateData.symbol,
-                      before: simulateData.balances.recipient?.before?.token,
-                      after: simulateData.balances.recipient?.after?.token,
-                      color: "text-emerald-400",
-                    },
-                  ]
-                    .filter(Boolean)
-                    .map((item, idx) => (
-                      <motion.div
-                        key={idx}
-                        initial={{ opacity: 0, y: 5 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: idx * 0.05 }}
-                        className="flex items-center justify-between group/balance"
-                      >
-                        <span className="text-slate-400 text-xs sm:text-sm group-hover/balance:text-gray-300 transition-colors">
-                          {item.symbol}
-                        </span>
-                        <div className="flex items-center gap-2 text-xs sm:text-sm">
-                          <span className="text-slate-300">
-                            {item.before || `0 ${item.symbol}`}
-                          </span>
-                          <FiArrowRight className="h-3 w-3 text-slate-500" />
-                          <span
-                            className={`font-semibold ${item.color} group-hover/balance:brightness-125 transition-all`}
-                          >
-                            {item.after || `0 ${item.symbol}`}
-                          </span>
-                        </div>
-                      </motion.div>
-                    ))}
-                </div>
-              </div>
+          {/* SENDER NODE */}
+          <div className="flex-1 w-full bg-[#111111] border border-white/10 p-4 rounded-xl flex flex-col items-center justify-center relative overflow-hidden group/node">
+            <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-1">Origin</span>
+            <span className="text-sm font-mono text-white font-semibold">Your Wallet</span>
+            <div className="mt-2 w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+              <FiUpload className="text-gray-300 h-3 w-3" />
             </div>
           </div>
-        </motion.div>
-      )}
-    </motion.div>
+
+          {/* ASSET PIPELINE ARROW */}
+          <div className="flex-1 w-full flex flex-col items-center justify-center px-4 relative">
+            <div className="w-full h-px bg-white/20 relative">
+              <m.div
+                className="absolute top-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full"
+                animate={{ left: ["0%", "100%"] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+              />
+            </div>
+
+            {/* Deltas Display floating above arrow */}
+            <div className="absolute top-1/2 -translate-y-2/3 -translate-x-1/2 left-1/2 flex flex-col items-center justify-center bg-black/80 px-4 py-1.5 rounded-md border border-white/10 shadow-xl backdrop-blur-md">
+              {(ethDelta !== 0 || tokenDelta !== 0) ? (
+                <>
+                  {ethDelta !== 0 && (
+                    <span className={`font-mono text-xs sm:text-sm font-bold tracking-wide break-all text-center ${ethDelta < 0 ? 'text-red-400 drop-shadow-[0_0_5px_rgba(248,113,113,0.5)]' : 'text-emerald-400 drop-shadow-[0_0_5px_rgba(52,211,153,0.5)]'}`}>
+                      {ethDelta > 0 ? '+' : ''}{ethDelta.toFixed(4)} ETH
+                    </span>
+                  )}
+                  {tokenDelta !== 0 && (
+                    <span className={`font-mono text-xs sm:text-sm font-bold tracking-wide break-all text-center ${tokenDelta < 0 ? 'text-red-400 drop-shadow-[0_0_5px_rgba(248,113,113,0.5)]' : 'text-emerald-400 drop-shadow-[0_0_5px_rgba(52,211,153,0.5)]'}`}>
+                      {tokenDelta > 0 ? '+' : ''}{tokenDelta.toString()} {watchToken ? 'Token' : ''}
+                    </span>
+                  )}
+                </>
+              ) : (
+                <span className="font-mono text-xs text-gray-500 uppercase tracking-widest">No Direct Transfers</span>
+              )}
+            </div>
+          </div>
+
+          {/* DESTINATION NODE */}
+          <div className="flex-1 w-full bg-[#111111] border border-white/10 p-4 rounded-xl flex flex-col items-center justify-center relative overflow-hidden group/node">
+            <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-1">Destination</span>
+            <span className="text-sm font-mono text-white font-semibold">Target Contract</span>
+            <div className="mt-2 w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+              <FiDownload className="text-gray-300 h-3 w-3" />
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </m.div>
   );
 }

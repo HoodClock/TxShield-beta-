@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { FiAlertTriangle, FiCheckCircle, FiShield, FiAlertOctagon } from "react-icons/fi";
 import { themes } from "./utils";
 
@@ -11,7 +11,7 @@ export default function SolanaDetails({
 }) {
   const t = themes[chain] || themes.SOL;
   const data = rawData?.data || {};
-  
+
   const {
     verdict,
     securityFlags,
@@ -34,30 +34,34 @@ export default function SolanaDetails({
   const riskBorder = isCritical ? "border-red-500/30" : isHighRisk ? "border-orange-500/30" : "border-green-500/30";
 
   return (
-    <div className="space-y-8 sm:space-y-12">
-      
+    <div className="space-y-3 sm:space-y-4 max-w-7xl mx-auto">
+
       {/* SECURITY VERDICT CARD */}
-      <motion.div variants={itemVariants} className="gradient-border-card p-[1px]">
-        <div className="card-inner p-6 h-full">
-          <div className="flex items-center justify-between mb-6">
+      <m.div
+        variants={itemVariants}
+        className="relative bg-[#0a0510] border border-purple-500/20 rounded-2xl overflow-hidden shadow-[inset_0_2px_15px_rgba(168,85,247,0.05)]"
+      >
+        <div className="relative z-10 p-3 sm:p-4 h-full">
+          <div className="flex items-center justify-between mb-3 pb-3 border-b border-purple-500/10">
             <div className="flex items-center gap-3">
-              <div className="icon-wrapper">
-                <FiShield className={`h-6 w-6 ${riskColor}`} />
+              <div className="p-2 border border-purple-500/20 bg-purple-500/10 rounded-xl">
+                <FiShield className="h-5 w-5 text-purple-400 drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]" />
               </div>
-              <h3 className="text-xl font-bold text-white">Security Verdict</h3>
+              <h3 className="text-base sm:text-lg font-bold font-mono uppercase tracking-widest text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]">Security Verdict</h3>
             </div>
             {riskLevel && (
-              <span className={`px-3 py-1 rounded-full text-xs font-bold border ${riskBorder} ${riskBg} ${riskColor}`}>
+              <span className={`px-4 py-1.5 rounded text-xs font-mono font-bold tracking-widest uppercase border ${riskColor}`}>
                 {riskLevel}
               </span>
             )}
           </div>
 
           <div className="space-y-4">
-             {/* Human Reason */}
-             {humanReason && (
-              <div className={`p-4 rounded-xl border ${riskBorder} ${riskBg}`}>
-                <p className="text-sm font-medium text-gray-200">
+            {/* Human Reason */}
+            {humanReason && (
+              <div className="p-4 sm:p-5 rounded-xl border border-white/10 bg-white/5 relative overflow-hidden">
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-current opacity-50" style={{ color: riskColor.replace('text-', '') }}></div>
+                <p className="text-sm font-mono tracking-wide text-gray-300 leading-relaxed pl-2">
                   {humanReason}
                 </p>
               </div>
@@ -65,82 +69,92 @@ export default function SolanaDetails({
 
             {/* Security Flags */}
             {securityFlags && securityFlags.length > 0 && (
-              <div className="mt-4">
-                <h4 className="text-xs text-gray-400 uppercase tracking-wide mb-3">Detected Threats</h4>
-                <div className="flex flex-wrap gap-2">
+              <div className="mt-6">
+                <h4 className="text-xs font-mono font-bold text-gray-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-red-500"></span> Detected Threats
+                </h4>
+                <div className="flex flex-wrap gap-2.5">
                   {securityFlags.map((flag, idx) => (
-                    <div key={idx} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20">
-                      <FiAlertOctagon className="h-4 w-4 text-red-400" />
-                      <span className="text-xs font-mono text-red-300">{flag}</span>
+                    <div key={idx} className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-red-500/10 border border-red-500/30">
+                      <FiAlertOctagon className="h-4 w-4 text-red-500" />
+                      <span className="text-xs font-mono tracking-wide text-red-400">{flag}</span>
                     </div>
                   ))}
                 </div>
               </div>
             )}
-            
+
             {/* Token Audit Error */}
             {tokenAudit?.error && (
-               <div className="mt-2 flex items-center gap-2 text-xs text-orange-300">
-                  <FiAlertTriangle className="h-3 w-3" />
-                  <span>Token Audit: {tokenAudit.error}</span>
-               </div>
+              <div className="mt-4 flex items-start gap-3 p-3 rounded-lg border border-orange-500/30 bg-orange-500/10">
+                <FiAlertTriangle className="h-4 w-4 text-orange-400 mt-0.5" />
+                <span className="text-xs font-mono text-orange-300 leading-relaxed">System Audit: {tokenAudit.error}</span>
+              </div>
             )}
           </div>
         </div>
-      </motion.div>
+      </m.div>
 
       {/* TRANSACTION DETAILS CARD */}
-      <motion.div variants={itemVariants} className="gradient-border-card p-[1px]">
-        <div className="card-inner p-6 h-full">
-          <div className="flex items-center justify-between mb-6">
+      <m.div
+        variants={itemVariants}
+        className="relative bg-[#0a0510] border border-purple-500/20 rounded-2xl overflow-hidden mt-3 shadow-[inset_0_2px_15px_rgba(168,85,247,0.05)]"
+      >
+        <div className="relative z-10 p-3 sm:p-4 h-full">
+          <div className="flex items-center justify-between mb-3 pb-3 border-b border-purple-500/10">
             <div className="flex items-center gap-3">
-              <div className="icon-wrapper">
-                <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 ${t.textPrimary}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="p-2 rounded-xl border border-purple-500/20 bg-purple-500/10">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-400 drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-white">Transaction Details</h3>
+              <h3 className="text-base sm:text-lg font-bold font-mono uppercase tracking-widest text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]">Transaction Output</h3>
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="flex justify-between items-center py-2 border-b border-gray-800">
-              <span className="text-gray-400">Status</span>
-              <span className={`font-bold ${simulation?.status === 'SUCCESS' ? 'text-green-400' : 'text-red-400'}`}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <div className="flex justify-between items-center px-3 py-2 bg-purple-500/5 border border-purple-500/10 rounded-lg">
+              <span className="text-[10px] sm:text-xs font-mono uppercase tracking-widest text-gray-500">Execution Status</span>
+              <span className={`text-[10px] sm:text-xs font-mono font-bold tracking-widest uppercase px-2 py-0.5 rounded border ${simulation?.status === 'SUCCESS' ? 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10' : 'text-red-400 border-red-500/30 bg-red-500/10'}`}>
                 {simulation?.status || 'UNKNOWN'}
               </span>
             </div>
-            <div className="flex justify-between items-center py-2 border-b border-gray-800">
-              <span className="text-gray-400">Compute Units</span>
-              <span className={`font-mono ${t.textSecondary}`}>{computeUnits?.toLocaleString() || 0}</span>
+
+            <div className="flex justify-between items-center px-3 py-2 bg-purple-500/5 border border-purple-500/10 rounded-lg">
+              <span className="text-[10px] sm:text-xs font-mono uppercase tracking-widest text-gray-500">Compute Units</span>
+              <span className="text-xs sm:text-sm font-mono text-pink-400 font-bold tracking-wide">{computeUnits?.toLocaleString() || 0}</span>
             </div>
-            <div className="flex justify-between items-center py-2 border-b border-gray-800">
-              <span className="text-gray-400">Wallet Balance</span>
-              <span className="text-white font-mono">{walletBalance !== undefined ? `${walletBalance} SOL` : 'N/A'}</span>
+
+            <div className="flex justify-between items-center px-3 py-2 bg-purple-500/5 border border-purple-500/10 rounded-lg">
+              <span className="text-[10px] sm:text-xs font-mono uppercase tracking-widest text-gray-500">Wallet Balance</span>
+              <span className="text-xs sm:text-sm font-mono text-purple-300 font-bold tracking-wide">{walletBalance !== undefined ? `${walletBalance} SOL` : 'N/A'}</span>
             </div>
+
             {estimatedChange && (
-                 <div className="flex justify-between items-center py-2 border-b border-gray-800">
-                 <span className="text-gray-400">Est. Change</span>
-                 <span className="text-white font-mono">{estimatedChange}</span>
-               </div>
+              <div className="flex justify-between items-center px-3 py-2 bg-purple-500/5 border border-purple-500/10 rounded-lg">
+                <span className="text-[10px] sm:text-xs font-mono uppercase tracking-widest text-gray-500">Est. Net Change</span>
+                <span className="text-xs sm:text-sm font-mono text-purple-300 font-bold tracking-wide">{estimatedChange}</span>
+              </div>
             )}
-            <div className="flex justify-between items-center py-2 border-b border-gray-800">
-              <span className="text-gray-400">Rent Exempt</span>
-              <span className={rentExempt ? "text-green-400" : "text-gray-500"}>
-                {rentExempt ? "Yes" : "No / Unknown"}
+
+            <div className="flex justify-between items-center px-3 py-2 bg-purple-500/5 border border-purple-500/10 rounded-lg">
+              <span className="text-[10px] sm:text-xs font-mono uppercase tracking-widest text-gray-500">Rent Exempt Status</span>
+              <span className={`text-[10px] sm:text-xs font-mono font-bold tracking-widest uppercase px-2 py-0.5 rounded border ${rentExempt ? "text-emerald-400 border-emerald-500/30 bg-emerald-500/10" : "text-gray-400 border-gray-500/30 bg-gray-500/10"}`}>
+                {rentExempt ? "VERIFIED" : "UNVERIFIED"}
               </span>
             </div>
+
             {contract && (
-                <div className="py-2">
-                <span className="text-gray-400 block mb-1">Interacting Contract</span>
-                <span className="text-xs sm:text-sm text-gray-300 break-all font-mono bg-gray-900/50 p-2 rounded block border border-gray-800">
-                    {contract}
+              <div className="md:col-span-2 flex flex-col sm:flex-row justify-between sm:items-center px-3 py-2 bg-purple-500/5 border border-purple-500/10 rounded-lg">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-gray-500 block mb-1 sm:mb-0">Target Contract</span>
+                <span className="text-[10px] sm:text-xs text-pink-400 break-all font-mono block">
+                  {contract}
                 </span>
-                </div>
+              </div>
             )}
           </div>
         </div>
-      </motion.div>
+      </m.div>
     </div>
   );
 }

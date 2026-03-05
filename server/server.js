@@ -22,6 +22,7 @@ const PORT = process.env.PORT || 5000;
 
 const allowedOrigins = [
   "http://localhost:3000",
+  "http://localhost:3001",
   "https://txshield.xyz",
   "https://www.txshield.xyz",
   /\.vercel\.app$/, // This Regex allows ANY Vercel preview or production branch

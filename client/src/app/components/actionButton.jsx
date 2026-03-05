@@ -12,7 +12,7 @@ export default function ActionButtons({ isVisible, onSimulateAgain }) {
       {/* Proceed Button */}
       <button
         onClick={handleProceed}
-        className="px-8 py-3.5 bg-gradient-to-r from-primary-400 to-secondary-500 hover:from-primary-500 hover:to-secondary-600 text-white font-semibold rounded-xl shadow-md hover:shadow-primary-400/30 transition-all duration-300 flex items-center justify-center group"
+        className="px-8 py-3.5 bg-gradient-to-r from-primary-400 to-secondary-500 hover:from-primary-500 hover:to-secondary-600 text-white font-semibold rounded-xl shadow-md hover:shadow-primary-400/30 transition-all duration-300 flex items-center justify-center group glitch-hover"
       >
         <i className="fas fa-paper-plane mr-3 transition-transform group-hover:translate-x-1"></i>
         <span className="tracking-wide">Proceed with Transaction</span>
@@ -24,7 +24,7 @@ export default function ActionButtons({ isVisible, onSimulateAgain }) {
       {/* Simulate Again Button */}
       <button
         onClick={onSimulateAgain}
-        className="px-8 py-3.5 bg-black border border-primary-400 hover:bg-primary-900 text-primary-300 font-medium rounded-xl transition-all duration-300 flex items-center justify-center group"
+        className="px-8 py-3.5 bg-black border border-primary-400 hover:bg-primary-900 text-primary-300 font-medium rounded-xl transition-all duration-300 flex items-center justify-center group glitch-hover"
       >
         <i className="fas fa-redo mr-3 transition-transform group-hover:rotate-180"></i>
         <span>Simulate Again</span>

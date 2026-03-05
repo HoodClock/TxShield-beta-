@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Sparkles, Bot } from "lucide-react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 export default function Recommendations({
   onGenerate,
@@ -71,7 +71,7 @@ export default function Recommendations({
   };
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
@@ -83,14 +83,14 @@ export default function Recommendations({
         <div className={`absolute bottom-[-20%] left-[-20%] w-64 h-64 ${theme.bgGlow2} opacity-5 rounded-full blur-2xl pointer-events-none`} />
 
         <div className="flex items-center gap-4 mb-6 relative z-10">
-          <motion.div
+          <m.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 260, damping: 20 }}
             className={`${theme.iconBg} p-3 rounded-full shadow-inner`}
           >
             <Sparkles className={`${theme.iconColor} w-6 h-6 drop-shadow-glow`} />
-          </motion.div>
+          </m.div>
           <h3 className={`text-3xl font-semibold tracking-wide ${theme.textGradient} text-transparent bg-clip-text drop-shadow-md`}>
             AI Security Insights
           </h3>
@@ -98,7 +98,7 @@ export default function Recommendations({
 
         {!generated ? (
           <div className="text-center relative z-10">
-            <motion.button
+            <m.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
               onClick={handleClick}
@@ -119,7 +119,7 @@ export default function Recommendations({
               ) : (
                 "Generate Recommendations"
               )}
-            </motion.button>
+            </m.button>
           </div>
         ) : (
           <div className="space-y-4 mt-6 relative z-10">
@@ -128,7 +128,7 @@ export default function Recommendations({
                 .split("\n")
                 .filter((line) => line.trim() !== "")
                 .map((line, idx) => (
-                  <motion.div
+                  <m.div
                     key={idx}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -141,10 +141,10 @@ export default function Recommendations({
                     <p className="text-gray-300 leading-relaxed text-base group-hover:text-gray-100 transition-colors">
                       {line}
                     </p>
-                  </motion.div>
+                  </m.div>
                 ))
             ) : (
-              <motion.div 
+              <m.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className="flex flex-col items-center justify-center py-8"
@@ -153,14 +153,14 @@ export default function Recommendations({
                 <p className="text-yellow-400 font-medium text-center">
                   No recommendations available. Try generating again.
                 </p>
-              </motion.div>
+              </m.div>
             )}
           </div>
         )}
 
         {/* AI Loading animation */}
         {isLoading && (
-          <motion.div 
+          <m.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -172,16 +172,16 @@ export default function Recommendations({
               </div>
               <div className={`absolute -inset-2 border-4 ${theme.loadingRing} rounded-full animate-spin-slow pointer-events-none`}></div>
             </div>
-            <motion.p 
+            <m.p 
               className={`mt-6 ${theme.loadingIcon} font-medium tracking-wide`}
               animate={{ opacity: [0.6, 1, 0.6] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
               Analyzing your security data...
-            </motion.p>
+            </m.p>
             <div className="mt-4 flex gap-2">
               {[...Array(3)].map((_, i) => (
-                <motion.div
+                <m.div
                   key={i}
                   className={`w-2 h-2 ${theme.loadingDot} rounded-full`}
                     animate={{ y: [0, -5, 0] }}
@@ -193,9 +193,9 @@ export default function Recommendations({
                 />
               ))}
             </div>
-          </motion.div>
+          </m.div>
         )}
       </div>
-    </motion.div>
+    </m.div>
   );
 }

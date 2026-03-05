@@ -1,165 +1,129 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { FiGitBranch, FiChevronDown, FiZap, FiType, FiHash, FiUser, FiUserCheck, FiTrendingUp, FiDollarSign } from "react-icons/fi";
+import { m } from "framer-motion";
+import { FiGitBranch, FiZap, FiType, FiHash, FiUser, FiUserCheck, FiTrendingUp, FiDollarSign } from "react-icons/fi";
 
 export default function TransactionDetails({
   itemVariants,
-  toggleSection,
-  expandedSections,
   simulateData,
+  requestData,
   gasPercent,
   gasEstimated,
   chain,
 }) {
   return (
-    <motion.div variants={itemVariants} className="group gradient-border-card">
-      <button
-        onClick={() => toggleSection("txDetails")}
-        className="card-inner p-4 sm:p-6 w-full"
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 sm:gap-4">
-            <div className="icon-wrapper">
-              <FiGitBranch className="h-5 w-5 text-purple-400" />
-            </div>
-            <h2 className="text-base sm:text-lg font-bold text-white text-left">
-              Transaction Details
-            </h2>
+    <m.div
+      variants={itemVariants}
+      className="relative bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-hidden"
+    >
+      <div className="relative z-10 p-4 sm:p-5 w-full flex items-center justify-between border-b border-white/5">
+        <div className="flex items-center gap-4">
+          <div className="p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/10">
+            <FiGitBranch className="h-4 w-4 sm:h-5 sm:w-5 text-gray-300" />
           </div>
-          <motion.div
-            animate={{ rotate: expandedSections.txDetails ? 180 : 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <FiChevronDown className="h-5 w-5 text-slate-400" />
-          </motion.div>
+          <h2 className="text-sm sm:text-base font-bold text-white tracking-widest uppercase font-mono text-left">
+            Transaction Schema
+          </h2>
         </div>
-      </button>
+      </div>
 
-      {expandedSections.txDetails && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.3 }}
-          className="card-inner p-4 sm:p-6 pt-0 space-y-4"
-        >
+      <div className="relative z-10 px-4 sm:px-5 pb-5 mt-4">
+        <div>
           {/* Transaction Details Fields */}
-          <div className="space-y-5">
+          <div className="grid grid-cols-2 gap-3 mt-2">
             {[
               {
-                label: "Type",
+                label: "Payload",
                 value:
                   simulateData.transferType === "eth"
-                    ? "Native ETH Transfer"
+                    ? "Native Transfer"
                     : "Token Transfer",
-                icon: <FiType className="h-4 w-4 text-gray-400 group-hover/item:text-gray-300 transition-colors" />,
+                icon: <FiType className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
               },
               {
-                label: "Amount",
-                value: `${simulateData.amount} ${simulateData.symbol}`,
-                icon: <FiHash className="h-4 w-4 text-gray-400 group-hover/item:text-gray-300 transition-colors" />,
+                label: "Value",
+                value: requestData?.amount ? `${requestData.amount} ${requestData.symbol || "ETH"}` : "Unknown",
+                icon: <FiHash className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
               },
               {
-                label: "From",
-                value: simulateData.from,
-                mono: true,
-                icon: <FiUser className="h-4 w-4 text-gray-400 group-hover/item:text-gray-300 transition-colors" />,
+                label: "Profit Detected",
+                value: simulateData.isProfit ? "Yes" : "No",
+                icon: <FiTrendingUp className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
               },
-              { 
-                label: "To", 
-                value: simulateData.to, 
+              {
+                label: "Target Hash",
+                value: requestData?.contractAddress || "Unknown",
                 mono: true,
-                icon: <FiUserCheck className="h-4 w-4 text-gray-400 group-hover/item:text-gray-300 transition-colors" />, 
+                icon: <FiUserCheck className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
               },
             ].map((item, idx) => (
-              <motion.div
+              <m.div
                 key={idx}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.05 }}
-                className="group/item pb-4 border-b border-slate-700/30 last:pb-0 last:border-b-0"
+                className="group/item relative p-3 rounded-xl overflow-hidden bg-black/40 border border-white/5 flex flex-col justify-center"
               >
-                <div className="flex items-center gap-2 mb-1">
+                <div className="flex items-center gap-2 mb-1 pl-2">
                   {item.icon}
-                  <label className="text-xs sm:text-sm font-medium text-gray-400 group-hover/item:text-gray-300 transition-colors">
+                  <label className="text-[10px] font-mono uppercase tracking-widest text-gray-500">
                     {item.label}
                   </label>
                 </div>
                 <p
-                  className={`text-white font-semibold mt-1 pl-6 ${
-                    item.mono ? "font-mono text-xs sm:text-sm break-all" : ""
-                  } group-hover/item:text-cyan-200 transition-colors`}
+                  className={`text-gray-300 font-semibold pl-8 ${item.mono ? "font-mono text-xs truncate" : "text-sm"
+                    }`}
                 >
                   {item.value}
                 </p>
-              </motion.div>
+              </m.div>
             ))}
           </div>
 
-          {/* Gas Analysis - Full Width Below */}
-          <div className="gradient-border-card pt-2">
-            <div className="card-inner p-4 sm:p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="icon-wrapper !w-10 !h-10">
-                  <FiZap className="h-4 w-4 text-yellow-400" />
-                </div>
-                <h3 className="font-bold text-white text-sm sm:text-base">
-                  Gas Analysis
-                </h3>
+          {/* Compact Gas Analysis Banner */}
+          <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-4 p-3 rounded-xl border border-white/10 bg-[#0a0a0a] overflow-hidden relative">
+            {/* Left: Energy Dial & title */}
+            <div className="flex items-center gap-4 relative z-10 w-full sm:w-auto">
+              <div className="relative w-12 h-12 rounded-full flex items-center justify-center bg-black border border-white/10">
+                <svg className="absolute inset-0 w-full h-full -rotate-90">
+                  <circle cx="50%" cy="50%" r="45%" fill="transparent" stroke="rgba(255,255,255,0.1)" strokeWidth="3" />
+                  <circle
+                    cx="50%" cy="50%" r="45%" fill="transparent" stroke="#ffffff" strokeWidth="3"
+                    strokeDasharray={`${2 * Math.PI * 22}`}
+                    strokeDashoffset={`${2 * Math.PI * 22 * (1 - gasPercent / 100)}`}
+                    className="transition-all duration-1000 ease-out origin-center"
+                  />
+                </svg>
+                <span className="text-white font-bold font-mono text-xs">{gasPercent}%</span>
               </div>
+              <div className="flex flex-col">
+                <span className="text-white font-mono font-bold uppercase tracking-widest text-[10px] flex items-center gap-1">
+                  <FiZap className="h-3 w-3" /> Network Energy
+                </span>
+                <span className="text-gray-400 font-mono text-[10px]">
+                  Limit: {gasEstimated}
+                </span>
+              </div>
+            </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-6 items-center">
-                <motion.div
-                  className="gauge-circle"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.6, delay: 0.1 }}
-                >
-                  <div className="gauge-inner">
-                    <div className="text-xl font-bold text-blue-400">
-                      {gasPercent}%
-                    </div>
-                    <div className="text-xs text-slate-400">
-                      {gasEstimated} gas
-                    </div>
-                  </div>
-                </motion.div>
-
-                <div className="space-y-3 col-span-1">
-                  <div className="flex flex-col">
-                    <div className="flex items-center gap-2 mb-1">
-                      <FiTrendingUp className="text-slate-400 h-4 w-4" />
-                      <span className="text-slate-400 text-xs sm:text-sm">
-                        Gas Price
-                      </span>
-                    </div>
-                    <span className="text-white font-semibold text-sm sm:text-base pl-6">
-                      {simulateData?.gas?.priceGwei ?? "N/A"} Gwei
-                    </span>
-                  </div>
-                </div>
-
-                <div className="space-y-3 col-span-1">
-                  <div className="flex flex-col">
-                    <div className="flex items-center gap-2 mb-1">
-                      <FiDollarSign className="text-slate-400 h-4 w-4" />
-                      <span className="text-slate-400 text-xs sm:text-sm">
-                        Total Cost
-                      </span>
-                    </div>
-                    <span className="text-yellow-400 font-bold text-sm sm:text-base pl-6">
-                      {simulateData?.gas?.costUsd
-                        ? `$${simulateData.gas.costUsd}`
-                        : "N/A"}
-                    </span>
-                  </div>
-                </div>
+            {/* Right: Metrics */}
+            <div className="flex items-center gap-4 relative z-10 w-full sm:w-auto justify-end divide-x divide-white/10">
+              <div className="flex flex-col items-end pr-4">
+                <span className="text-gray-500 uppercase tracking-widest font-mono text-[10px]">Gas Used</span>
+                <span className="font-mono font-semibold text-white text-sm">{simulateData?.gasUsed ?? "N/A"}</span>
+              </div>
+              <div className="flex flex-col items-end pl-4">
+                <span className="text-gray-300 uppercase tracking-widest font-mono text-[10px] flex items-center gap-1">
+                  <FiDollarSign className="h-3 w-3" /> Est. Tax
+                </span>
+                <span className="font-mono font-bold text-gray-200 text-sm">
+                  {simulateData?.estimatedTax ? `${simulateData.estimatedTax} BPS` : "0 BPS"}
+                </span>
               </div>
             </div>
           </div>
-        </motion.div>
-      )}
-    </motion.div>
+        </div>
+      </div>
+    </m.div>
   );
 }
