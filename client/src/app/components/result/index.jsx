@@ -21,7 +21,14 @@ import TransactionSummary from "./TransactionSummary";
 import BytecodeAnalysis from "./BytecodeAnalysis";
 import SolanaDetails from "./SolanaDetails";
 import SolanaLogs from "./SolanaLogs";
-import { mockSimulation, mockHoneypot, mockPhishing, mockSolSimulation, getRiskStyle, themes } from "./utils";
+import {
+  mockSimulation,
+  mockHoneypot,
+  mockPhishing,
+  mockSolSimulation,
+  getRiskStyle,
+  themes,
+} from "./utils";
 
 export default function ResultsDashboard({
   isVisible,
@@ -39,23 +46,23 @@ export default function ResultsDashboard({
 
   // Use mock data for testing, real data when available
   // TESTING: Uncomment the next 3 lines to use mock data
-  const finalSimulation = mockSimulation;
-  const finalHoneypot = mockHoneypot;
-  const finalPhishing = mockPhishing;
-  // const finalSimulation = simulation;
-  // const finalHoneypot = honeypot;
-  // const finalPhishing = phishing;
+  // const finalSimulation = mockSimulation;
+  // const finalHoneypot = mockHoneypot;
+  // const finalPhishing = mockPhishing;
+  const finalSimulation = simulation;
+  const finalHoneypot = honeypot;
+  const finalPhishing = phishing;
   const finalRequestData = requestData;
-  const finalSolSimulation = mockSolSimulation;
-  // const finalSolSimulation = solSimulation;
+  // const finalSolSimulation = mockSolSimulation;
+  const finalSolSimulation = solSimulation;
 
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState("overview");
 
   const tabs = [
-    { id: 'overview', label: 'Overview', icon: FiLayout },
-    { id: 'security', label: 'Security', icon: FiShield },
-    { id: 'deepdive', label: 'Deep Dive', icon: FiCpu },
-    { id: 'insights', label: 'AI Insights', icon: FiTrendingUp }
+    { id: "overview", label: "Overview", icon: FiLayout },
+    { id: "security", label: "Security", icon: FiShield },
+    { id: "deepdive", label: "Deep Dive", icon: FiCpu },
+    { id: "insights", label: "AI Insights", icon: FiTrendingUp },
   ];
 
   useEffect(() => {
@@ -65,9 +72,14 @@ export default function ResultsDashboard({
     };
   }, []);
 
-
-
-  if (!isVisible && !finalSimulation && !finalHoneypot && !finalPhishing && !finalSolSimulation) return null;
+  if (
+    !isVisible &&
+    !finalSimulation &&
+    !finalHoneypot &&
+    !finalPhishing &&
+    !finalSolSimulation
+  )
+    return null;
 
   const t = themes[chain] || themes.EVM;
 
@@ -87,11 +99,11 @@ export default function ResultsDashboard({
     { passed: !honeypotRes.hasMintable },
     { passed: !honeypotRes.hasTradingControl },
     { passed: !(honeypotRes.buyingTax > 10 || honeypotRes.sellingTax > 10) },
-    { passed: !honeypotRes.isTimeHoneypot }
+    { passed: !honeypotRes.isTimeHoneypot },
   ];
 
   const totalChecks = 5;
-  const passedChecks = checkFlags.filter(c => c.passed).length;
+  const passedChecks = checkFlags.filter((c) => c.passed).length;
   const evmRatioText = `${passedChecks}/${totalChecks}`;
 
   const calculatedPassRate = `${Math.round((passedChecks / totalChecks) * 100)}%`;
@@ -110,21 +122,22 @@ export default function ResultsDashboard({
     : simulateData.errorReason || "Transaction would fail";
 
   const isContract = byteData.isContract || false;
-  const warnings = [
-    ...(byteData.warnings || []),
-  ];
+  const warnings = [...(byteData.warnings || [])];
 
   const summary = txHistoryData.summary || {};
   const recentTransfers = txHistoryData.recentTransfers || [];
 
   const rawGasEstimated = simulateData?.gasUsed || "0";
-  const evmGasEstimated = typeof rawGasEstimated === 'string'
-    ? parseInt(rawGasEstimated, 10)
-    : rawGasEstimated;
+  const evmGasEstimated =
+    typeof rawGasEstimated === "string"
+      ? parseInt(rawGasEstimated, 10)
+      : rawGasEstimated;
 
   const EVM_GAS_CAP = 200000;
-  const evmGasPercent = Math.min(100, Math.round((evmGasEstimated / EVM_GAS_CAP) * 100));
-
+  const evmGasPercent = Math.min(
+    100,
+    Math.round((evmGasEstimated / EVM_GAS_CAP) * 100),
+  );
 
   // --- Solana Data Processing ---
   const solData = finalSolSimulation?.data || {};
@@ -142,15 +155,18 @@ export default function ResultsDashboard({
   const solComputeUnits = solSimulationData.computeUnits || 0;
 
   const SOL_COMPUTE_CAP = 200000;
-  const solGasPercent = Math.min(100, Math.round((solComputeUnits / SOL_COMPUTE_CAP) * 100));
-
+  const solGasPercent = Math.min(
+    100,
+    Math.round((solComputeUnits / SOL_COMPUTE_CAP) * 100),
+  );
 
   // --- Unified Status Props ---
-  const executionSuccess = chain === 'SOL' ? solExecutionSuccess : evmExecutionSuccess;
-  const executionMessage = chain === 'SOL' ? solExecutionMessage : evmExecutionMessage;
-  const gasPercent = chain === 'SOL' ? solGasPercent : evmGasPercent;
-  const ratioText = chain === 'SOL' ? "N/A" : evmRatioText;
-
+  const executionSuccess =
+    chain === "SOL" ? solExecutionSuccess : evmExecutionSuccess;
+  const executionMessage =
+    chain === "SOL" ? solExecutionMessage : evmExecutionMessage;
+  const gasPercent = chain === "SOL" ? solGasPercent : evmGasPercent;
+  const ratioText = chain === "SOL" ? "N/A" : evmRatioText;
 
   // Animation variants
   const containerVariants = {
@@ -179,7 +195,9 @@ export default function ResultsDashboard({
   return (
     <div className="min-h-screen w-full bg-transparent text-white p-2 sm:p-4 relative overflow-hidden z-0">
       {/* Dynamic Background based on chain */}
-      <div className={`absolute inset-0 -z-30 overflow-hidden bg-[#0a0a0a] bg-gradient-to-br ${t.bgGradient} to-transparent`}></div>
+      <div
+        className={`absolute inset-0 -z-30 overflow-hidden bg-[#0a0a0a] bg-gradient-to-br ${t.bgGradient} to-transparent`}
+      ></div>
 
       <style jsx global>{`
         /* Hide scrollbar for Chrome, Safari and Opera */
@@ -204,7 +222,10 @@ export default function ResultsDashboard({
         {/* Header */}
         <m.div variants={itemVariants} className="text-center mb-4 sm:mb-6">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold font-mono tracking-wider mb-2">
-            <span className={`text-transparent bg-clip-text ${t.gradText}`}>SECURITY ANALYSIS</span> <span className="text-white">REPORT</span>
+            <span className={`text-transparent bg-clip-text ${t.gradText}`}>
+              SECURITY ANALYSIS
+            </span>{" "}
+            <span className="text-white">REPORT</span>
           </h1>
           <p className="text-xs sm:text-sm text-gray-400 max-w-2xl mx-auto px-4 font-mono">
             {chain} Forensics & Payload Inspection Complete
@@ -223,8 +244,7 @@ export default function ResultsDashboard({
 
         {/* === MAIN GRID === */}
         <div className="grid grid-cols-1 gap-4 sm:gap-6">
-
-          {chain === 'EVM' ? (
+          {chain === "EVM" ? (
             /* ================= EVM LAYOUT ================= */
             <>
               {/* Tab Navigation */}
@@ -236,17 +256,27 @@ export default function ResultsDashboard({
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`relative px-4 py-2.5 rounded-xl font-mono text-xs sm:text-sm font-bold tracking-wide transition-all duration-300 flex items-center gap-2 
-                        ${isActive ? 'text-blue-400 bg-blue-500/10 shadow-[inset_0_0_10px_rgba(59,130,246,0.2)]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                      className={`relative px-4 py-2.5 rounded-xl font-mono text-xs sm:text-sm font-bold tracking-wide transition-all duration-300 flex items-center gap-2
+                        ${isActive ? "text-blue-400 bg-blue-500/10 shadow-[inset_0_0_10px_rgba(59,130,246,0.2)]" : "text-gray-400 hover:text-white hover:bg-white/5"}`}
                     >
                       {isActive && (
                         <m.div
                           layoutId="activeTabBadge"
                           className="absolute inset-0 border border-blue-500/30 rounded-xl"
-                          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 300,
+                            damping: 30,
+                          }}
                         />
                       )}
-                      <Icon className={isActive ? "text-blue-400 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]" : ""} />
+                      <Icon
+                        className={
+                          isActive
+                            ? "text-blue-400 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]"
+                            : ""
+                        }
+                      />
                       <span className="relative z-10">{tab.label}</span>
                     </button>
                   );
@@ -263,13 +293,15 @@ export default function ResultsDashboard({
                 className="space-y-4"
               >
                 {/* --- OVERVIEW TAB --- */}
-                {activeTab === 'overview' && (
+                {activeTab === "overview" && (
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
                     <div className="lg:col-span-2 space-y-4">
                       <TransactionDetails
                         itemVariants={itemVariants}
                         simulateData={simulateData}
-                        requestData={finalRequestData || mockSimulation.requestData}
+                        requestData={
+                          finalRequestData || mockSimulation.requestData
+                        }
                         gasPercent={gasPercent}
                         gasEstimated={evmGasEstimated}
                         chain={chain}
@@ -290,7 +322,7 @@ export default function ResultsDashboard({
                 )}
 
                 {/* --- SECURITY TAB --- */}
-                {activeTab === 'security' && (
+                {activeTab === "security" && (
                   <div className="space-y-4 max-w-7xl mx-auto">
                     <Phishing data={finalPhishing} chain={chain} />
 
@@ -298,7 +330,8 @@ export default function ResultsDashboard({
 
                     <div className="text-center mb-4">
                       <h2 className="text-xl sm:text-2xl font-bold font-mono tracking-wider text-white mb-2 uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">
-                        <span className="grad-word">Honeypot & Security</span> Analysis
+                        <span className="grad-word">Honeypot & Security</span>{" "}
+                        Analysis
                       </h2>
                     </div>
 
@@ -314,12 +347,16 @@ export default function ResultsDashboard({
                       chain={chain}
                     />
 
-                    <HoneypotChecks isVisible={isVisible} data={honeypot} chain={chain} />
+                    <HoneypotChecks
+                      isVisible={isVisible}
+                      data={honeypot}
+                      chain={chain}
+                    />
                   </div>
                 )}
 
                 {/* --- DEEP DIVE TAB --- */}
-                {activeTab === 'deepdive' && (
+                {activeTab === "deepdive" && (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                     <div className="space-y-4">
                       <BytecodeAnalysis
@@ -340,10 +377,12 @@ export default function ResultsDashboard({
                 )}
 
                 {/* --- AI INSIGHTS TAB --- */}
-                {activeTab === 'insights' && (
+                {activeTab === "insights" && (
                   <div className="max-w-7xl mx-auto">
                     <Recommendations
-                      simulationData={chain === 'EVM' ? simulation : solSimulation}
+                      simulationData={
+                        chain === "EVM" ? simulation : solSimulation
+                      }
                       honeypotData={honeypot}
                       onGenerate={onGenerateRecommendation}
                       recommendation={recommendationData}
@@ -358,28 +397,40 @@ export default function ResultsDashboard({
             <>
               {/* Tab Navigation for Solana */}
               <div className="flex flex-wrap items-center justify-center gap-2 mb-4 bg-black/40 p-2 rounded-2xl border border-white/5 shadow-[inset_0_2px_15px_rgba(0,0,0,0.5)] backdrop-blur-md">
-                {tabs.filter(t => t.id !== 'security').map((tab) => {
-                  const Icon = tab.icon;
-                  const isActive = activeTab === tab.id;
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveTab(tab.id)}
-                      className={`relative px-4 py-2.5 rounded-xl font-mono text-xs sm:text-sm font-bold tracking-wide transition-all duration-300 flex items-center gap-2 
-                        ${isActive ? 'text-purple-400 bg-purple-500/10 shadow-[inset_0_0_10px_rgba(168,85,247,0.2)]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
-                    >
-                      {isActive && (
-                        <m.div
-                          layoutId="activeTabBadgeSol"
-                          className="absolute inset-0 border border-purple-500/30 rounded-xl"
-                          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                {tabs
+                  .filter((t) => t.id !== "security")
+                  .map((tab) => {
+                    const Icon = tab.icon;
+                    const isActive = activeTab === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`relative px-4 py-2.5 rounded-xl font-mono text-xs sm:text-sm font-bold tracking-wide transition-all duration-300 flex items-center gap-2
+                        ${isActive ? "text-purple-400 bg-purple-500/10 shadow-[inset_0_0_10px_rgba(168,85,247,0.2)]" : "text-gray-400 hover:text-white hover:bg-white/5"}`}
+                      >
+                        {isActive && (
+                          <m.div
+                            layoutId="activeTabBadgeSol"
+                            className="absolute inset-0 border border-purple-500/30 rounded-xl"
+                            transition={{
+                              type: "spring",
+                              stiffness: 300,
+                              damping: 30,
+                            }}
+                          />
+                        )}
+                        <Icon
+                          className={
+                            isActive
+                              ? "text-purple-400 drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]"
+                              : ""
+                          }
                         />
-                      )}
-                      <Icon className={isActive ? "text-purple-400 drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]" : ""} />
-                      <span className="relative z-10">{tab.label}</span>
-                    </button>
-                  );
-                })}
+                        <span className="relative z-10">{tab.label}</span>
+                      </button>
+                    );
+                  })}
               </div>
 
               <m.div
@@ -391,7 +442,7 @@ export default function ResultsDashboard({
                 className="space-y-4"
               >
                 {/* --- OVERVIEW TAB (SOLANA) --- */}
-                {activeTab === 'overview' && (
+                {activeTab === "overview" && (
                   <div className="space-y-4">
                     <SolanaDetails
                       itemVariants={itemVariants}
@@ -402,7 +453,7 @@ export default function ResultsDashboard({
                 )}
 
                 {/* --- DEEP DIVE TAB (SOLANA) --- */}
-                {activeTab === 'deepdive' && (
+                {activeTab === "deepdive" && (
                   <div className="space-y-4">
                     <SolanaLogs
                       itemVariants={itemVariants}
@@ -413,7 +464,7 @@ export default function ResultsDashboard({
                 )}
 
                 {/* --- AI INSIGHTS TAB (SOLANA) --- */}
-                {activeTab === 'insights' && (
+                {activeTab === "insights" && (
                   <div className="max-w-7xl mx-auto">
                     <Recommendations
                       simulationData={solSimulation}
@@ -430,11 +481,7 @@ export default function ResultsDashboard({
         </div>
 
         {/* Back to Simulate Button */}
-        <BackToSimulate
-          itemVariants={itemVariants}
-          t={t}
-          chain={chain}
-        />
+        <BackToSimulate itemVariants={itemVariants} t={t} chain={chain} />
       </m.div>
     </div>
   );
