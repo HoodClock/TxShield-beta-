@@ -1,14 +1,16 @@
 import axios from "axios";
 
 // for local.
-// const BASE_URL = "http://localhost:5000";
+const rawBaseUrl = "http://localhost:5000";
 
 // for testing.
 // const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 // for prod-envoirnment
-const rawBaseUrl = process.env.NEXT_PUBLIC_PROD_BASE_URL || "";
-const BASE_URL = rawBaseUrl.endsWith("/") ? rawBaseUrl.slice(0, -1) : rawBaseUrl;
+// const rawBaseUrl = process.env.NEXT_PUBLIC_PROD_BASE_URL || "";
+const BASE_URL = rawBaseUrl.endsWith("/")
+  ? rawBaseUrl.slice(0, -1)
+  : rawBaseUrl;
 
 // eth api's
 export const simulateTx = async (formData) => {
