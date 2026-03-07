@@ -45,7 +45,11 @@ contract TxShieldHoneypot is
         }
 
         // Mint access detection
-        (bool isMintable, uint256 mintScore, string memory mintReason) = _checkMint(targetContract);
+        (
+            bool isMintable,
+            uint256 mintScore,
+            string memory mintReason
+        ) = _checkMint(targetContract);
         result.isMintable = isMintable;
         result.mintScore = mintScore;
         result.mintReason = mintReason;
