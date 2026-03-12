@@ -82,8 +82,8 @@ function keyMatrics({
 
   if (!isVisible || !data) return null;
 
-  const checks = data.checks || {};
-  if (Object.keys(checks).length === 0) {
+  const honeypotRes = data.honeypotResponse || data.checks || {};
+  if (Object.keys(honeypotRes).length === 0) {
     return (
       <div className="relative overflow-hidden rounded-xl border border-white/10 bg-black/40 p-6 mb-6 shadow-[inset_0_0_20px_rgba(255,255,255,0.02)]">
         <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.25)_50%)] bg-[length:100%_4px] opacity-20 pointer-events-none"></div>
@@ -115,7 +115,9 @@ function keyMatrics({
         <p className="relative z-10 text-gray-500 font-mono text-sm pl-16">
           {data.verdict ||
             data.message ||
-            "This contract didn’t trigger any honeypot detection scripts."}
+            data.honeypotResponse?.errorReason ||
+            data.honeypotResponse?.mintReason ||
+            "This contract didn't trigger any honeypot detection scripts."}
         </p>
       </div>
     );
