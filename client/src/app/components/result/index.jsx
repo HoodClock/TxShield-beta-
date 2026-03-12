@@ -12,7 +12,6 @@ import HoneypotChecks from "../honeypotChecks";
 import Recommendations from "../recomendations";
 
 // Local sub-components
-import { FiAlertTriangle } from "react-icons/fi";
 import HeroStatus from "./HeroStatus";
 import TransactionDetails from "./TransactionDetails";
 import BalanceChanges from "./BalanceChanges";
@@ -50,14 +49,12 @@ export default function ResultsDashboard({
   const finalSolSimulation = mockSolSimulation;
   // const finalSolSimulation = solSimulation;
 
-  // const finalSolSimulation = solSimulation;
-
-  const [activeTab, setActiveTab] = useState('simulation');
+  const [activeTab, setActiveTab] = useState('overview');
 
   const tabs = [
-    { id: 'simulation', label: 'Simulation', icon: FiLayout },
-    { id: 'honeypot', label: 'Honeypot', icon: FiShield },
-    { id: 'phishing', label: 'Phishing', icon: FiAlertTriangle },
+    { id: 'overview', label: 'Overview', icon: FiLayout },
+    { id: 'security', label: 'Security', icon: FiShield },
+    { id: 'deepdive', label: 'Deep Dive', icon: FiCpu },
     { id: 'insights', label: 'AI Insights', icon: FiTrendingUp }
   ];
 
@@ -265,58 +262,43 @@ export default function ResultsDashboard({
                 variants={containerVariants}
                 className="space-y-4"
               >
-                {/* --- SIMULATION TAB --- */}
-                {activeTab === 'simulation' && (
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-                      <div className="lg:col-span-2 space-y-4">
-                        <TransactionDetails
-                          itemVariants={itemVariants}
-                          simulateData={simulateData}
-                          requestData={finalRequestData || mockSimulation.requestData}
-                          gasPercent={gasPercent}
-                          gasEstimated={evmGasEstimated}
-                          chain={chain}
-                        />
-                        <BalanceChanges
-                          itemVariants={itemVariants}
-                          simulateData={simulateData}
-                        />
-                      </div>
-                      <div className="space-y-4">
-                        <TransactionSummary
-                          itemVariants={itemVariants}
-                          txHistoryData={txHistoryData}
-                          summary={summary}
-                        />
-                      </div>
+                {/* --- OVERVIEW TAB --- */}
+                {activeTab === 'overview' && (
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+                    <div className="lg:col-span-2 space-y-4">
+                      <TransactionDetails
+                        itemVariants={itemVariants}
+                        simulateData={simulateData}
+                        requestData={finalRequestData || mockSimulation.requestData}
+                        gasPercent={gasPercent}
+                        gasEstimated={evmGasEstimated}
+                        chain={chain}
+                      />
+                      <BalanceChanges
+                        itemVariants={itemVariants}
+                        simulateData={simulateData}
+                      />
                     </div>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-                      <div className="space-y-4">
-                        <BytecodeAnalysis
-                          itemVariants={itemVariants}
-                          isContract={isContract}
-                          byteData={byteData}
-                          warnings={warnings}
-                          t={t}
-                        />
-                      </div>
-                      <div className="space-y-4">
-                        <RecentTransfers
-                          itemVariants={itemVariants}
-                          recentTransfers={recentTransfers}
-                        />
-                      </div>
+                    <div className="space-y-4">
+                      <TransactionSummary
+                        itemVariants={itemVariants}
+                        txHistoryData={txHistoryData}
+                        summary={summary}
+                      />
                     </div>
                   </div>
                 )}
 
-                {/* --- HONEYPOT TAB --- */}
-                {activeTab === 'honeypot' && (
+                {/* --- SECURITY TAB --- */}
+                {activeTab === 'security' && (
                   <div className="space-y-4 max-w-7xl mx-auto">
+                    <Phishing data={finalPhishing} chain={chain} />
+
+                    <div className="connector-line my-4"></div>
+
                     <div className="text-center mb-4">
                       <h2 className="text-xl sm:text-2xl font-bold font-mono tracking-wider text-white mb-2 uppercase drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">
-                        <span className="grad-word">Honeypot Tracker</span> Analysis
+                        <span className="grad-word">Honeypot & Security</span> Analysis
                       </h2>
                     </div>
 
@@ -332,14 +314,28 @@ export default function ResultsDashboard({
                       chain={chain}
                     />
 
-                    <HoneypotChecks isVisible={isVisible} data={finalHoneypot} chain={chain} />
+                    <HoneypotChecks isVisible={isVisible} data={honeypot} chain={chain} />
                   </div>
                 )}
 
-                {/* --- PHISHING TAB --- */}
-                {activeTab === 'phishing' && (
-                  <div className="space-y-4 max-w-7xl mx-auto">
-                    <Phishing data={finalPhishing} chain={chain} />
+                {/* --- DEEP DIVE TAB --- */}
+                {activeTab === 'deepdive' && (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+                    <div className="space-y-4">
+                      <BytecodeAnalysis
+                        itemVariants={itemVariants}
+                        isContract={isContract}
+                        byteData={byteData}
+                        warnings={warnings}
+                        t={t}
+                      />
+                    </div>
+                    <div className="space-y-4">
+                      <RecentTransfers
+                        itemVariants={itemVariants}
+                        recentTransfers={recentTransfers}
+                      />
+                    </div>
                   </div>
                 )}
 
@@ -395,7 +391,7 @@ export default function ResultsDashboard({
                 className="space-y-4"
               >
                 {/* --- OVERVIEW TAB (SOLANA) --- */}
-                {activeTab === 'simulation' && (
+                {activeTab === 'overview' && (
                   <div className="space-y-4">
                     <SolanaDetails
                       itemVariants={itemVariants}
@@ -406,7 +402,7 @@ export default function ResultsDashboard({
                 )}
 
                 {/* --- DEEP DIVE TAB (SOLANA) --- */}
-                {activeTab === 'honeypot' && (
+                {activeTab === 'deepdive' && (
                   <div className="space-y-4">
                     <SolanaLogs
                       itemVariants={itemVariants}
