@@ -74,12 +74,75 @@ export const mockSimulation = {
           type: "ERC-20"
         },
         {
+          hash: "0xff224c42f41acbd69902f97260ac42b36c633b682435869c413d33f706b99267",
+          from: "0x00e2b6d170740c15bf9fb01d0b6e77c0d4510e32",
+          to: "0x514910771af9ca656af840dff83e8264ecf986ca",
+          symbol: "DOG",
+          amount: "1000000000000000000",
+          date: "2/25/2026, 5:19:47 AM",
+          type: "ERC-20"
+        },
+        {
           hash: "0xd112aa05bd62a0b55cb6d651d95b8741937b49328ebcbab2f78b472edd761b00",
           from: "0x5497b1ab5bb59b194e25764ea0b61871b122a43f",
           to: "0x514910771af9ca656af840dff83e8264ecf986ca",
           symbol: "SHIB",
           amount: "1000000000000000000",
           date: "2/22/2026, 3:07:47 AM",
+          type: "ERC-20"
+        },
+        {
+          hash: "0x7faa17a2d2e9bff8031c10905b8c16fd40b2aefa142e7212b01401dde78849ed",
+          from: "0x23400dc0cc44fb8f295fd4c73bb19528066b59f3",
+          to: "0x514910771af9ca656af840dff83e8264ecf986ca",
+          symbol: "B0x",
+          amount: "1000000000000000000",
+          date: "2/21/2026, 10:06:23 PM",
+          type: "ERC-20"
+        },
+        {
+          hash: "0xcd81b594b9c22fc31dbf87d9c67a9d955a56baa1370aa9bb8953b198b58a9fc8",
+          from: "0x4921bb864de2e557939b074be20ff4b98723b86b",
+          to: "0x514910771af9ca656af840dff83e8264ecf986ca",
+          symbol: "WAR",
+          amount: "1000000000000000000",
+          date: "2/20/2026, 9:22:11 PM",
+          type: "ERC-20"
+        },
+        {
+          hash: "0xbef7f684a457678da49a83548a6958d519ee1e6318db6ba44df9f6393fee10f3",
+          from: "0x514910771af9ca656af840dff83e8264ecf986ca",
+          to: "0x20145c5e27408b5c1cf2239d0115ee3bbc27cbd7",
+          symbol: "",
+          amount: "5200000000000000000000",
+          date: "2/19/2026, 2:59:59 PM",
+          type: "ERC-20"
+        },
+        {
+          hash: "0x00238735fe9d8b5a2646a55b05dd62cc46aa894a3d6f9158d61a56a9fb7d832d",
+          from: "0x496a35a65c00b4aed125d19df3871e6b4cb05188",
+          to: "0x514910771af9ca656af840dff83e8264ecf986ca",
+          symbol: "REKT",
+          amount: "1000000000000000000",
+          date: "2/18/2026, 5:49:23 AM",
+          type: "ERC-20"
+        },
+        {
+          hash: "0x2c69bd7b1eac4867134a7f5953d57f4408fd154814448f6e834af9c7cb974062",
+          from: "0x290b3b9f7661a6834135be44c3475aef987fa3b2",
+          to: "0x514910771af9ca656af840dff83e8264ecf986ca",
+          symbol: "DOGE",
+          amount: "1000000000000000000",
+          date: "2/13/2026, 1:20:11 AM",
+          type: "ERC-20"
+        },
+        {
+          hash: "0xa5b91bb976f9d45ef767071a46c3712ca9567339c214090b7b46808049567f44",
+          from: "0x40fa604e31d85b0cb1478b50007a0b10cd4e2d62",
+          to: "0x514910771af9ca656af840dff83e8264ecf986ca",
+          symbol: "YFTE",
+          amount: "10000000000000000",
+          date: "2/3/2026, 12:15:23 AM",
           type: "ERC-20"
         }
       ]
@@ -127,7 +190,7 @@ export const mockPhishing = {
       isContract: true,
       isScam: true,
       confidence: "high",
-      reason: "Bytecode contains 10 CALL opcodes.",
+      reason: "Bytecode contains 10 CALL opcodes (likely ETH forwarding pattern).",
       checks: {
         callOpcodeCount: 10
       },
@@ -139,7 +202,7 @@ export const mockPhishing = {
     },
     permitCheck: {
       isProxy: false,
-      reason: "No permit signature found."
+      reason: "No proxy pattern found in bytecode."
     },
     domainCheck: {
       hasSuspiciousLinks: false,
