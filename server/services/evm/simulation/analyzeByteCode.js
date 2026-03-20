@@ -1,93 +1,84 @@
 const { decideChains } = require("../../../config/provider");
 const { getAddress } = require("ethers");
 
-const analyzeBytecode = async (_recipientAddress, _currencySymbol) => {
+const analyzeBytecode = async (recipientAddress, chainId) => {
   try {
-    const provider = decideChains(_currencySymbol)
-    const checksumAddress = getAddress(_recipientAddress);
+    const { provider } = decideChains(chainId);
+    const checksumAddress = getAddress(recipientAddress);
     const byteCode = await provider.getCode(checksumAddress);
 
     if (!byteCode || byteCode === "0x") {
-      return { 
-        isContract: false, 
-        isScam: false, 
-        confidence: "low", 
-        reason: "Address is not a smart contract.", 
-        warnings: [] 
+      return {
+        isContract: false,
+        trustStatus: "Neutral",
+        humanWarning:
+          "This is a standard wallet, not a smart contract. No token logic exists here.",
+        riskFlags: [],
       };
     }
 
-    // opcode set
-    const opCode = {
-      SELFDESTRUCT: "ff",   // kill contract
-      DELEGATECALL: "f4",   // execute in caller context
-      CALLCODE: "f2",       // deprecated delegatecall style
-      CREATE2: "fb",        // predictable contract creation
-      CREATE: "f0",         // normal contract creation
-      CALL: "f1"            // external calls (can siphon ETH)
+    const byteCodeStr = byteCode.toLowerCase();
+    const riskFlags = [];
+    let severityScore = 0;
+
+    // Translate Opcodes to Retail-Friendly Explanations
+    const OPCODES = {
+      SELFDESTRUCT: {
+        hex: "ff",
+        risk: 10,
+        title: "Kill Switch Detected",
+        desc: "The creator can delete this token at any time, instantly wiping its value.",
+      },
+      DELEGATECALL: {
+        hex: "f4",
+        risk: 5,
+        title: "Hidden Logic (Proxy)",
+        desc: "The contract can execute code from other hidden contracts. Often used in scams to change rules after launch, though sometimes used in legitimate upgradeable tokens.",
+      },
+      CREATE2: {
+        hex: "fb",
+        risk: 2,
+        title: "Dynamic Deployment",
+        desc: "Can spawn new contracts on the fly.",
+      },
     };
 
-    const warnings = [];
-    let riskScore = 0;
-
-    for (const [name, hex] of Object.entries(opCode)) {
-      const occurrences = byteCode.toLowerCase().split(hex).length - 1;
-
-      if (occurrences > 0) {
-        warnings.push(`Opcode ${name} found ${occurrences} times`);
-        
-        // Dynamic risk: heavier weight if repeated
-        if (["SELFDESTRUCT", "CREATE2", "DELEGATECALL"].includes(name)) {
-          riskScore += 2 * occurrences;
-        } else {
-          riskScore += 1 * occurrences;
-        }
+    for (const [name, data] of Object.entries(OPCODES)) {
+      if (byteCodeStr.includes(data.hex)) {
+        riskFlags.push({
+          threatLevel: data.risk >= 5 ? "HIGH" : "MEDIUM",
+          title: data.title,
+          description: data.desc,
+        });
+        severityScore += data.risk;
       }
     }
 
-    // 🔥 Enhanced decision logic
-    let isScam = false;
-    let confidence = "low";
-    let reason = "";
+    // Determine Retail-Friendly Status
+    let trustStatus = "Safe";
+    let humanWarning =
+      "No immediately obvious malicious opcodes detected. (Note: Always simulate transactions to be sure).";
 
-    if (riskScore >= 5) {
-      isScam = true;
-      confidence = "high";
-      reason = `Multiple high-risk opcodes found (${warnings.join(", ")}), indicates probable malicious intent.`;
-    } else if (riskScore >= 3) {
-      isScam = true;
-      confidence = "medium";
-      reason = `Some risky opcodes detected: ${warnings.join(", ")}. May be unsafe.`;
-    } else if (riskScore >= 1) {
-      isScam = false;
-      confidence = "medium";
-      reason = `Minor suspicious opcodes present: ${warnings.join(", ")}. Likely okay but warrants caution.`;
-    } else {
-      isScam = false;
-      confidence = "high";
-      reason = "No dangerous opcodes found in bytecode.";
+    if (severityScore >= 10) {
+      trustStatus = "Critical Risk";
+      humanWarning =
+        "EXTREME DANGER: This contract contains a kill-switch or severely malicious logic.";
+    } else if (severityScore >= 5) {
+      trustStatus = "Suspicious";
+      humanWarning =
+        "Caution: This contract has hidden logic or proxy capabilities. The developer could change the token's behavior.";
     }
 
     return {
       isContract: true,
-      isScam,
-      confidence,
-      reason,
-      warnings,
-      address: _recipientAddress
+      trustStatus,
+      humanWarning,
+      riskFlags,
     };
   } catch (error) {
-    console.error("Bytecode analysis failed:", error);
-    return { 
-      isContract: false, 
-      isScam: false, 
-      confidence: "low", 
-      reason: "Analysis failed due to error.", 
-      warnings: [], 
-      error: error.message 
-    };
+    console.error("Bytecode analysis failed:", error.message);
+    return { isContract: false, trustStatus: "Unknown", error: error.message };
   }
 };
 
-
-module.exports = analyzeBytecode;
+module.exports = { analyzeBytecode };

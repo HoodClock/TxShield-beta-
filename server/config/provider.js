@@ -1,21 +1,25 @@
 const { ethers } = require("ethers");
-const { Connection } = require("@solana/web3.js");
 require("dotenv").config();
 
-const decideChains = (chain) => {
-  switch (chain) {
-    case "ETH":
-      return new ethers.JsonRpcProvider(process.env.ETH_MAINNET_NET_URL);
+const EVM_NETWORKS = {
+  1: { name: "Ethereum", rpcUrl: process.env.ETH_MAINNET_NET_URL },
+  56: { name: "BNB", rpcUrl: process.env.BNB_MAINNET_NET_URL },
+  8453: { name: "Base", rpcUrl: process.env.BASE_MAINNET_NET_URL },
+  42161: { name: "Arbitrum", rpcUrl: process.env.ARBITRUM_MAINNET_NET_URL },
+};
 
-    case "BNB":
-      return new ethers.JsonRpcProvider(process.env.BNB_MAINNET_NET_URL);
+const decideChains = (chainId) => {
+  const config = EVM_NETWORKS[Number(chainId)];
 
-    case "SOL":
-      return new Connection(process.env.SOL_MAINET_NET_URL, "confirmed");
-
-    default:
-      throw new Error("Unsupported Chain");
+  if (!config) {
+    throw new Error("Unsupported Chain");
   }
+
+  return {
+    name: config.name,
+    provider: new ethers.JsonRpcProvider(config.rpcUrl),
+    rpcUrl: config.rpcUrl,
+  };
 };
 
 module.exports = { decideChains };
