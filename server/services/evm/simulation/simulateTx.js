@@ -1,12 +1,10 @@
 const { ethers } = require("ethers");
-const { Network, Alchemy } = require("alchemy-sdk");
 const axios = require("axios");
 require("dotenv").config();
 const redisClient = require("../../../config/redisClient");
 const { generateChacheKey } = require("../../../utils/cache");
 
 const EXPIRY_SECONDS = process.env.REDIS_EXPIRY_SECONDS || 3600;
-const ALCHEMY_URL = process.env.ETH_MAINNET_NET_URL;
 
 const PHANTOM_ADDRESS = "0x0000000000000000000000000000000000008888";
 
@@ -74,10 +72,12 @@ const _runSimulation = async (
   txData,
   valueInWeiHex,
   expectedAmount,
+  rpcUrl,
 ) => {
   // prepareing the data & handling the empty data
   const token = tokenAddress || ethers.ZeroAddress;
   const watch = watchToken || ethers.ZeroAddress;
+
   // to normalize amount
   const normalizeHex = (hex) => {
     if (!hex || hex === "0x") return "0x0";
@@ -161,14 +161,14 @@ const _runSimulation = async (
 
     // 1.simulateExecution
     try {
-      simulationExec = await axios.post(ALCHEMY_URL, payloadSimulateExec);
+      simulationExec = await axios.post(rpcUrl, payloadSimulateExec);
     } catch (e) {
       simulationExec = { data: { error: e.response?.data || e } };
       console.warn("⚠️ Alchemy Exec Failed:", e.message);
     }
 
     // 3. Phantom_SmartContract_simulation
-    phantomExec = await axios.post(ALCHEMY_URL, phantomPayload, {
+    phantomExec = await axios.post(rpcUrl, phantomPayload, {
       timeout: 10000,
     });
 
@@ -233,6 +233,7 @@ const _runSimulation = async (
 
 // for caching the response
 const getSimulate = async (
+  rpcUrl,
   userAddress,
   txTo,
   tokenAddress,
@@ -241,12 +242,14 @@ const getSimulate = async (
   txData,
   valueInWei,
   expectedAmount,
+  chainId,
 ) => {
   const cachePayload = {
+    chainId: chainId.toString(),
     userAddress: userAddress.toLowerCase(),
     txTo: txTo.toLowerCase(),
     tokenAddress: tokenAddress.toLowerCase(),
-    watchToken: watchToken.toLowerCase(),
+    watchToken: watchToken,
     watchList: watchList,
     txData: txData.toString(),
     valueInWei: valueInWei.toString(),
@@ -261,6 +264,7 @@ const getSimulate = async (
   }
 
   const simResult = await _runSimulation(
+    rpcUrl,
     userAddress,
     txTo,
     tokenAddress,
@@ -280,4 +284,4 @@ const getSimulate = async (
   return simResult;
 };
 
-module.exports = getSimulate;
+module.exports = { getSimulate };

@@ -1,6 +1,6 @@
 // all evm-simulation based module
 module.exports = {
-    analyzeByteCode: require("./analyzeByteCode"),
-    getTransactionHistory: require("./getTransferHistory"),
-    getSimulate: require('./simulateTx')
-}
+  analyzeBytecode: require("./analyzeByteCode"),
+  getTransferHistory: require("./getTransferHistory"),
+  getSimulate: require("./simulateTx"),
+};

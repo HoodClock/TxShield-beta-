@@ -1,118 +1,108 @@
-// services/getTransferHistory.js
 const axios = require("axios");
 
-// Helper to convert Unix‐timestamp string → human‐readable date
+const EXPLORER_CONFIG = {
+  1: {
+    url: "https://api.etherscan.io/api",
+    key: process.env.ETHERSCAN_API_KEY,
+  },
+  56: {
+    url: "https://api.bscscan.com/api",
+    key: process.env.ETHERSCAN_API_KEY,
+  },
+  8453: {
+    url: "https://api.basescan.org/api",
+    key: process.env.ETHERSCAN_API_KEY,
+  },
+  42161: {
+    url: "https://api.arbiscan.io/api",
+    key: process.env.ETHERSCAN_API_KEY,
+  },
+};
+
 function formatTimestamp(ts) {
   const date = new Date(parseInt(ts, 10) * 1000);
   return date.toLocaleString("en-US", { timeZone: "UTC" });
 }
 
-const getTransferHistory = async (_recipientAddress) => {
+const getTransferHistory = async (targetAddress, chainId) => {
   try {
-    if (!_recipientAddress || typeof _recipientAddress !== "string") {
-      throw new Error("Invalid recipient address");
+    const explorer = EXPLORER_CONFIG[Number(chainId)];
+    if (!explorer || !explorer.key) {
+      // If we don't have an API key for this chain, fail gracefully
+      return {
+        success: false,
+        activityPulse: "Unknown (Explorer Not Configured)",
+      };
     }
 
-    const etherScan_Api_Key = process.env.ETHERSCAN_API_KEY;
-    const etherScan_Endpoint = process.env.ETHERSCAN_API_ENDPOINT;
-
-    // STEP 1: Fetch up to 10 recent ERC-20 token transfers
-    const tokenTxRes = await axios.get(etherScan_Endpoint, {
+    // Fetch ERC-20 token transfers
+    const response = await axios.get(explorer.url, {
       params: {
         module: "account",
         action: "tokentx",
-        address: _recipientAddress,
+        contractaddress: targetAddress, // Look for transfers OF this token
         page: 1,
-        offset: 10,
+        offset: 50, // Get a larger sample size to determine activity
         sort: "desc",
-        apikey: etherScan_Api_Key,
+        apikey: explorer.key,
       },
     });
 
-    let rawTransfers = [];
-    if (tokenTxRes.data.status === "1") {
-      rawTransfers = tokenTxRes.data.result.map((tx) => ({
-        hash: tx.hash,
-        from: tx.from,
-        to: tx.to,
-        contract: tx.contractAddress,
-        symbol: tx.tokenSymbol,
-        tokenName: tx.tokenName,
-        amount: tx.value,
-        timeStamp: tx.timeStamp,
-        type: "ERC-20",
-      }));
-    } else {
-      // STEP 2: If no ERC-20, fall back to ETH transfers
-      const ethTxRes = await axios.get(etherScan_Endpoint, {
-        params: {
-          module: "account",
-          action: "txlist",
-          address: _recipientAddress,
-          page: 1,
-          offset: 10,
-          sort: "desc",
-          apikey: etherScan_Api_Key,
-        },
-      });
+    const transfers = response.data.result;
 
-      if (ethTxRes.data.status === "1") {
-        rawTransfers = ethTxRes.data.result.map((tx) => ({
-          hash: tx.hash,
-          from: tx.from,
-          to: tx.to,
-          contract: null,
-          symbol: "ETH",
-          tokenName: "Ethereum",
-          amount: tx.value,
-          timeStamp: tx.timeStamp,
-          type: "ETH",
-        }));
-      }
+    if (response.data.status !== "1" || !transfers || transfers.length === 0) {
+      return {
+        success: true,
+        activityPulse: "Dead / No Activity",
+        message:
+          "No recent token transfers found. If this is a new token, no one is trading it.",
+        recentTransfers: [],
+      };
     }
 
-    if (rawTransfers.length === 0) {
-      return { success: false, error: "No recent transfers found" };
+    // Analyze the pulse of the token
+    const latestTxTime = parseInt(transfers[0].timeStamp, 10);
+    const currentTime = Math.floor(Date.now() / 1000);
+    const timeSinceLastTx = currentTime - latestTxTime;
+
+    let activityPulse = "Active";
+    if (timeSinceLastTx < 3600) {
+      // Under 1 hour
+      activityPulse = "Highly Active (Hot)";
+    } else if (timeSinceLastTx > 86400 * 7) {
+      // Over 7 days
+      activityPulse = "Abandoned / Dead";
     }
 
-    // STEP 3: Compute summary
-    const totalTransfers = rawTransfers.length;
-    // Most recent transfer = first element (sorted desc)
-    const latest = rawTransfers[0];
-    const lastTransferDate = formatTimestamp(latest.timeStamp);
+    // Count unique addresses interacting with it
+    const uniqueWallets = new Set();
+    transfers.forEach((tx) => {
+      uniqueWallets.add(tx.from);
+      uniqueWallets.add(tx.to);
+    });
 
-    // Sum up “amount” for ERC-20 only (in raw wei/token units)
-    const totalTokenVolume = rawTransfers
-      .filter((tx) => tx.type === "ERC-20")
-      .reduce((acc, tx) => acc + BigInt(tx.amount), BigInt(0));
-
-    // Convert to string (raw) so frontend can format as needed
-    const totalVolumeString = totalTokenVolume.toString();
-
-    // STEP 4: Keep only the top 10 most recent for display
-    const recentTransfers = rawTransfers.slice(0, 10).map((tx) => ({
+    // Format top 5 for the frontend to show a quick preview
+    const recentSample = transfers.slice(0, 5).map((tx) => ({
       hash: tx.hash,
-      from: tx.from,
-      to: tx.to,
-      symbol: tx.symbol,
-      amount: tx.amount,
+      from: `${tx.from.substring(0, 6)}...${tx.from.substring(38)}`,
+      to: `${tx.to.substring(0, 6)}...${tx.to.substring(38)}`,
       date: formatTimestamp(tx.timeStamp),
-      type: tx.type,
     }));
 
     return {
       success: true,
+      activityPulse,
       summary: {
-        totalTransfers,
-        lastTransferDate,
-        totalERC20Volume: totalVolumeString,
+        totalAnalyzed: transfers.length,
+        uniqueWalletsInteracting: uniqueWallets.size,
+        lastTrade: formatTimestamp(latestTxTime),
       },
-      recentTransfers,
+      recentSample,
     };
   } catch (err) {
     console.error("Transfer History Error:", err.message);
-    return { success: false, error: err.message };
+    return { success: false, error: "Failed to fetch on-chain history." };
   }
 };
 
-module.exports = getTransferHistory;
+module.exports = { getTransferHistory };
