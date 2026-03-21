@@ -1,7 +1,7 @@
 "use client";
 
 import { m } from "framer-motion";
-import { FiGitBranch, FiZap, FiType, FiHash, FiUser, FiUserCheck, FiTrendingUp, FiDollarSign } from "react-icons/fi";
+import { FiGitBranch, FiZap, FiType, FiHash, FiUser, FiUserCheck, FiTrendingUp, FiDollarSign, FiShield } from "react-icons/fi";
 
 export default function TransactionDetails({
   itemVariants,
@@ -55,6 +55,47 @@ export default function TransactionDetails({
                 value: requestData?.contractAddress || "Unknown",
                 mono: true,
                 icon: <FiUserCheck className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
+              },
+              {
+                label: "Simulation Output",
+                value: simulateData?.success ? "Success" : (simulateData?.errorReason || "Failed"),
+                icon: <FiZap className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
+              },
+              {
+                label: "ETH Delta",
+                value: simulateData?.ethDelta || "0",
+                icon: <FiTrendingUp className="h-4 w-4 pl-1 text-blue-500/50 group-hover/item:text-blue-400" />,
+              },
+              {
+                label: "Token Delta",
+                value: simulateData?.tokenDelta || "0",
+                icon: <FiTrendingUp className="h-4 w-4 pl-1 text-blue-500/50 group-hover/item:text-blue-400" />,
+              },
+              {
+                label: "Allowance Altered",
+                value: simulateData?.allowanceChanged ? `Yes (${simulateData?.allowanceDelta || '0'})` : "No",
+                icon: <FiHash className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
+              },
+              {
+                label: "Honeypot Guard",
+                value: simulateData?.isHoneypot ? "Detected" : "Safe",
+                icon: <FiShield className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
+              },
+              {
+                label: "Reentrancy Filter",
+                value: simulateData?.isReentrancy ? "Detected" : "Safe",
+                icon: <FiZap className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
+              },
+              {
+                label: "Monitored Tokens",
+                value: (!simulateData?.watchedTokens || simulateData?.watchedTokens === "N/A" || simulateData?.watchedTokens === "") ? "None" : `${simulateData.watchedTokens.split(',').length} Tokens`,
+                icon: <FiUser className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
+              },
+              {
+                label: "Tokens Delta",
+                value: (!simulateData?.watchedTokensDeltas || simulateData?.watchedTokensDeltas === "N/A" || simulateData?.watchedTokensDeltas === "") ? "0" : simulateData.watchedTokensDeltas,
+                icon: <FiTrendingUp className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
+                mono: true,
               },
             ].map((item, idx) => (
               <m.div

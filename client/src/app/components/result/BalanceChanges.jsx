@@ -37,9 +37,6 @@ export default function BalanceChanges({
           <div className="flex-1 w-full bg-[#111111] border border-white/10 p-4 rounded-xl flex flex-col items-center justify-center relative overflow-hidden group/node">
             <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-1">Origin</span>
             <span className="text-sm font-mono text-white font-semibold">Your Wallet</span>
-            <div className="mt-2 w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-              <FiUpload className="text-gray-300 h-3 w-3" />
-            </div>
           </div>
 
           {/* ASSET PIPELINE ARROW */}
@@ -77,9 +74,6 @@ export default function BalanceChanges({
           <div className="flex-1 w-full bg-[#111111] border border-white/10 p-4 rounded-xl flex flex-col items-center justify-center relative overflow-hidden group/node">
             <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-1">Destination</span>
             <span className="text-sm font-mono text-white font-semibold">Target Contract</span>
-            <div className="mt-2 w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-              <FiDownload className="text-gray-300 h-3 w-3" />
-            </div>
           </div>
 
         </div>
