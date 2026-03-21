@@ -1,12 +1,12 @@
 const { isContract, getByteCode } = require("../../externals/etherscanService");
 const { decideChains } = require("../../../config/provider");
 const { ethers } = require("ethers");
-const { analyzeByteCode } = require("../simulation/index");
+const { analyzeBytecode } = require("../simulation/index");
 const aiService = require("../../externals/aiServices"); // an ai service which accepts the prompt (Deepseek R-1)
 
-const detectMaliciousProxy = async (_recepientAddress, currencySymbol) => {
+const detectMaliciousProxy = async (_recepientAddress, currencySymbol, chainId) => {
 
-  const provider = decideChains(currencySymbol);
+  const { provider } = decideChains(chainId);
   const contractAddress = await isContract(_recepientAddress, currencySymbol);
 
   if (!contractAddress)
@@ -59,7 +59,7 @@ const detectMaliciousProxy = async (_recepientAddress, currencySymbol) => {
   // now check Implementation bytecode
   const implementationBytecode = await getByteCode(implementationAddress, currencySymbol);
 
-  const analysisResult = await analyzeByteCode(implementationBytecode, currencySymbol);
+  const analysisResult = await analyzeBytecode(implementationAddress, chainId);
 
   // now genrating AI summery of the whole data
   const prompt = `

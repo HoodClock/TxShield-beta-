@@ -1,9 +1,9 @@
 const { decideChains } = require("../../../config/provider");
 
-const detectEtherForwarding = async (checkSumRecepientAddress, currencySymbol) => {
+const detectEtherForwarding = async (checkSumRecepientAddress, currencySymbol, chainId) => {
   try {
 
-    const provider = decideChains(currencySymbol);
+    const { provider } = decideChains(chainId);
 
     const bytecode = await provider.getCode(checkSumRecepientAddress);
 

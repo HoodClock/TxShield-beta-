@@ -54,7 +54,7 @@ const WATCHED_CHAIN_TOKENS = {
 // master controller
 const masterSimulationController = async (req, res) => {
   try {
-    const { userAddress, targetContractAddress, amount, chainId } = req.body;
+    const { userAddress, recepientAddress, amount, chainId, currency } = req.body;
 
     // call the validator
     evmSimulateValidator(req.body);
@@ -67,27 +67,23 @@ const masterSimulationController = async (req, res) => {
       throw new Error(`Token configuration missing for chainId: ${chainId}`);
     }
 
-    const cleanAddress = targetContractAddress.toLowerCase();
+    const cleanAddress = recepientAddress.toLowerCase();
     if (!isAddress(cleanAddress)) {
       throw new Error("Invalid Ethereum Address format");
     }
 
+    const isNativeTrasnfer = currency === "ETH" || currency === "BNB";
+
     let txTo;
     let txData;
     let txValue;
-    let tokenAddress = targetContractAddress
-      ? targetContractAddress.toLowerCase()
-      : null;
-
-    const isNativeTrasnfer =
-      !tokenAddress || tokenAddress === ethers.ZeroAddress;
+    let tokenAddress = isNativeTrasnfer ? ethers.ZeroAddress : cleanAddress;
 
     if (isNativeTrasnfer) {
       txTo = cleanAddress;
       const weiBigInt = ethers.parseEther(amount.toString());
       txValue = ethers.toBeHex(weiBigInt);
       txData = "0x";
-      tokenAddress = ethers.ZeroAddress;
     } else {
       if (!isAddress(tokenAddress))
         throw new Error("Invalid Token Address format");
@@ -108,6 +104,7 @@ const masterSimulationController = async (req, res) => {
     const [simulateResult, byteCodeResult, transactionHistoryResult] =
       await Promise.all([
         getSimulate(
+          rpcUrl,
           userAddress,
           txTo,
           tokenAddress,
@@ -116,7 +113,6 @@ const masterSimulationController = async (req, res) => {
           txData,
           txValue,
           expectedAmount,
-          rpcUrl,
           chainId,
         ),
         analyzeBytecode(cleanAddress, chainId),
