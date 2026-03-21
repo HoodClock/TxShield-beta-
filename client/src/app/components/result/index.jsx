@@ -3,7 +3,7 @@
 import { m } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { FiLayout, FiShield, FiCpu, FiTrendingUp } from "react-icons/fi";
+import { FiLayout, FiShield, FiCpu, FiCode } from "react-icons/fi";
 
 // Sub-components from parent folder
 import KeyMatrics from "../keyMatrics";
@@ -55,13 +55,12 @@ export default function ResultsDashboard({
     { id: 'simulation', label: 'Simulation', icon: FiLayout },
     { id: 'honeypot', label: 'Honeypot', icon: FiShield },
     { id: 'phishing', label: 'Phishing', icon: FiCpu },
-    { id: 'insights', label: 'AI Insights', icon: FiTrendingUp }
+    { id: 'bytecode', label: 'Bytecode Scanning', icon: FiCode }
   ];
 
   const solTabs = [
     { id: 'overview', label: 'Overview', icon: FiLayout },
-    { id: 'deepdive', label: 'Deep Dive', icon: FiCpu },
-    { id: 'insights', label: 'AI Insights', icon: FiTrendingUp }
+    { id: 'deepdive', label: 'Deep Dive', icon: FiCpu }
   ];
 
   const tabs = chain === 'SOL' ? solTabs : evmTabs;
@@ -272,39 +271,38 @@ export default function ResultsDashboard({
               >
                 {/* --- SIMULATION TAB --- */}
                 {activeTab === 'simulation' && (
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-                    <div className="lg:col-span-2 space-y-4">
-                      <TransactionDetails
-                        itemVariants={itemVariants}
-                        simulateData={simulateData}
-                        requestData={finalRequestData || mockSimulation.requestData}
-                        gasPercent={gasPercent}
-                        gasEstimated={evmGasEstimated}
-                        chain={chain}
-                      />
-                      <BalanceChanges
-                        itemVariants={itemVariants}
-                        simulateData={simulateData}
-                      />
-                      <BytecodeAnalysis
-                        itemVariants={itemVariants}
-                        isContract={isContract}
-                        byteData={byteData}
-                        warnings={warnings}
-                        t={t}
-                      />
+                  <div>
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+                      <div className="lg:col-span-2 space-y-4">
+                        <TransactionDetails
+                          itemVariants={itemVariants}
+                          simulateData={simulateData}
+                          requestData={finalRequestData || mockSimulation.requestData}
+                          gasPercent={gasPercent}
+                          gasEstimated={evmGasEstimated}
+                          chain={chain}
+                        />
+                        <BalanceChanges
+                          itemVariants={itemVariants}
+                          simulateData={simulateData}
+                        />
+                      </div>
+                      <div className="space-y-4">
+                        <TransactionSummary
+                          itemVariants={itemVariants}
+                          txHistoryData={txHistoryData}
+                          summary={summary}
+                        />
+                      </div>
                     </div>
-                    <div className="space-y-4">
-                      <TransactionSummary
-                        itemVariants={itemVariants}
-                        txHistoryData={txHistoryData}
-                        summary={summary}
-                      />
+
+                    <div className="mt-4 sm:mt-6">
                       <RecentTransfers
                         itemVariants={itemVariants}
                         recentTransfers={recentTransfers}
                       />
                     </div>
+
                   </div>
                 )}
 
@@ -340,15 +338,15 @@ export default function ResultsDashboard({
                   </div>
                 )}
 
-                {/* --- AI INSIGHTS TAB --- */}
-                {activeTab === 'insights' && (
+                {/* --- BYTECODE SCANNING TAB --- */}
+                {activeTab === 'bytecode' && (
                   <div className="max-w-7xl mx-auto">
-                    <Recommendations
-                      simulationData={chain === 'EVM' ? simulation : solSimulation}
-                      honeypotData={honeypot}
-                      onGenerate={onGenerateRecommendation}
-                      recommendation={recommendationData}
-                      chain={chain}
+                    <BytecodeAnalysis
+                      itemVariants={itemVariants}
+                      isContract={isContract}
+                      byteData={byteData}
+                      warnings={warnings}
+                      t={t}
                     />
                   </div>
                 )}
@@ -413,18 +411,7 @@ export default function ResultsDashboard({
                   </div>
                 )}
 
-                {/* --- AI INSIGHTS TAB (SOLANA) --- */}
-                {activeTab === 'insights' && (
-                  <div className="max-w-7xl mx-auto">
-                    <Recommendations
-                      simulationData={solSimulation}
-                      honeypotData={honeypot}
-                      onGenerate={onGenerateRecommendation}
-                      recommendation={recommendationData}
-                      chain={chain}
-                    />
-                  </div>
-                )}
+                {/* AI INSIGHTS TAB (SOLANA) REMOVED */}
               </m.div>
             </>
           )}
