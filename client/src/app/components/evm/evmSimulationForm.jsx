@@ -13,7 +13,7 @@ export default function SimulationForm({
   backButtonHandler,
   onSwitchChain,
 }) {
-  const { address: userAddress, isConnected } = useAccount();
+  const { address: userAddress, isConnected, chainId } = useAccount();
   const [contractAddress, setContractAddress] = useState("");
   const [amount, setAmount] = useState("");
   const [currency, setCurrency] = useState("ETH");
@@ -40,6 +40,7 @@ export default function SimulationForm({
       amount: amount,
       currencySymbol: currency,
       currency: currency,
+      chainId,
     };
 
     // credentials for honeypot
@@ -51,6 +52,7 @@ export default function SimulationForm({
       recepientAddress: contractAddress,
       value: amount,
       currencySymbol: currency,
+      chainId,
     };
 
     onSimulateAll({ honeypotData, simulationData });

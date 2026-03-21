@@ -22,8 +22,8 @@ ${urls.join("\n")}
 /**
  * Main Phishing Domain Detector
  */
-async function detectPhishingDomainLinks(contractAddress, currencySymbol) {
-  const provider = decideChains(currencySymbol);
+async function detectPhishingDomainLinks(contractAddress, currencySymbol, chainId) {
+  const { provider } = decideChains(chainId);
 
   // 1. Data Collection Phase
   const abi = await getAbi(contractAddress, currencySymbol).catch(() => null);

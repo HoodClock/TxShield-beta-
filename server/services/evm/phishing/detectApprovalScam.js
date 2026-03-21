@@ -4,7 +4,7 @@ const {
   getSourceCode,
 } = require("../../externals/etherscanService");
 
-const { getTransactionHistory } = require("../simulation/index");
+const { getTransferHistory } = require("../simulation/index");
 
 // keywords that signal phishing patterns
 const SUSPICIOUS_FUNCTIONS = ["approve", "transferFrom"];
@@ -15,6 +15,7 @@ const detectApprovalScam = async (
   userAddress,
   recepientAddress,
   currencySymbol,
+  chainId,
 ) => {
   const isSmartContract = await isContract(recepientAddress, currencySymbol);
 
@@ -28,7 +29,7 @@ const detectApprovalScam = async (
 
   const abi = await getAbi(recepientAddress, currencySymbol);
   const sourceCodeObj = await getSourceCode(recepientAddress, currencySymbol);
-  const transactionHistory = await getTransactionHistory(recepientAddress);
+  const transactionHistory = await getTransferHistory(recepientAddress, chainId);
 
   let suspiciousAbi = false;
   let suspiciousSource = false;

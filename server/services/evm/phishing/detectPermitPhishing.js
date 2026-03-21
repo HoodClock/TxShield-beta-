@@ -19,9 +19,9 @@ const UINT256_MAX = ethers.MaxUint256;
 Detects if a token contracts implements EIP-2612 permit():- allow unlimited token withdrawals without normal approval steps. 
 */
 
-async function detectPermitPhishing(contractAddress, currencySymbol) {
+async function detectPermitPhishing(contractAddress, currencySymbol, chainId) {
 
-    const provider = decideChains(currencySymbol)
+    const { provider } = decideChains(chainId)
 
     if (!ethers.isAddress(contractAddress)) {
         throw new Error("Invalid contract address")

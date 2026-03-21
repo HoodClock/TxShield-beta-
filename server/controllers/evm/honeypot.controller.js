@@ -3,10 +3,10 @@ const { HoneypotService } = require("../../services/evm/honeypot/index");
 // master controllers of Honeypot Services
 const honeypotMasterController = async (req, res) => {
   try {
-    const { contractAddress } = req.body;
+    const { contractAddress, chainId } = req.body;
 
     const [honeypotResp] = await Promise.all([
-      HoneypotService(contractAddress),
+      HoneypotService(contractAddress, chainId),
     ]);
 
     // Final Result (all checks + riskScoring)

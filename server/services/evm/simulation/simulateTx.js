@@ -264,7 +264,6 @@ const getSimulate = async (
   }
 
   const simResult = await _runSimulation(
-    rpcUrl,
     userAddress,
     txTo,
     tokenAddress,
@@ -273,6 +272,7 @@ const getSimulate = async (
     txData,
     valueInWei,
     expectedAmount,
+    rpcUrl,
   );
 
   // Only cache if not a system error

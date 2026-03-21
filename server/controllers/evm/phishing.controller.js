@@ -6,7 +6,7 @@ const { getAddress } = require("ethers");
 const MasterPhishingController = async (req, res) => {
   try {
 
-    const { userAddress, recepientAddress, currencySymbol } = req.body;
+    const { userAddress, recepientAddress, currencySymbol, chainId } = req.body;
 
     // validation
     const validation = evmPhishingValidator(req.body);
@@ -16,11 +16,11 @@ const MasterPhishingController = async (req, res) => {
     const normalContractAddress = getAddress(recepientAddress);
 
     const [approveScam, etherForwarding, proxyScam, permitCheck, domainCheck] = await Promise.all([
-      detectApprovalScam(normalUserAddress, normalContractAddress, currencySymbol),
-      detectEtherForwarding(normalContractAddress, currencySymbol),
-      detectMaliciousProxy(normalContractAddress, currencySymbol),
-      detectPermitPhishing(normalContractAddress, currencySymbol),
-      detectPhishingDomainLink(normalContractAddress, currencySymbol),
+      detectApprovalScam(normalUserAddress, normalContractAddress, currencySymbol, chainId),
+      detectEtherForwarding(normalContractAddress, currencySymbol, chainId),
+      detectMaliciousProxy(normalContractAddress, currencySymbol, chainId),
+      detectPermitPhishing(normalContractAddress, currencySymbol, chainId),
+      detectPhishingDomainLink(normalContractAddress, currencySymbol, chainId),
     ]);
 
     const results = [
