@@ -13,10 +13,17 @@ export default function SimulationForm({
   backButtonHandler,
   onSwitchChain,
 }) {
-  const { address: userAddress, isConnected, chainId } = useAccount();
+  const { address: userAddress, isConnected } = useAccount();
   const [contractAddress, setContractAddress] = useState("");
   const [amount, setAmount] = useState("");
-  const [currency, setCurrency] = useState("ETH");
+
+  const CHAINS = [
+    { id: 1, name: "Ethereum", symbol: "ETH" },
+    { id: 56, name: "BNB Chain", symbol: "BNB" },
+    { id: 8453, name: "Base", symbol: "ETH" },
+    { id: 42161, name: "Arbitrum", symbol: "ETH" }
+  ];
+  const [selectedChain, setSelectedChain] = useState(CHAINS[0]);
 
   const handleSimulate = async () => {
     console.log("Submit button clicked!", { isConnected, userAddress, contractAddress, amount });
@@ -31,27 +38,29 @@ export default function SimulationForm({
       return;
     }
 
-    const currencySymbol = currency === "ETH";
+    const currencySymbol = selectedChain.symbol;
+    const currency = selectedChain.symbol;
+    const chainId = selectedChain.id;
 
     // credentials for simulation
     const simulationData = {
       userAddress,
-      recepientAddress: contractAddress,
-      amount: amount,
-      currencySymbol: currency,
-      currency: currency,
+      recepientAddress: contractAddress.trim(),
+      amount: amount.trim(),
+      currencySymbol,
+      currency,
       chainId,
     };
 
     // credentials for honeypot
     const honeypotData = {
-      address: contractAddress,
+      address: contractAddress.trim(),
       userAddress: userAddress,
-      contractAddress: contractAddress,
-      tokenAddress: contractAddress,
-      recepientAddress: contractAddress,
-      value: amount,
-      currencySymbol: currency,
+      contractAddress: contractAddress.trim(),
+      tokenAddress: contractAddress.trim(),
+      recepientAddress: contractAddress.trim(),
+      value: amount.trim(),
+      currencySymbol,
       chainId,
     };
 
@@ -145,6 +154,36 @@ export default function SimulationForm({
             <div className="space-y-6 max-w-lg mx-auto">
               <div className="group/input">
                 <label className="block text-blue-400 font-mono text-xs uppercase tracking-widest mb-2 ml-1 opacity-80 group-focus-within/input:opacity-100 group-focus-within/input:text-blue-300 transition-all duration-300">
+                  Target Network
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-0 bg-black/40 rounded-xl shadow-[inset_0_2px_15px_rgba(0,0,0,0.8)] pointer-events-none transition-colors duration-300 group-focus-within/input:bg-black/60 border border-white/5 group-focus-within/input:border-blue-500/30"></div>
+                  <div className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent opacity-0 group-focus-within/input:opacity-100 transition-opacity duration-500 blur-[1px]"></div>
+
+                  <select
+                    className="relative z-10 w-full px-5 py-4 rounded-xl bg-transparent text-white focus:outline-none transition-all duration-300 font-mono text-sm appearance-none cursor-pointer"
+                    value={selectedChain.id}
+                    onChange={(e) => {
+                      const chain = CHAINS.find(c => c.id === Number(e.target.value));
+                      setSelectedChain(chain);
+                    }}
+                  >
+                    {CHAINS.map(chain => (
+                      <option key={chain.id} value={chain.id} className="bg-[#0a0a0a] text-white font-mono">
+                        {chain.name} ({chain.id})
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-500/50 group-focus-within/input:text-blue-400 transition-colors pointer-events-none z-20">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="group/input">
+                <label className="block text-blue-400 font-mono text-xs uppercase tracking-widest mb-2 ml-1 opacity-80 group-focus-within/input:opacity-100 group-focus-within/input:text-blue-300 transition-all duration-300">
                   Target Contract
                 </label>
                 <div className="relative">
@@ -205,7 +244,7 @@ export default function SimulationForm({
                     onChange={(e) => setAmount(e.target.value)}
                   />
                   <div className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex items-center gap-2 pointer-events-none">
-                    <span className="text-gray-500 text-xs font-mono pr-2 border-r border-white/10 group-focus-within/input:border-blue-500/30 transition-colors">ETH</span>
+                    <span className="text-gray-500 text-xs font-mono pr-2 border-r border-white/10 group-focus-within/input:border-blue-500/30 transition-colors">{selectedChain.symbol}</span>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-blue-500/50 group-focus-within/input:text-blue-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>

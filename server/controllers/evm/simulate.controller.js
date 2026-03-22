@@ -67,7 +67,7 @@ const masterSimulationController = async (req, res) => {
       throw new Error(`Token configuration missing for chainId: ${chainId}`);
     }
 
-    const cleanAddress = recepientAddress.toLowerCase();
+    const cleanAddress = recepientAddress.trim().toLowerCase();
     if (!isAddress(cleanAddress)) {
       throw new Error("Invalid Ethereum Address format");
     }
