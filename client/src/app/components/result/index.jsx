@@ -39,15 +39,15 @@ export default function ResultsDashboard({
 
   // Use mock data for testing, real data when available
   // TESTING: Uncomment the next 3 lines to use mock data
-  const finalSimulation = mockSimulation;
-  const finalHoneypot = mockHoneypot;
-  const finalPhishing = mockPhishing;
-  // const finalSimulation = simulation;
-  // const finalHoneypot = honeypot;
-  // const finalPhishing = phishing;
+  // const finalSimulation = mockSimulation;
+  // const finalHoneypot = mockHoneypot;
+  // const finalPhishing = mockPhishing;
+  const finalSimulation = simulation;
+  const finalHoneypot = honeypot;
+  const finalPhishing = phishing;
   const finalRequestData = requestData;
-  const finalSolSimulation = mockSolSimulation;
-  // const finalSolSimulation = solSimulation;
+  // const finalSolSimulation = mockSolSimulation;
+  const finalSolSimulation = solSimulation;
 
   const [activeTab, setActiveTab] = useState(chain === 'SOL' ? 'overview' : 'simulation');
 
@@ -184,9 +184,8 @@ export default function ResultsDashboard({
   };
 
   return (
-    <div className="min-h-screen w-full bg-transparent text-white p-2 sm:p-4 relative overflow-hidden z-0">
-      {/* Dynamic Background based on chain */}
-      <div className={`absolute inset-0 -z-30 overflow-hidden bg-[#0a0a0a] bg-gradient-to-br ${t.bgGradient} to-transparent`}></div>
+    <div className={`min-h-screen pt-[104px] pb-24 bg-[#0a0a0a]`}>
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0" />
 
       <style jsx global>{`
         /* Hide scrollbar for Chrome, Safari and Opera */
@@ -197,7 +196,6 @@ export default function ResultsDashboard({
         .no-scrollbar {
           -ms-overflow-style: none;  /* IE and Edge */
           scrollbar-width: none;  /* Firefox */
-        }
         }
       `}</style>
 
@@ -233,9 +231,9 @@ export default function ResultsDashboard({
 
           {chain === 'EVM' ? (
             /* ================= EVM LAYOUT ================= */
-            <>
+            <div className={`relative w-full rounded-3xl border border-blue-500/30 bg-[#0a1931]/80 backdrop-blur-2xl overflow-hidden p-4 sm:p-6 shadow-[0_0_80px_rgba(59,130,246,0.15)]`}>
               {/* Tab Navigation */}
-              <div className="flex flex-wrap items-center justify-center gap-2 mb-4 bg-black/40 p-2 rounded-2xl border border-white/5 shadow-[inset_0_2px_15px_rgba(0,0,0,0.5)] backdrop-blur-md">
+              <div className="flex flex-wrap items-center justify-center gap-2 mb-4 bg-blue-950/30 p-2 rounded-2xl border border-blue-500/20 shadow-[inset_0_2px_15px_rgba(0,0,0,0.5)] backdrop-blur-md">
                 {tabs.map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
@@ -244,7 +242,7 @@ export default function ResultsDashboard({
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
                       className={`relative px-4 py-2.5 rounded-xl font-mono text-xs sm:text-sm font-bold tracking-wide transition-all duration-300 flex items-center gap-2 
-                        ${isActive ? 'text-blue-400 bg-blue-500/10 shadow-[inset_0_0_10px_rgba(59,130,246,0.2)]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                        ${isActive ? `text-${t.primary}-400 bg-${t.primary}-500/10 shadow-[inset_0_0_10px_rgba(59,130,246,0.2)]` : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
                     >
                       {isActive && (
                         <m.div
@@ -351,7 +349,7 @@ export default function ResultsDashboard({
                   </div>
                 )}
               </m.div>
-            </>
+            </div>
           ) : (
             /* ================= SOLANA LAYOUT ================= */
             <>

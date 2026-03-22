@@ -73,7 +73,7 @@ async function sumUpAllFeatures(_connection, _contractAddress, _userAddress, _am
 
     } catch (error) {
         console.error("TxShield SumUp Error:", error.message);
-        return { success: false, error: "Internal Analysis Error" };
+        return { success: false, message: "Internal Analysis Error: " + error.message };
     }
 }
 

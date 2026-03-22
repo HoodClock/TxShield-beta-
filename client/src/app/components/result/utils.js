@@ -178,7 +178,7 @@ export const mockPhishing = {
   "riskSummery": {
     "totalScore": 8,
     "riskLevel": "Safe Zone",
-    "verdict": "✅ No immediate phishing threats detected."
+    "verdict": "No immediate phishing threats detected."
   },
   "details": {
     "approveScam": {

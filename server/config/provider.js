@@ -1,4 +1,5 @@
 const { ethers } = require("ethers");
+const { Connection } = require("@solana/web3.js");
 require("dotenv").config();
 
 const EVM_NETWORKS = {
@@ -9,10 +10,17 @@ const EVM_NETWORKS = {
 };
 
 const decideChains = (chainId) => {
+  // Handle Solana
+  if (chainId === "SOL") {
+    const solRpcUrl = process.env.SOL_MAINET_NET_URL || "https://api.mainnet-beta.solana.com";
+    return new Connection(solRpcUrl, "confirmed");
+  }
+
+  // Handle EVM
   const config = EVM_NETWORKS[Number(chainId)];
 
   if (!config) {
-    throw new Error("Unsupported Chain");
+    throw new Error(`Unsupported Chain: ${chainId}`);
   }
 
   return {
