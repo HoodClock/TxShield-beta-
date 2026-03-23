@@ -68,7 +68,9 @@ const simulateSolTranscation = async (_signedTxBase64, _userAddress, _contractAd
       txError: simValue.err,
       parsedLogs: simValue.logs || [],
       // Essential for sumUpAllFeatures forensics:
-      accounts: tx.message.staticAccountKeys || [],
+      accounts: tx.message 
+        ? (tx.message.staticAccountKeys || []) 
+        : (tx.compileMessage().accountKeys || []),
       preBalances: [], // Placeholder: handled by connection in sumUpAllFeatures
       postBalances: simValue.accounts || [],
       rentExemption: await rentExemptionCheck(contractPublicKey, provider)

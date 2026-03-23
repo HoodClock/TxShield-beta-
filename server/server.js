@@ -3,6 +3,10 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
+console.log("==========================================");
+console.log("TXSHIELD BACKEND VERSION: 3.0 (DIAGNOSTIC)");
+console.log("==========================================");
+
 // middlewares
 const authMiddleware = require("./middlewares/auth.middleware");
 
@@ -18,7 +22,12 @@ const solSimulateRouter = require("./routes/simulation/sol-simulation.routes");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.get("/ping", (req, res) => {
+  res.send("TxShield Backend Live - Version 3.0 Diagnostic");
+});
+
 // middlewares
+
 
 const allowedOrigins = [
   "http://localhost:3000",
@@ -49,6 +58,15 @@ app.use(
   }),
 );
 app.use(express.json());
+
+// GLOBAL REQUEST LOGGER
+app.use((req, res, next) => {
+  if (req.url.includes('/simulate')) {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    if (req.method === 'POST') console.log("Body:", JSON.stringify(req.body, null, 2));
+  }
+  next();
+});
 
 // Routes (some need auth_middleware)
 app.use("/api/simulate", simulateRouter);

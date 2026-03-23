@@ -234,7 +234,7 @@ export default function App() {
 
         {/* Results Section */}
         {showResults && (
-          <section className="container mx-auto px-4 py-12 space-y-8">
+          <section className="w-full">
             <ResultsDashboard
               chain={chain}
               isVisible={showResults}
