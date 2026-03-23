@@ -99,13 +99,20 @@ contract TxShieldSimulator {
                 return
                     SimulationResult(100, 100, true, "Honeypot: 100% Buy Tax");
 
-            // --- SELL SIMULATION ---
-            address[] memory sellPath = new address[](2);
-            sellPath[0] = token;
-            sellPath[1] = weth;
+        // --- SELL SIMULATION ---
+        address[] memory sellPath = new address[](2);
+        sellPath[0] = token;
+        sellPath[1] = weth;
 
-            IERC20(token).approve(router, actualTokens);
-            uint256 startEthBal = address(this).balance;
+        // Loophole Fix: Low-level call for approve to support USDT (which returns void)
+        (bool approveSuccess, ) = token.call(
+            abi.encodeWithSelector(0x095ea7b3, router, actualTokens)
+        );
+        if (!approveSuccess) {
+            return SimulationResult(result.buyTax, 100, true, "Honeypot: Approve Failed");
+        }
+
+        uint256 startEthBal = address(this).balance;
             uint256 expectedEth = 0;
 
             try dexRouter.getAmountsOut(actualTokens, sellPath) returns (

@@ -91,7 +91,7 @@ const _runSimulation = async (
   const txObj = {
     from: checksumAddress,
     to: txTo,
-    value: "0x0",
+    value: value,
     gas: "0xF4240",
     gasPrice: "0x0",
   };
@@ -102,18 +102,23 @@ const _runSimulation = async (
 
   // using stateOverride here to dodge the insufficient_gas_error
   const stateOverride = {
-    [checksumAddress]: { balance: "0xffffffffffffffffffffffff" },
+    [checksumAddress]: {
+      balance: "0xffffffffffffffffffffffffffffffff", // Increased balance
+    },
   };
-
-  /**
-   * @constructs [Transaction, block, stateOverride] => @method [simulateExecution, simulateAssetChange]
-   */
 
   const payloadSimulateExec = {
     id: 1,
     jsonrpc: "2.0",
     method: "alchemy_simulateExecution",
-    params: [txObj, "latest", stateOverride],
+    params: [
+      {
+        ...txObj,
+        gasPrice: "0x0", // Ensure zero gas price for Alchemy simulation
+      },
+      "latest",
+      stateOverride,
+    ],
   };
 
   // calling our phantom_contract function
