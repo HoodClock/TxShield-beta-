@@ -77,7 +77,7 @@ const masterSimulationController = async (req, res) => {
       throw new Error(`Token configuration missing for chainId: ${chainId}`);
     }
 
-    const cleanAddress = normalizedRecipient.toLowerCase();
+    const cleanAddress = recepientAddress.trim().toLowerCase();
     if (!isAddress(cleanAddress)) {
       throw new Error("Invalid Ethereum Address format");
     }
@@ -153,28 +153,40 @@ const masterSimulationController = async (req, res) => {
 
     // Human-friendly error mapping
     if (simulateResult && !simulateResult.success) {
-      const reason = simulateResult.errorReason ? simulateResult.errorReason.toLowerCase() : "";
-      
+      const reason = simulateResult.errorReason
+        ? simulateResult.errorReason.toLowerCase()
+        : "";
+
       // Loophole Check: Native ETH to Contract failure
-      if (isNativeTrasnfer && byteCodeResult.isContract && reason.includes("silent")) {
-        simulateResult.humanReason = "Transaction Reverted: You are trying to send native ETH to a token contract address. Tokens usually don't accept raw ETH transfers.";
-      } 
-      else if (reason.includes("insufficient allowance")) {
-        simulateResult.humanReason = "Allowance Error: You need to approve the token first.";
-      } 
-      else if (reason.includes("insufficient balance") || reason.includes("transfer amount exceeds balance")) {
-        simulateResult.humanReason = "Balance Error: You don't have enough tokens for this transaction.";
-      } 
-      else if (reason.includes("slippage") || reason.includes("insufficient_output_amount")) {
-        simulateResult.humanReason = "Slippage Error: Price changed too much. Try increasing slippage.";
-      } 
-      else if (reason.includes("expired")) {
-        simulateResult.humanReason = "Deadline Error: The transaction took too long and expired.";
-      } 
-      else if (reason.includes("frozen") || reason.includes("blacklisted")) {
-        simulateResult.humanReason = "Security Error: Your address or the token is frozen/blacklisted.";
-      } 
-      else {
+      if (
+        isNativeTrasnfer &&
+        byteCodeResult.isContract &&
+        reason.includes("silent")
+      ) {
+        simulateResult.humanReason =
+          "Transaction Reverted: You are trying to send native ETH to a token contract address. Tokens usually don't accept raw ETH transfers.";
+      } else if (reason.includes("insufficient allowance")) {
+        simulateResult.humanReason =
+          "Allowance Error: You need to approve the token first.";
+      } else if (
+        reason.includes("insufficient balance") ||
+        reason.includes("transfer amount exceeds balance")
+      ) {
+        simulateResult.humanReason =
+          "Balance Error: You don't have enough tokens for this transaction.";
+      } else if (
+        reason.includes("slippage") ||
+        reason.includes("insufficient_output_amount")
+      ) {
+        simulateResult.humanReason =
+          "Slippage Error: Price changed too much. Try increasing slippage.";
+      } else if (reason.includes("expired")) {
+        simulateResult.humanReason =
+          "Deadline Error: The transaction took too long and expired.";
+      } else if (reason.includes("frozen") || reason.includes("blacklisted")) {
+        simulateResult.humanReason =
+          "Security Error: Your address or the token is frozen/blacklisted.";
+      } else {
         simulateResult.humanReason = `Transaction Reverted: ${simulateResult.errorReason || "Unknown Reason"}`;
       }
     }
