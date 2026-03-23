@@ -54,10 +54,20 @@ const WATCHED_CHAIN_TOKENS = {
 // master controller
 const masterSimulationController = async (req, res) => {
   try {
-    const { userAddress, recepientAddress, amount, chainId, currency } = req.body;
-
     // call the validator
-    evmSimulateValidator(req.body);
+    const validation = evmSimulateValidator(req.body);
+    if (validation !== true) {
+      return res.status(400).json(validation);
+    }
+
+    // Normalized values are now injected by the validator
+    const {
+      userAddress,
+      amount,
+      chainId,
+      normalizedRecipient,
+      normalizedCurrency,
+    } = req.body;
 
     // getting provider
     const { provider, rpcUrl } = decideChains(chainId);
@@ -67,17 +77,22 @@ const masterSimulationController = async (req, res) => {
       throw new Error(`Token configuration missing for chainId: ${chainId}`);
     }
 
-    const cleanAddress = recepientAddress.toLowerCase();
+    const cleanAddress = normalizedRecipient.toLowerCase();
     if (!isAddress(cleanAddress)) {
       throw new Error("Invalid Ethereum Address format");
     }
 
-    const isNativeTrasnfer = currency === "ETH" || currency === "BNB";
+    // Determine if it's a native transfer based on the currency
+    const isNativeTrasnfer =
+      normalizedCurrency === "ETH" ||
+      normalizedCurrency === "BNB" ||
+      normalizedCurrency === "MATIC";
 
     let txTo;
     let txData;
     let txValue;
     let tokenAddress = isNativeTrasnfer ? ethers.ZeroAddress : cleanAddress;
+    let decimals = 18;
 
     if (isNativeTrasnfer) {
       txTo = cleanAddress;
@@ -85,20 +100,37 @@ const masterSimulationController = async (req, res) => {
       txValue = ethers.toBeHex(weiBigInt);
       txData = "0x";
     } else {
+      // ... (ERC20 logic remains same)
       if (!isAddress(tokenAddress))
         throw new Error("Invalid Token Address format");
       txTo = tokenAddress;
-      txValue = 0x0;
+      txValue = "0x0";
+
+      const erc20Abi = ["function decimals() view returns(uint8)"];
+      const tokenContract = new ethers.Contract(
+        tokenAddress,
+        erc20Abi,
+        provider,
+      );
+      try {
+        decimals = await tokenContract.decimals();
+      } catch (e) {
+        console.warn("Could not fetch decimals, defaulting to 18");
+      }
+
       txData = await getErc20TransferData(
         provider,
         tokenAddress,
         cleanAddress,
         amount,
+        decimals,
       );
     }
 
     // preparing the expected amount for tax-checking
-    const expectedAmount = ethers.parseUnits(amount.toString(), 18).toString();
+    const expectedAmount = ethers
+      .parseUnits(amount.toString(), decimals)
+      .toString();
 
     // now call the services
     const [simulateResult, byteCodeResult, transactionHistoryResult] =
@@ -118,6 +150,34 @@ const masterSimulationController = async (req, res) => {
         analyzeBytecode(cleanAddress, chainId),
         getTransferHistory(cleanAddress, chainId),
       ]);
+
+    // Human-friendly error mapping
+    if (simulateResult && !simulateResult.success) {
+      const reason = simulateResult.errorReason ? simulateResult.errorReason.toLowerCase() : "";
+      
+      // Loophole Check: Native ETH to Contract failure
+      if (isNativeTrasnfer && byteCodeResult.isContract && reason.includes("silent")) {
+        simulateResult.humanReason = "Transaction Reverted: You are trying to send native ETH to a token contract address. Tokens usually don't accept raw ETH transfers.";
+      } 
+      else if (reason.includes("insufficient allowance")) {
+        simulateResult.humanReason = "Allowance Error: You need to approve the token first.";
+      } 
+      else if (reason.includes("insufficient balance") || reason.includes("transfer amount exceeds balance")) {
+        simulateResult.humanReason = "Balance Error: You don't have enough tokens for this transaction.";
+      } 
+      else if (reason.includes("slippage") || reason.includes("insufficient_output_amount")) {
+        simulateResult.humanReason = "Slippage Error: Price changed too much. Try increasing slippage.";
+      } 
+      else if (reason.includes("expired")) {
+        simulateResult.humanReason = "Deadline Error: The transaction took too long and expired.";
+      } 
+      else if (reason.includes("frozen") || reason.includes("blacklisted")) {
+        simulateResult.humanReason = "Security Error: Your address or the token is frozen/blacklisted.";
+      } 
+      else {
+        simulateResult.humanReason = `Transaction Reverted: ${simulateResult.errorReason || "Unknown Reason"}`;
+      }
+    }
 
     return res.status(200).json({
       success: true,
@@ -139,20 +199,14 @@ const getErc20TransferData = async (
   tokenAddress,
   recipient,
   amountStr,
+  decimals,
 ) => {
-  const erc20Abi = [
-    "function transfer(address to, uint256 amount)",
-    "function decimals() view returns(uint8)",
-  ];
-  const tokenContract = new ethers.Contract(tokenAddress, erc20Abi, provider);
+  const erc20Abi = ["function transfer(address to, uint256 amount)"];
+  const iface = new ethers.Interface(erc20Abi);
 
-  const decimals = await tokenContract.decimals();
   const amountWei = ethers.parseUnits(amountStr.toString(), decimals);
 
-  return tokenContract.interface.encodeFunctionData("transfer", [
-    recipient,
-    amountWei,
-  ]);
+  return iface.encodeFunctionData("transfer", [recipient, amountWei]);
 };
 
 module.exports = masterSimulationController;
