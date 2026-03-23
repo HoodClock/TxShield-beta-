@@ -45,7 +45,7 @@ export default function Footer() {
                     <h4 className="text-white font-semibold mb-6">Resources</h4>
                     <ul className="space-y-4">
                          <li>
-                            <Link href="https://txshield.gitbook.io/txshield-docs/" className="flex items-center gap-2 text-gray-400 hover:text-purple-400 transition-colors group">
+                            <Link href="https://docs.txshield.xyz/" className="flex items-center gap-2 text-gray-400 hover:text-purple-400 transition-colors group">
                                 <FiBook className="group-hover:scale-110 transition-transform" />
                                 <span>Docs</span>
                             </Link>
