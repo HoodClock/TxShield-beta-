@@ -80,7 +80,7 @@ function HeroSection() {
                     </Link>
 
                     <Link
-                        href="https://txshield.gitbook.io/txshield-docs/"
+                        href="https://docs.txshield.xyz/"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-medium text-center relative overflow-hidden hero-secondary-btn group border border-white/30 hover:border-white/50 transition-all duration-300 glitch-hover"
