@@ -14,14 +14,17 @@ const simulateSOLTransactionController = async (req, res) => {
 
     const result = await sumUpAllFeatures(
       signedTxBase64,
-      userAddress,
-      recepientAddress,
+      recepientAddress, // maps to _contractAddress
+      userAddress,      // maps to _userAddress
       amount,
       currencySymbol,
     );
 
     if (!result.success) {
-      return res.status(400).json({ success: false, message: result.message });
+      return res.status(400).json({
+        success: false,
+        message: result.message || result.error || "Simulation Error"
+      });
     }
 
     res.status(200).json({ success: true, data: result });
