@@ -82,7 +82,7 @@ const getTransferHistory = async (targetAddress, chainId) => {
     });
 
     // Format top 5 for the frontend to show a quick preview
-    const recentSample = transfers.slice(0, 5).map((tx) => {
+    const recentTransfers = transfers.slice(0, 5).map((tx) => {
       const decimals = parseInt(tx.tokenDecimal, 10) || 18;
       const amount = (parseFloat(tx.value) / Math.pow(10, decimals)).toFixed(4);
       return {
@@ -111,7 +111,7 @@ const getTransferHistory = async (targetAddress, chainId) => {
         lastTransferDate: formatTimestamp(latestTxTime),
         totalERC20Volume: `${totalVolume.toFixed(2)} ${transfers[0].tokenSymbol}`,
       },
-      recentSample,
+      recentTransfers,
     };
   } catch (err) {
     console.error("Transfer History Error:", err.message);
