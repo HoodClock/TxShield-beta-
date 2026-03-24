@@ -55,7 +55,7 @@ export default function TransactionDetails({
               },
               {
                 label: "Simulation Output",
-                value: simulateData?.success ? "Success" : (simulateData?.errorReason || "Failed"),
+                value: simulateData?.success ? "Success" : (simulateData?.humanReason || simulateData?.errorReason || "Failed"),
                 icon: <FiZap className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
               },
               {
@@ -92,7 +92,7 @@ export default function TransactionDetails({
                 label: "Tokens Delta",
                 value: (!simulateData?.watchedTokensDeltas || simulateData?.watchedTokensDeltas === "N/A" || simulateData?.watchedTokensDeltas === "") 
                   ? "0" 
-                  : (simulateData.watchedTokensDeltas.split(",").map(d => parseFloat(d) / 1e18).find(d => d !== 0) || 0) + " WETH",
+                  : (simulateData.watchedTokensDeltas.split(",").map(d => parseFloat(d) / 1e18).find(d => d !== 0) || 0) + ` ${requestData?.symbol || "Token"}`,
                 icon: <FiTrendingUp className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
                 mono: true,
               },
