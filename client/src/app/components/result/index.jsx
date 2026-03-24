@@ -107,9 +107,9 @@ export default function ResultsDashboard({
 
   const riskStyle = getRiskStyle(riskLevel);
 
-  const simulateData = finalSimulation?.checks?.simulateResult || {};
-  const byteData = finalSimulation?.checks?.byteCodeResult || {};
-  const txHistoryData = finalSimulation?.checks?.transactionHistoryResult || {};
+  const simulateData = (finalSimulation?.checks?.simulateResult || finalSimulation?.simulateResult) || {};
+  const byteData = (finalSimulation?.checks?.byteCodeResult || finalSimulation?.byteCodeResult) || {};
+  const txHistoryData = (finalSimulation?.checks?.transactionHistoryResult || finalSimulation?.transactionHistoryResult) || {};
 
   const evmExecutionSuccess = simulateData.success ?? false;
   const evmExecutionMessage = evmExecutionSuccess
@@ -123,7 +123,7 @@ export default function ResultsDashboard({
   const warnings = byteData.riskFlags || [];
 
   const summary = txHistoryData.summary || {};
-  const recentTransfers = txHistoryData.recentSample || [];
+  const recentTransfers = (txHistoryData.recentTransfers || txHistoryData.recentSample) || [];
 
   const rawGasEstimated = simulateData?.gasUsed || "0";
   const evmGasEstimated = typeof rawGasEstimated === 'string'
