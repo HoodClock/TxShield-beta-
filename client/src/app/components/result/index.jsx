@@ -117,12 +117,13 @@ export default function ResultsDashboard({
     : simulateData.errorReason || "Transaction would fail";
 
   const isContract = byteData.isContract || false;
-  const warnings = [
-    ...(byteData.warnings || []),
-  ];
+  // Map backend fields to frontend expectations
+  const isScam = byteData.trustStatus === "Critical Risk";
+  const reason = byteData.humanWarning;
+  const warnings = byteData.riskFlags || [];
 
   const summary = txHistoryData.summary || {};
-  const recentTransfers = txHistoryData.recentTransfers || [];
+  const recentTransfers = txHistoryData.recentSample || [];
 
   const rawGasEstimated = simulateData?.gasUsed || "0";
   const evmGasEstimated = typeof rawGasEstimated === 'string'
@@ -343,6 +344,8 @@ export default function ResultsDashboard({
                       itemVariants={itemVariants}
                       isContract={isContract}
                       byteData={byteData}
+                      isScam={isScam}
+                      reason={reason}
                       warnings={warnings}
                       t={t}
                     />
