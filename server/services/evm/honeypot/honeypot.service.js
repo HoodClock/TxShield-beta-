@@ -17,7 +17,7 @@ const SIMULATOR_ABI = [
 ];
 const iface = new ethers.Interface(SIMULATOR_ABI);
 
-const _runHoneypotCheck = async (targetContract, chainId = 1) => {
+const _runHoneypotCheck = async (contractAddress, chainId = 1) => {
   try {
     const { provider } = decideChains(chainId);
     const dexRouterAddress = ROUTERS[chainId];
@@ -26,7 +26,7 @@ const _runHoneypotCheck = async (targetContract, chainId = 1) => {
       throw new Error("Unsupported DEX Router for this chain");
 
     const callData = iface.encodeFunctionData("simulateTrade", [
-      targetContract,
+      contractAddress,
       dexRouterAddress,
     ]);
 

@@ -21,12 +21,17 @@ export default function SimulationForm({
     { id: 1, name: "Ethereum", symbol: "ETH" },
     { id: 56, name: "BNB Chain", symbol: "BNB" },
     { id: 8453, name: "Base", symbol: "ETH" },
-    { id: 42161, name: "Arbitrum", symbol: "ETH" }
+    { id: 42161, name: "Arbitrum", symbol: "ETH" },
   ];
   const [selectedChain, setSelectedChain] = useState(CHAINS[0]);
 
   const handleSimulate = async () => {
-    console.log("Submit button clicked!", { isConnected, userAddress, contractAddress, amount });
+    console.log("Submit button clicked!", {
+      isConnected,
+      userAddress,
+      contractAddress,
+      amount,
+    });
 
     if (!isConnected || !userAddress) {
       alert("Please connect your wallet first.");
@@ -54,14 +59,8 @@ export default function SimulationForm({
 
     // credentials for honeypot
     const honeypotData = {
-      address: contractAddress.trim(),
-      userAddress: userAddress,
       contractAddress: contractAddress.trim(),
-      tokenAddress: contractAddress.trim(),
-      recepientAddress: contractAddress.trim(),
-      value: amount.trim(),
-      currencySymbol,
-      chainId,
+      chainId: chainId,
     };
 
     onSimulateAll({ honeypotData, simulationData });
@@ -121,7 +120,9 @@ export default function SimulationForm({
                 alt="Solana"
                 className="w-4 h-4 rounded-full group-hover:rotate-12 transition-transform duration-300"
               />
-              <span className="text-xs font-mono text-gray-400 group-hover:text-purple-300 transition-colors">Switch to SOL</span>
+              <span className="text-xs font-mono text-gray-400 group-hover:text-purple-300 transition-colors">
+                Switch to SOL
+              </span>
             </button>
           </div>
 
@@ -144,7 +145,8 @@ export default function SimulationForm({
                 </svg>
               </div>
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight">
-                <ScrambleText text="EVM" className="inline-block" /> <span className="text-blue-500">Simulation</span>
+                <ScrambleText text="EVM" className="inline-block" />{" "}
+                <span className="text-blue-500">Simulation</span>
               </h2>
               <p className="text-gray-400 text-sm max-w-md mx-auto">
                 Securely simulate Ethereum transactions before you sign.
@@ -164,24 +166,41 @@ export default function SimulationForm({
                     className="relative z-10 w-full px-5 py-4 rounded-xl bg-transparent text-white focus:outline-none transition-all duration-300 font-mono text-sm appearance-none cursor-pointer"
                     value={selectedChain.id}
                     onChange={(e) => {
-                      const chain = CHAINS.find(c => c.id === Number(e.target.value));
+                      const chain = CHAINS.find(
+                        (c) => c.id === Number(e.target.value),
+                      );
                       setSelectedChain(chain);
                     }}
                   >
-                    {CHAINS.map(chain => (
-                      <option key={chain.id} value={chain.id} className="bg-[#0a0a0a] text-white font-mono">
+                    {CHAINS.map((chain) => (
+                      <option
+                        key={chain.id}
+                        value={chain.id}
+                        className="bg-[#0a0a0a] text-white font-mono"
+                      >
                         {chain.name} ({chain.id})
                       </option>
                     ))}
                   </select>
                   <div className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-500/50 group-focus-within/input:text-blue-400 transition-colors pointer-events-none z-20">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M19 9l-7 7-7-7"
+                      />
                     </svg>
                   </div>
                 </div>
               </div>
-              
+
               <div className="group/input">
                 <label className="block text-blue-400 font-mono text-xs uppercase tracking-widest mb-2 ml-1 opacity-80 group-focus-within/input:opacity-100 group-focus-within/input:text-blue-300 transition-all duration-300">
                   Target Contract
@@ -244,9 +263,22 @@ export default function SimulationForm({
                     onChange={(e) => setAmount(e.target.value)}
                   />
                   <div className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex items-center gap-2 pointer-events-none">
-                    <span className="text-gray-500 text-xs font-mono pr-2 border-r border-white/10 group-focus-within/input:border-blue-500/30 transition-colors">{selectedChain.symbol}</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-blue-500/50 group-focus-within/input:text-blue-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    <span className="text-gray-500 text-xs font-mono pr-2 border-r border-white/10 group-focus-within/input:border-blue-500/30 transition-colors">
+                      {selectedChain.symbol}
+                    </span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 text-blue-500/50 group-focus-within/input:text-blue-400 transition-colors"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      />
                     </svg>
                   </div>
                 </div>
