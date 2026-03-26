@@ -17,12 +17,12 @@ export default function SimulationForm({
   const [contractAddress, setContractAddress] = useState("");
   const [amount, setAmount] = useState("");
 
-  const CHAINS = [
-    { id: 1, name: "Ethereum", symbol: "ETH" },
-    { id: 56, name: "BNB Chain", symbol: "BNB" },
-    { id: 8453, name: "Base", symbol: "ETH" },
-    { id: 42161, name: "Arbitrum", symbol: "ETH" },
-  ];
+const CHAINS = [
+  { id: 1, name: "Ethereum", symbol: "ETH", icon: "https://assets.coingecko.com/coins/images/279/small/ethereum.png" },
+  { id: 56, name: "BNB Chain", symbol: "BNB", icon: "https://assets.coingecko.com/coins/images/825/small/bnb-icon2_2x.png" },
+  { id: 8453, name: "Base", symbol: "ETH", icon: "https://assets.coingecko.com/coins/images/16547/small/coinbase.png" },
+  { id: 42161, name: "Arbitrum", symbol: "ETH", icon: "https://assets.coingecko.com/coins/images/16547/small/arbitrum.png" },
+];
   const [selectedChain, setSelectedChain] = useState(CHAINS[0]);
 
   const handleSimulate = async () => {
@@ -178,7 +178,7 @@ export default function SimulationForm({
                         value={chain.id}
                         className="bg-[#0a0a0a] text-white font-mono"
                       >
-                        {chain.name} ({chain.id})
+                        {chain.name} ({chain.id}) {chain.icon && <img src={chain.icon} alt={chain.name} width="20" />}
                       </option>
                     ))}
                   </select>
@@ -238,46 +238,6 @@ export default function SimulationForm({
                         strokeLinejoin="round"
                         strokeWidth={1.5}
                         d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              <div className="group/input">
-                <label className="block text-blue-400 font-mono text-xs uppercase tracking-widest mb-2 ml-1 opacity-80 group-focus-within/input:opacity-100 group-focus-within/input:text-blue-300 transition-all duration-300">
-                  Transaction Amount
-                </label>
-                <div className="relative">
-                  {/* Hollow Input Background */}
-                  <div className="absolute inset-0 bg-black/40 rounded-xl shadow-[inset_0_2px_15px_rgba(0,0,0,0.8)] pointer-events-none transition-colors duration-300 group-focus-within/input:bg-black/60 border border-white/5 group-focus-within/input:border-blue-500/30"></div>
-
-                  {/* Bottom Glow Element */}
-                  <div className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent opacity-0 group-focus-within/input:opacity-100 transition-opacity duration-500 blur-[1px]"></div>
-
-                  <input
-                    type="number"
-                    placeholder="0.00"
-                    className={`relative z-10 w-full px-5 py-4 rounded-xl bg-transparent text-white placeholder-gray-600 focus:outline-none transition-all duration-300 font-mono text-sm ${styles.noSpinner}`}
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                  />
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex items-center gap-2 pointer-events-none">
-                    <span className="text-gray-500 text-xs font-mono pr-2 border-r border-white/10 group-focus-within/input:border-blue-500/30 transition-colors">
-                      {selectedChain.symbol}
-                    </span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 text-blue-500/50 group-focus-within/input:text-blue-400 transition-colors"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 10V3L4 14h7v7l9-11h-7z"
                       />
                     </svg>
                   </div>
