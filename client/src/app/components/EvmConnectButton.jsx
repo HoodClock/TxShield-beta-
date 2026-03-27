@@ -1,6 +1,7 @@
 "use client"
 
 import '@rainbow-me/rainbowkit/styles.css'
+import Image from "next/image";
 import { m } from "framer-motion"; // Import motion for animations
 
 import { ConnectButton } from '@rainbow-me/rainbowkit'
@@ -79,10 +80,16 @@ export default function EvmConnectButton() {
                                             className="px-4 py-2 bg-gray-700 text-white font-bold rounded-lg hover:bg-gray-600 transition-all duration-300 shadow-lg shadow-gray-700/40"
                                         >
                                             {chain.has && (
-                                                <img
-                                                    alt={chain.name}
+                                                <Image
+                                                    alt={chain.name ?? 'Chain icon'}
                                                     src={chain.iconUrl}
-                                                    style={{ width: 24, height: 24, marginRight: 8 }}
+                                                    width={24}
+                                                    height={24}
+                                                    unoptimized
+                                                    priority
+                                                    placeholder="blur"
+                                                    blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+                                                    style={{ marginRight: 8 }}
                                                 />
                                             )}
                                             {chain.name}

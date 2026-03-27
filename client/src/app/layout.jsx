@@ -1,18 +1,7 @@
-import { Geist, Geist_Mono } from "next/font/google";
 import "@solana/wallet-adapter-react-ui/styles.css";
 import "./globals.css";
 import ClientLayout from "./clientLayout";
 import ScrollProgressBar from "./components/ScrollProgressBar";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata = {
   title: "TxShield",
@@ -24,9 +13,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    // Add the `dark` class so the CSS custom properties default to the dark theme
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} dark`}>
-      <body className="antialiased bg-background text-foreground">
+    <html lang="en" className="dark" suppressHydrationWarning>
+      <body
+        className="antialiased bg-background text-foreground"
+        suppressHydrationWarning
+      >
         <ClientLayout>
           <ScrollProgressBar />
           {children}
