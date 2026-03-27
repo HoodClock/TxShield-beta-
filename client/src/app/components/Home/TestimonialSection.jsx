@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from "next/image";
 import { m } from "framer-motion";
 
 // Expanded Testimonials for Infinite Scrolling
@@ -182,10 +183,15 @@ const ReviewCard = ({ testimonial }) => (
             <div className="flex items-center gap-3 mt-auto pt-4 border-t border-white/10">
                 <div className="relative w-10 h-10 rounded-full overflow-hidden shrink-0 border border-white/10 group-hover:border-purple-500/50 transition-colors">
                     {testimonial.image ? (
-                        <img
+                        <Image
                             src={testimonial.image}
                             alt={testimonial.name}
+                            width={40}
+                            height={40}
                             className="w-full h-full object-cover"
+                            priority
+                            placeholder="blur"
+                            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
                             onError={(e) => {
                                 e.target.style.display = 'none';
                                 e.target.nextSibling.style.display = 'flex';

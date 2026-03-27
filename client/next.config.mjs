@@ -7,6 +7,20 @@ const __dirname = path.dirname(__filename);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'raw.githubusercontent.com',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'assets.coingecko.com',
+                pathname: '/**',
+            }
+        ],
+    },
     experimental: {
         optimizePackageImports: ['@rainbow-me/rainbowkit', '@solana/wallet-adapter-react', 'wagmi', 'lucide-react', 'react-icons', '@web3icons/react', 'framer-motion'],
     },

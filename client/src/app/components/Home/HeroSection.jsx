@@ -1,10 +1,9 @@
 "use client"
 
-import React, { Suspense } from 'react'
 import Link from "next/link";
+import Image from "next/image";
 import { m } from "framer-motion";
 import { MdArrowRightAlt } from "react-icons/md";
-import dynamic from 'next/dynamic';
 import ScrambleText from '../ScrambleText';
 import HeroBackground from '../backgrounds/HeroBackground';
 
@@ -34,14 +33,14 @@ function HeroSection() {
                         transition={{ duration: 1 }}
                     >
                         <div className="absolute inset-0 bg-cyan-500/10 rounded-full opacity-50 max-sm:hidden" style={{ filter: 'blur(48px)' }}></div>
-                        <img
+                        <Image
                             src="/Images/logo.png"
                             alt="Shield Logo"
                             className="h-full w-auto object-contain relative z-10"
                             loading="eager"
-                            decoding="async"
                             width={256}
                             height={256}
+                            priority
                         />
                     </m.div>
                 </Link>
