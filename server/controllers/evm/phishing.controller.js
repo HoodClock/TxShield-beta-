@@ -58,6 +58,7 @@ const MasterPhishingController = async (req, res) => {
     return res.status(200).json({
       success: true,
       riskSummery: summery,
+      phishingVerdict: summery, // Alias for frontend compatibility
       details: {
         approveScam,
         etherForwarding,

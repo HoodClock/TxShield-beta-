@@ -136,10 +136,26 @@ const _runHoneypotCheck = async (contractAddress, chainId = 1) => {
       }
     }
 
-    return finalResult;
+    return {
+      ...finalResult,
+      buyingTax: finalResult.buyTax,
+      sellingTax: finalResult.sellTax,
+      hasBlackListDetected: false, // Default flags for UI compatibility
+      hasMintable: false,
+      hasTradingControl: false,
+    };
   } catch (err) {
     console.error(`Honeypot Fatal Error: ${err.message}`);
-    throw err;
+    return {
+      success: false,
+      error: err.message,
+      riskScore: 0,
+      buyingTax: 0,
+      sellingTax: 0,
+      hasBlackListDetected: false,
+      hasMintable: false,
+      hasTradingControl: false,
+    };
   }
 };
 
