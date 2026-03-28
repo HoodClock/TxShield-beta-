@@ -1,6 +1,5 @@
 'use client'
 
-import EvmConnectButton from './EvmConnectButton'
 import SolanaConnectButton from './SolanaConnectButton';
 import { usePathname } from 'next/navigation'
 

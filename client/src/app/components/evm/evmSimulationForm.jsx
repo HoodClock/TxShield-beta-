@@ -18,10 +18,10 @@ export default function SimulationForm({
   const [amount, setAmount] = useState("");
 
 const CHAINS = [
-  { id: 1, name: "Ethereum", symbol: "ETH", icon: "https://assets.coingecko.com/coins/images/279/small/ethereum.png" },
-  { id: 56, name: "BNB Chain", symbol: "BNB", icon: "https://assets.coingecko.com/coins/images/825/small/bnb-icon2_2x.png" },
-  { id: 8453, name: "Base", symbol: "ETH", icon: "https://assets.coingecko.com/coins/images/16547/small/coinbase.png" },
-  { id: 42161, name: "Arbitrum", symbol: "ETH", icon: "https://assets.coingecko.com/coins/images/16547/small/arbitrum.png" },
+  { id: 1, name: "Ethereum", symbol: "ETH" },
+  { id: 56, name: "BNB Chain", symbol: "BNB" },
+  { id: 8453, name: "Base", symbol: "ETH" },
+  { id: 42161, name: "Arbitrum", symbol: "ETH" },
 ];
   const [selectedChain, setSelectedChain] = useState(CHAINS[0]);
 
@@ -32,11 +32,6 @@ const CHAINS = [
       contractAddress,
       amount,
     });
-
-    if (!isConnected || !userAddress) {
-      alert("Please connect your wallet first.");
-      return;
-    }
 
     if (!contractAddress || !amount) {
       alert("Please enter both contract address and amount.");
