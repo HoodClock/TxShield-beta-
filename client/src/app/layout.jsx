@@ -7,11 +7,13 @@ import ScrollProgressBar from "./components/ScrollProgressBar";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap"  // fast render font & improves LCP
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap"  // fast render font & improves LCP
 });
 
 export const metadata = {
