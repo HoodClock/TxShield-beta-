@@ -68,6 +68,7 @@ app.use((req, res, next) => {
   next();
 });
 
+// general api rate limiter on all routes
 app.use(generalLimiter);
 
 // Routes middlewares goes in routes(auth_middleware, analysisLimiter middleware)
