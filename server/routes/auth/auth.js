@@ -1,70 +1,29 @@
-const express = require('express')
-const {v4: uuidv4} = require('uuid')
-const db = require("../../config/db")
-const {ethers} = require('ethers')
+/**
+ *  for Devs:
+ * What this router file does: generates & reterives api keys
+ * @deprecated: the current code was not compatible with our new POSTGRE_SQL so i remove it
+ * @description: middleware to authticate request for api_key and store in database
+ * @todo update to use POSTGRE_SQL
+ * @async
+ * @param {wallet, signature} = req.body
+ * -> check if wallet & signature exists in req.body otherwise throw error right away
+ * -> verify signature against wallet address
+ *      => const message = "They can't exploit you if you are the exploit"
+ * -> check if wallet already have a apiKey exists in database if not throw error right away || if exists [Key already exists]
+ * -> if apiKey does not exist, insert it into the database
+ * @generator -> const apikey = 'txs' + crypto.randomBytes(32).toString("hex");
+ * -> after generating apikey apply query to insert into database (right now no payment so all apiKeys are free for every user)
+ *
+ * THEN MAKE ANOTHER ROUTE
+ * @router GET /apikey/:wallet
+ * -> check if wallet exists in database and return apiKey if not throw error right away
+ * -> otherwise select apiKey from database and return it
+ */
 
+const express = require("express");
+const { ethers } = require("ethers");
+const crypto = require("crypto");
+const pool = require("../config/db");
 const router = express.Router();
-
-// to generate the key
-router.post('/connect', (req, res)=> {
-    const {wallet, signature} = req.body
-
-    if (!wallet || !signature) {
-        return res.status(400).json({ error: "Wallet and signature required" });
-    }
-
-    // verification signatures
-    const message = "They can't exploit you if you are the exploit"
-    const recovered = ethers.verifyMessage(message, signature)
-
-    if (recovered.toLowerCase() !== wallet.toLowerCase()) {
-        return res.status(401).json({ error: "Signature verification failed" });
-    }
-
-    // check if wallet have already api key
-    db.get("SELECT * FROM api_keys WHERE wallet = ?", [wallet], (err, row)=> {
-        if (err) return res.status(500).json({ error: "DB error" });
-
-        // if wallet has already api key
-        if (row){
-            return res.json({apiKey: row.apiKey})
-        }
-
-        // if not -> generate new one using uuidv4 with now date
-        const apiKey = uuidv4();
-        const createdAt = new Date().toISOString();
-
-        // now insert into database
-        db.run(
-            "INSERT INTO api_keys (wallet, apiKey, createdAt) VALUES (?, ?, ?)",
-            [wallet, apiKey, createdAt],
-            function(err){
-                if (err) return res.status(500).json({error: "DB insertion error"})
-                res.json({apiKey})        
-            }
-        )
-    })
-})
-
-// to get the existing key
-router.get('/apiKey/:wallet', async(req, res)=> {
-    const {wallet} = req.params
-
-    if (!wallet) {
-        return res.status(400).json({ error: "Wallet address required" });
-    }
-
-    db.get("SELECT * FROM api_keys WHERE wallet = ?", [wallet], (err, row)=> {
-        if (err) {
-            return res.status(500).json({ error: "DB error" });
-        }
-
-        if (row){
-            return res.json({apiKey: row.apiKey})
-        }else{
-            return res.json({apiKey: null})
-        }
-    }) 
-})
 
 module.exports = router;
