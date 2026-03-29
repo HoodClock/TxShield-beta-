@@ -23,7 +23,7 @@
 const express = require("express");
 const { ethers } = require("ethers");
 const crypto = require("crypto");
-const pool = require("../config/db");
+const pool = require("../../config/db");
 const router = express.Router();
 
 module.exports = router;
