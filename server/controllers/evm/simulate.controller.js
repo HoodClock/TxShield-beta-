@@ -165,7 +165,7 @@ const masterSimulationController = async (req, res) => {
       if (
         reason.includes("insufficient amount") ||
         reason.includes("transfer_failed") ||
-        reason.includes("k")
+        reason.includes("uniswapv2: k")
       ) {
         simulateResult.humanReason =
           "Simulation Failed: Token lacks liquidity, or has a 100% buy tax (Honeypot).";
