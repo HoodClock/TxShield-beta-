@@ -319,7 +319,7 @@
 
 // module.exports = { getSimulate };
 
-// new COde
+// New code
 const { ethers } = require("ethers");
 const axios = require("axios");
 require("dotenv").config();
