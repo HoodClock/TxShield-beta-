@@ -1,16 +1,17 @@
 "use client";
 
+import React, { useMemo } from "react";
 import { m } from "framer-motion";
 import { FiGitBranch, FiZap, FiType, FiHash, FiUser, FiUserCheck, FiTrendingUp, FiDollarSign, FiShield } from "react-icons/fi";
 
-export default function TransactionDetails({
+const TransactionDetails = React.memo(({
   itemVariants,
   simulateData,
   requestData,
   gasPercent,
   gasEstimated,
   chain,
-}) {
+}) => {
   return (
     <m.div
       variants={itemVariants}
@@ -31,7 +32,7 @@ export default function TransactionDetails({
         <div>
           {/* Transaction Details Fields */}
           <div className="grid grid-cols-2 gap-3 mt-2">
-            {[
+            {useMemo(() => [
               {
                 label: "Payload",
                 value: "Contract Interaction",
@@ -96,7 +97,7 @@ export default function TransactionDetails({
                 icon: <FiTrendingUp className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
                 mono: true,
               },
-            ].map((item, idx) => (
+            ], [simulateData, requestData]).map((item, idx) => (
               <m.div
                 key={idx}
                 initial={{ opacity: 0, y: 5 }}
@@ -166,4 +167,6 @@ export default function TransactionDetails({
       </div>
     </m.div>
   );
-}
+});
+
+export default TransactionDetails;
