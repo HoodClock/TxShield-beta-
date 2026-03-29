@@ -36,9 +36,13 @@ export default function HeroBackground({ className = "" }) {
         };
         window.addEventListener("mousemove", handleMouseMove);
 
-        let animationFrameId;
+        let animationFrameId = null;
+        let isVisible = true;
+        let isTabActive = !document.hidden;
 
         const render = () => {
+            if (!isVisible || !isTabActive) return;
+            
             ctx.clearRect(0, 0, width, height);
 
             ctx.fillStyle = "rgba(168, 85, 247, 0.8)"; // Tailwind purple-500
@@ -91,7 +95,45 @@ export default function HeroBackground({ className = "" }) {
             animationFrameId = requestAnimationFrame(render);
         };
 
-        render();
+        const startAnimation = () => {
+            if (!animationFrameId) {
+                render();
+            }
+        };
+
+        const stopAnimation = () => {
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
+        };
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                isVisible = entry.isIntersecting;
+                if (isVisible && isTabActive) {
+                    startAnimation();
+                } else {
+                    stopAnimation();
+                }
+            },
+            { threshold: 0 }
+        );
+
+        if (canvas) observer.observe(canvas);
+
+        const handleVisibilityChange = () => {
+            isTabActive = !document.hidden;
+            if (isVisible && isTabActive) {
+                startAnimation();
+            } else {
+                stopAnimation();
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        // Start animation initially
+        startAnimation();
 
         const handleResize = () => {
             width = window.innerWidth;
@@ -103,9 +145,12 @@ export default function HeroBackground({ className = "" }) {
         window.addEventListener("resize", handleResize);
 
         return () => {
+            if (canvas) observer.unobserve(canvas);
+            observer.disconnect();
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
             window.removeEventListener("resize", handleResize);
             window.removeEventListener("mousemove", handleMouseMove);
-            cancelAnimationFrame(animationFrameId);
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
         };
     }, []);
 
