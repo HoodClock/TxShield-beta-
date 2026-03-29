@@ -1,0 +1,21 @@
+/* INPUT FIX */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+/* RAINBOWKIT FIX */
+[data-rk] {
+    z-index: 1000;
+}
+
+/* SCROLLBAR HIDE */
+html, body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    display: none;
+}

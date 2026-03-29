@@ -1,0 +1,23 @@
+.glass-morphism {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+}
+
+.gradient-border {
+    background:
+        linear-gradient(black, black) padding-box,
+        linear-gradient(45deg, transparent, white, transparent) border-box;
+}
+
+/* ORBS */
+.orb-bg { position: relative; isolation: isolate; }
+.orb-bg .orb { position: absolute; border-radius: 50%; }
+
+/* BUTTONS */
+.hero-primary-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* SIMULATE PAGE */
+.evm-chain-card { transition: all 0.3s ease; }
+.sol-chain-card { transition: all 0.3s ease; }

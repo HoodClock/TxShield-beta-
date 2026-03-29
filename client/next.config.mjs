@@ -10,6 +10,20 @@ const nextConfig = {
     experimental: {
         optimizePackageImports: ['@rainbow-me/rainbowkit', '@solana/wallet-adapter-react', 'wagmi', 'lucide-react', 'react-icons', '@web3icons/react', 'framer-motion'],
     },
+
+    // ✅ ADD THIS BLOCK
+ images: {
+  remotePatterns: [
+    {
+      protocol: "https",
+      hostname: "raw.githubusercontent.com",
+    },
+    {
+      protocol: "https",
+      hostname: "assets.coingecko.com", // ✅ ADD THIS
+    },
+  ],
+},
     turbopack: {
         resolveAlias: {
             ws: './empty-module.js',
@@ -30,10 +44,11 @@ const nextConfig = {
         );
         return config;
     },
-    // Enable React strict mode for better error detection
+
     reactStrictMode: true,
+
     onDemandEntries: {
-        maxInactiveAge: 15 * 1000, // 15 seconds
+        maxInactiveAge: 15 * 1000,
         pagesBufferLength: 5,
     },
 };
@@ -41,5 +56,6 @@ const nextConfig = {
 const bundleAnalyzer = withBundleAnalyzer({
     enabled: process.env.ANALYZE === 'true',
 });
+
 
 export default bundleAnalyzer(nextConfig);

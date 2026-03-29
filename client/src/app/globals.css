@@ -3,7 +3,7 @@
 @import "tw-animate-css";
 
 @import "tailwindcss";
-
+/* @import "./styles/animations.css"; */
 
 @font-face {
     font-family: "ClashDisplay-Bold";
@@ -1529,4 +1529,12 @@ div>section:first-child {
 
 .contain-intrinsic-footer {
     contain-intrinsic-size: auto 400px;
+}
+:root {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  font-family: var(--font-sans);
 }

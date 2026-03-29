@@ -1,0 +1,65 @@
+/* ===== SHIELD GRADIENT + GLOW ===== */
+.grad-word {
+  background: linear-gradient(90deg, #a855f7, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+  text-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+}
+
+/* ===== GLITCH EFFECT ===== */
+.grad-word::before,
+.grad-word::after {
+  content: "SHIELD";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  color: transparent;
+  background: linear-gradient(90deg, #a855f7, #06b6d4);
+  -webkit-background-clip: text;
+  opacity: 0.6;
+}
+
+.grad-word::before {
+  animation: glitchTop 2s infinite linear alternate-reverse;
+}
+
+.grad-word::after {
+  animation: glitchBottom 2s infinite linear alternate-reverse;
+}
+
+@keyframes glitchTop {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-2px, -2px); }
+  40% { transform: translate(2px, 2px); }
+  60% { transform: translate(-1px, 1px); }
+  80% { transform: translate(1px, -1px); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes glitchBottom {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(1px, -1px); }
+  80% { transform: translate(-1px, 1px); }
+  100% { transform: translate(0, 0); }
+}
+
+/* ===== BUTTON SHIMMER ===== */
+.simulate-btn-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(168, 85, 247, 0.2),
+    rgba(6, 182, 212, 0.2),
+    rgba(168, 85, 247, 0.2)
+  );
+  background-size: 200% 100%;
+  animation: shimmerMove 3s linear infinite;
+}
+
+@keyframes shimmerMove {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

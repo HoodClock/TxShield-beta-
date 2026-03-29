@@ -1,5 +1,5 @@
 "use client"
-
+import Image from "next/image";
 import '@rainbow-me/rainbowkit/styles.css'
 import { m } from "framer-motion"; // Import motion for animations
 
@@ -79,7 +79,7 @@ export default function EvmConnectButton() {
                                             className="px-4 py-2 bg-gray-700 text-white font-bold rounded-lg hover:bg-gray-600 transition-all duration-300 shadow-lg shadow-gray-700/40"
                                         >
                                             {chain.has && (
-                                                <img
+                                                <Image
                                                     alt={chain.name}
                                                     src={chain.iconUrl}
                                                     style={{ width: 24, height: 24, marginRight: 8 }}

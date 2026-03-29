@@ -1,9 +1,10 @@
 "use client";
 
+import React, { useMemo } from "react";
 import { m } from "framer-motion";
 import { FiGitBranch, FiZap, FiType, FiHash, FiUser, FiUserCheck, FiTrendingUp, FiDollarSign, FiShield } from "react-icons/fi";
 
-export default function TransactionDetails({
+const TransactionDetails = React.memo(function TransactionDetails({
   itemVariants,
   simulateData,
   requestData,
@@ -11,6 +12,79 @@ export default function TransactionDetails({
   gasEstimated,
   chain,
 }) {
+
+  // ✅ Memoized data (prevents re-calculation on every render)
+  const transactionItems = useMemo(() => {
+    return [
+      {
+        label: "Payload",
+        value: "Contract Interaction",
+        icon: <FiType className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
+      },
+      {
+        label: "Value",
+        value: requestData?.amount ? `${requestData.amount} ${requestData.symbol || "ETH"}` : "0.05 ETH (Proxy)",
+        icon: <FiHash className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
+      },
+      {
+        label: "Profit Detected",
+        value: simulateData.isProfit ? "Yes" : "No",
+        icon: <FiTrendingUp className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
+      },
+      {
+        label: "Target Hash",
+        value: requestData?.contractAddress || "0xC02aa...756Cc2 (WETH)",
+        mono: true,
+        icon: <FiUserCheck className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
+      },
+      {
+        label: "Simulation Output",
+        value: simulateData?.success ? "Success" : (simulateData?.errorReason || "Failed"),
+        icon: <FiZap className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
+      },
+      {
+        label: "ETH Delta",
+        value: simulateData?.ethDelta || "0",
+        icon: <FiTrendingUp className="h-4 w-4 pl-1 text-blue-500/50 group-hover/item:text-blue-400" />,
+      },
+      {
+        label: "Token Delta",
+        value: simulateData?.tokenDelta || "0",
+        icon: <FiTrendingUp className="h-4 w-4 pl-1 text-blue-500/50 group-hover/item:text-blue-400" />,
+      },
+      {
+        label: "Allowance Altered",
+        value: simulateData?.allowanceChanged ? `Yes (${simulateData?.allowanceDelta || '0'})` : "No",
+        icon: <FiHash className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
+      },
+      {
+        label: "Honeypot Guard",
+        value: simulateData?.isHoneypot ? "Detected" : "Safe",
+        icon: <FiShield className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
+      },
+      {
+        label: "Reentrancy Filter",
+        value: simulateData?.isReentrancy ? "Detected" : "Safe",
+        icon: <FiZap className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
+      },
+      {
+        label: "Monitored Tokens",
+        value: (!simulateData?.watchedTokens || simulateData?.watchedTokens === "N/A" || simulateData?.watchedTokens === "") 
+          ? "None" 
+          : `${simulateData.watchedTokens.split(',').length} Tokens`,
+        icon: <FiUser className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
+      },
+      {
+        label: "Tokens Delta",
+        value: (!simulateData?.watchedTokensDeltas || simulateData?.watchedTokensDeltas === "N/A" || simulateData?.watchedTokensDeltas === "") 
+          ? "0" 
+          : (simulateData.watchedTokensDeltas.split(",").map(d => parseFloat(d) / 1e18).find(d => d !== 0) || 0) + " WETH",
+        icon: <FiTrendingUp className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
+        mono: true,
+      },
+    ];
+  }, [simulateData, requestData]);
+
   return (
     <m.div
       variants={itemVariants}
@@ -29,74 +103,8 @@ export default function TransactionDetails({
 
       <div className="relative z-10 px-4 sm:px-5 pb-5 mt-4">
         <div>
-          {/* Transaction Details Fields */}
           <div className="grid grid-cols-2 gap-3 mt-2">
-            {[
-              {
-                label: "Payload",
-                value: "Contract Interaction",
-                icon: <FiType className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
-              },
-              {
-                label: "Value",
-                value: requestData?.amount ? `${requestData.amount} ${requestData.symbol || "ETH"}` : "0.05 ETH (Proxy)",
-                icon: <FiHash className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
-              },
-              {
-                label: "Profit Detected",
-                value: simulateData.isProfit ? "Yes" : "No",
-                icon: <FiTrendingUp className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
-              },
-              {
-                label: "Target Hash",
-                value: requestData?.contractAddress || "0xC02aa...756Cc2 (WETH)",
-                mono: true,
-                icon: <FiUserCheck className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
-              },
-              {
-                label: "Simulation Output",
-                value: simulateData?.success ? "Success" : (simulateData?.errorReason || "Failed"),
-                icon: <FiZap className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
-              },
-              {
-                label: "ETH Delta",
-                value: simulateData?.ethDelta || "0",
-                icon: <FiTrendingUp className="h-4 w-4 pl-1 text-blue-500/50 group-hover/item:text-blue-400" />,
-              },
-              {
-                label: "Token Delta",
-                value: simulateData?.tokenDelta || "0",
-                icon: <FiTrendingUp className="h-4 w-4 pl-1 text-blue-500/50 group-hover/item:text-blue-400" />,
-              },
-              {
-                label: "Allowance Altered",
-                value: simulateData?.allowanceChanged ? `Yes (${simulateData?.allowanceDelta || '0'})` : "No",
-                icon: <FiHash className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
-              },
-              {
-                label: "Honeypot Guard",
-                value: simulateData?.isHoneypot ? "Detected" : "Safe",
-                icon: <FiShield className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
-              },
-              {
-                label: "Reentrancy Filter",
-                value: simulateData?.isReentrancy ? "Detected" : "Safe",
-                icon: <FiZap className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
-              },
-              {
-                label: "Monitored Tokens",
-                value: (!simulateData?.watchedTokens || simulateData?.watchedTokens === "N/A" || simulateData?.watchedTokens === "") ? "None" : `${simulateData.watchedTokens.split(',').length} Tokens`,
-                icon: <FiUser className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
-              },
-              {
-                label: "Tokens Delta",
-                value: (!simulateData?.watchedTokensDeltas || simulateData?.watchedTokensDeltas === "N/A" || simulateData?.watchedTokensDeltas === "") 
-                  ? "0" 
-                  : (simulateData.watchedTokensDeltas.split(",").map(d => parseFloat(d) / 1e18).find(d => d !== 0) || 0) + " WETH",
-                icon: <FiTrendingUp className="h-4 w-4 text-blue-500/50 group-hover/item:text-blue-400" />,
-                mono: true,
-              },
-            ].map((item, idx) => (
+            {transactionItems.map((item, idx) => (
               <m.div
                 key={idx}
                 initial={{ opacity: 0, y: 5 }}
@@ -111,8 +119,7 @@ export default function TransactionDetails({
                   </label>
                 </div>
                 <p
-                  className={`text-gray-300 font-semibold pl-8 ${item.mono ? "font-mono text-xs truncate" : "text-sm"
-                    }`}
+                  className={`text-gray-300 font-semibold pl-8 ${item.mono ? "font-mono text-xs truncate" : "text-sm"}`}
                 >
                   {item.value}
                 </p>
@@ -120,9 +127,8 @@ export default function TransactionDetails({
             ))}
           </div>
 
-          {/* Compact Gas Analysis Banner */}
+          {/* Gas section untouched */}
           <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-4 p-3 rounded-xl border border-blue-500/20 bg-[#080d1a] overflow-hidden relative">
-            {/* Left: Energy Dial & title */}
             <div className="flex items-center gap-4 relative z-10 w-full sm:w-auto">
               <div className="relative w-12 h-12 rounded-full flex items-center justify-center bg-black border border-white/10">
                 <svg className="absolute inset-0 w-full h-full -rotate-90">
@@ -146,7 +152,6 @@ export default function TransactionDetails({
               </div>
             </div>
 
-            {/* Right: Metrics */}
             <div className="flex items-center gap-4 relative z-10 w-full sm:w-auto justify-end divide-x divide-white/10">
               <div className="flex flex-col items-end pr-4">
                 <span className="text-gray-500 uppercase tracking-widest font-mono text-[10px]">Gas Used</span>
@@ -166,4 +171,6 @@ export default function TransactionDetails({
       </div>
     </m.div>
   );
-}
+});
+
+export default TransactionDetails;

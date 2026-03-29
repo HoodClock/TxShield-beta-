@@ -7,26 +7,30 @@ import ScrollProgressBar from "./components/ScrollProgressBar";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap", // ✅ prevents layout shift (CLS fix)
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap", // ✅ important
 });
 
 export const metadata = {
   title: "TxShield",
   description: "Simulate Ethereum transactions securely",
   icons: {
-    icon: '/Images/logo.png',
+    icon: "/Images/logo.png",
   },
 };
 
 export default function RootLayout({ children }) {
   return (
-    // Add the `dark` class so the CSS custom properties default to the dark theme
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} dark`}>
-      <body className="antialiased bg-background text-foreground">
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} dark`}
+    >
+      <body className="bg-background text-foreground antialiased font-sans">
         <ClientLayout>
           <ScrollProgressBar />
           {children}

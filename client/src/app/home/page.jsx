@@ -1,125 +1,127 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import Header from "../components/header";
-import StatsSection from "../components/Home/StatsSection";
-import ContactUs from "../components/contactus";
-import HeroSection from "../components/Home/HeroSection";
-import AnalysisSection from "../components/Home/AnalysisSection";
-import ChainSection from "../components/Home/ChainSection";
-import TestimonialSection from "../components/Home/TestimonialSection";
-import Footer from "../components/footer";
-import DataFlowBackground from "../components/DataFlowBackground";
+import React, { useEffect } from "react";
+import dynamic from "next/dynamic";
 
-import { gsap } from "gsap";
-import { ScrollSmoother } from "gsap/ScrollSmoother";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+// ✅ Lazy-loaded components (code splitting)
+const Header = dynamic(() => import("../components/header"));
+const HeroSection = dynamic(() => import("../components/Home/HeroSection"));
 
-gsap.registerPlugin(ScrollSmoother, ScrollTrigger);
+const StatsSection = dynamic(() => import("../components/Home/StatsSection"), { ssr: false });
+const AnalysisSection = dynamic(() => import("../components/Home/AnalysisSection"), { ssr: false });
+const ChainSection = dynamic(() => import("../components/Home/ChainSection"), { ssr: false });
+const TestimonialSection = dynamic(() => import("../components/Home/TestimonialSection"), { ssr: false });
+const ContactUs = dynamic(() => import("../components/contactus"), { ssr: false });
+const Footer = dynamic(() => import("../components/footer"), { ssr: false });
+const DataFlowBackground = dynamic(() => import("../components/DataFlowBackground"), { ssr: false });
 
 function HomePage() {
-  const smoother = useRef(null);
-  const mounted = useRef(true);
 
   useEffect(() => {
-    mounted.current = true;
+    let smootherInstance;
 
-    // Kill any existing ScrollSmoother instance to prevent stacking
-    const existingSmoother = ScrollSmoother.get();
-    if (existingSmoother) {
-      existingSmoother.kill();
-    }
+    const initGSAP = async () => {
+      // ✅ Lazy load GSAP (BIG FIX)
+      const gsapModule = await import("gsap");
+      const ScrollTriggerModule = await import("gsap/ScrollTrigger");
+      const ScrollSmootherModule = await import("gsap/ScrollSmoother");
 
-    // Kill all existing ScrollTriggers
-    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      const gsap = gsapModule.gsap || gsapModule.default;
+      const ScrollTrigger = ScrollTriggerModule.ScrollTrigger;
+      const ScrollSmoother = ScrollSmootherModule.ScrollSmoother;
 
-    // Create a fresh ScrollSmoother instance
-    if (mounted.current) {
-      smoother.current = ScrollSmoother.create({
+      gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
+
+      // Clean previous instances
+      const existing = ScrollSmoother.get();
+      if (existing) existing.kill();
+
+      ScrollTrigger.getAll().forEach((t) => t.kill());
+
+      // Create smoother
+      smootherInstance = ScrollSmoother.create({
         smooth: 1,
         effects: true,
         smoothTouch: 0.1,
       });
-    }
+    };
 
-    // Cleanup on unmount
+    initGSAP();
+
     return () => {
-      mounted.current = false;
-      if (smoother.current) {
-        smoother.current.kill();
-        smoother.current = null;
-      }
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-      gsap.context(() => { }, document.body);
+      if (smootherInstance) smootherInstance.kill();
     };
   }, []);
 
   return (
-    <div className="bg-black text-white min-h-screen font-sans overflow-x-hidden relative" style={{ fontFamily: "'ClashDisplay-Bold', sans-serif", margin: 0, padding: 0, border: 'none', borderTop: 'none', position: 'relative' }}>
-      <div id="smooth-wrapper" style={{ margin: 0, padding: 0, border: 'none', borderTop: 'none' }}>
-        <div id="smooth-content" style={{ margin: 0, padding: 0, border: 'none', borderTop: 'none' }}>
+    <div className="bg-black text-white min-h-screen font-sans overflow-x-hidden relative"
+      style={{ fontFamily: "'ClashDisplay-Bold', sans-serif", margin: 0, padding: 0, border: 'none', borderTop: 'none', position: 'relative' }}
+    >
+
+      <div id="smooth-wrapper">
+        <div id="smooth-content">
+
           <Header />
-          <div className="section-merge relative" style={{ border: 'none', borderTop: 'none', marginTop: 0, paddingTop: 0 }}>
+
+          <div className="section-merge relative">
             <HeroSection />
           </div>
 
-          {/* Beautiful Section Divider */}
           <div className="section-divider"></div>
 
-          {/* Below-the-fold sections with content-visibility optimization */}
           <div className="orb-bg section-merge content-visibility-auto contain-intrinsic-stats relative">
             <DataFlowBackground className="opacity-30 z-0" />
-            <div className="orb orb-1" aria-hidden="true"></div>
-            <div className="orb orb-2" aria-hidden="true"></div>
-            <div className="orb orb-3" aria-hidden="true"></div>
+            <div className="orb orb-1" />
+            <div className="orb orb-2" />
+            <div className="orb orb-3" />
             <div className="relative z-10">
               <StatsSection />
             </div>
           </div>
 
-          {/* Beautiful Section Divider */}
           <div className="section-divider"></div>
 
           <div className="orb-bg section-merge content-visibility-auto contain-intrinsic-analysis">
-            <div className="orb orb-1" aria-hidden="true"></div>
-            <div className="orb orb-2" aria-hidden="true"></div>
-            <div className="orb orb-3" aria-hidden="true"></div>
+            <div className="orb orb-1" />
+            <div className="orb orb-2" />
+            <div className="orb orb-3" />
             <AnalysisSection />
           </div>
 
-          {/* Beautiful Section Divider */}
           <div className="section-divider"></div>
 
           <div className="orb-bg section-merge content-visibility-auto contain-intrinsic-chain">
-            <div className="orb orb-1" aria-hidden="true"></div>
-            <div className="orb orb-2" aria-hidden="true"></div>
-            <div className="orb orb-3" aria-hidden="true"></div>
+            <div className="orb orb-1" />
+            <div className="orb orb-2" />
+            <div className="orb orb-3" />
             <ChainSection />
           </div>
 
           <div className="orb-bg section-merge content-visibility-auto contain-intrinsic-testimonial">
-            <div className="orb orb-1" aria-hidden="true"></div>
-            <div className="orb orb-2" aria-hidden="true"></div>
-            <div className="orb orb-3" aria-hidden="true"></div>
+            <div className="orb orb-1" />
+            <div className="orb orb-2" />
+            <div className="orb orb-3" />
             <TestimonialSection />
           </div>
 
           <div className="orb-bg section-merge content-visibility-auto contain-intrinsic-contact">
-            <div className="orb orb-1" aria-hidden="true"></div>
-            <div className="orb orb-2" aria-hidden="true"></div>
-            <div className="orb orb-3" aria-hidden="true"></div>
+            <div className="orb orb-1" />
+            <div className="orb orb-2" />
+            <div className="orb orb-3" />
             <ContactUs />
           </div>
 
           <div className="orb-bg section-merge content-visibility-auto contain-intrinsic-footer">
-            <div className="orb orb-1" aria-hidden="true"></div>
-            <div className="orb orb-2" aria-hidden="true"></div>
-            <div className="orb orb-3" aria-hidden="true"></div>
+            <div className="orb orb-1" />
+            <div className="orb orb-2" />
+            <div className="orb orb-3" />
             <Footer />
           </div>
+
         </div>
       </div>
     </div>
   );
 }
+
 export default HomePage;

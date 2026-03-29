@@ -1,35 +1,45 @@
-"use client"
+"use client";
 
-import dynamic from "next/dynamic"
+import dynamic from "next/dynamic";
+import React from "react";
 
-const EvmProvider = dynamic(() => import("./evm/EvmProvider"), {
-    ssr: false,
-    loading: () => (
-        <div className="flex justify-center py-4">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-        </div>
-    )
-})
+// Lazy load BOTH providers ONLY when used
+const EvmProvider = dynamic(
+    () => import("./evm/EvmProvider"),
+    {
+        ssr: false,
+        loading: () => (
+            <div className="flex justify-center py-4">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+            </div>
+        ),
+    }
+);
 
-const SolProvider = dynamic(() => import("./sol/SolProvider"), {
-    ssr: false,
-    loading: () => (
-        <div className="flex justify-center py-4">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-        </div>
-    )
-})
+const SolProvider = dynamic(
+    () => import("./sol/SolProvider"),
+    {
+        ssr: false,
+        loading: () => (
+            <div className="flex justify-center py-4">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+            </div>
+        ),
+    }
+);
 
 export default function WalletProviderWrapper({ chain, children }) {
-    if (!chain) {
-        return <>{children}</>
+    // ✅ If no chain → don't load anything
+    if (!chain) return <>{children}</>;
+
+    // ✅ Select provider dynamically
+    if (chain === "EVM") {
+        return <EvmProvider>{children}</EvmProvider>;
     }
 
-    const Provider = chain === "EVM" ? EvmProvider : SolProvider;
+    if (chain === "SOL") {
+        return <SolProvider>{children}</SolProvider>;
+    }
 
-    return (
-        <Provider>
-            {children}
-        </Provider>
-    )
+    return <>{children}</>;
 }
