@@ -11,9 +11,16 @@ const {
   getTransferHistory,
 } = require("../../services/evm/simulation/getTransferHistory");
 
-// ⚠️ CRITICAL: The address of your deployed Phantom Simulator Contract
-const PHANTOM_ADDRESS = "0x0000000000000000000000000000000000008888";
+// ⚠️ CRITICAL: The address of your deployed Phantom Simulator Contract.
+// Read from environment so it can differ per deployment/chain.
+const PHANTOM_ADDRESS = process.env.PHANTOM_ADDRESS;
 
+if (!PHANTOM_ADDRESS || !isAddress(PHANTOM_ADDRESS)) {
+  throw new Error(
+    "Invalid or missing PHANTOM_ADDRESS environment variable: " +
+      (PHANTOM_ADDRESS || "<undefined>")
+  );
+}
 const WATCHED_CHAIN_TOKENS = {
   1: {
     watchToken: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
