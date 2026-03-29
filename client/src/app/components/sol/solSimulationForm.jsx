@@ -15,7 +15,6 @@ export default function SimulationForm({
 }) {
   const [contractAddress, setContractAddress] = useState("");
   const [amount, setAmount] = useState("");
-  const [currency, setCurrency] = useState("SOL");
   const { publicKey } = useWallet();
 
   const handleSimulate = async () => {
@@ -65,10 +64,7 @@ export default function SimulationForm({
     // builiding and sending payload
     const solSimulationData = {
       signedTxBase64: base64Tx,
-      userAddress: publicKey.toBase58(),
       recepientAddress: contractAddress,
-      amount: amount,
-      currencySymbol: currency,
     };
 
     onSolSimulateAll({ solSimulationData });

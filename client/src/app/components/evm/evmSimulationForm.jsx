@@ -29,17 +29,11 @@ export default function SimulationForm({
       return;
     }
 
-    const currencySymbol = selectedChain.symbol;
-    const currency = selectedChain.symbol;
     const chainId = selectedChain.id;
 
     // credentials for simulation
     const simulationData = {
-      userAddress: "0x000000000000000000000000000000000000dEaD", // Dummy address 
       recepientAddress: contractAddress.trim(),
-      amount: "0",
-      currencySymbol,
-      currency,
       chainId,
     };
 
