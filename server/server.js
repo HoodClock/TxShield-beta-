@@ -18,6 +18,10 @@ const contactRouter = require("./routes/contact/contact.routes");
 const suggestionRouter = require("./routes/aiModel/aiModel.routes");
 const authRouter = require("./routes/auth/auth");
 const solSimulateRouter = require("./routes/simulation/sol-simulation.routes");
+const analysisRouter = require("./routes/analysis/analysis.routes");
+
+// start analysis worker right away
+require("./queues/analysisWorker.queue");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -79,6 +83,8 @@ app.use("/api/honeypot", honeypotRouter);
 app.use("/api/phishing", phishingRouter);
 
 app.use("/api/solana/simulate", solSimulateRouter);
+
+app.use("/api/analyze", analysisRouter);
 
 // right now not implementing
 app.use("/api/generations/", suggestionRouter);

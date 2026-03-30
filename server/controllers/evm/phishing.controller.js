@@ -1,9 +1,7 @@
 const {
   evmPhishingValidator,
 } = require("../../validators/evm/evmPhishing.validator");
-const {
-  detectPhishing,
-} = require("../../services/evm/phishing/phishingService");
+const { detectPhishing } = require("../../services/evm/phishing/index");
 const { getAddress } = require("ethers");
 
 const MasterPhishingController = async (req, res) => {
