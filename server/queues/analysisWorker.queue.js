@@ -1,5 +1,5 @@
 const { Worker } = require("bullmq");
-const { connection } = require("./analysisQueue");
+const { connection } = require("./analysis.queue");
 const { getAddress } = require("ethers");
 
 // Your exact services
