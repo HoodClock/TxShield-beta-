@@ -7,6 +7,20 @@ const __dirname = path.dirname(__filename);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    images: {
+    // Allow ALL HTTPS domains (universal)
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**', // matches any HTTPS domain
+        port: '',       // no port
+        pathname: '**', // match any path
+      },
+    ],
+    // Optional: you can also define a custom loader for more control
+    loader: 'default', 
+  },
+  reactStrictMode: true,
     experimental: {
         optimizePackageImports: ['@rainbow-me/rainbowkit', '@solana/wallet-adapter-react', 'wagmi', 'lucide-react', 'react-icons', '@web3icons/react', 'framer-motion'],
     },
