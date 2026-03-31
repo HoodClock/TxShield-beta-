@@ -11,7 +11,7 @@ export default function ConnectWallet({chain}) {
 
   return (
     <div className='flex flex-wrap gap-2'>
-      {chain === "SOL" && <SolanaConnectButton />}
+      
     </div>
   )
 }

@@ -5,6 +5,7 @@ import { serialize, useAccount } from "wagmi";
 import { m } from "framer-motion";
 import ScrambleText from "../ScrambleText";
 import DataFlowBackground from "../DataFlowBackground";
+import Image from "next/image";
 
 import styles from "./evmSimulationForm.module.css";
 
@@ -110,11 +111,14 @@ const CHAINS = [
               className="px-3 py-1.5 rounded-full bg-white/5 hover:bg-purple-500/20 border border-white/10 hover:border-purple-500/50 transition-all duration-300 flex items-center gap-2 group glitch-hover"
               title="Switch to Solana Simulation"
             >
-              <img
+              <Image
                 src="https://assets.coingecko.com/coins/images/4128/small/solana.png"
                 alt="Solana"
-                className="w-4 h-4 rounded-full group-hover:rotate-12 transition-transform duration-300"
-              />
+                width={16}
+                height={16}
+                priority
+                className="rounded-full group-hover:rotate-12 transition-transform duration-300"
+            />
               <span className="text-xs font-mono text-gray-400 group-hover:text-purple-300 transition-colors">
                 Switch to SOL
               </span>
