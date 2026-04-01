@@ -30,6 +30,9 @@ app.get("/ping", (req, res) => {
   res.send("TxShield Backend Live - Version 3.0 Diagnostic");
 });
 
+// let railway know we're behind a proxy
+app.set("trust proxy", 1);
+
 // middlewares
 
 const allowedOrigins = [
