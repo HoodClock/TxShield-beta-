@@ -1,13 +1,10 @@
 const { Queue } = require("bullmq");
+const IORedis = require("ioredis");
 require("dotenv").config();
 
-// Railway gives you these exact variable names
-const connection = {
-  host: process.env.REDISHOST,
-  port: parseInt(process.env.REDISPORT),
-  password: process.env.REDISPASSWORD,
-  username: process.env.REDISUSER || "default",
-};
+const connection = new IORedis(process.env.REDIS_URL, {
+  maxRetriesPerRequest: null,
+});
 
 const analysisQueue = new Queue("analysis", { connection });
 
