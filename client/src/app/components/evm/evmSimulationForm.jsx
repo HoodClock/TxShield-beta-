@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { serialize, useAccount } from "wagmi";
-import { m } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import ScrambleText from "../ScrambleText";
 import DataFlowBackground from "../DataFlowBackground";
 
@@ -13,47 +13,28 @@ export default function SimulationForm({
   backButtonHandler,
   onSwitchChain,
 }) {
-  const { address: userAddress, isConnected } = useAccount();
   const [contractAddress, setContractAddress] = useState("");
-  const [amount, setAmount] = useState("");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const CHAINS = [
-    { id: 1, name: "Ethereum", symbol: "ETH" },
-    { id: 56, name: "BNB Chain", symbol: "BNB" },
-    { id: 8453, name: "Base", symbol: "ETH" },
-    { id: 42161, name: "Arbitrum", symbol: "ETH" },
+    { id: 1, name: "Ethereum", symbol: "ETH", icon: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png" },
+    { id: 56, name: "BNB Chain", symbol: "BNB", icon: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png" },
+    { id: 8453, name: "Base", symbol: "ETH", icon: "https://avatars.githubusercontent.com/u/108554348?v=4" },
+    { id: 42161, name: "Arbitrum", symbol: "ETH", icon: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/arbitrum/info/logo.png" },
   ];
   const [selectedChain, setSelectedChain] = useState(CHAINS[0]);
 
   const handleSimulate = async () => {
-    console.log("Submit button clicked!", {
-      isConnected,
-      userAddress,
-      contractAddress,
-      amount,
-    });
-
-    if (!isConnected || !userAddress) {
-      alert("Please connect your wallet first.");
+    if (!contractAddress) {
+      alert("Please enter a contract address.");
       return;
     }
 
-    if (!contractAddress || !amount) {
-      alert("Please enter both contract address and amount.");
-      return;
-    }
-
-    const currencySymbol = selectedChain.symbol;
-    const currency = selectedChain.symbol;
     const chainId = selectedChain.id;
 
     // credentials for simulation
     const simulationData = {
-      userAddress,
       recepientAddress: contractAddress.trim(),
-      amount: amount.trim(),
-      currencySymbol,
-      currency,
       chainId,
     };
 
@@ -115,9 +96,11 @@ export default function SimulationForm({
               className="px-3 py-1.5 rounded-full bg-white/5 hover:bg-purple-500/20 border border-white/10 hover:border-purple-500/50 transition-all duration-300 flex items-center gap-2 group glitch-hover"
               title="Switch to Solana Simulation"
             >
-              <img
+              <Image
                 src="https://assets.coingecko.com/coins/images/4128/small/solana.png"
                 alt="Solana"
+                width={16}
+                height={16}
                 className="w-4 h-4 rounded-full group-hover:rotate-12 transition-transform duration-300"
               />
               <span className="text-xs font-mono text-gray-400 group-hover:text-purple-300 transition-colors">
@@ -153,55 +136,72 @@ export default function SimulationForm({
               </p>
             </div>
 
-            <div className="space-y-6 max-w-lg mx-auto">
-              <div className="group/input">
+            <div className="space-y-6 max-w-lg mx-auto relative">
+              <div className="group/input relative z-[60]">
                 <label className="block text-blue-400 font-mono text-xs uppercase tracking-widest mb-2 ml-1 opacity-80 group-focus-within/input:opacity-100 group-focus-within/input:text-blue-300 transition-all duration-300">
                   Target Network
                 </label>
-                <div className="relative">
+                <div className="relative z-50">
                   <div className="absolute inset-0 bg-black/40 rounded-xl shadow-[inset_0_2px_15px_rgba(0,0,0,0.8)] pointer-events-none transition-colors duration-300 group-focus-within/input:bg-black/60 border border-white/5 group-focus-within/input:border-blue-500/30"></div>
                   <div className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent opacity-0 group-focus-within/input:opacity-100 transition-opacity duration-500 blur-[1px]"></div>
 
-                  <select
-                    className="relative z-10 w-full px-5 py-4 rounded-xl bg-transparent text-white focus:outline-none transition-all duration-300 font-mono text-sm appearance-none cursor-pointer"
-                    value={selectedChain.id}
-                    onChange={(e) => {
-                      const chain = CHAINS.find(
-                        (c) => c.id === Number(e.target.value),
-                      );
-                      setSelectedChain(chain);
-                    }}
+                  <div 
+                    className="relative z-10 w-full px-5 py-4 rounded-xl bg-transparent text-white cursor-pointer select-none"
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
                   >
-                    {CHAINS.map((chain) => (
-                      <option
-                        key={chain.id}
-                        value={chain.id}
-                        className="bg-[#0a0a0a] text-white font-mono"
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <img src={selectedChain.icon} alt={selectedChain.name} className="w-5 h-5 rounded-full object-cover shadow-sm" />
+                        <span className="font-mono text-sm transition-colors group-hover:text-white">{selectedChain.name} <span className="text-gray-500 text-xs ml-1 opacity-70">({selectedChain.id})</span></span>
+                      </div>
+                      <m.svg
+                        animate={{ rotate: dropdownOpen ? 180 : 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 text-blue-500/50"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
                       >
-                        {chain.name} ({chain.id})
-                      </option>
-                    ))}
-                  </select>
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-500/50 group-focus-within/input:text-blue-400 transition-colors pointer-events-none z-20">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
+                      </m.svg>
+                    </div>
                   </div>
+
+                  <AnimatePresence>
+                    {dropdownOpen && (
+                      <m.div
+                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute top-16 left-0 right-0 mt-2 bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.8)] z-50 overflow-hidden"
+                      >
+                        {CHAINS.map((chain) => (
+                          <div
+                            key={chain.id}
+                            onClick={() => {
+                              setSelectedChain(chain);
+                              setDropdownOpen(false);
+                            }}
+                            className={`flex items-center gap-3 px-5 py-4 cursor-pointer transition-all duration-200 ${
+                              selectedChain.id === chain.id 
+                                ? "bg-blue-500/20 text-white border-l-2 border-blue-500" 
+                                : "hover:bg-white/5 text-gray-400 hover:text-white border-l-2 border-transparent hover:border-blue-400/50"
+                            }`}
+                          >
+                            <img src={chain.icon} alt={chain.name} className={`w-5 h-5 rounded-full object-cover ${selectedChain.id === chain.id ? 'shadow-[0_0_10px_rgba(59,130,246,0.6)]' : ''}`} />
+                            <span className="font-mono text-sm">{chain.name}</span>
+                            <span className="text-xs ml-auto font-mono opacity-50">ID: {chain.id}</span>
+                          </div>
+                        ))}
+                      </m.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
 
-              <div className="group/input">
+              <div className="group/input relative z-[50]">
                 <label className="block text-blue-400 font-mono text-xs uppercase tracking-widest mb-2 ml-1 opacity-80 group-focus-within/input:opacity-100 group-focus-within/input:text-blue-300 transition-all duration-300">
                   Target Contract
                 </label>
@@ -244,47 +244,9 @@ export default function SimulationForm({
                 </div>
               </div>
 
-              <div className="group/input">
-                <label className="block text-blue-400 font-mono text-xs uppercase tracking-widest mb-2 ml-1 opacity-80 group-focus-within/input:opacity-100 group-focus-within/input:text-blue-300 transition-all duration-300">
-                  Transaction Amount
-                </label>
-                <div className="relative">
-                  {/* Hollow Input Background */}
-                  <div className="absolute inset-0 bg-black/40 rounded-xl shadow-[inset_0_2px_15px_rgba(0,0,0,0.8)] pointer-events-none transition-colors duration-300 group-focus-within/input:bg-black/60 border border-white/5 group-focus-within/input:border-blue-500/30"></div>
 
-                  {/* Bottom Glow Element */}
-                  <div className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent opacity-0 group-focus-within/input:opacity-100 transition-opacity duration-500 blur-[1px]"></div>
 
-                  <input
-                    type="number"
-                    placeholder="0.00"
-                    className={`relative z-10 w-full px-5 py-4 rounded-xl bg-transparent text-white placeholder-gray-600 focus:outline-none transition-all duration-300 font-mono text-sm ${styles.noSpinner}`}
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                  />
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex items-center gap-2 pointer-events-none">
-                    <span className="text-gray-500 text-xs font-mono pr-2 border-r border-white/10 group-focus-within/input:border-blue-500/30 transition-colors">
-                      {selectedChain.symbol}
-                    </span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 text-blue-500/50 group-focus-within/input:text-blue-400 transition-colors"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 10V3L4 14h7v7l9-11h-7z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-6 relative z-50">
+              <div className="pt-6 relative z-[40]">
                 <m.button
                   onClick={handleSimulate}
                   whileHover={{ scale: 1.01, y: -2 }}
