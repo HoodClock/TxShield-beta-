@@ -5,14 +5,21 @@ const {
 } = require("../../validators/evm/evmSimulation.validator");
 const { getSimulate } = require("../../services/evm/simulation/simulateTx");
 const {
-  analyzeBytecode,
-} = require("../../services/evm/simulation/analyzeByteCode");
-const {
-  getTransferHistory,
-} = require("../../services/evm/simulation/getTransferHistory");
+  analyzeBytecodeCache,
+  getTransferHistoryCache,
+} = require("../../services/evm/simulation/index");
 
 // ⚠️ CRITICAL: The address of your deployed Phantom Simulator Contract
 const PHANTOM_ADDRESS = "0x0000000000000000000000000000000000008888";
+
+const DEFAULT_USER_ADDRESS = process.env.SIMULATOR_WALLET_ADDRESS;
+
+const CHAIN_DEFAULT_AMOUNTS = {
+  1: "1",
+  56: "0.5",
+  8453: "1",
+  42161: "1",
+};
 
 const WATCHED_CHAIN_TOKENS = {
   1: {
@@ -103,7 +110,7 @@ const masterSimulationController = async (req, res) => {
       return res.status(400).json(validation);
     }
 
-    const { userAddress, amount, chainId, normalizedRecipient } = req.body;
+    const { normalizedRecipient, chainId } = req.body;
 
     const { provider, rpcUrl } = decideChains(chainId);
     const tokenConfig = WATCHED_CHAIN_TOKENS[Number(chainId)];
@@ -124,10 +131,9 @@ const masterSimulationController = async (req, res) => {
     const txTo = dexRouter;
     const expectedAmount = "0";
     const needsTokenSpoof = false;
-
-    // We spend the exact ETH amount
-    const weiBigInt = ethers.parseEther(amount.toString());
-    const txValue = ethers.toBeHex(weiBigInt);
+    const userAddress = DEFAULT_USER_ADDRESS;
+    const amount = CHAIN_DEFAULT_AMOUNTS[Number(chainId)];
+    const txValue = ethers.toBeHex(ethers.parseEther(amount));
 
     // ⚠️ We set the recipient to PHANTOM_ADDRESS so the simulator catches and measures the tokens!
     const txData = await getDexSwapData(
@@ -147,13 +153,13 @@ const masterSimulationController = async (req, res) => {
           tokenConfig.watchToken,
           tokenConfig.watchList,
           txData, // The swap payload
-          txValue, // 1 ETH
+          txValue, // the amount based on chianId to simulate on behalf of the user
           expectedAmount,
           chainId,
           needsTokenSpoof,
         ),
-        analyzeBytecode(tokenAddressToScan, chainId),
-        getTransferHistory(tokenAddressToScan, chainId),
+        analyzeBytecodeCache(tokenAddressToScan, chainId),
+        getTransferHistoryCache(tokenAddressToScan, chainId),
       ]);
 
     // Human-friendly error mapping for DEX Swaps

@@ -38,7 +38,7 @@ abstract contract HighTaxLogic is HoneypotBase {
         try dexRouter.WETH() returns (address w) {
             weth = w;
         } catch {
-            return (0, 0); // No WETH found on router
+            return (0, 0);
         }
 
         address[] memory buyPath = new address[](2);
@@ -48,52 +48,74 @@ abstract contract HighTaxLogic is HoneypotBase {
         uint256 ethIn = 0.1 ether;
         uint256 deadline = block.timestamp + 300;
 
-        // BUY SIMULATION
         uint256 startTokenBal = IERC20(token).balanceOf(address(this));
-        uint256[] memory expectedBuy = dexRouter.getAmountsOut(ethIn, buyPath);
-        
-        try dexRouter.swapExactETHForTokensSupportingFeeOnTransferTokens{value: ethIn}(
-            0,
-            buyPath,
-            address(this),
-            deadline
+        uint256[] memory expectedBuy;
+        try dexRouter.getAmountsOut(ethIn, buyPath) returns (
+            uint[] memory amounts
         ) {
-            uint256 endTokenBal = IERC20(token).balanceOf(address(this));
-            uint256 actualTokens = endTokenBal - startTokenBal;
-            
-            if (expectedBuy[1] > 0) {
-                buyTax = ((expectedBuy[1] - actualTokens) * 100) / expectedBuy[1];
+            expectedBuy = amounts;
+        } catch {}
+
+        // BUY SIMULATION
+        try
+            dexRouter.swapExactETHForTokensSupportingFeeOnTransferTokens{
+                value: ethIn
+            }(0, buyPath, address(this), deadline)
+        {
+            uint256 actualTokens = IERC20(token).balanceOf(address(this)) -
+                startTokenBal;
+
+            if (expectedBuy.length > 1 && expectedBuy[1] > 0) {
+                buyTax =
+                    ((expectedBuy[1] - actualTokens) * 100) /
+                    expectedBuy[1];
             }
-            
+
             // SELL SIMULATION
             if (actualTokens > 0) {
                 address[] memory sellPath = new address[](2);
                 sellPath[0] = token;
                 sellPath[1] = weth;
 
-                IERC20(token).approve(router, actualTokens);
-                uint256 startEthBal = address(this).balance;
-                uint256[] memory expectedSell = dexRouter.getAmountsOut(actualTokens, sellPath);
+                // Loophole Fix: Low-level call for approve to support USDT
+                (bool approveSuccess, ) = token.call(
+                    abi.encodeWithSelector(0x095ea7b3, router, actualTokens)
+                );
+                if (!approveSuccess) {
+                    return (buyTax, 100); // Approve failed = Sell Honeypot
+                }
 
-                try dexRouter.swapExactTokensForETHSupportingFeeOnTransferTokens(
-                    actualTokens,
-                    0,
-                    sellPath,
-                    address(this),
-                    deadline
+                uint256 startEthBal = address(this).balance;
+                uint256[] memory expectedSell;
+                try dexRouter.getAmountsOut(actualTokens, sellPath) returns (
+                    uint[] memory amounts
                 ) {
-                    uint256 endEthBal = address(this).balance;
-                    uint256 actualEth = endEthBal - startEthBal;
-                    
-                    if (expectedSell[1] > 0) {
-                        sellTax = ((expectedSell[1] - actualEth) * 100) / expectedSell[1];
+                    expectedSell = amounts;
+                } catch {}
+
+                try
+                    dexRouter
+                        .swapExactTokensForETHSupportingFeeOnTransferTokens(
+                            actualTokens,
+                            0,
+                            sellPath,
+                            address(this),
+                            deadline
+                        )
+                {
+                    uint256 actualEth = address(this).balance - startEthBal;
+
+                    if (expectedSell.length > 1 && expectedSell[1] > 0) {
+                        sellTax =
+                            ((expectedSell[1] - actualEth) * 100) /
+                            expectedSell[1];
                     }
                 } catch {
                     sellTax = 100; // SELL FAILED = HONEYPOT
                 }
             }
         } catch {
-            buyTax = 100; // BUY FAILED
+            buyTax = 100; // BUY FAILED = HONEYPOT
         }
 
         return (buyTax, sellTax);

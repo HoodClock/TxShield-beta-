@@ -4,6 +4,7 @@ import React from 'react'
 import { m } from "framer-motion";
 import DataFlowBackground from "./DataFlowBackground";
 import ScrambleText from "./ScrambleText";
+import Image from "next/image";
 import "./SimulateHeroSection.module.css";
 import Image from "next/image";
 
@@ -78,10 +79,7 @@ function SimulateHeroSection({ onChainSelect }) {
                                     <Image
                                         src="https://assets.coingecko.com/coins/images/279/small/ethereum.png"
                                         alt="Ethereum"
-                                        priority
-                                        width={48}
-                                        height={48}
-                                        className="sm:w-12 sm:h-12 logo-spin group-hover:scale-110 transition-transform duration-500"
+                                        className="w-10 h-10 sm:w-12 sm:h-12 logo-spin group-hover:scale-110 transition-transform duration-500"
                                     />
                                 </div>
                                 <div className="text-center group-hover:drop-shadow-[0_0_8px_rgba(59,130,246,0.8)] transition-all duration-500">
@@ -120,10 +118,7 @@ function SimulateHeroSection({ onChainSelect }) {
                                     <Image
                                         src="https://assets.coingecko.com/coins/images/4128/small/solana.png"
                                         alt="Solana"
-                                        priority
-                                        width={48}
-                                        height={48}
-                                        className="sm:w-12 sm:h-12 logo-spin group-hover:scale-110 transition-transform duration-500"
+                                        className="w-10 h-10 sm:w-12 sm:h-12 logo-spin group-hover:scale-110 transition-transform duration-500"
                                     />
                                 </div>
                                 <div className="text-center group-hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)] transition-all duration-500">

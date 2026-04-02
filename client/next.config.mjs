@@ -8,6 +8,7 @@ const __dirname = path.dirname(__filename);
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
+<<<<<<< HEAD
     // Allow ALL HTTPS domains (universal)
     remotePatterns: [
       {
@@ -21,6 +22,15 @@ const nextConfig = {
     loader: 'default', 
   },
   reactStrictMode: true,
+=======
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'assets.coingecko.com',
+            },
+        ],
+    },
+>>>>>>> 9c2b2db2a7af6424903283e2344cd356ce024a5a
     experimental: {
         optimizePackageImports: ['@rainbow-me/rainbowkit', '@solana/wallet-adapter-react', 'wagmi', 'lucide-react', 'react-icons', '@web3icons/react', 'framer-motion'],
     },

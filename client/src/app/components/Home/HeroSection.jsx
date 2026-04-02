@@ -4,6 +4,7 @@ import React, { Suspense } from 'react'
 import Link from "next/link";
 import { m } from "framer-motion";
 import { MdArrowRightAlt } from "react-icons/md";
+import Image from "next/image";
 import dynamic from 'next/dynamic';
 import ScrambleText from '../ScrambleText';
 import HeroBackground from '../backgrounds/HeroBackground';
@@ -39,8 +40,7 @@ function HeroSection() {
                             src="/Images/logo.png"
                             alt="Shield Logo"
                             className="h-full w-auto object-contain relative z-10"
-                            loading="eager"
-                            decoding="async"
+                            priority
                             width={256}
                             height={256}
                             priority

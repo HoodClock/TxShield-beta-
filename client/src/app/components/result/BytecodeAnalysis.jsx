@@ -7,10 +7,12 @@ export default function BytecodeAnalysis({
   itemVariants,
   isContract,
   byteData,
+  isScam,
+  reason,
   warnings,
   t,
 }) {
-  const { isScam, confidence, reason } = byteData || {};
+  const { confidence } = byteData || {};
 
   return (
     <m.div
@@ -70,13 +72,17 @@ export default function BytecodeAnalysis({
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.1 }}
-                    className="group/warning relative flex items-start gap-3 p-3.5 bg-black/40 border border-amber-500/20 rounded-lg hover:border-amber-500/40 hover:bg-amber-500/5 transition-all duration-300"
+                    className={`group/warning relative flex flex-col gap-1 p-3.5 bg-black/40 border rounded-lg transition-all duration-300 ${warning.threatLevel === 'HIGH' ? 'border-red-500/20 hover:border-red-500/40 hover:bg-red-500/5' : 'border-amber-500/20 hover:border-amber-500/40 hover:bg-amber-500/5'}`}
                   >
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-amber-500/0 group-hover/warning:bg-amber-500/50 transition-colors"></div>
-                    <FiAlertTriangle className="h-4 w-4 text-amber-500 mt-0.5 flex-shrink-0 drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]" />
-                    <span className="text-amber-100 font-mono text-xs sm:text-sm tracking-wide">
-                      {warning}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <FiAlertTriangle className={`h-4 w-4 mt-0.5 flex-shrink-0 ${warning.threatLevel === 'HIGH' ? 'text-red-500 drop-shadow-[0_0_5px_rgba(239,68,68,0.5)]' : 'text-amber-500 drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]'}`} />
+                      <span className={`font-mono text-xs sm:text-sm font-bold tracking-wide ${warning.threatLevel === 'HIGH' ? 'text-red-400' : 'text-amber-400'}`}>
+                        {warning.title}
+                      </span>
+                    </div>
+                    <p className="text-gray-400 font-mono text-[10px] sm:text-xs pl-7 leading-relaxed">
+                      {warning.description}
+                    </p>
                   </m.div>
                 ))
               ) : (

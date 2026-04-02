@@ -1,11 +1,11 @@
 require("module-alias/register");
+const {
+  generalLimiter,
+  analysisLimiter,
+} = require("./middlewares/rateLimiter.middleware");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-
-console.log("==========================================");
-console.log("TXSHIELD BACKEND VERSION: 3.0 (DIAGNOSTIC)");
-console.log("==========================================");
 
 // middlewares
 const authMiddleware = require("./middlewares/auth.middleware");
@@ -18,6 +18,10 @@ const contactRouter = require("./routes/contact/contact.routes");
 const suggestionRouter = require("./routes/aiModel/aiModel.routes");
 const authRouter = require("./routes/auth/auth");
 const solSimulateRouter = require("./routes/simulation/sol-simulation.routes");
+const analysisRouter = require("./routes/analysis/analysis.routes");
+
+// start analysis worker right away
+require("./queues/analysisWorker.queue");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -26,8 +30,10 @@ app.get("/ping", (req, res) => {
   res.send("TxShield Backend Live - Version 3.0 Diagnostic");
 });
 
-// middlewares
+// let railway know we're behind a proxy
+app.set("trust proxy", 1);
 
+// middlewares
 
 const allowedOrigins = [
   "http://localhost:3000",
@@ -61,27 +67,32 @@ app.use(express.json());
 
 // GLOBAL REQUEST LOGGER
 app.use((req, res, next) => {
-  if (req.url.includes('/simulate')) {
+  if (req.url.includes("/simulate")) {
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-    if (req.method === 'POST') console.log("Body:", JSON.stringify(req.body, null, 2));
+    if (req.method === "POST")
+      console.log("Body:", JSON.stringify(req.body, null, 2));
   }
   next();
 });
 
-// Routes (some need auth_middleware)
+// general api rate limiter on all routes
+app.use(generalLimiter);
+
+// Routes middlewares goes in routes(auth_middleware, analysisLimiter middleware)
 app.use("/api/simulate", simulateRouter);
 
 app.use("/api/honeypot", honeypotRouter);
 
 app.use("/api/phishing", phishingRouter);
 
-app.use("/api/generations/", suggestionRouter);
-
-app.use("/api/contact/", contactRouter);
-
-app.use("/auth", authRouter);
-
 app.use("/api/solana/simulate", solSimulateRouter);
+
+app.use("/api/analyze", analysisRouter);
+
+// right now not implementing
+app.use("/api/generations/", suggestionRouter);
+app.use("/api/contact/", contactRouter);
+app.use("/auth", authRouter);
 
 // Listen Server
 app.listen(PORT, () => {

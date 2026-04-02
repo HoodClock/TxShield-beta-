@@ -69,11 +69,15 @@ const analyzeBytecode = async (recipientAddress, chainId) => {
         "Caution: This contract has hidden logic or proxy capabilities. The developer could change the token's behavior.";
     }
 
+    // Determine confidence based on severity and findings count
+    const confidence = severityScore >= 10 ? "HIGH" : severityScore >= 5 ? "MEDIUM" : "LOW";
+
     return {
       isContract: true,
       trustStatus,
       humanWarning,
       riskFlags,
+      confidence,
     };
   } catch (error) {
     console.error("Bytecode analysis failed:", error.message);
