@@ -186,9 +186,7 @@ const ReviewCard = ({ testimonial }) => (
                         <Image
                             src={testimonial.image}
                             alt={testimonial.name}
-                            fill
-                            priority
-                            className="object-cover"
+                            className="w-full h-full object-cover"
                             onError={(e) => {
                                 e.target.style.display = 'none';
                                 e.target.nextSibling.style.display = 'flex';

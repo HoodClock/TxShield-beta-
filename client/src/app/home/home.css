@@ -1,0 +1,859 @@
+/* Subtle glowing circular orbs used as background accents for sections */
+.orb-bg {
+    position: relative;
+    isolation: isolate;
+}
+
+.orb-bg .orb {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.12;
+    pointer-events: none;
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+}
+
+.orb-bg .orb.orb-1 {
+    width: 420px;
+    height: 420px;
+    right: 10%;
+    top: -60px;
+    background: radial-gradient(circle at 30% 30%,
+            rgba(124, 58, 237, 0.75),
+            rgba(124, 58, 237, 0.05) 50%,
+            transparent 70%);
+}
+
+.orb-bg .orb.orb-2 {
+    width: 340px;
+    height: 340px;
+    left: 6%;
+    top: 10%;
+    background: radial-gradient(circle at 40% 40%,
+            rgba(14, 165, 233, 0.7),
+            rgba(14, 165, 233, 0.03) 50%,
+            transparent 75%);
+}
+
+.orb-bg .orb.orb-3 {
+    width: 240px;
+    height: 240px;
+    left: 60%;
+    bottom: -40px;
+    background: radial-gradient(circle at 50% 50%,
+            rgba(236, 72, 153, 0.6),
+            rgba(236, 72, 153, 0.02) 50%,
+            transparent 75%);
+}
+
+@keyframes orbFloat {
+    0% {
+        transform: translateY(0px) translateX(0px);
+    }
+
+    50% {
+        transform: translateY(-10px) translateX(6px);
+    }
+
+    100% {
+        transform: translateY(0px) translateX(0px);
+    }
+}
+
+.orb-bg .orb {
+    animation: orbFloat 8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .orb-bg .orb {
+        animation: none;
+        filter: blur(18px);
+    }
+}
+
+/* Disable expensive orb animations and blur on mobile for performance */
+@media (max-width: 768px) {
+    .orb-bg .orb {
+        animation: none;
+        filter: blur(10px);
+        opacity: 0.08;
+    }
+}
+
+/* Section merging effect: slight overlap + fade masks at edges so sections visually blend */
+.section-merge {
+    position: relative;
+    overflow: visible;
+    border: none !important;
+    border-top: none !important;
+    outline: none !important;
+}
+
+.section-merge>* {
+    position: relative;
+    z-index: 2;
+    /* content above orbs */
+}
+
+.section-merge .orb {
+    z-index: 1;
+    /* orbs behind content */
+}
+
+.section-merge {
+    /* Use CSS masking to create a soft fade at top and bottom edges so sections blend smoothly.
+     Masking fades the element's own pixels rather than overlaying a solid-colored pseudo-element,
+     which avoids hard seams between sections caused by background-color mismatches. */
+    -webkit-mask-image: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0),
+            rgba(0, 0, 0, 1) 18%,
+            rgba(0, 0, 0, 1) 82%,
+            rgba(0, 0, 0, 0));
+    mask-image: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0),
+            rgba(0, 0, 0, 1) 18%,
+            rgba(0, 0, 0, 1) 82%,
+            rgba(0, 0, 0, 0));
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+
+    /* Gentle overlap so sections tuck into each other visually */
+    margin-top: -44px;
+    padding-top: 72px;
+    padding-bottom: 40px;
+}
+
+/* Remove border from first section-merge */
+.section-merge:first-child {
+    border-top: none !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+    border: none !important;
+    outline: none !important;
+}
+
+@media (max-width: 768px) {
+    .section-merge {
+        margin-top: -28px;
+        padding-top: 56px;
+    }
+}
+
+/* Subtle purple-blue gradient utility with Watch Dogs Style Hacker Glitch */
+@keyframes hackerSlice {
+
+    /* 0% to 70% is the 1-second "pause" (1.3s total duration = ~0.9s pause) */
+    0%,
+    70% {
+        transform: translate(0) skewX(0);
+        clip-path: inset(0 0 0 0);
+        text-shadow: none;
+    }
+
+    /* 71% to 100% is the 0.3s glitch sequence */
+    71% {
+        transform: translate(-3px, 2px) skewX(4deg);
+        clip-path: inset(10% 0 80% 0);
+        text-shadow: 2px 0 #3b82f6, -2px 0 #a855f7;
+    }
+
+    75% {
+        transform: translate(4px, -3px) skewX(-8deg);
+        clip-path: inset(50% 0 30% 0);
+        text-shadow: -2px 0 #3b82f6, 2px 0 #a855f7;
+    }
+
+    79% {
+        transform: translate(-5px, 0) skewX(20deg);
+        clip-path: inset(30% 0 50% 0);
+        text-shadow: 3px 0 #3b82f6;
+    }
+
+    83% {
+        transform: translate(6px, 1px) skewX(-15deg);
+        clip-path: inset(80% 0 10% 0);
+        text-shadow: -3px 0 #a855f7;
+    }
+
+    87% {
+        transform: translate(-2px, -2px) skewX(5deg);
+        clip-path: inset(20% 0 60% 0);
+        text-shadow: 2px 0 #3b82f6, -1px 0 #a855f7;
+    }
+
+    91% {
+        transform: translate(3px, 3px) skewX(-3deg);
+        clip-path: inset(60% 0 20% 0);
+        text-shadow: -2px 0 #3b82f6, 2px 0 #a855f7;
+    }
+
+    95% {
+        transform: translate(-1px, -1px) skewX(1deg);
+        clip-path: inset(5% 0 90% 0);
+        text-shadow: none;
+    }
+
+    100% {
+        transform: translate(0) skewX(0);
+        clip-path: inset(0 0 0 0);
+        text-shadow: none;
+    }
+}
+
+/* =========================================
+   Watch Dogs Cyber Glitch Hover Effect
+   ========================================= */
+.glitch-hover {
+    position: relative;
+    overflow: hidden;
+    /* Hardware acceleration for crisp slices */
+    transform: translateZ(0);
+}
+
+/* The physical button doesn't move, preventing the "fluttering" feeling */
+.glitch-hover:hover {
+    animation: none;
+}
+
+/* Create two overlay copies of the button for the Red/Blue chromatic split */
+.glitch-hover::before,
+.glitch-hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    border-radius: inherit;
+    opacity: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Cyan/Blue slice */
+.glitch-hover::before {
+    background-color: rgba(59, 130, 246, 0.4);
+    /* Tailwind blue-500 */
+    box-shadow: -2px 0 0 #3b82f6;
+}
+
+/* Purple slice */
+.glitch-hover::after {
+    background-color: rgba(168, 85, 247, 0.4);
+    /* Tailwind purple-500 */
+    box-shadow: 2px 0 0 #a855f7;
+}
+
+/* Trigger the aggressive slice animations on hover to loop infinitely */
+.glitch-hover:hover::before {
+    animation: cyberSlice1 2.5s infinite linear;
+}
+
+.glitch-hover:hover::after {
+    animation: cyberSlice2 2.5s infinite linear;
+}
+
+@keyframes cyberSlice1 {
+
+    /* 0-15% is the active glitch */
+    0% {
+        opacity: 0;
+        clip-path: inset(10% 0 80% 0);
+        transform: translateX(-4px);
+    }
+
+    3% {
+        opacity: 1;
+        clip-path: inset(50% 0 10% 0);
+        transform: translateX(4px);
+    }
+
+    6% {
+        opacity: 1;
+        clip-path: inset(20% 0 60% 0);
+        transform: translateX(-2px);
+    }
+
+    9% {
+        opacity: 1;
+        clip-path: inset(80% 0 5% 0);
+        transform: translateX(6px);
+    }
+
+    12% {
+        opacity: 1;
+        clip-path: inset(15% 0 70% 0);
+        transform: translateX(-6px);
+    }
+
+    15% {
+        opacity: 0;
+        clip-path: inset(0 0 0 0);
+        transform: translateX(0);
+    }
+
+    /* 16-100% is the pause interval doing nothing */
+    100% {
+        opacity: 0;
+        clip-path: inset(0 0 0 0);
+        transform: translateX(0);
+    }
+}
+
+@keyframes cyberSlice2 {
+
+    /* 0-15% is the active glitch */
+    0% {
+        opacity: 0;
+        clip-path: inset(80% 0 5% 0);
+        transform: translateX(4px);
+    }
+
+    3% {
+        opacity: 1;
+        clip-path: inset(10% 0 60% 0);
+        transform: translateX(-4px);
+    }
+
+    6% {
+        opacity: 1;
+        clip-path: inset(60% 0 20% 0);
+        transform: translateX(2px);
+    }
+
+    9% {
+        opacity: 1;
+        clip-path: inset(5% 0 80% 0);
+        transform: translateX(-6px);
+    }
+
+    12% {
+        opacity: 1;
+        clip-path: inset(70% 0 15% 0);
+        transform: translateX(6px);
+    }
+
+    15% {
+        opacity: 0;
+        clip-path: inset(0 0 0 0);
+        transform: translateX(0);
+    }
+
+    /* 16-100% is the pause interval doing nothing */
+    100% {
+        opacity: 0;
+        clip-path: inset(0 0 0 0);
+        transform: translateX(0);
+    }
+}
+
+.grad-word {
+    background: linear-gradient(90deg, #a855f7 0%, #3b82f6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 700;
+    display: inline-block;
+    position: relative;
+    /* 1.3s total duration: ~1s pause (0-70%), ~0.3s glitch (70-100%) */
+    animation: hackerSlice 1.3s infinite linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .grad-word {
+        color: #7c3aed;
+        background-clip: unset;
+        -webkit-background-clip: unset;
+    }
+}
+
+/* Fancy gradient border for containers and controls */
+.fancy-gradient-border {
+    background:
+        linear-gradient(var(--background), var(--background)) padding-box,
+        linear-gradient(90deg,
+            rgba(124, 58, 237, 0.65),
+            rgba(79, 70, 229, 0.6),
+            rgba(14, 165, 233, 0.6)) border-box;
+    border: 1px solid transparent;
+    box-shadow: 0 6px 30px rgba(79, 70, 229, 0.06);
+}
+
+.fancy-gradient-border.subtle {
+    box-shadow: 0 8px 40px rgba(14, 165, 233, 0.04);
+}
+
+.fancy-dropdown {
+    background: linear-gradient(180deg,
+            rgba(255, 255, 255, 0.02),
+            rgba(255, 255, 255, 0.01));
+    border-radius: 0.75rem;
+    padding: 0.125rem;
+    /* small padding so border gradient shows */
+}
+
+.fancy-dropdown>.fancy-inner {
+    border-radius: 0.625rem;
+    background: rgba(11, 11, 11, 0.7);
+    padding: 0.75rem;
+}
+
+/* Dimmed surface overrides for Tailwind translucent white utilities
+   These make UI panels/sub-surfaces more subtle and less bright while
+   preserving existing shape and backdrop blur. Placed after Tailwind
+   imports so these rules take precedence. */
+.bg-white\/4 {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+.bg-white\/5 {
+    background-color: rgba(255, 255, 255, 0.025) !important;
+}
+
+.bg-white\/6 {
+    background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+.bg-white\/8 {
+    background-color: rgba(255, 255, 255, 0.012) !important;
+}
+
+.bg-white\/10 {
+    background-color: rgba(255, 255, 255, 0.008) !important;
+}
+
+/* Slightly darker, subtler borders for the same utilities */
+.border-white\/6 {
+    border-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+.border-white\/10 {
+    border-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+/* Reduce hover/active brightness on these surfaces to keep the UI calm */
+.hover\:bg-white\/5:hover {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+.hover\:bg-white\/8:hover {
+    background-color: rgba(255, 255, 255, 0.01) !important;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+
+    .bg-white\/4,
+    .bg-white\/5,
+    .bg-white\/6 {
+        background-color: rgba(255, 255, 255, 0.02) !important;
+    }
+}
+
+/* Very dim feature surface used for feature-grid containers so they blend
+   with the site background while preserving content contrast. */
+.feature-surface {
+    background: rgba(6, 6, 6, 0.6) !important;
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+}
+
+.feature-surface .rounded-lg {
+    border-radius: 0.5rem;
+}
+
+/* Disable backdrop-filter on mobile for better performance */
+@media (max-width: 768px) {
+    .feature-surface {
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+        background: rgba(6, 6, 6, 0.95) !important;
+    }
+}
+
+/* Feature item hover tooltip */
+.feature-item {
+    position: relative;
+}
+
+.feature-popup {
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 10px);
+    transform: translateX(-50%) translateY(8px) scale(0.98);
+    opacity: 0;
+    pointer-events: none;
+    width: min(320px, 86vw);
+    max-width: 380px;
+    background: rgba(10, 10, 10, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    padding: 0.6rem 0.75rem;
+    border-radius: 0.5rem;
+    color: #d6d6e0;
+    font-size: 0.9rem;
+    line-height: 1.25rem;
+    box-shadow: 0 8px 30px rgba(2, 6, 23, 0.6);
+    z-index: 60;
+    transition:
+        opacity 160ms ease,
+        transform 160ms ease;
+}
+
+.feature-item:hover .feature-popup,
+.feature-item:focus-within .feature-popup {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+/* keep tooltip inside viewport on small screens by shifting slightly left/right */
+@media (max-width: 640px) {
+    .feature-popup {
+        left: 50%;
+        top: calc(100% + 6px);
+        width: calc(100% - 2rem);
+        transform: translateX(-50%);
+    }
+}
+
+/* Continuous horizontal logo loop (marquee) */
+.logo-loop {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.logo-track {
+    display: flex;
+    gap: 1.25rem;
+    align-items: center;
+    /* will-change applied only during animation via animation property */
+    /* duplicate content is expected (two copies) so translate by the measured
+    scroll distance moves one copy out — CSS vars are set by JS for exactness. */
+    animation: marquee var(--marquee-duration, 20s) linear infinite;
+}
+
+/* Pause marquee animation on mobile to save battery */
+@media (max-width: 640px) {
+    .logo-track {
+        animation-play-state: paused;
+    }
+}
+
+/* When JavaScript drives the transform we must disable the CSS animation to avoid
+   transform conflicts/jumps. Add the class `js-driven` to the track element
+   to turn off the CSS marquee. */
+.logo-track.js-driven {
+    animation: none !important;
+}
+
+.logo-item {
+    flex: 0 0 auto;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+
+    /* use measured pixel distance when available; fallback to -50% */
+    100% {
+        transform: translateX(calc(var(--scroll-distance, -50%)));
+    }
+}
+
+/* Pause animation when hovered or focused for accessibility */
+.logo-loop:hover .logo-track,
+.logo-loop:focus-within .logo-track {
+    animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .logo-track {
+        animation: none;
+    }
+}
+
+/* Hide native scrollbars while keeping scrolling functional */
+html,
+body {
+    -ms-overflow-style: none;
+    /* IE 10+ */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+/* Remove any borders or lines at the top */
+html {
+    border-top: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+/* Remove any default borders from main containers */
+#smooth-wrapper,
+#smooth-content,
+#__next,
+div[id="smooth-wrapper"],
+div[id="smooth-content"] {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    border-top: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Remove any lines from sections */
+section,
+section:first-child,
+.section-merge:first-child,
+div>section:first-child {
+    border: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+/* Black stroke for SHIELD text - using text-shadow for gradient text compatibility */
+.shield-text-stroke {
+    text-shadow:
+        -2px -2px 0 #000000,
+        2px -2px 0 #000000,
+        -2px 2px 0 #000000,
+        2px 2px 0 #000000,
+        -2px 0 0 #000000,
+        2px 0 0 #000000,
+        0 -2px 0 #000000,
+        0 2px 0 #000000,
+        -1px -1px 0 #000000,
+        1px -1px 0 #000000,
+        -1px 1px 0 #000000,
+        1px 1px 0 #000000;
+}
+
+/* Section indicator (right-side small boxes) */
+.section-indicator {
+    position: fixed;
+    right: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 9999;
+    pointer-events: auto;
+}
+
+.section-indicator ul {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.section-indicator li {
+    list-style: none;
+}
+
+.section-indicator .dot {
+    display: block;
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    transition: all 180ms ease;
+    box-shadow: inset 0 -4px 8px rgba(0, 0, 0, 0.45);
+}
+
+.section-indicator .dot:hover {
+    transform: scale(1.08);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.section-indicator .dot.active {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #7c3aed 0%, #0ea5e9 100%);
+    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Accessibility: hide text but available to screen readers */
+.visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0 0 0 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* Enhanced Hero Button Styles */
+.hero-primary-btn {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.hero-primary-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+}
+
+.hero-secondary-btn {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.hero-secondary-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Beautiful Section Dividers */
+.section-divider {
+    position: relative;
+    height: 1px;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(168, 85, 247, 0.3) 20%,
+            rgba(139, 92, 246, 0.5) 50%,
+            rgba(168, 85, 247, 0.3) 80%,
+            transparent);
+    margin: 60px 0;
+    overflow: hidden;
+}
+
+.section-divider::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(34, 211, 238, 0.5),
+            transparent);
+    animation: divider-shimmer 4s ease-in-out infinite;
+}
+
+/* Disable shimmer animation on mobile */
+@media (max-width: 768px) {
+    .section-divider::before {
+        animation: none;
+        opacity: 0;
+    }
+}
+
+@keyframes divider-shimmer {
+
+    0%,
+    100% {
+        left: -100%;
+    }
+
+    50% {
+        left: 100%;
+    }
+}
+
+/* Enhanced Card Glow Effects */
+.card-glow {
+    position: relative;
+}
+
+.card-glow::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(135deg,
+            rgba(168, 85, 247, 0.5),
+            rgba(34, 211, 238, 0.5));
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.card-glow:hover::before {
+    opacity: 1;
+}
+
+/* Responsive improvements */
+@media (max-width: 640px) {
+
+    /* Reduce padding on small screens */
+    .section-merge {
+        padding-top: 40px !important;
+        padding-bottom: 32px !important;
+    }
+
+    /* Ensure text doesn't overflow on mobile */
+    h1,
+    h2,
+    h3 {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+
+    /* Better touch targets for mobile */
+    button,
+    a {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
+/* Tablet optimizations */
+@media (min-width: 641px) and (max-width: 1024px) {
+    .section-merge {
+        padding-top: 56px !important;
+        padding-bottom: 40px !important;
+    }
+}
+
+/* Content-visibility optimization for below-the-fold sections */
+.content-visibility-auto {
+    content-visibility: auto;
+}
+
+/* Contain intrinsic sizes for different section types */
+.contain-intrinsic-stats {
+    contain-intrinsic-size: auto 600px;
+}
+
+.contain-intrinsic-analysis {
+    contain-intrinsic-size: auto 800px;
+}
+
+.contain-intrinsic-chain {
+    contain-intrinsic-size: auto 700px;
+}
+
+.contain-intrinsic-testimonial {
+    contain-intrinsic-size: auto 500px;
+}
+
+.contain-intrinsic-contact {
+    contain-intrinsic-size: auto 600px;
+}
+
+.contain-intrinsic-footer {
+    contain-intrinsic-size: auto 400px;
+}

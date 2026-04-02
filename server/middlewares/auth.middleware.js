@@ -1,34 +1,18 @@
-const db = require('../config/db')
+/**
+ * Middleware to authenticate request for api_key and store in database
+ * @async
+ * @param {wallet} = req.headers
+ * @function @async authMiddleware(req, res, next)
+ * const origin = req.headers.origin then
+ * -> Allow all origins (cors) just like in the server.js (just copy paste that here)
+ * -> check if apiKey exists in database and attach wallet info to request if not throw error right away (using sql {pool.query})
+ * @constant fetch req.[wallet,tier,apikey]
+ * -> update last_used timestamp using sql {pool.query}
+ * -> at last use "next()" to pass control to the next middleware
+ */
 
-function authMidlleware(req, res, next){
+const pool = require("../config/db");
 
-    const origin = req.headers.origin || req.headers.host;
+async function authMiddleware(req, res, next) {}
 
-    if (
-        origin?.includes("localhost:3000") ||  // local frontend
-        origin?.includes("localhost:5000") ||  // local backend
-        origin?.includes("txshield-beta.vercel.app") // vercel frontend
-    ) {
-        return next();
-    }
-
-    // extracting the authorization from the header
-    const authHeader = req.header["authorization"]
-
-    if (!authHeader) return res.status(401).json({ error: "Missing Authorization header" });
-
-    // Bearer <APIKEY>
-    const token = authHeader.split(" ")[1]; 
-    if (!token) return res.status(401).json({ error: "Invalid Authorization format" });
-
-    db.get("SELECT * FROM api_keys WHERE apiKey = ?", [token], (err, row)=> {
-        if (err) return res.status(500).json({ error: "DB error" });
-        if (!row) return res.status(403).json({ error: "Invalid API key" });
-
-        // attach wallet info to request for later use if needed
-        req.wallet = row.wallet;
-        next();
-    })
-}
-
-module.exports = authMidlleware;
+module.exports = authMiddleware;
