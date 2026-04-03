@@ -171,15 +171,6 @@ export default function App() {
     }
   }, [simulationData, honeypotData]);
 
-  const handleSimulationComplete = () => {
-    setIsLoading(false);
-    setShowResults(true);
-  };
-
-  const handleSimulateAgain = () => {
-    setShowResults(false);
-  };
-
   return (
     <div className="min-h-screen bg-black flex flex-col">
       <Head>

@@ -9,8 +9,9 @@ const {
   getTransferHistoryCache,
 } = require("../../services/evm/simulation/index");
 
-// ⚠️ CRITICAL: The address of your deployed Phantom Simulator Contract
-const PHANTOM_ADDRESS = "0x0000000000000000000000000000000000008888";
+// ⚠️ CRITICAL: The address of your deployed Phantom Simulator Contract.
+// Read from environment so it can differ per deployment/chain.
+const PHANTOM_ADDRESS = process.env.PHANTOM_ADDRESS;
 
 const DEFAULT_USER_ADDRESS = process.env.SIMULATOR_WALLET_ADDRESS;
 
@@ -171,7 +172,7 @@ const masterSimulationController = async (req, res) => {
       if (
         reason.includes("insufficient amount") ||
         reason.includes("transfer_failed") ||
-        reason.includes("k")
+        reason.includes("uniswapv2: k")
       ) {
         simulateResult.humanReason =
           "Simulation Failed: Token lacks liquidity, or has a 100% buy tax (Honeypot).";

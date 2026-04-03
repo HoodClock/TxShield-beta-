@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import Image from "next/image";
 import { m, useInView } from "framer-motion";
 
 function ChainDisplay() {
@@ -91,10 +92,15 @@ function ChainDisplay() {
                                     {/* Inner Node Pulse */}
                                     <div className={`relative flex items-center justify-center`}>
                                         <div className="absolute inset-0 bg-white/20 blur-md rounded-full group-hover:bg-purple-500/40 transition-colors duration-300"></div>
-                                        <img
+                                        <Image
                                             src={chain.logo}
                                             alt={chain.label}
+                                            width={40}
+                                            height={40}
                                             className="w-8 h-8 sm:w-10 sm:h-10 object-contain rounded-full relative z-10 group-hover:scale-110 transition-transform duration-300 drop-shadow-lg"
+                                            priority
+                                            placeholder="blur"
+                                            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
                                             onError={(e) => {
                                                 e.target.style.display = 'none';
                                                 const placeholder = e.target.parentElement;

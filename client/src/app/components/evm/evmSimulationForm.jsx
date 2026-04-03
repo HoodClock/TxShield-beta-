@@ -1,20 +1,30 @@
 "use client";
 
 import { useState } from "react";
+<<<<<<< HEAD
 import { m, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+=======
+import Image from "next/image";
+import { useAccount } from "wagmi";
+import { m } from "framer-motion";
+>>>>>>> 2b8ce27548758e8d2162cf2fbd583c584e69af4a
 import ScrambleText from "../ScrambleText";
 import DataFlowBackground from "../DataFlowBackground";
-
-import styles from "./evmSimulationForm.module.css";
 
 export default function SimulationForm({
   onSimulateAll,
   backButtonHandler,
   onSwitchChain,
 }) {
+<<<<<<< HEAD
   const [contractAddress, setContractAddress] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
+=======
+  const { address: userAddress } = useAccount();
+  const [contractAddress, setContractAddress] = useState("");
+  const DEFAULT_SIMULATION_AMOUNT = "0.05";
+>>>>>>> 2b8ce27548758e8d2162cf2fbd583c584e69af4a
 
   const CHAINS = [
     { id: 1, name: "Ethereum", symbol: "ETH", icon: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png" },
@@ -25,16 +35,45 @@ export default function SimulationForm({
   const [selectedChain, setSelectedChain] = useState(CHAINS[0]);
 
   const handleSimulate = async () => {
+<<<<<<< HEAD
     if (!contractAddress) {
       alert("Please enter a contract address.");
       return;
     }
 
+=======
+    console.log("Submit button clicked!", {
+      userAddress,
+      contractAddress,
+    });
+
+    if (!userAddress) {
+      alert("Please connect your wallet first.");
+      return;
+    }
+
+    if (!contractAddress) {
+      alert("Please enter your contract address");
+      return;
+    }
+
+    const currencySymbol = selectedChain.symbol;
+    const currency = selectedChain.symbol;
+>>>>>>> 2b8ce27548758e8d2162cf2fbd583c584e69af4a
     const chainId = selectedChain.id;
 
     // credentials for simulation
     const simulationData = {
+<<<<<<< HEAD
       recepientAddress: contractAddress.trim(),
+=======
+      userAddress,
+      contractAddress: contractAddress.trim(),
+      recepientAddress: contractAddress.trim(),
+      amount: DEFAULT_SIMULATION_AMOUNT,
+      currencySymbol,
+      currency,
+>>>>>>> 2b8ce27548758e8d2162cf2fbd583c584e69af4a
       chainId,
     };
 
@@ -101,7 +140,14 @@ export default function SimulationForm({
                 alt="Solana"
                 width={16}
                 height={16}
+<<<<<<< HEAD
                 className="w-4 h-4 rounded-full group-hover:rotate-12 transition-transform duration-300"
+=======
+                className="rounded-full group-hover:rotate-12 transition-transform duration-300"
+                priority
+                placeholder="blur"
+                blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+>>>>>>> 2b8ce27548758e8d2162cf2fbd583c584e69af4a
               />
               <span className="text-xs font-mono text-gray-400 group-hover:text-purple-300 transition-colors">
                 Switch to SOL
@@ -244,9 +290,13 @@ export default function SimulationForm({
                 </div>
               </div>
 
+<<<<<<< HEAD
 
 
               <div className="pt-6 relative z-[40]">
+=======
+              <div className="pt-6 relative z-50">
+>>>>>>> 2b8ce27548758e8d2162cf2fbd583c584e69af4a
                 <m.button
                   onClick={handleSimulate}
                   whileHover={{ scale: 1.01, y: -2 }}

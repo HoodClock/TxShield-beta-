@@ -11,6 +11,7 @@ import TestimonialSection from "../components/Home/TestimonialSection";
 import Footer from "../components/footer";
 import DataFlowBackground from "../components/DataFlowBackground";
 
+<<<<<<< HEAD
 import { gsap } from "gsap";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -18,40 +19,56 @@ import "./home.css";
 
 gsap.registerPlugin(ScrollSmoother, ScrollTrigger);
 
+=======
+>>>>>>> 2b8ce27548758e8d2162cf2fbd583c584e69af4a
 function HomePage() {
   const smoother = useRef(null);
-  const mounted = useRef(true);
+  const cleanupRef = useRef(null);
 
   useEffect(() => {
-    mounted.current = true;
+    let isMounted = true;
 
-    // Kill any existing ScrollSmoother instance to prevent stacking
-    const existingSmoother = ScrollSmoother.get();
-    if (existingSmoother) {
-      existingSmoother.kill();
-    }
+    const setupSmoother = async () => {
+      const [{ gsap }, { ScrollSmoother }, { ScrollTrigger }] = await Promise.all([
+        import("gsap"),
+        import("gsap/ScrollSmoother"),
+        import("gsap/ScrollTrigger"),
+      ]);
 
-    // Kill all existing ScrollTriggers
-    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      if (!isMounted) {
+        return;
+      }
 
-    // Create a fresh ScrollSmoother instance
-    if (mounted.current) {
+      gsap.registerPlugin(ScrollSmoother, ScrollTrigger);
+
+      const existingSmoother = ScrollSmoother.get();
+      if (existingSmoother) {
+        existingSmoother.kill();
+      }
+
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+
       smoother.current = ScrollSmoother.create({
         smooth: 1,
         effects: true,
         smoothTouch: 0.1,
       });
-    }
 
-    // Cleanup on unmount
+      cleanupRef.current = () => {
+        if (smoother.current) {
+          smoother.current.kill();
+          smoother.current = null;
+        }
+        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      };
+    };
+
+    setupSmoother();
+
     return () => {
-      mounted.current = false;
-      if (smoother.current) {
-        smoother.current.kill();
-        smoother.current = null;
-      }
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-      gsap.context(() => { }, document.body);
+      isMounted = false;
+      cleanupRef.current?.();
+      cleanupRef.current = null;
     };
   }, []);
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from "next/image";
 import { m } from "framer-motion";
 import Image from "next/image";
 
@@ -189,6 +190,9 @@ const ReviewCard = ({ testimonial }) => (
                             width={40}
                             height={40}
                             className="w-full h-full object-cover"
+                            priority
+                            placeholder="blur"
+                            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
                             onError={(e) => {
                                 e.target.style.display = 'none';
                                 e.target.nextSibling.style.display = 'flex';
