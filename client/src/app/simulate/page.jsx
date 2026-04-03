@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  useState,
-  useCallback,
-  useRef,
-  useEffect,
-} from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { AnimatePresence } from "framer-motion";
 import Head from "next/head";
@@ -13,30 +8,48 @@ import "./simulate.css";
 
 // UI Components (SSR enabled)
 const Header = dynamic(() => import("../components/header"), {
-  loading: () => <div className="h-16 bg-black"></div>
+  loading: () => <div className="h-16 bg-black"></div>,
 });
-const SimulateHeroSection = dynamic(() => import("../components/SimulateHeroSection"), {
-  loading: () => <div className="h-auto bg-black"></div>
-});
+const SimulateHeroSection = dynamic(
+  () => import("../components/SimulateHeroSection"),
+  {
+    loading: () => <div className="h-auto bg-black"></div>,
+  },
+);
 const ResultsDashboard = dynamic(() => import("../components/result/index"), {
-  loading: () => <div className="h-64 bg-gray-900 rounded-xl animate-pulse"></div>
+  loading: () => (
+    <div className="h-64 bg-gray-900 rounded-xl animate-pulse"></div>
+  ),
 });
 const Footer = dynamic(() => import("../components/footer"), {
-  loading: () => <div className="h-20 bg-black"></div>
+  loading: () => <div className="h-20 bg-black"></div>,
 });
 const SkeletonLoader = dynamic(() => import("../components/SkeletonLoader"));
 
 // Web3 & Simulation Components (Strictly Client-Side, SSR disabled)
 
-const WalletProviderWrapper = dynamic(() => import("../components/WalletProviderWrapper"), { ssr: false });
-const EvmSimulationForm = dynamic(() => import("../components/evm/evmSimulationForm"), {
-  ssr: false,
-  loading: () => <div className="h-64 bg-gray-900 rounded-xl animate-pulse"></div>
-});
-const SolSimulationForm = dynamic(() => import("../components/sol/solSimulationForm"), {
-  ssr: false,
-  loading: () => <div className="h-64 bg-gray-900 rounded-xl animate-pulse"></div>
-});
+const WalletProviderWrapper = dynamic(
+  () => import("../components/WalletProviderWrapper"),
+  { ssr: false },
+);
+const EvmSimulationForm = dynamic(
+  () => import("../components/evm/evmSimulationForm"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-64 bg-gray-900 rounded-xl animate-pulse"></div>
+    ),
+  },
+);
+const SolSimulationForm = dynamic(
+  () => import("../components/sol/solSimulationForm"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-64 bg-gray-900 rounded-xl animate-pulse"></div>
+    ),
+  },
+);
 
 import {
   honeypotChecks as runHoneypotChecks,
@@ -74,46 +87,44 @@ export default function App() {
     };
   }, []);
 
-  // for simulation when currency => ETH
-  const handleSimulateAll = useCallback(
-    async ({ honeypotData: hpData, simulationData: simData }) => {
-      if (!mounted.current) return;
+  const handleSimulateAll = useCallback(async (_evmPayload) => {
+    if (!mounted.current) return;
 
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    abortControllerRef.current = new AbortController();
+
+    setIsLoading(true);
+    setShowResults(false);
+
+    try {
+      const [simulationRes, honeypotRes, phishingRes] = await Promise.all([
+        runSimulateTx(_evmPayload),
+        runHoneypotChecks(_evmPayload),
+        runPhishing(_evmPayload),
+      ]);
+
+      if (mounted.current) {
+        setRequestData(_evmPayload);
+        setSimulationData(simulationRes.data);
+        setHoneypotData(honeypotRes.data);
+        setPhishingData(phishingRes.data);
+        setShowResults(true);
       }
-      abortControllerRef.current = new AbortController();
-
-      setIsLoading(true);
-      setShowResults(false);
-
-      try {
-        const [simulationRes, honeypotRes, phishingRes] = await Promise.all([
-          runSimulateTx(simData),
-          runHoneypotChecks(hpData),
-          runPhishing(simData),
-        ]);
-
-        if (mounted.current) {
-          setRequestData(simData);
-          setSimulationData(simulationRes.data);
-          setHoneypotData(honeypotRes.data);
-          setPhishingData(phishingRes.data);
-          setShowResults(true);
-        }
-      } catch (err) {
-        if (err.name !== "AbortError") {
-          console.error("Simulation API Error:", err.response?.data || err);
-          alert(`Simulation failed: ${err.response?.data?.error || err.message || "Check console"}`);
-        }
-      } finally {
-        if (mounted.current) {
-          setIsLoading(false);
-        }
+    } catch (err) {
+      if (err.name !== "AbortError") {
+        console.error("Simulation API Error:", err.response?.data || err);
+        alert(
+          `Simulation failed: ${err.response?.data?.error || err.message || "Check console"}`,
+        );
       }
-    },
-    [],
-  );
+    } finally {
+      if (mounted.current) {
+        setIsLoading(false);
+      }
+    }
+  }, []);
 
   // for simulation when currency => SOL
   const handleSolSimulation = useCallback(
@@ -139,8 +150,13 @@ export default function App() {
         }
       } catch (err) {
         if (err.name !== "AbortError") {
-          console.error("Solana Simulation API Error:", err.response?.data || err);
-          alert(`Solana Simulation failed: ${err.response?.data?.error || err.message || "Check console"}`);
+          console.error(
+            "Solana Simulation API Error:",
+            err.response?.data || err,
+          );
+          alert(
+            `Solana Simulation failed: ${err.response?.data?.error || err.message || "Check console"}`,
+          );
         }
       } finally {
         if (mounted.current) {
@@ -204,9 +220,7 @@ export default function App() {
         {chain && !showResults && (
           <section className="container mx-auto px-4 py-12">
             <WalletProviderWrapper chain={chain}>
-              <div className="flex justify-center my-6">
-
-              </div>
+              <div className="flex justify-center my-6"></div>
               <AnimatePresence mode="wait">
                 {chain === "EVM" && (
                   <EvmSimulationForm
@@ -227,9 +241,7 @@ export default function App() {
               </AnimatePresence>
             </WalletProviderWrapper>
 
-            {isLoading && (
-              <SkeletonLoader isLoading={true} />
-            )}
+            {isLoading && <SkeletonLoader isLoading={true} />}
           </section>
         )}
 

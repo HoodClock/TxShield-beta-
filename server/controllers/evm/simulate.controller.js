@@ -1,8 +1,6 @@
 const { isAddress, ethers } = require("ethers");
+require("dotenv").config();
 const { decideChains } = require("../../config/provider");
-const {
-  evmSimulateValidator,
-} = require("../../validators/evm/evmSimulation.validator");
 const { getSimulate } = require("../../services/evm/simulation/simulateTx");
 const {
   analyzeBytecodeCache,
@@ -105,12 +103,7 @@ const getDexSwapData = async (
 // Master Controller
 const masterSimulationController = async (req, res) => {
   try {
-    const validation = evmSimulateValidator(req.body);
-    if (validation !== true) {
-      return res.status(400).json(validation);
-    }
-
-    const { normalizedRecipient, chainId } = req.body;
+    const { contractAddress, chainId } = req.body;
 
     const { provider, rpcUrl } = decideChains(chainId);
     const tokenConfig = WATCHED_CHAIN_TOKENS[Number(chainId)];
@@ -120,7 +113,7 @@ const masterSimulationController = async (req, res) => {
       throw new Error(`Configuration missing for chainId: ${chainId}`);
     }
 
-    const tokenAddressToScan = normalizedRecipient.trim().toLowerCase();
+    const tokenAddressToScan = contractAddress.trim().toLowerCase();
     if (!isAddress(tokenAddressToScan)) {
       throw new Error("Invalid Ethereum Address format");
     }
