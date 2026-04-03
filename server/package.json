@@ -1,9 +1,9 @@
 {
   "dependencies": {
     "@metaplex-foundation/mpl-token-metadata": "^3.4.0",
-    "@solana/spl-token": "^0.4.14",
+    "@solana/spl-token": "^0.1.8",
     "@solana/web3.js": "^1.98.4",
-    "alchemy-sdk": "^3.6.5",
+    "alchemy-sdk": "^2.0.2",
     "axios": "^1.8.4",
     "bull": "^4.16.5",
     "bullmq": "^5.71.1",
@@ -17,9 +17,10 @@
     "nodemailer": "^7.0.3",
     "nodemon": "^3.1.9",
     "pg": "^8.20.0",
+    "pool": "^0.4.1",
     "rate-limit-redis": "^4.3.1",
     "redis": "^5.10.0",
-    "sqlite3": "^5.1.7",
+    "sqlite3": "^6.0.1",
     "uuid": "^11.1.0"
   },
   "name": "server",

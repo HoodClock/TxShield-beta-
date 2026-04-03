@@ -1,23 +1,17 @@
 // Validator for EVM Simulation requests
 const evmSimulateValidator = (body) => {
-  const { userAddress, amount, chainId } = body;
-  
   // Support multiple naming conventions for the recipient
   const recipient = body.recepientAddress || body.recipientAddress || body.targetContractAddress;
-  
+
   // Support currency or currencySymbol, default to "ETH" if missing for backward compatibility
   const currency = body.currency || body.currencySymbol || "ETH";
 
-  if (!userAddress) {
-    return { success: false, message: "userAddress is missing" };
-  }
+  // NOTE: userAddress and amount are NOT required from the client —
+  // the controller uses SIMULATOR_WALLET_ADDRESS (env) and CHAIN_DEFAULT_AMOUNTS (hardcoded).
   if (!recipient) {
-    return { success: false, message: "recipient address is missing (use recipientAddress or targetContractAddress)" };
+    return { success: false, message: "recipient address is missing (use recepientAddress, recipientAddress, or targetContractAddress)" };
   }
-  if (!amount) {
-    return { success: false, message: "amount is missing" };
-  }
-  if (!chainId) {
+  if (!body.chainId) {
     return { success: false, message: "chainId is missing" };
   }
 
@@ -29,3 +23,4 @@ const evmSimulateValidator = (body) => {
 };
 
 module.exports = { evmSimulateValidator };
+

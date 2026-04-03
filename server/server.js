@@ -6,6 +6,15 @@ const {
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
+const setupDb = require("./config/setupDb");
+
+// // Initialize the database
+// setupDb().then(() => {
+//   console.log("Database setup successfully.");
+// }).catch((err) => {
+//   console.error("Database setup failed:", err);
+//   process.exit(1); // Exit the process if the database setup fails
+// });
 
 // middlewares
 const authMiddleware = require("./middlewares/auth.middleware");
@@ -79,15 +88,15 @@ app.use((req, res, next) => {
 app.use(generalLimiter);
 
 // Routes middlewares goes in routes(auth_middleware, analysisLimiter middleware)
-app.use("/api/simulate", simulateRouter);
+app.use("/api/simulate", authMiddleware,simulateRouter);
 
-app.use("/api/honeypot", honeypotRouter);
+app.use("/api/honeypot", authMiddleware, honeypotRouter);
 
-app.use("/api/phishing", phishingRouter);
+app.use("/api/phishing", authMiddleware, phishingRouter);
 
-app.use("/api/solana/simulate", solSimulateRouter);
+app.use("/api/solana/simulate", authMiddleware, solSimulateRouter);
 
-app.use("/api/analyze", analysisRouter);
+app.use("/api/analyze", authMiddleware, analysisRouter);
 
 // right now not implementing
 app.use("/api/generations/", suggestionRouter);
