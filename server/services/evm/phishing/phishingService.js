@@ -95,7 +95,7 @@ const HARNESS_ABI = [
   },
 ];
 
-// ── Chain → Alchemy RPC URL mapping ───────────────────────────────────────
+// ── Chain
 const { decideChains } = require("../../../config/provider");
 
 // debug_traceCall chain support (not all chains support this)

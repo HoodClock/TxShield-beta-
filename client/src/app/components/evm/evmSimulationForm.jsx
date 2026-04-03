@@ -17,10 +17,30 @@ export default function SimulationForm({
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const CHAINS = [
-    { id: 1, name: "Ethereum", symbol: "ETH", icon: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png" },
-    { id: 56, name: "BNB Chain", symbol: "BNB", icon: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png" },
-    { id: 8453, name: "Base", symbol: "ETH", icon: "https://avatars.githubusercontent.com/u/108554348?v=4" },
-    { id: 42161, name: "Arbitrum", symbol: "ETH", icon: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/arbitrum/info/logo.png" },
+    {
+      id: 1,
+      name: "Ethereum",
+      symbol: "ETH",
+      icon: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png",
+    },
+    {
+      id: 56,
+      name: "BNB Chain",
+      symbol: "BNB",
+      icon: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/info/logo.png",
+    },
+    {
+      id: 8453,
+      name: "Base",
+      symbol: "ETH",
+      icon: "https://avatars.githubusercontent.com/u/108554348?v=4",
+    },
+    {
+      id: 42161,
+      name: "Arbitrum",
+      symbol: "ETH",
+      icon: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/arbitrum/info/logo.png",
+    },
   ];
   const [selectedChain, setSelectedChain] = useState(CHAINS[0]);
 
@@ -33,18 +53,12 @@ export default function SimulationForm({
     const chainId = selectedChain.id;
 
     // credentials for simulation
-    const simulationData = {
-      recepientAddress: contractAddress.trim(),
+    const _evmPayload = {
+      contractAddress: contractAddress.trim(),
       chainId,
     };
 
-    // credentials for honeypot
-    const honeypotData = {
-      contractAddress: contractAddress.trim(),
-      chainId: chainId,
-    };
-
-    onSimulateAll({ honeypotData, simulationData });
+    onSimulateAll(_evmPayload);
   };
 
   return (
@@ -145,14 +159,23 @@ export default function SimulationForm({
                   <div className="absolute inset-0 bg-black/40 rounded-xl shadow-[inset_0_2px_15px_rgba(0,0,0,0.8)] pointer-events-none transition-colors duration-300 group-focus-within/input:bg-black/60 border border-white/5 group-focus-within/input:border-blue-500/30"></div>
                   <div className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent opacity-0 group-focus-within/input:opacity-100 transition-opacity duration-500 blur-[1px]"></div>
 
-                  <div 
+                  <div
                     className="relative z-10 w-full px-5 py-4 rounded-xl bg-transparent text-white cursor-pointer select-none"
                     onClick={() => setDropdownOpen(!dropdownOpen)}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <img src={selectedChain.icon} alt={selectedChain.name} className="w-5 h-5 rounded-full object-cover shadow-sm" />
-                        <span className="font-mono text-sm transition-colors group-hover:text-white">{selectedChain.name} <span className="text-gray-500 text-xs ml-1 opacity-70">({selectedChain.id})</span></span>
+                        <img
+                          src={selectedChain.icon}
+                          alt={selectedChain.name}
+                          className="w-5 h-5 rounded-full object-cover shadow-sm"
+                        />
+                        <span className="font-mono text-sm transition-colors group-hover:text-white">
+                          {selectedChain.name}{" "}
+                          <span className="text-gray-500 text-xs ml-1 opacity-70">
+                            ({selectedChain.id})
+                          </span>
+                        </span>
                       </div>
                       <m.svg
                         animate={{ rotate: dropdownOpen ? 180 : 0 }}
@@ -163,7 +186,12 @@ export default function SimulationForm({
                         viewBox="0 0 24 24"
                         stroke="currentColor"
                       >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1.5}
+                          d="M19 9l-7 7-7-7"
+                        />
                       </m.svg>
                     </div>
                   </div>
@@ -185,14 +213,22 @@ export default function SimulationForm({
                               setDropdownOpen(false);
                             }}
                             className={`flex items-center gap-3 px-5 py-4 cursor-pointer transition-all duration-200 ${
-                              selectedChain.id === chain.id 
-                                ? "bg-blue-500/20 text-white border-l-2 border-blue-500" 
+                              selectedChain.id === chain.id
+                                ? "bg-blue-500/20 text-white border-l-2 border-blue-500"
                                 : "hover:bg-white/5 text-gray-400 hover:text-white border-l-2 border-transparent hover:border-blue-400/50"
                             }`}
                           >
-                            <img src={chain.icon} alt={chain.name} className={`w-5 h-5 rounded-full object-cover ${selectedChain.id === chain.id ? 'shadow-[0_0_10px_rgba(59,130,246,0.6)]' : ''}`} />
-                            <span className="font-mono text-sm">{chain.name}</span>
-                            <span className="text-xs ml-auto font-mono opacity-50">ID: {chain.id}</span>
+                            <img
+                              src={chain.icon}
+                              alt={chain.name}
+                              className={`w-5 h-5 rounded-full object-cover ${selectedChain.id === chain.id ? "shadow-[0_0_10px_rgba(59,130,246,0.6)]" : ""}`}
+                            />
+                            <span className="font-mono text-sm">
+                              {chain.name}
+                            </span>
+                            <span className="text-xs ml-auto font-mono opacity-50">
+                              ID: {chain.id}
+                            </span>
                           </div>
                         ))}
                       </m.div>
@@ -243,8 +279,6 @@ export default function SimulationForm({
                   </div>
                 </div>
               </div>
-
-
 
               <div className="pt-6 relative z-[40]">
                 <m.button
