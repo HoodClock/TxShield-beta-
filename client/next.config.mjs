@@ -16,7 +16,7 @@ const nextConfig = {
         ],
     },
     experimental: {
-        optimizePackageImports: ['@rainbow-me/rainbowkit', '@solana/wallet-adapter-react', 'wagmi', 'lucide-react', 'react-icons', '@web3icons/react', 'framer-motion'],
+        optimizePackageImports: ['@solana/wallet-adapter-react', 'thirdweb', 'lucide-react', 'react-icons', '@web3icons/react', 'framer-motion'],
     },
     turbopack: {
         resolveAlias: {

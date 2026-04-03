@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, Suspense, lazy } from "react";
-import { useAccount, useSignMessage } from "wagmi";
+import { useActiveAccount } from "thirdweb/react";
 import {
     authConnect as AuthApiConnect,
     authGetAPI as AuthFetchAPi,
@@ -18,8 +18,9 @@ const Header = lazy(() => import("../components/header"));
 const Footer = lazy(() => import("../components/footer"));
 
 export default function ApiRefClient() {
-    const { address, isConnected } = useAccount();
-    const { signMessageAsync } = useSignMessage();
+    const account = useActiveAccount();
+    const address = account?.address;
+    const isConnected = !!account;
     const [apiKey, setApiKey] = useState(null);
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(false);
@@ -48,7 +49,7 @@ export default function ApiRefClient() {
         try {
             setLoading(true);
             const message = "They can't exploit you if you are the exploit";
-            const signature = await signMessageAsync({ message });
+            const signature = await account.signMessage({ message });
             const res = await AuthApiConnect({ wallet: address, signature });
             setApiKey(res.data.apiKey);
         } catch (err) {

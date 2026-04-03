@@ -10,7 +10,7 @@ export default function BalanceChanges({
   if (!simulateData || (!simulateData.ethDelta && !simulateData.tokenDelta)) return null;
 
   const ethDelta = parseFloat(simulateData.ethDelta || "0") / 1e18;
-  const rawTokenDelta = parseFloat(simulateData.tokenDelta || "0"); 
+  const rawTokenDelta = parseFloat(simulateData.tokenDelta || "0") / 1e18;
   const watchToken = simulateData.watchedTokens;
   const deltasArray = (simulateData.watchedTokensDeltas || "").split(",");
   

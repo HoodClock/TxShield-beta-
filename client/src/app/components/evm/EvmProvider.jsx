@@ -1,15 +1,11 @@
 "use client"
 
-import { WagmiProvider } from "wagmi"
-import { wagmiConfig, chains } from "@/lib/wagmi"
-import { RainbowKitProvider } from "@rainbow-me/rainbowkit"
+import { ThirdwebProvider } from "thirdweb/react"
 
 export default function EvmProvider({ children }) {
     return (
-        <WagmiProvider config={wagmiConfig}>
-            <RainbowKitProvider chains={chains}>
-                {children}
-            </RainbowKitProvider>
-        </WagmiProvider>
+        <ThirdwebProvider>
+            {children}
+        </ThirdwebProvider>
     )
 }
