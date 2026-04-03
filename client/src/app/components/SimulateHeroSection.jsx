@@ -1,6 +1,7 @@
 "use client"
 
 import React from 'react'
+import Image from 'next/image';
 import { m } from "framer-motion";
 import DataFlowBackground from "./DataFlowBackground";
 import ScrambleText from "./ScrambleText";
@@ -77,8 +78,14 @@ function SimulateHeroSection({ onChainSelect }) {
                                         alt="Ethereum"
                                         width={48}
                                         height={48}
+<<<<<<< HEAD
                                         className="w-10 h-10 sm:w-12 sm:h-12 logo-spin group-hover:scale-110 transition-transform duration-500"
                                     />
+=======
+                                        className="w-10 h-10 sm:w-12 sm:h-12 logo-spin group-hover:scale-110 transition-transform duration-500"                                          priority
+                                          placeholder="blur"
+                                          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="                                    />
+>>>>>>> 2b8ce27548758e8d2162cf2fbd583c584e69af4a
                                 </div>
                                 <div className="text-center group-hover:drop-shadow-[0_0_8px_rgba(59,130,246,0.8)] transition-all duration-500">
                                     <h3 className="text-xl sm:text-2xl font-bold tracking-wide text-gray-200 group-hover:text-white transition-colors duration-300">Ethereum</h3>
@@ -118,8 +125,14 @@ function SimulateHeroSection({ onChainSelect }) {
                                         alt="Solana"
                                         width={48}
                                         height={48}
+<<<<<<< HEAD
                                         className="w-10 h-10 sm:w-12 sm:h-12 logo-spin group-hover:scale-110 transition-transform duration-500"
                                     />
+=======
+                                        className="w-10 h-10 sm:w-12 sm:h-12 logo-spin group-hover:scale-110 transition-transform duration-500"                                          priority
+                                          placeholder="blur"
+                                          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="                                    />
+>>>>>>> 2b8ce27548758e8d2162cf2fbd583c584e69af4a
                                 </div>
                                 <div className="text-center group-hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.8)] transition-all duration-500">
                                     <h3 className="text-xl sm:text-2xl font-bold tracking-wide text-gray-200 group-hover:text-white transition-colors duration-300">Solana</h3>
