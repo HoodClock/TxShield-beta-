@@ -39,7 +39,7 @@ export default function RootLayout({ children }) {
   return (
     // Add the `dark` class so the CSS custom properties default to the dark theme
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${clashDisplay.variable} dark`}>
-      <body className="antialiased bg-background text-foreground">
+      <body className="antialiased bg-background text-foreground" suppressHydrationWarning>
         <ClientLayout>
           <ScrollProgressBar />
           {children}
