@@ -7,9 +7,7 @@ const {
   getTransferHistoryCache,
 } = require("../../services/evm/simulation/index");
 
-// ⚠️ CRITICAL: The address of your deployed Phantom Simulator Contract
 const PHANTOM_ADDRESS = "0x0000000000000000000000000000000000008888";
-
 const DEFAULT_USER_ADDRESS = process.env.SIMULATOR_WALLET_ADDRESS;
 
 const CHAIN_DEFAULT_AMOUNTS = {
@@ -17,6 +15,13 @@ const CHAIN_DEFAULT_AMOUNTS = {
   56: "0.5",
   8453: "1",
   42161: "1",
+};
+
+const CHAIN_WETH = {
+  1: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+  56: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+  8453: "0x4200000000000000000000000000000000000006",
+  42161: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
 };
 
 const WATCHED_CHAIN_TOKENS = {
@@ -61,38 +66,17 @@ const CHAIN_DEX_ROUTERS = {
   42161: "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506",
 };
 
-// DEX Utility Function
-const getDexSwapData = async (
-  provider,
-  routerAddress,
-  tokenOutAddress,
-  recipient,
-) => {
-  const routerAbi = [
+// ✅ Fixed: uses routerInterface (not routerContract), correct param order
+const getDexSwapData = (wethAddress, tokenOutAddress, recipient) => {
+  const routerInterface = new ethers.Interface([
     "function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline)",
-    "function WETH() external pure returns (address)",
-  ];
-
-  const routerContract = new ethers.Contract(
-    routerAddress,
-    routerAbi,
-    provider,
-  );
-
-  let wethAddress;
-  try {
-    wethAddress = await routerContract.WETH();
-  } catch (e) {
-    throw new Error(
-      "Target is not a standard V2 Router or WETH() is unsupported.",
-    );
-  }
+  ]);
 
   const path = [wethAddress, tokenOutAddress];
-  const amountOutMin = 0; // 100% Slippage
+  const amountOutMin = 0;
   const deadline = Math.floor(Date.now() / 1000) + 60 * 20;
 
-  return routerContract.interface.encodeFunctionData("swapExactETHForTokens", [
+  return routerInterface.encodeFunctionData("swapExactETHForTokens", [
     amountOutMin,
     path,
     recipient,
@@ -100,38 +84,52 @@ const getDexSwapData = async (
   ]);
 };
 
-// Master Controller
 const masterSimulationController = async (req, res) => {
   try {
     const { contractAddress, chainId } = req.body;
 
-    const { provider, rpcUrl } = decideChains(chainId);
-    const tokenConfig = WATCHED_CHAIN_TOKENS[Number(chainId)];
-    const dexRouter = CHAIN_DEX_ROUTERS[Number(chainId)];
+    if (!contractAddress || !chainId) {
+      return res
+        .status(400)
+        .json({ success: false, error: "Missing contractAddress or chainId." });
+    }
+
+    const chainIdNum = Number(chainId);
+    const { rpcUrl } = decideChains(chainId);
+    const tokenConfig = WATCHED_CHAIN_TOKENS[chainIdNum];
+    const dexRouter = CHAIN_DEX_ROUTERS[chainIdNum];
+    const wethAddress = CHAIN_WETH[chainIdNum];
 
     if (!tokenConfig || !dexRouter) {
       throw new Error(`Configuration missing for chainId: ${chainId}`);
     }
+    if (!wethAddress) {
+      throw new Error(`WETH address not configured for chainId: ${chainId}`);
+    }
 
     const tokenAddressToScan = contractAddress.trim().toLowerCase();
     if (!isAddress(tokenAddressToScan)) {
-      throw new Error("Invalid Ethereum Address format");
+      return res
+        .status(400)
+        .json({ success: false, error: "Invalid Ethereum address format." });
     }
 
-    // --- THE CORE ARCHITECTURE FIX ---
-    // We ruthlessly enforce a DEX swap. The target is the Router. The purchase is the Token.
+    // ✅ Guard: prevent WETH → WETH swap (IDENTICAL_ADDRESSES error)
+    if (tokenAddressToScan === wethAddress.toLowerCase()) {
+      return res.status(400).json({
+        success: false,
+        error:
+          "Cannot simulate native wrapped token. Please enter a token contract address.",
+      });
+    }
 
-    const txTo = dexRouter;
-    const expectedAmount = "0";
-    const needsTokenSpoof = false;
     const userAddress = DEFAULT_USER_ADDRESS;
-    const amount = CHAIN_DEFAULT_AMOUNTS[Number(chainId)];
+    const amount = CHAIN_DEFAULT_AMOUNTS[chainIdNum];
     const txValue = ethers.toBeHex(ethers.parseEther(amount));
 
-    // ⚠️ We set the recipient to PHANTOM_ADDRESS so the simulator catches and measures the tokens!
-    const txData = await getDexSwapData(
-      provider,
-      dexRouter,
+    // ✅ Fixed: correct arg order (wethAddress, tokenOut, recipient) — no await needed, it's sync now
+    const txData = getDexSwapData(
+      wethAddress,
       tokenAddressToScan,
       PHANTOM_ADDRESS,
     );
@@ -141,21 +139,19 @@ const masterSimulationController = async (req, res) => {
         getSimulate(
           rpcUrl,
           userAddress,
-          txTo, // Send to DEX Router
-          tokenAddressToScan, // The Token CA we are evaluating
+          dexRouter,
+          tokenAddressToScan,
           tokenConfig.watchToken,
           tokenConfig.watchList,
-          txData, // The swap payload
-          txValue, // the amount based on chianId to simulate on behalf of the user
-          expectedAmount,
+          txData,
+          txValue,
+          "0",
           chainId,
-          needsTokenSpoof,
         ),
         analyzeBytecodeCache(tokenAddressToScan, chainId),
         getTransferHistoryCache(tokenAddressToScan, chainId),
       ]);
 
-    // Human-friendly error mapping for DEX Swaps
     if (simulateResult && !simulateResult.success) {
       const reason = simulateResult.errorReason
         ? simulateResult.errorReason.toLowerCase()
@@ -167,7 +163,10 @@ const masterSimulationController = async (req, res) => {
         reason.includes("k")
       ) {
         simulateResult.humanReason =
-          "Simulation Failed: Token lacks liquidity, or has a 100% buy tax (Honeypot).";
+          "Simulation Failed: Token lacks liquidity or has 100% buy tax (Honeypot).";
+      } else if (reason.includes("identical_addresses")) {
+        simulateResult.humanReason =
+          "Simulation Failed: Cannot swap a token with itself.";
       } else if (reason.includes("silent") || reason === "") {
         simulateResult.humanReason =
           "Transaction Reverted: DEX Swap failed. Token may be a honeypot, paused, or lack liquidity.";
@@ -178,11 +177,7 @@ const masterSimulationController = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      checks: {
-        simulateResult,
-        byteCodeResult,
-        transactionHistoryResult,
-      },
+      checks: { simulateResult, byteCodeResult, transactionHistoryResult },
     });
   } catch (err) {
     console.error("Master Simulation Controller Error:", err.message);
