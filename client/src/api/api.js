@@ -1,13 +1,13 @@
 import axios from "axios";
 
 // for local.
-const rawBaseUrl = "http://localhost:5000";
+// const rawBaseUrl = "http://localhost:5000";
 
 // for testing.
 // const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 // for prod-envoirnment
-// const rawBaseUrl = process.env.NEXT_PUBLIC_PROD_BASE_URL || "";
+const rawBaseUrl = process.env.NEXT_PUBLIC_PROD_BASE_URL || "";
 const BASE_URL = rawBaseUrl.endsWith("/")
   ? rawBaseUrl.slice(0, -1)
   : rawBaseUrl;
