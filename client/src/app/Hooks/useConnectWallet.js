@@ -1,24 +1,17 @@
 'use client';
 
-import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { useActiveAccount, useConnect, useDisconnect } from 'thirdweb/react';
 
 export default function useConnectWallet() {
-  const { address, isConnected } = useAccount();
-  const { connect, connectors, error, isLoading, pendingConnector } = useConnect();
+  const account = useActiveAccount();
+  const { connect, isConnecting } = useConnect();
   const { disconnect } = useDisconnect();
-
-  // Optional: Find MetaMask or WalletConnect if you want defaults
-  const metaMaskConnector = connectors.find(connector => connector.id === 'metaMask');
 
   return {
     connect,
     disconnect,
-    connectors,
-    address,
-    isConnected,
-    isLoading,
-    error,
-    pendingConnector,
-    metaMaskConnector,
+    address: account?.address,
+    isConnected: !!account,
+    isLoading: isConnecting,
   };
 }

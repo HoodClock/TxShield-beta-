@@ -228,6 +228,7 @@ export default function App() {
                     onSimulateAll={handleSimulateAll}
                     backButtonHandler={() => setChain(null)}
                     onSwitchChain={() => setChain("SOL")}
+                    isLoading={isLoading}
                   />
                 )}
                 {chain === "SOL" && (
@@ -236,6 +237,7 @@ export default function App() {
                     onSolSimulateAll={handleSolSimulation}
                     backButtonHandler={() => setChain(null)}
                     onSwitchChain={() => setChain("EVM")}
+                    isLoading={isLoading}
                   />
                 )}
               </AnimatePresence>
