@@ -19,6 +19,7 @@ const suggestionRouter = require("./routes/aiModel/aiModel.routes");
 const authRouter = require("./routes/auth/auth");
 const solSimulateRouter = require("./routes/simulation/sol-simulation.routes");
 const analysisRouter = require("./routes/analysis/analysis.routes");
+const authMiddleware = require("./middlewares/auth.middleware");
 
 // start analysis worker right away
 require("./queues/analysisWorker.queue");
@@ -92,7 +93,7 @@ app.use("/api/analyze", analysisRouter);
 // right now not implementing
 app.use("/api/generations/", suggestionRouter);
 app.use("/api/contact/", contactRouter);
-app.use("/auth", authRouter);
+app.use("/auth",authMiddleware ,  authRouter);
 
 // Listen Server
 app.listen(PORT, () => {
