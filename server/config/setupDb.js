@@ -1,13 +1,32 @@
 const pool = require("./db");
 
 /**
- * for devs:
- * @async
- * @function -> "your function name here"
- * @description Initialize api_keys table: {id, api_key, wallet, tier, request_count, created_at, last_used}
- * @returns {Promise<void>} -> using pool here from ./db.js {@example -> pool.query("your query")} with await returns void
- * @todo call a funciton simply at the end -> {setup}
- * @throws {Error} Database connection failed
- * @example await setup(); // logs "DB READY"
- * @todo run this file once on server startup in terminal -> @example {node ./location of this file }
+ * Initialize api_keys table: {id, api_key, wallet, tier, request_count, created_at, last_used}
  */
+const setup = async () => {
+  try {
+    const query = `
+      CREATE TABLE IF NOT EXISTS api_keys (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        api_key VARCHAR(255) UNIQUE NOT NULL,
+        wallet VARCHAR(42) NOT NULL,
+        tier VARCHAR(50) DEFAULT 'free',
+        request_count INTEGER DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        last_used TIMESTAMP
+      );
+    `;
+    await pool.query(query);
+    console.log("DB READY: api_keys table initialized.");
+  } catch (error) {
+    console.error("Database connection failed", error);
+    throw error;
+  }
+};
+
+// Run if called directly
+if (require.main === module) {
+  setup().finally(() => process.exit());
+}
+
+module.exports = setup;

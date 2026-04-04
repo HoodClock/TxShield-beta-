@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-import { ConnectButton as RainbowConnectButton } from "@rainbow-me/rainbowkit";
+import { ConnectButton } from "thirdweb/react";
+import { client } from "@/lib/thirdwebClient";
 
 export default function ConnectButtonWrapper() {
-    return <RainbowConnectButton />;
+    return <ConnectButton client={client} />;
 }

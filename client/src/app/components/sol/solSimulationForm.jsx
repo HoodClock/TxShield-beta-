@@ -12,6 +12,7 @@ export default function SimulationForm({
   onSolSimulateAll,
   backButtonHandler,
   onSwitchChain,
+  isLoading,
 }) {
   const [contractAddress, setContractAddress] = useState("");
   const [amount, setAmount] = useState("");
@@ -226,27 +227,41 @@ export default function SimulationForm({
               <div className="pt-6 relative z-50">
                 <m.button
                   onClick={handleSimulate}
-                  whileHover={{ scale: 1.01, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`w-full py-4 rounded-xl bg-purple-600/20 border border-purple-500/50 text-white font-bold tracking-widest uppercase text-sm shadow-[0_0_20px_rgba(147,51,234,0.2)] hover:shadow-[0_0_40px_rgba(147,51,234,0.4)] hover:bg-purple-600/40 relative overflow-hidden group glitch-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-purple-500 pointer-events-auto ${styles['sol-btn-glow']}`}
+                  disabled={isLoading}
+                  whileHover={isLoading ? {} : { scale: 1.01, y: -2 }}
+                  whileTap={isLoading ? {} : { scale: 0.98 }}
+                  className={`w-full py-4 rounded-xl border text-white font-bold tracking-widest uppercase text-sm relative overflow-hidden group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black transition-all ${
+                    isLoading 
+                      ? "bg-purple-600/10 border-purple-500/20 text-white/50 cursor-not-allowed" 
+                      : `bg-purple-600/20 border-purple-500/50 shadow-[0_0_20px_rgba(147,51,234,0.2)] hover:shadow-[0_0_40px_rgba(147,51,234,0.4)] hover:bg-purple-600/40 glitch-hover focus:ring-purple-500 pointer-events-auto ${styles['sol-btn-glow']}`
+                  }`}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] transition-all"></div>
+                  {!isLoading && <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] transition-all"></div>}
                   <span className="relative z-10 flex items-center justify-center gap-3">
-                    Execute Simulation
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 group-hover:translate-x-1 group-hover:text-purple-300 transition-all"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M14 5l7 7m0 0l-7 7m7-7H3"
-                      />
-                    </svg>
+                    {isLoading ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                        Simulating...
+                      </>
+                    ) : (
+                      <>
+                        Execute Simulation
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5 group-hover:translate-x-1 group-hover:text-purple-300 transition-all"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"
+                          />
+                        </svg>
+                      </>
+                    )}
                   </span>
                 </m.button>
               </div>
