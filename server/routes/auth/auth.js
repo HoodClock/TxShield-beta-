@@ -30,9 +30,9 @@ router.post("/", async (req, res) => {
         }
 
         // Generate and insert new api key
-        const apiKey = 'txs' + crypto.randomBytes(32).toString("hex");
-        const insertQuery = "INSERT INTO api_keys (api_key, wallet) VALUES ($1, $2) RETURNING api_key";
-        await pool.query(insertQuery, [apiKey, wallet]);
+        const apiKey = 'txs_' + crypto.randomBytes(32).toString("hex");
+        const insertQuery = "INSERT INTO api_keys (api_key, wallet, tier) VALUES ($1, $2, $3) RETURNING api_key";
+        await pool.query(insertQuery, [apiKey, wallet, "free"]);
 
         return res.status(201).json({ apiKey, message: "API key generated successfully" });
     } catch (error) {
@@ -62,5 +62,4 @@ router.get("/apikey/:wallet", async (req, res) => {
         return res.status(500).json({ error: "Internal server error" });
     }
 });
-
 module.exports = router;

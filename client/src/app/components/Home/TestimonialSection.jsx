@@ -186,8 +186,6 @@ const ReviewCard = ({ testimonial }) => (
                         <Image
                             src={testimonial.image}
                             alt={testimonial.name}
-                            width={40}
-                            height={40}
                             className="w-full h-full object-cover"
                             onError={(e) => {
                                 e.target.style.display = 'none';

@@ -5,6 +5,7 @@ import { m, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import ScrambleText from "../ScrambleText";
 import DataFlowBackground from "../DataFlowBackground";
+import Image from "next/image";
 
 import styles from "./evmSimulationForm.module.css";
 
