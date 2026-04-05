@@ -288,12 +288,14 @@ export default function SimulationForm({
                   whileHover={isLoading ? {} : { scale: 1.01, y: -2 }}
                   whileTap={isLoading ? {} : { scale: 0.98 }}
                   className={`w-full py-4 rounded-xl border text-white font-bold tracking-widest uppercase text-sm relative overflow-hidden group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black transition-all ${
-                    isLoading 
-                      ? "bg-blue-600/10 border-blue-500/20 text-white/50 cursor-not-allowed" 
+                    isLoading
+                      ? "bg-blue-600/10 border-blue-500/20 text-white/50 cursor-not-allowed"
                       : "bg-blue-600/20 border-blue-500/50 shadow-[0_0_20px_rgba(37,99,235,0.2)] hover:shadow-[0_0_40px_rgba(37,99,235,0.4)] hover:bg-blue-600/40 glitch-hover focus:ring-blue-500 pointer-events-auto"
                   }`}
                 >
-                  {!isLoading && <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] transition-all"></div>}
+                  {!isLoading && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] transition-all"></div>
+                  )}
                   <span className="relative z-10 flex items-center justify-center gap-3">
                     {isLoading ? (
                       <>

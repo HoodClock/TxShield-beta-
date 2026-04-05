@@ -9,7 +9,7 @@ const setup = async () => {
       CREATE TABLE IF NOT EXISTS api_keys (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         api_key VARCHAR(255) UNIQUE NOT NULL,
-        wallet VARCHAR(42) NOT NULL,
+        wallet VARCHAR(42) UNIQUE NOT NULL,
         tier VARCHAR(50) DEFAULT 'free',
         request_count INTEGER DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
