@@ -19,7 +19,11 @@ export default function SimulationForm({
   const { publicKey } = useWallet();
 
   const handleSimulate = async () => {
-    console.log("Solana Submit button clicked!", { publicKey, contractAddress, amount });
+    console.log("Solana Submit button clicked!", {
+      publicKey,
+      contractAddress,
+      amount,
+    });
 
     if (!contractAddress || !amount) {
       alert("Please enter both contract address and amount.");
@@ -35,7 +39,9 @@ export default function SimulationForm({
       await import("@solana/web3.js");
 
     const rpcDevnetURL = process.env.NEXT_PUBLIC_SOL_DEVNET_RPC;
-    const rpcMainnetURL = process.env.NEXT_PUBLIC_SOL_MAINNET_RPC || "https://api.mainnet-beta.solana.com";
+    const rpcMainnetURL =
+      process.env.NEXT_PUBLIC_SOL_MAINNET_RPC ||
+      "https://api.mainnet-beta.solana.com";
 
     const connection = new Connection(rpcMainnetURL);
     const targetPubKey = new PublicKey(contractAddress);
@@ -123,7 +129,9 @@ export default function SimulationForm({
                 height={16}
                 className="w-4 h-4 rounded-full group-hover:rotate-12 transition-transform duration-300"
               />
-              <span className="text-xs font-mono text-gray-400 group-hover:text-blue-300 transition-colors">Switch to EVM</span>
+              <span className="text-xs font-mono text-gray-400 group-hover:text-blue-300 transition-colors">
+                Switch to EVM
+              </span>
             </button>
           </div>
 
@@ -147,7 +155,8 @@ export default function SimulationForm({
                 </svg>
               </div>
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight">
-                <ScrambleText text="Solana" className="inline-block" /> <span className="text-purple-500">Simulation</span>
+                <ScrambleText text="Solana" className="inline-block" />{" "}
+                <span className="text-purple-500">Simulation</span>
               </h2>
               <p className="text-gray-400 text-sm max-w-md mx-auto">
                 Securely simulate Solana transactions before you sign.
@@ -216,9 +225,22 @@ export default function SimulationForm({
                     onChange={(e) => setAmount(e.target.value)}
                   />
                   <div className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex items-center gap-2 pointer-events-none">
-                    <span className="text-gray-500 text-xs font-mono pr-2 border-r border-white/10 group-focus-within/input:border-purple-500/30 transition-colors">SOL</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-purple-500/50 group-focus-within/input:text-purple-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    <span className="text-gray-500 text-xs font-mono pr-2 border-r border-white/10 group-focus-within/input:border-purple-500/30 transition-colors">
+                      SOL
+                    </span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 text-purple-500/50 group-focus-within/input:text-purple-400 transition-colors"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      />
                     </svg>
                   </div>
                 </div>
@@ -231,12 +253,14 @@ export default function SimulationForm({
                   whileHover={isLoading ? {} : { scale: 1.01, y: -2 }}
                   whileTap={isLoading ? {} : { scale: 0.98 }}
                   className={`w-full py-4 rounded-xl border text-white font-bold tracking-widest uppercase text-sm relative overflow-hidden group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black transition-all ${
-                    isLoading 
-                      ? "bg-purple-600/10 border-purple-500/20 text-white/50 cursor-not-allowed" 
-                      : `bg-purple-600/20 border-purple-500/50 shadow-[0_0_20px_rgba(147,51,234,0.2)] hover:shadow-[0_0_40px_rgba(147,51,234,0.4)] hover:bg-purple-600/40 glitch-hover focus:ring-purple-500 pointer-events-auto ${styles['sol-btn-glow']}`
+                    isLoading
+                      ? "bg-purple-600/10 border-purple-500/20 text-white/50 cursor-not-allowed"
+                      : `bg-purple-600/20 border-purple-500/50 shadow-[0_0_20px_rgba(147,51,234,0.2)] hover:shadow-[0_0_40px_rgba(147,51,234,0.4)] hover:bg-purple-600/40 glitch-hover focus:ring-purple-500 pointer-events-auto ${styles["sol-btn-glow"]}`
                   }`}
                 >
-                  {!isLoading && <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] transition-all"></div>}
+                  {!isLoading && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] transition-all"></div>
+                  )}
                   <span className="relative z-10 flex items-center justify-center gap-3">
                     {isLoading ? (
                       <>

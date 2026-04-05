@@ -89,10 +89,11 @@ app.use("/api/solana/simulate", solSimulateRouter);
 
 app.use("/api/analyze", analysisRouter);
 
+app.use("/auth", authRouter);
+
 // right now not implementing
 app.use("/api/generations/", suggestionRouter);
 app.use("/api/contact/", contactRouter);
-app.use("/auth", authRouter);
 
 // Listen Server
 app.listen(PORT, () => {
