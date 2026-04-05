@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { m } from "framer-motion";
 import { useWallet } from "@solana/wallet-adapter-react";
+import Image from "next/image";
 import ScrambleText from "../ScrambleText";
 import DataFlowBackground from "../DataFlowBackground";
 import styles from "./solSimulationForm.module.css";
+import Image from "next/image";
 
 export default function SimulationForm({
   onSolSimulateAll,
@@ -14,7 +16,6 @@ export default function SimulationForm({
 }) {
   const [contractAddress, setContractAddress] = useState("");
   const [amount, setAmount] = useState("");
-  const [currency, setCurrency] = useState("SOL");
   const { publicKey } = useWallet();
 
   const handleSimulate = async () => {
@@ -64,10 +65,7 @@ export default function SimulationForm({
     // builiding and sending payload
     const solSimulationData = {
       signedTxBase64: base64Tx,
-      userAddress: publicKey.toBase58(),
       recepientAddress: contractAddress,
-      amount: amount,
-      currencySymbol: currency,
     };
 
     onSolSimulateAll({ solSimulationData });
@@ -118,9 +116,11 @@ export default function SimulationForm({
               className="px-3 py-1.5 rounded-full bg-white/5 hover:bg-blue-500/20 border border-white/10 hover:border-blue-500/50 transition-all duration-300 flex items-center gap-2 group glitch-hover"
               title="Switch to EVM Simulation"
             >
-              <img
+              <Image
                 src="https://assets.coingecko.com/coins/images/279/small/ethereum.png"
                 alt="Ethereum"
+                width={16}
+                height={16}
                 className="w-4 h-4 rounded-full group-hover:rotate-12 transition-transform duration-300"
               />
               <span className="text-xs font-mono text-gray-400 group-hover:text-blue-300 transition-colors">Switch to EVM</span>

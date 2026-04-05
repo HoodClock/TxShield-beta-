@@ -27,14 +27,14 @@ const calculatePhishingRisks = (checkResult) => {
     const percentage = Math.min((totalWeightedScore / maxPossibleScore) * 100, 100)
 
     let riskLevel = "Safe Zone"
-    let verdict = "✅ No immediate phishing threats detected."
+    let verdict = "No immediate phishing threats detected."
 
     if (percentage >= 60) {
         riskLevel = "Critical Risk"
-        verdict = "❌ High Phishing Probability: This contract exhibits known theft patterns."
+        verdict = "High Phishing Probability: This contract exhibits known theft patterns."
     } else if (percentage >= 25) {
         riskLevel = "Caution Zone"
-        verdict = "⚠️ Suspicious Activity: Unusual permissions or proxy patterns detected."
+        verdict = "Suspicious Activity: Unusual permissions or proxy patterns detected."
     }
 
     return {

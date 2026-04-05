@@ -6,14 +6,18 @@
     "alchemy-sdk": "^3.6.5",
     "axios": "^1.8.4",
     "bull": "^4.16.5",
+    "bullmq": "^5.71.1",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "ethers": "^6.13.5",
     "express": "^5.1.0",
+    "express-rate-limit": "^8.3.1",
     "ioredis": "^5.6.1",
     "module-alias": "^2.2.3",
     "nodemailer": "^7.0.3",
     "nodemon": "^3.1.9",
+    "pg": "^8.20.0",
+    "rate-limit-redis": "^4.3.1",
     "redis": "^5.10.0",
     "sqlite3": "^5.1.7",
     "uuid": "^11.1.0"
@@ -23,7 +27,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",

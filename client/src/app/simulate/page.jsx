@@ -9,6 +9,7 @@ import {
 import dynamic from "next/dynamic";
 import { AnimatePresence } from "framer-motion";
 import Head from "next/head";
+import "./simulate.css";
 
 // UI Components (SSR enabled)
 const Header = dynamic(() => import("../components/header"), {
@@ -23,10 +24,10 @@ const ResultsDashboard = dynamic(() => import("../components/result/index"), {
 const Footer = dynamic(() => import("../components/footer"), {
   loading: () => <div className="h-20 bg-black"></div>
 });
-const LoadingState = dynamic(() => import("../components/loading"));
+const SkeletonLoader = dynamic(() => import("../components/SkeletonLoader"));
 
 // Web3 & Simulation Components (Strictly Client-Side, SSR disabled)
-const ConnectWallet = dynamic(() => import("../components/connectWallet"), { ssr: false });
+
 const WalletProviderWrapper = dynamic(() => import("../components/WalletProviderWrapper"), { ssr: false });
 const EvmSimulationForm = dynamic(() => import("../components/evm/evmSimulationForm"), {
   ssr: false,
@@ -204,7 +205,7 @@ export default function App() {
           <section className="container mx-auto px-4 py-12">
             <WalletProviderWrapper chain={chain}>
               <div className="flex justify-center my-6">
-                <ConnectWallet chain={chain} />
+
               </div>
               <AnimatePresence mode="wait">
                 {chain === "EVM" && (
@@ -227,14 +228,14 @@ export default function App() {
             </WalletProviderWrapper>
 
             {isLoading && (
-              <LoadingState isLoading={true} onComplete={() => { }} />
+              <SkeletonLoader isLoading={true} />
             )}
           </section>
         )}
 
         {/* Results Section */}
         {showResults && (
-          <section className="container mx-auto px-4 py-12 space-y-8">
+          <section className="w-full">
             <ResultsDashboard
               chain={chain}
               isVisible={showResults}

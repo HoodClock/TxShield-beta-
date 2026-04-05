@@ -14,6 +14,7 @@ import DataFlowBackground from "../components/DataFlowBackground";
 import { gsap } from "gsap";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import "./home.css";
 
 gsap.registerPlugin(ScrollSmoother, ScrollTrigger);
 
