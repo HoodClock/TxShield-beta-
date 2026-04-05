@@ -4,7 +4,6 @@ import { useState } from "react";
 import Image from "next/image";
 import { m } from "framer-motion";
 import { useWallet } from "@solana/wallet-adapter-react";
-import Image from "next/image";
 import ScrambleText from "../ScrambleText";
 import DataFlowBackground from "../DataFlowBackground";
 import styles from "./solSimulationForm.module.css";
@@ -121,14 +120,7 @@ export default function SimulationForm({
                 alt="Ethereum"
                 width={16}
                 height={16}
-<<<<<<< HEAD
                 className="w-4 h-4 rounded-full group-hover:rotate-12 transition-transform duration-300"
-=======
-                className="rounded-full group-hover:rotate-12 transition-transform duration-300"
-                priority
-                placeholder="blur"
-                blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
->>>>>>> 2b8ce27548758e8d2162cf2fbd583c584e69af4a
               />
               <span className="text-xs font-mono text-gray-400 group-hover:text-blue-300 transition-colors">Switch to EVM</span>
             </button>

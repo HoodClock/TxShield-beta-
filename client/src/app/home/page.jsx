@@ -11,7 +11,6 @@ import TestimonialSection from "../components/Home/TestimonialSection";
 import Footer from "../components/footer";
 import DataFlowBackground from "../components/DataFlowBackground";
 
-<<<<<<< HEAD
 import { gsap } from "gsap";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -19,8 +18,6 @@ import "./home.css";
 
 gsap.registerPlugin(ScrollSmoother, ScrollTrigger);
 
-=======
->>>>>>> 2b8ce27548758e8d2162cf2fbd583c584e69af4a
 function HomePage() {
   const smoother = useRef(null);
   const cleanupRef = useRef(null);

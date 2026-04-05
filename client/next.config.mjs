@@ -11,19 +11,12 @@ const nextConfig = {
         remotePatterns: [
             {
                 protocol: 'https',
-<<<<<<< HEAD
                 hostname: 'assets.coingecko.com',
-            },
-=======
-                hostname: 'raw.githubusercontent.com',
-                pathname: '/**',
             },
             {
                 protocol: 'https',
-                hostname: 'assets.coingecko.com',
-                pathname: '/**',
-            }
->>>>>>> 2b8ce27548758e8d2162cf2fbd583c584e69af4a
+                hostname: 'raw.githubusercontent.com',
+            },
         ],
     },
     experimental: {

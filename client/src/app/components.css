@@ -1,0 +1,58 @@
+
+
+/* Shared glass-morphism effect */
+.glass-morphism {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Shared gradient-border effect */
+.gradient-border {
+    background:
+        linear-gradient(black, black) padding-box,
+        linear-gradient(45deg, transparent, white, transparent) border-box;
+    border: 1px solid transparent;
+}
+
+
+
+/* ============================================
+   MOBILE PERFORMANCE OPTIMIZATIONS
+   Disable expensive effects on mobile devices
+   ============================================ */
+@media (max-width: 768px) {
+
+    /* Reduce/disable animations globally on mobile */
+    .animate-pulse-slow,
+    .animate-spin-slow,
+    .animate-logo-float,
+    .animate-shimmer,
+    .animate-border-glow {
+        animation: none;
+    }
+
+    /* Reduce box-shadow intensity on mobile */
+    .hero-primary-btn:hover {
+        box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+    }
+
+    .evm-chain-card:hover,
+    .sol-chain-card:hover {
+        box-shadow: 0 10px 25px rgba(98, 126, 234, 0.2);
+        transform: translateY(-4px);
+    }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
