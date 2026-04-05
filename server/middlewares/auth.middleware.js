@@ -1,34 +1,72 @@
-const db = require('../config/db')
+const pool = require("../config/db");
 
-function authMidlleware(req, res, next){
+async function authMiddleware(req, res, next) {
+    try {
+    const apiKey = req.headers["x-api-key"];
+    const wallet = req.headers["wallet"];
+    const origin = req.headers.origin;
 
-    const origin = req.headers.origin || req.headers.host;
+    const allowedOrigins = [
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "https://txshield.xyz",
+        "https://www.txshield.xyz",
+        /\.vercel\.app$/, // This Regex allows ANY Vercel preview or production branch
+    ];
 
-    if (
-        origin?.includes("localhost:3000") ||  // local frontend
-        origin?.includes("localhost:5000") ||  // local backend
-        origin?.includes("txshield-beta.vercel.app") // vercel frontend
-    ) {
-        return next();
+    const isAllowed = allowedOrigins.some((allowed) => {
+    if (allowed instanceof RegExp) {
+        return allowed.test(origin);
+    }
+        return allowed === origin;
+    });
+
+    if (origin && !isAllowed) {
+        return res.status(403).json({ error: "CORS: Origin not allowed" });
     }
 
-    // extracting the authorization from the header
-    const authHeader = req.header["authorization"]
+        // Allow request
+        res.setHeader("Access-Control-Allow-Origin", origin || "*");
+        res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, x-api-key, wallet");
 
-    if (!authHeader) return res.status(401).json({ error: "Missing Authorization header" });
+        // Handle preflight
+        if (req.method === "OPTIONS") {
+        return res.sendStatus(200);
+    }
 
-    // Bearer <APIKEY>
-    const token = authHeader.split(" ")[1]; 
-    if (!token) return res.status(401).json({ error: "Invalid Authorization format" });
+    if (!apiKey || !wallet) {
+        return res.status(401).json({ error: "Missing API key or wallet" });
+    }
 
-    db.get("SELECT * FROM api_keys WHERE apiKey = ?", [token], (err, row)=> {
-        if (err) return res.status(500).json({ error: "DB error" });
-        if (!row) return res.status(403).json({ error: "Invalid API key" });
+    // Check API key in DB
+    const result = await pool.query(
+        "SELECT * FROM api_keys WHERE api_key = $1 AND wallet = $2",
+        [apiKey, wallet]
+    );
 
-        // attach wallet info to request for later use if needed
-        req.wallet = row.wallet;
-        next();
-    })
+    if (result.rows.length === 0) {
+        return res.status(403).json({ error: "Invalid API key" });
+    }
+
+    const user = result.rows[0];
+
+    // Attach user info to request
+    req.wallet = user.wallet;
+    req.tier = user.tier;
+    req.apiKey = user.api_key;
+
+    // Update last_used timestamp
+    await pool.query(
+        "UPDATE api_keys SET last_used = NOW() WHERE api_key = $1",
+        [apiKey]
+    );
+
+    next();
+  } catch (error) {
+        console.error("Auth middleware error:", error.message);
+        res.status(500).json({ error: "Internal server error" });
+  }
 }
 
-module.exports = authMidlleware;
+module.exports = authMiddleware;

@@ -10,8 +10,17 @@ export default function BalanceChanges({
   if (!simulateData || (!simulateData.ethDelta && !simulateData.tokenDelta)) return null;
 
   const ethDelta = parseFloat(simulateData.ethDelta || "0") / 1e18;
-  const tokenDelta = parseFloat(simulateData.tokenDelta || "0"); // Assuming decimals handled elsewhere or simplified here
+  const rawTokenDelta = parseFloat(simulateData.tokenDelta || "0"); 
   const watchToken = simulateData.watchedTokens;
+  const deltasArray = (simulateData.watchedTokensDeltas || "").split(",");
+  
+  // Calculate if any dynamic token in the watch string actually moved
+  const dynamicTokenDeltaRaw = deltasArray.find(d => parseFloat(d) !== 0) || "0";
+  const dynamicTokenDelta = parseFloat(dynamicTokenDeltaRaw) / 1e18; // generic 18 decimals fallback for UI
+
+  const activeTokenDelta = rawTokenDelta !== 0 ? rawTokenDelta : dynamicTokenDelta;
+
+  if (ethDelta === 0 && activeTokenDelta === 0) return null;
 
   return (
     <m.div
@@ -51,16 +60,16 @@ export default function BalanceChanges({
 
             {/* Deltas Display floating above arrow */}
             <div className="absolute top-1/2 -translate-y-2/3 -translate-x-1/2 left-1/2 flex flex-col items-center justify-center bg-black/80 px-4 py-1.5 rounded-md border border-white/10 shadow-xl backdrop-blur-md">
-              {(ethDelta !== 0 || tokenDelta !== 0) ? (
+              {(ethDelta !== 0 || activeTokenDelta !== 0) ? (
                 <>
                   {ethDelta !== 0 && (
-                    <span className={`font-mono text-xs sm:text-sm font-bold tracking-wide break-all text-center ${ethDelta < 0 ? 'text-red-400 drop-shadow-[0_0_5px_rgba(248,113,113,0.5)]' : 'text-emerald-400 drop-shadow-[0_0_5px_rgba(52,211,153,0.5)]'}`}>
+                    <span className={`font-mono text-xs sm:text-sm font-bold tracking-wide whitespace-nowrap text-center ${ethDelta < 0 ? 'text-red-400 drop-shadow-[0_0_5px_rgba(248,113,113,0.5)]' : 'text-emerald-400 drop-shadow-[0_0_5px_rgba(52,211,153,0.5)]'}`}>
                       {ethDelta > 0 ? '+' : ''}{ethDelta.toFixed(4)} ETH
                     </span>
                   )}
-                  {tokenDelta !== 0 && (
-                    <span className={`font-mono text-xs sm:text-sm font-bold tracking-wide break-all text-center ${tokenDelta < 0 ? 'text-red-400 drop-shadow-[0_0_5px_rgba(248,113,113,0.5)]' : 'text-emerald-400 drop-shadow-[0_0_5px_rgba(52,211,153,0.5)]'}`}>
-                      {tokenDelta > 0 ? '+' : ''}{tokenDelta.toString()} {watchToken ? 'Token' : ''}
+                  {activeTokenDelta !== 0 && (
+                    <span className={`font-mono text-xs sm:text-sm font-bold tracking-wide whitespace-nowrap text-center ${activeTokenDelta < 0 ? 'text-red-400 drop-shadow-[0_0_5px_rgba(248,113,113,0.5)]' : 'text-emerald-400 drop-shadow-[0_0_5px_rgba(52,211,153,0.5)]'}`}>
+                      {activeTokenDelta > 0 ? '+' : ''}{activeTokenDelta.toFixed(4)} Token
                     </span>
                   )}
                 </>

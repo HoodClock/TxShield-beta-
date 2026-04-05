@@ -13,7 +13,7 @@ export default function TransactionSummary({
   return (
     <m.div
       variants={itemVariants}
-      className="relative bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-hidden"
+      className="relative bg-[#080d1a] border border-blue-500/20 rounded-2xl overflow-hidden"
     >
       <div className="relative z-10 p-4 sm:p-5 w-full flex items-center justify-between border-b border-white/5">
         <div className="flex items-center gap-4">

@@ -51,18 +51,6 @@ const SIMULATOR_ABI = [
 
 const iface = new ethers.Interface(SIMULATOR_ABI);
 
-/**
- * @param {*} userAddress
- * @param {*} data
- * @param {*} recipientAddress
- * @param {*} amount
- * @param {*} tokenAddress
- * @param {*} watchToken
- * @call_to_alchemyNode `eth_call` which siliently call our Phantom_Contract
- * @call_to_alchemy_simulateExecution `which makes the call to simulateTransaction
- * @returns Json response
- */
-
 const _runSimulation = async (
   userAddress,
   txTo,
@@ -74,11 +62,9 @@ const _runSimulation = async (
   expectedAmount,
   rpcUrl,
 ) => {
-  // prepareing the data & handling the empty data
   const token = tokenAddress || ethers.ZeroAddress;
   const watch = watchToken || ethers.ZeroAddress;
 
-  // to normalize amount
   const normalizeHex = (hex) => {
     if (!hex || hex === "0x") return "0x0";
     return "0x" + BigInt(hex).toString(16);
@@ -87,36 +73,38 @@ const _runSimulation = async (
 
   const checksumAddress = ethers.getAddress(userAddress);
 
-  // senitizing alchemy payload for txData
   const txObj = {
     from: checksumAddress,
     to: txTo,
-    value: "0x0",
+    value: value,
     gas: "0xF4240",
     gasPrice: "0x0",
   };
-  // only add txData when it got some value not "0x"
+
   if (txData && txData !== "0x") {
     txObj.data = txData;
   }
 
-  // using stateOverride here to dodge the insufficient_gas_error
   const stateOverride = {
-    [checksumAddress]: { balance: "0xffffffffffffffffffffffff" },
+    [checksumAddress]: {
+      balance: "0xffffffffffffffffffffffffffffffff",
+    },
   };
-
-  /**
-   * @constructs [Transaction, block, stateOverride] => @method [simulateExecution, simulateAssetChange]
-   */
 
   const payloadSimulateExec = {
     id: 1,
     jsonrpc: "2.0",
     method: "alchemy_simulateExecution",
-    params: [txObj, "latest", stateOverride],
+    params: [
+      {
+        ...txObj,
+        gasPrice: "0x0",
+      },
+      "latest",
+      stateOverride,
+    ],
   };
 
-  // calling our phantom_contract function
   const phantomCallData = iface.encodeFunctionData("simulateTransaction", [
     txTo,
     token,
@@ -126,7 +114,6 @@ const _runSimulation = async (
     txData,
   ]);
 
-  // creating payload for the eth_call
   const phantomPayload = {
     id: 1,
     jsonrpc: "2.0",
@@ -141,25 +128,18 @@ const _runSimulation = async (
       },
       "latest",
       {
-        // state_overrides for our Contract
         [PHANTOM_ADDRESS]: {
           code: SIMULATOR_BYTECODE,
         },
-        // state_overrides for userAddress
-        [checksumAddress]: {
-          balance: "0xffffffffffffffffffffffff",
-        },
+        ...stateOverride,
       },
     ],
   };
 
-  // -------for alchemy_simulateExecution simulation-------
   try {
-    // execution of [Alchemy simulationExecution, PhantomContractSimulation]
     let simulationExec = { data: { error: { message: "Not Executed" } } };
     let phantomExec;
 
-    // 1.simulateExecution
     try {
       simulationExec = await axios.post(rpcUrl, payloadSimulateExec);
     } catch (e) {
@@ -167,13 +147,9 @@ const _runSimulation = async (
       console.warn("⚠️ Alchemy Exec Failed:", e.message);
     }
 
-    // 3. Phantom_SmartContract_simulation
     phantomExec = await axios.post(rpcUrl, phantomPayload, {
       timeout: 10000,
     });
-
-    // --------------------RESULTS--------------------
-    // handling Alchemy_related_results & Errors (simulationExecution, AssetChange)
 
     let simulateExecutionCalls = [];
     let simulateExecutionLogs = [];
@@ -187,7 +163,6 @@ const _runSimulation = async (
       console.warn("⚠️ Alchemy Exec Failed:", errMsg);
     }
 
-    // handling Phantom_contract_results & Error
     if (phantomExec.data.error) {
       throw new Error(
         `Phantom Simulation Failed: ${phantomExec.data.error.message}`,
@@ -198,10 +173,8 @@ const _runSimulation = async (
       "simulateTransaction",
       phantomExec.data.result,
     );
-
     const resultData = decoded[0];
 
-    // formatted final response
     const result = {
       success: resultData.success,
       ethDelta: resultData.ethDelta.toString(),
@@ -231,7 +204,6 @@ const _runSimulation = async (
   }
 };
 
-// for caching the response
 const getSimulate = async (
   rpcUrl,
   userAddress,
@@ -244,19 +216,11 @@ const getSimulate = async (
   expectedAmount,
   chainId,
 ) => {
-  const cachePayload = {
+  const cacheKey = generateChacheKey({
+    type: "simulation",
     chainId: chainId.toString(),
-    userAddress: userAddress.toLowerCase(),
-    txTo: txTo.toLowerCase(),
     tokenAddress: tokenAddress.toLowerCase(),
-    watchToken: watchToken,
-    watchList: watchList,
-    txData: txData.toString(),
-    valueInWei: valueInWei.toString(),
-    expectedAmount: expectedAmount.toString(),
-  };
-
-  const cacheKey = generateChacheKey(cachePayload);
+  });
 
   const cachedData = await redisClient.get(cacheKey);
   if (cachedData) {
@@ -275,7 +239,6 @@ const getSimulate = async (
     rpcUrl,
   );
 
-  // Only cache if not a system error
   if (simResult && simResult.reason !== "simulation_infrastructure_error") {
     await redisClient.set(cacheKey, JSON.stringify(simResult), {
       EX: parseInt(EXPIRY_SECONDS),

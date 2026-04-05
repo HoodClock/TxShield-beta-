@@ -4,9 +4,11 @@ import React, { Suspense } from 'react'
 import Link from "next/link";
 import { m } from "framer-motion";
 import { MdArrowRightAlt } from "react-icons/md";
+import Image from "next/image";
 import dynamic from 'next/dynamic';
 import ScrambleText from '../ScrambleText';
 import HeroBackground from '../backgrounds/HeroBackground';
+import Image from "next/image";
 
 function HeroSection() {
     return (
@@ -34,14 +36,14 @@ function HeroSection() {
                         transition={{ duration: 1 }}
                     >
                         <div className="absolute inset-0 bg-cyan-500/10 rounded-full opacity-50 max-sm:hidden" style={{ filter: 'blur(48px)' }}></div>
-                        <img
+                        <Image
                             src="/Images/logo.png"
                             alt="Shield Logo"
                             className="h-full w-auto object-contain relative z-10"
-                            loading="eager"
-                            decoding="async"
+                            priority
                             width={256}
                             height={256}
+                            priority
                         />
                     </m.div>
                 </Link>

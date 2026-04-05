@@ -3,6 +3,10 @@ const {
 } = require("../../services/solana/simulationSol/sumUpallFeatures");
 
 const simulateSOLTransactionController = async (req, res) => {
+  console.log(
+    "Solana Simulation Request Body:",
+    JSON.stringify(req.body, null, 2),
+  );
   try {
     const {
       signedTxBase64,
@@ -15,19 +19,23 @@ const simulateSOLTransactionController = async (req, res) => {
     const result = await sumUpAllFeatures(
       signedTxBase64,
       recepientAddress, // maps to _contractAddress
-      userAddress,      // maps to _userAddress
+      userAddress, // maps to _userAddress
       amount,
       currencySymbol,
     );
 
     if (!result.success) {
-      return res.status(400).json({
+      console.log("SIMULATION FAILED RETURNING 418:", result.message);
+      return res.status(418).json({
         success: false,
-        message: result.message || result.error || "Simulation Error"
+        message: result.message || result.error || "Simulation Error",
+        _debug: "HIT-CONTROLLER-418",
       });
     }
 
-    res.status(200).json({ success: true, data: result });
+    res
+      .status(200)
+      .json({ success: true, data: result, _v: "2.0-PATCH-LEGACY-FIX" });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

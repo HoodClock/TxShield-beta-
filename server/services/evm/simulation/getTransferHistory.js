@@ -82,22 +82,36 @@ const getTransferHistory = async (targetAddress, chainId) => {
     });
 
     // Format top 5 for the frontend to show a quick preview
-    const recentSample = transfers.slice(0, 5).map((tx) => ({
-      hash: tx.hash,
-      from: `${tx.from.substring(0, 6)}...${tx.from.substring(38)}`,
-      to: `${tx.to.substring(0, 6)}...${tx.to.substring(38)}`,
-      date: formatTimestamp(tx.timeStamp),
-    }));
+    const recentTransfers = transfers.slice(0, 5).map((tx) => {
+      const decimals = parseInt(tx.tokenDecimal, 10) || 18;
+      const amount = (parseFloat(tx.value) / Math.pow(10, decimals)).toFixed(4);
+      return {
+        hash: tx.hash,
+        from: `${tx.from.substring(0, 6)}...${tx.from.substring(38)}`,
+        to: `${tx.to.substring(0, 6)}...${tx.to.substring(38)}`,
+        amount: amount,
+        symbol: tx.tokenSymbol,
+        date: formatTimestamp(tx.timeStamp),
+      };
+    });
+
+    // Calculate total volume for the summary
+    const totalVolume = transfers.reduce((acc, tx) => {
+      const decimals = parseInt(tx.tokenDecimal, 10) || 18;
+      const amount = parseFloat(tx.value) / Math.pow(10, decimals);
+      return acc + amount;
+    }, 0);
 
     return {
       success: true,
       activityPulse,
       summary: {
-        totalAnalyzed: transfers.length,
-        uniqueWalletsInteracting: uniqueWallets.size,
-        lastTrade: formatTimestamp(latestTxTime),
+        totalTransfers: transfers.length,
+        uniqueWallets: uniqueWallets.size,
+        lastTransferDate: formatTimestamp(latestTxTime),
+        totalERC20Volume: `${totalVolume.toFixed(2)} ${transfers[0].tokenSymbol}`,
       },
-      recentSample,
+      recentTransfers,
     };
   } catch (err) {
     console.error("Transfer History Error:", err.message);
