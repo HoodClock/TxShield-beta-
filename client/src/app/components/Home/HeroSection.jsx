@@ -8,6 +8,7 @@ import Image from "next/image";
 import dynamic from 'next/dynamic';
 import ScrambleText from '../ScrambleText';
 import HeroBackground from '../backgrounds/HeroBackground';
+import Image from "next/image";
 
 function HeroSection() {
     return (
@@ -42,6 +43,7 @@ function HeroSection() {
                             priority
                             width={256}
                             height={256}
+                            priority
                         />
                     </m.div>
                 </Link>

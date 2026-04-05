@@ -7,6 +7,7 @@ import Image from "next/image";
 import ScrambleText from "../ScrambleText";
 import DataFlowBackground from "../DataFlowBackground";
 import styles from "./solSimulationForm.module.css";
+import Image from "next/image";
 
 export default function SimulationForm({
   onSolSimulateAll,
