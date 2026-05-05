@@ -48,7 +48,7 @@ export default function HamburgerMenu() {
       <button
         onClick={toggleMenu}
         className={`fixed top-8 right-8 z-[100] flex justify-center items-center w-12 h-12 rounded-full transition-all duration-500 ${
-          isOpen ? "bg-white/5 border border-cyan-500/20" : "bg-white/5 border border-white/10 hover:bg-white/10"
+          isOpen ? "bg-white/5 border border-blue-500/20" : "bg-white/5 border border-white/10 hover:bg-white/10"
         } backdrop-blur-md group`}
         aria-label="Toggle Menu"
       >
@@ -56,7 +56,7 @@ export default function HamburgerMenu() {
           className={`relative w-6 h-6 flex flex-col justify-center items-center transition-all duration-500 ${isOpen ? "opacity-100 scale-110" : "opacity-100"}`}
           style={isOpen ? { transform: "perspective(1000px) rotateY(-30deg) rotateX(10deg) skewX(-5deg)" } : {}}
         >
-          <span className={`absolute h-[1.5px] transition-all duration-300 ${isOpen ? "w-6 rotate-45 bg-cyan-400 translate-x-[1px] shadow-[0_0_8px_rgba(34,211,238,0.4)]" : "w-5 -translate-y-1.5 bg-white"}`} />
+          <span className={`absolute h-[1.5px] transition-all duration-300 ${isOpen ? "w-6 rotate-45 bg-blue-400 translate-x-[1px] shadow-[0_0_8px_rgba(59,130,246,0.4)]" : "w-5 -translate-y-1.5 bg-white"}`} />
           <span className={`absolute h-[1.5px] bg-white transition-all duration-300 ${isOpen ? "opacity-0" : "w-3 translate-x-1"}`} />
           <span className={`absolute h-[1.5px] transition-all duration-300 ${isOpen ? "w-6 -rotate-45 bg-purple-400 -translate-x-[1px] opacity-80 shadow-[0_0_8px_rgba(168,85,247,0.3)]" : "w-5 translate-y-1.5 bg-white"}`} />
         </div>
@@ -106,13 +106,13 @@ export default function HamburgerMenu() {
                     <a
                       href={item.path}
                       onClick={(e) => handleNavigation(e, item.path)}
-                      className="relative overflow-hidden py-1"
+                      className="relative py-1 px-4"
                     >
                       <motion.span
-                        whileHover={{ x: 8, scale: 1.02 }}
+                        whileHover={{ scale: 1.05 }}
                         className={`block font-clash text-2xl md:text-3xl lg:text-5xl font-bold tracking-tight transition-all duration-300 ${
                           isActive 
-                            ? "text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 drop-shadow-[0_0_15px_rgba(168,85,247,0.3)]" 
+                            ? "text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 drop-shadow-[0_0_15px_rgba(168,85,247,0.3)]" 
                             : "text-white/40 group-hover:text-white"
                         }`}
                       >
@@ -121,11 +121,11 @@ export default function HamburgerMenu() {
                       
                       {/* Underline Hover Effect */}
                       <motion.div 
-                        className="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-cyan-500 to-purple-500 origin-left"
+                        className="absolute bottom-0 left-4 h-[2px] bg-gradient-to-r from-blue-500 to-purple-500 origin-left"
                         initial={{ scaleX: 0 }}
                         whileHover={{ scaleX: 1 }}
                         transition={{ duration: 0.4, ease: "circOut" }}
-                        style={{ width: "100%" }}
+                        style={{ width: "calc(100% - 32px)" }}
                       />
                     </a>
                   </motion.div>
@@ -143,7 +143,7 @@ export default function HamburgerMenu() {
               <div className="h-[1px] w-24 bg-white/10" />
               <div className="flex items-center gap-3">
                 <span className="font-mono text-[9px] text-white/20 tracking-[0.4em] uppercase">Security Protocol</span>
-                <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,211,238,0.5)]"></div>
+                <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
               </div>
             </motion.div>
 
