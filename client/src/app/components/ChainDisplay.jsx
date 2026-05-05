@@ -39,7 +39,7 @@ function ChainDisplay() {
     `;
 
     return (
-        <section ref={sectionRef} className="relative py-12 sm:py-20 px-4 sm:px-6 overflow-hidden bg-black">
+        <section ref={sectionRef} className="relative py-12 sm:py-20 px-4 sm:px-6 overflow-hidden bg-background transition-colors duration-700">
             {/* Inject Marquee CSS */}
             <style>{marqueeStyle}</style>
 
@@ -53,14 +53,14 @@ function ChainDisplay() {
                     viewport={{ once: true }}
                     className="text-center mb-8 sm:mb-12 w-full max-w-2xl"
                 >
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
-                        <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.8)]"></div>
-                        <span className="text-xs text-gray-300 font-semibold tracking-wider uppercase">Native RPC Integrations</span>
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-muted border border-border mb-4 shadow-sm">
+                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
+                        <span className="text-xs text-muted-foreground font-semibold tracking-wider uppercase">Native RPC Integrations</span>
                     </div>
                     <h2 className="text-3xl sm:text-4xl font-bold mb-3 tracking-tight">
-                        <span className="text-white drop-shadow-md">Supported <span className="grad-word">Networks</span></span>
+                        <span className="text-foreground drop-shadow-md">Supported <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500">Networks</span></span>
                     </h2>
-                    <p className="text-xs sm:text-sm text-gray-400">
+                    <p className="text-xs sm:text-sm text-muted-foreground">
                         EVM & Solana compatible. Simulating transactions across the most active Web3 subnets.
                     </p>
                 </m.div>
@@ -73,45 +73,45 @@ function ChainDisplay() {
                     className="w-full relative"
                 >
                     {/* The "Glass Tube" container */}
-                    <div className="relative w-full rounded-[2rem] bg-[#0c0c0c]/80 backdrop-blur-xl border border-white/10 p-4 sm:p-6 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.8)] overflow-hidden">
+                    <div className="relative w-full rounded-[2rem] glass-morphism p-4 sm:p-6 shadow-xl overflow-hidden">
 
                         {/* Inner shadow overlay for depth */}
-                        <div className="absolute inset-0 shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] pointer-events-none rounded-[2rem] z-20"></div>
+                        <div className="absolute inset-0 shadow-[inset_0_0_40px_rgba(0,0,0,0.05)] dark:shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] pointer-events-none rounded-[2rem] z-20"></div>
 
                         {/* Faded Gradient Masks for Seamless Edge Scrolling */}
-                        <div className="absolute top-0 left-0 bottom-0 w-16 sm:w-32 bg-gradient-to-r from-[#0c0c0c] to-transparent z-10 pointer-events-none rounded-l-[2rem]"></div>
-                        <div className="absolute top-0 right-0 bottom-0 w-16 sm:w-32 bg-gradient-to-l from-[#0c0c0c] to-transparent z-10 pointer-events-none rounded-r-[2rem]"></div>
+                        <div className="absolute top-0 left-0 bottom-0 w-16 sm:w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none rounded-l-[2rem]"></div>
+                        <div className="absolute top-0 right-0 bottom-0 w-16 sm:w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none rounded-r-[2rem]"></div>
 
                         {/* Scrolling Marquee Track */}
                         <div className="flex gap-4 sm:gap-8 w-max animate-marquee relative z-0 py-2 items-center">
                             {scrollChains.map((chain, index) => (
                                 <div
                                     key={`${chain.id}-${index}`}
-                                    className="flex items-center gap-3 sm:gap-4 px-5 sm:px-6 py-3 sm:py-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.08] hover:border-purple-500/50 transition-all duration-300 group cursor-default shadow-inner"
+                                    className="flex items-center gap-3 sm:gap-4 px-5 sm:px-6 py-3 sm:py-4 rounded-2xl bg-muted/40 border border-border hover:bg-card hover:border-primary/50 transition-all duration-300 group cursor-default shadow-sm"
                                 >
                                     {/* Inner Node Pulse */}
                                     <div className={`relative flex items-center justify-center`}>
-                                        <div className="absolute inset-0 bg-white/20 blur-md rounded-full group-hover:bg-purple-500/40 transition-colors duration-300"></div>
+                                        <div className="absolute inset-0 bg-primary/10 blur-md rounded-full group-hover:bg-primary/20 transition-colors duration-300"></div>
                                         <Image
                                             src={chain.logo}
                                             alt={chain.label}
                                             priority
                                              width={40}
                                             height={40}
-                                            className="w-8 h-8 sm:w-10 sm:h-10 object-contain rounded-full relative z-10 group-hover:scale-110 transition-transform duration-300 drop-shadow-lg"
+                                            className="w-8 h-8 sm:w-10 sm:h-10 object-contain rounded-full relative z-10 group-hover:scale-110 transition-transform duration-300 drop-shadow-md dark:invert"
                                             onError={(e) => {
                                                 e.target.style.display = 'none';
                                                 const placeholder = e.target.parentElement;
                                                 if (placeholder && !placeholder.querySelector('.logo-placeholder')) {
                                                     const placeholderDiv = document.createElement('div');
-                                                    placeholderDiv.className = 'logo-placeholder w-full h-full absolute inset-0 rounded-full bg-gradient-to-br from-purple-500/20 to-cyan-500/20 flex items-center justify-center text-white text-[10px] font-bold z-10';
+                                                    placeholderDiv.className = 'logo-placeholder w-full h-full absolute inset-0 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center text-foreground text-[10px] font-bold z-10';
                                                     placeholderDiv.textContent = chain.label.substring(0, 2).toUpperCase();
                                                     placeholder.appendChild(placeholderDiv);
                                                 }
                                             }}
                                         />
                                     </div>
-                                    <span className="text-sm font-semibold text-gray-400 group-hover:text-white transition-colors whitespace-nowrap tracking-wide">
+                                    <span className="text-sm font-semibold text-muted-foreground group-hover:text-foreground transition-colors whitespace-nowrap tracking-wide">
                                         {chain.label}
                                     </span>
                                 </div>
@@ -121,7 +121,7 @@ function ChainDisplay() {
                     </div>
 
                     {/* Glowing highlight trace underneath the container */}
-                    <div className="absolute -bottom-px left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent blur-[1px]"></div>
+                    <div className="absolute -bottom-px left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent blur-[1px]"></div>
                 </m.div>
 
             </div>

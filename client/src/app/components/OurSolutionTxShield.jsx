@@ -135,13 +135,13 @@ function OurSolutionTxShield() {
   };
 
   return (
-    <div className="relative w-full h-full flex flex-col justify-between px-4 sm:px-6 overflow-hidden bg-[#050505]">
+    <div className="relative w-full h-full flex flex-col justify-between px-4 sm:px-6 overflow-hidden bg-background transition-colors duration-700">
       {/* CSS Rules */}
       <style jsx global>{`
         .custom-scrollbar-cyber::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar-cyber::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 4px; }
-        .custom-scrollbar-cyber::-webkit-scrollbar-thumb { background: rgba(34, 211, 238, 0.4); border-radius: 4px; }
-        .custom-scrollbar-cyber::-webkit-scrollbar-thumb:hover { background: rgba(34, 211, 238, 0.8); }
+        .custom-scrollbar-cyber::-webkit-scrollbar-track { background: var(--muted); border-radius: 4px; }
+        .custom-scrollbar-cyber::-webkit-scrollbar-thumb { background: var(--primary); opacity: 0.4; border-radius: 4px; }
+        .custom-scrollbar-cyber::-webkit-scrollbar-thumb:hover { background: var(--primary); }
         
         @keyframes radar-sweep {
             from { transform: rotate(0deg); }
@@ -153,34 +153,34 @@ function OurSolutionTxShield() {
         
         .grid-bg-cyber {
             background-image: 
-                linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+                linear-gradient(to right, var(--foreground) 0.05 1px, transparent 1px),
+                linear-gradient(to bottom, var(--foreground) 0.05 1px, transparent 1px);
             background-size: 30px 30px;
         }
       `}</style>
 
       {/* Cyber Grid Background */}
-      <div className="absolute inset-0 grid-bg-cyber opacity-50 pointer-events-none"></div>
+      <div className="absolute inset-0 grid-bg-cyber opacity-20 pointer-events-none transition-opacity duration-700"></div>
 
-      <div className="max-w-[1400px] mx-auto relative z-10 w-full flex flex-col h-full py-6 sm:py-8">
+      <div className="max-w-[1400px] mx-auto relative z-10 w-full flex flex-col h-full py-6 sm:py-8 transition-colors duration-700">
 
         {/* Header */}
-        <div className="flex flex-col md:flex-row items-center justify-between w-full border-b border-white/10 pb-4 mb-6 shrink-0 gap-4 pr-16">
+        <div className="flex flex-col md:flex-row items-center justify-between w-full border-b border-border pb-4 mb-6 shrink-0 gap-4 pr-16">
 			<div className="flex flex-col items-center md:items-start">
-				<div className="inline-flex items-center gap-2 px-3 py-1 rounded-none bg-white/5 border border-white/10 mb-2">
+				<div className="inline-flex items-center gap-2 px-3 py-1 rounded-none bg-card border border-border mb-2">
 					<div className="w-1.5 h-1.5 bg-cyan-500 shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div>
-					<span className="text-[10px] text-gray-300 font-mono tracking-widest uppercase">Threat Intelligence</span>
+					<span className="text-[10px] text-muted-foreground font-mono tracking-widest uppercase">Threat Intelligence</span>
 				</div>
-				<h2 className="text-4xl sm:text-5xl lg:text-6xl font-clash font-extrabold text-white tracking-widest uppercase">
+				<h2 className="text-4xl sm:text-5xl lg:text-6xl font-clash font-extrabold text-foreground tracking-widest uppercase">
 					TxShield <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">Core</span>
 				</h2>
 			</div>
-			<div className="text-right flex items-center gap-4 bg-[#0a0a0a] border border-white/10 p-3">
+			<div className="text-right flex items-center gap-4 bg-card border border-border p-3">
 				<div className="flex flex-col text-right hidden sm:flex">
-					<span className="text-[10px] text-gray-500 uppercase tracking-widest font-mono">Active Sector</span>
-					<span className="text-lg font-mono font-bold text-white tracking-tighter"><GlitchText text={activeSection.title} /></span>
+					<span className="text-[10px] text-muted-foreground uppercase tracking-widest font-mono">Active Sector</span>
+					<span className="text-lg font-mono font-bold text-foreground tracking-tighter"><GlitchText text={activeSection.title} /></span>
 				</div>
-				<span className="text-5xl font-clash font-bold text-white/10 hidden sm:block">0{activeIndex + 1}</span>
+				<span className="text-5xl font-clash font-bold text-foreground/5 hidden sm:block">0{activeIndex + 1}</span>
 			</div>
         </div>
 
@@ -188,10 +188,10 @@ function OurSolutionTxShield() {
         <div className="flex flex-col lg:flex-row gap-8 items-center justify-center w-full flex-1 min-h-0 pt-4 pb-8">
 
           {/* LEFT COLUMN: Feature List */}
-          <div className="w-full lg:w-[320px] xl:w-[350px] shrink-0 h-[300px] lg:h-[480px] flex flex-col bg-[#050505] border border-white/10 relative overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] rounded-xl">
-			<div className="h-10 bg-[#0a0a0a] border-b border-white/5 flex items-center px-4 justify-between shrink-0">
+          <div className="w-full lg:w-[320px] xl:w-[350px] shrink-0 h-[300px] lg:h-[480px] flex flex-col bg-background border border-border relative overflow-hidden shadow-2xl rounded-xl transition-colors duration-700">
+			<div className="h-10 bg-card border-b border-border flex items-center px-4 justify-between shrink-0">
 				<span className="text-[10px] font-mono text-cyan-400/80 uppercase tracking-widest">Active Filters</span>
-				<span className="text-[10px] font-mono text-gray-500">{activeSection.items.length} Modules</span>
+				<span className="text-[10px] font-mono text-muted-foreground">{activeSection.items.length} Modules</span>
 			</div>
 			
 			<div className="flex-1 overflow-y-auto custom-scrollbar-cyber p-2 space-y-1">
@@ -203,8 +203,8 @@ function OurSolutionTxShield() {
 					transition={{ delay: idx * 0.03 }}
 					onMouseEnter={() => setHoveredFeature(item)}
 					className={`p-3 rounded-lg border transition-all cursor-pointer group relative overflow-hidden ${hoveredFeature === item
-					? `bg-white/5 border-white/20`
-					: 'bg-transparent border-transparent hover:bg-white/[0.02] hover:border-white/10'
+					? `bg-primary/5 border-primary/20`
+					: 'bg-transparent border-transparent hover:bg-muted/50 hover:border-border'
 					}`}
 				>
 					{/* Active Indicator Bar */}
@@ -215,11 +215,11 @@ function OurSolutionTxShield() {
 					<div className="flex items-center gap-3 pl-2">
 						<div className={`p-1.5 rounded-md border transition-colors ${hoveredFeature === item
 							? 'text-cyan-400 bg-cyan-400/10 border-cyan-400/30'
-							: 'text-gray-500 bg-[#0a0a0a] border-white/5 group-hover:text-gray-400 group-hover:border-white/10'
+							: 'text-muted-foreground bg-muted border-border group-hover:text-foreground group-hover:border-primary/20'
 							}`}>
 							{React.cloneElement(item.icon, { className: "text-xs" })}
 						</div>
-						<h4 className={`text-[11px] font-mono uppercase tracking-widest transition-colors ${hoveredFeature === item ? 'text-white' : 'text-gray-400 group-hover:text-gray-200'}`}>
+						<h4 className={`text-[11px] font-mono uppercase tracking-widest transition-colors ${hoveredFeature === item ? 'text-foreground font-bold' : 'text-muted-foreground group-hover:text-foreground'}`}>
 							{item.title}
 						</h4>
 					</div>
@@ -234,15 +234,15 @@ function OurSolutionTxShield() {
             <div className="relative w-[300px] h-[300px] sm:w-[380px] sm:h-[380px]">
               
               {/* Radar Grid Lines (Concentric Circles) - Sharp Vectors */}
-              <div className="absolute inset-0 rounded-full border-2 border-white/10 shadow-[inset_0_0_80px_rgba(34,211,238,0.05)]">
-                <div className="absolute inset-[20%] rounded-full border border-white/10"></div>
-                <div className="absolute inset-[40%] rounded-full border border-white/10"></div>
-                <div className="absolute inset-[60%] rounded-full border border-white/10 border-dashed"></div>
-                <div className="absolute inset-[80%] rounded-full border border-white/5"></div>
+              <div className="absolute inset-0 rounded-full border-2 border-border/40 shadow-[inset_0_0_80px_rgba(34,211,238,0.05)]">
+                <div className="absolute inset-[20%] rounded-full border border-border/20"></div>
+                <div className="absolute inset-[40%] rounded-full border border-border/20"></div>
+                <div className="absolute inset-[60%] rounded-full border border-border/20 border-dashed"></div>
+                <div className="absolute inset-[80%] rounded-full border border-border/10"></div>
 
                 {/* Crosshairs */}
-                <div className="absolute top-0 bottom-0 left-1/2 w-[1px] bg-white/10 -translate-x-1/2"></div>
-                <div className="absolute left-0 right-0 top-1/2 h-[1px] bg-white/10 -translate-y-1/2"></div>
+                <div className="absolute top-0 bottom-0 left-1/2 w-[1px] bg-border/20 -translate-x-1/2"></div>
+                <div className="absolute left-0 right-0 top-1/2 h-[1px] bg-border/20 -translate-y-1/2"></div>
               </div>
 
               {/* Sweeping Radar Line */}
@@ -277,8 +277,8 @@ function OurSolutionTxShield() {
                         {/* Sharp Node Box */}
                         <m.div
                           className={`w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center transition-all duration-300 relative overflow-hidden ${isActive
-                            ? `scale-110 bg-cyan-950/80 border border-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.4)]`
-                            : `scale-90 opacity-50 hover:opacity-100 hover:scale-100 bg-[#0A0A0A] border border-white/20`
+                            ? `scale-110 bg-primary/10 border border-primary shadow-[0_0_20px_rgba(59,130,246,0.3)]`
+                            : `scale-90 opacity-50 hover:opacity-100 hover:scale-100 bg-card border border-border`
                             }`}
                         >
                           {/* Active Scanline */}
@@ -288,7 +288,7 @@ function OurSolutionTxShield() {
 
                           {/* Icon */}
                           <m.div
-                            className={`relative z-10 ${isActive ? 'text-cyan-400' : 'text-gray-500'}`}
+                            className={`relative z-10 ${isActive ? 'text-cyan-400' : 'text-muted-foreground'}`}
                             animate={{ rotate: -(rotation + angle) }}
                             transition={{ type: "spring", stiffness: 45, damping: 25 }}
                           >
@@ -308,9 +308,9 @@ function OurSolutionTxShield() {
               </m.div>
 
               {/* STATIC CENTER HUB */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 bg-[#050505] z-20 pointer-events-none border border-white/20 flex items-center justify-center rotate-45">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#0a0a0a] border border-white/10 flex items-center justify-center relative overflow-hidden -rotate-45">
-                  <FaShieldAlt className="text-2xl sm:text-3xl text-white/80 relative z-10" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 bg-background z-20 pointer-events-none border border-border flex items-center justify-center rotate-45 transition-colors duration-700">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-card border border-border flex items-center justify-center relative overflow-hidden -rotate-45">
+                  <FaShieldAlt className="text-2xl sm:text-3xl text-foreground/80 relative z-10" />
                 </div>
               </div>
 
@@ -318,15 +318,15 @@ function OurSolutionTxShield() {
           </div>
 
           {/* RIGHT COLUMN: Terminal Data Panes */}
-          <div className="w-full lg:w-[320px] xl:w-[350px] shrink-0 h-[300px] lg:h-[480px] bg-[#050505] border border-white/10 flex flex-col relative overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] rounded-xl">
+          <div className="w-full lg:w-[320px] xl:w-[350px] shrink-0 h-[300px] lg:h-[480px] bg-background border border-border flex flex-col relative overflow-hidden shadow-2xl rounded-xl transition-colors duration-700">
 			{/* Top Bar (Terminal style) */}
-			<div className="h-10 bg-[#0a0a0a] border-b border-white/5 flex items-center px-4 justify-between shrink-0">
+			<div className="h-10 bg-card border-b border-border flex items-center px-4 justify-between shrink-0">
 				<div className="flex gap-1.5">
-					<div className="w-2.5 h-2.5 bg-white/20"></div>
-					<div className="w-2.5 h-2.5 bg-white/20"></div>
-					<div className="w-2.5 h-2.5 bg-white/20"></div>
+					<div className="w-2.5 h-2.5 bg-muted-foreground/20"></div>
+					<div className="w-2.5 h-2.5 bg-muted-foreground/20"></div>
+					<div className="w-2.5 h-2.5 bg-muted-foreground/20"></div>
 				</div>
-				<span className="text-[9px] font-mono text-gray-500 uppercase tracking-widest">sys/analyzer/output</span>
+				<span className="text-[9px] font-mono text-muted-foreground uppercase tracking-widest">sys/analyzer/output</span>
 			</div>
 
 			<div className="p-5 sm:p-6 flex-grow flex flex-col relative z-10 w-full h-full overflow-y-auto custom-scrollbar-cyber">
@@ -342,30 +342,30 @@ function OurSolutionTxShield() {
 				>
 					{/* Header */}
 					<div className="flex items-center gap-4 mb-6">
-					<div className="w-12 h-12 bg-white/5 border border-white/10 flex items-center justify-center text-cyan-400 shrink-0">
+					<div className="w-12 h-12 bg-muted/50 border border-border flex items-center justify-center text-cyan-400 shrink-0">
 						{React.cloneElement(hoveredFeature.icon, { className: "text-2xl" })}
 					</div>
-					<h4 className="text-lg font-clash font-bold text-white uppercase tracking-wider">
+					<h4 className="text-lg font-clash font-bold text-foreground uppercase tracking-wider">
 						<GlitchText text={hoveredFeature.title} />
 					</h4>
 					</div>
 
 					<div className="flex-grow">
 					<div className="border-l-2 border-cyan-500/50 pl-4 py-1">
-						<p className="text-cyan-100/70 leading-relaxed text-sm font-mono">
+						<p className="text-foreground/70 leading-relaxed text-sm font-mono italic">
 						{hoveredFeature.description}
 						</p>
 					</div>
 					</div>
 
-					<div className="mt-8 pt-4 border-t border-white/10">
+					<div className="mt-8 pt-4 border-t border-border">
 					<div className="flex flex-col gap-2">
 						<div className="flex items-center justify-between text-[10px] uppercase font-mono tracking-widest">
-							<span className="text-gray-500">Target Vector</span>
-							<span className="text-white">Smart Contract</span>
+							<span className="text-muted-foreground">Target Vector</span>
+							<span className="text-foreground">Smart Contract</span>
 						</div>
 						<div className="flex items-center justify-between text-[10px] uppercase font-mono tracking-widest">
-							<span className="text-gray-500 flex items-center gap-2"><FaTerminal className="text-cyan-500" /> Module Status</span>
+							<span className="text-muted-foreground flex items-center gap-2"><FaTerminal className="text-cyan-500" /> Module Status</span>
 							<span className="text-cyan-400 font-bold flex items-center gap-1.5">
 							<span className="w-1.5 h-1.5 bg-cyan-400 animate-pulse shadow-[0_0_5px_currentColor]"></span>
 							ENGAGED
@@ -382,11 +382,11 @@ function OurSolutionTxShield() {
 					exit={{ opacity: 0 }}
 					className="flex flex-col items-center justify-center h-full text-center relative z-10 opacity-50"
 				>
-					<div className="w-16 h-16 border border-dashed border-white/20 flex items-center justify-center mb-6">
-					<FaSearch className="text-2xl text-white/50" />
+					<div className="w-16 h-16 border border-dashed border-border flex items-center justify-center mb-6">
+					<FaSearch className="text-2xl text-muted-foreground/50" />
 					</div>
 					<p className="text-xs uppercase tracking-[0.3em] font-mono text-cyan-500/50">Standby Mode</p>
-					<p className="text-[10px] text-gray-500 mt-2 font-mono">Select a feature vector on the left to initialize analysis</p>
+					<p className="text-[10px] text-muted-foreground mt-2 font-mono">Select a feature vector on the left to initialize analysis</p>
 				</m.div>
 				)}
 			</AnimatePresence>

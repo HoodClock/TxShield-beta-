@@ -43,9 +43,9 @@ export default function TransitionOverlay() {
           delay: phase === "in" ? 0 : 0.1 
         }}
       />
-      {/* Foreground layer - Deep Black matching app background */}
+      {/* Foreground layer - Theme background */}
       <motion.div
-        className="fixed top-0 left-0 w-screen h-screen bg-[#050505] z-[9999] pointer-events-none"
+        className="fixed top-0 left-0 w-screen h-screen bg-background z-[9999] pointer-events-none transition-colors duration-700"
         initial={{ x: "100%" }}
         animate={{ x: phase === "in" ? "0%" : phase === "out" ? "-100%" : "100%" }}
         transition={{ 

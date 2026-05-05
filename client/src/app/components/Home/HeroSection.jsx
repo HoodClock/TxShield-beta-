@@ -49,7 +49,7 @@ function HeroSection() {
     <section
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="h-[100dvh] w-screen bg-[#050505] overflow-hidden relative flex flex-col items-center justify-center perspective-[1000px]"
+      className="h-[100dvh] w-screen bg-background overflow-hidden relative flex flex-col items-center justify-center perspective-[1000px] transition-colors duration-700"
     >
       {/* Cinematic Full Screen Background */}
       <HeroBackground className="z-0 opacity-60" />
@@ -69,8 +69,8 @@ function HeroSection() {
           className="flex flex-col items-center gap-4 mb-4"
         >
           <m.div
-            whileHover={{ scale: 1.1, boxShadow: "0px 0px 40px rgba(34,211,238,0.4)" }}
-            className="relative w-12 h-12 md:w-16 md:h-16 flex items-center justify-center rounded-full bg-[#050505] border border-cyan-500/30 shadow-[0_0_20px_rgba(34,211,238,0.15)] mb-2 cursor-pointer pointer-events-auto transition-all duration-300"
+            whileHover={{ scale: 1.1, boxShadow: "0px 0px 40px rgba(168,85,247,0.4)" }}
+            className="relative w-12 h-12 md:w-16 md:h-16 flex items-center justify-center rounded-full bg-card border border-primary/30 shadow-[0_0_20px_rgba(168,85,247,0.15)] mb-2 cursor-pointer pointer-events-auto transition-all duration-300"
           >
             <Image
               src="/Images/logo.png"
@@ -78,10 +78,10 @@ function HeroSection() {
               height={64}
               alt="Logo"
               priority
-              className="object-contain w-8 h-8 md:w-10 md:h-10 drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]"
+              className="object-contain w-8 h-8 md:w-10 md:h-10 drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]"
             />
           </m.div>
-          <span className="text-cyan-400 font-mono tracking-[0.3em] text-xs sm:text-sm md:text-base uppercase">TxShield Protocol</span>
+          <span className="text-primary font-mono tracking-[0.3em] text-xs sm:text-sm md:text-base uppercase">TxShield Protocol</span>
         </m.div>
 
         <m.h1
@@ -96,7 +96,7 @@ function HeroSection() {
         </m.h1>
 
         <m.div
-          className="text-gray-400 text-sm sm:text-lg md:text-xl font-light tracking-[0.2em] uppercase mt-8 sm:mt-10 max-w-3xl"
+          className="text-muted-foreground text-sm sm:text-lg md:text-xl font-light tracking-[0.2em] uppercase mt-8 sm:mt-10 max-w-3xl"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.5 }}
@@ -112,7 +112,7 @@ function HeroSection() {
 
       {/* Sharp Tactical Command Bar */}
       <m.div
-        className="absolute bottom-0 left-0 w-full bg-[#050505]/95 backdrop-blur-xl border-t border-cyan-500/20 px-6 py-4 md:px-12 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6 z-30"
+        className="absolute bottom-0 left-0 w-full bg-background/95 backdrop-blur-xl border-t border-border px-6 py-4 md:px-12 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6 z-30"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.8 }}
@@ -120,21 +120,21 @@ function HeroSection() {
         {/* Left: Tactical Status */}
         <div className="flex flex-col items-center sm:items-start gap-1">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-none bg-cyan-400 animate-pulse shadow-[0_0_10px_rgba(34,211,238,0.8)]"></div>
-            <span className="text-cyan-400 text-[10px] sm:text-xs font-mono font-bold tracking-widest uppercase">System Online</span>
+            <div className="w-2 h-2 rounded-none bg-primary animate-pulse shadow-[0_0_10px_rgba(59,130,246,0.8)]"></div>
+            <span className="text-primary text-[10px] sm:text-xs font-mono font-bold tracking-widest uppercase">System Online</span>
           </div>
-          <p className="text-gray-500 text-[9px] sm:text-[10px] font-mono uppercase tracking-widest">
+          <p className="text-muted-foreground text-[9px] sm:text-[10px] font-mono uppercase tracking-widest">
             {scannedCount.toLocaleString()} Scanned
           </p>
         </div>
 
         {/* Center: Sharp Links */}
         <div className="flex items-center justify-center gap-6 md:gap-12 text-xs sm:text-sm font-mono tracking-widest uppercase">
-          <Link href="/playbook" className="text-white/60 hover:text-cyan-400 transition-colors">
+          <Link href="/playbook" className="text-muted-foreground hover:text-primary transition-colors">
             Playbook
           </Link>
-          <div className="w-px h-4 bg-cyan-500/30"></div>
-          <Link href="/ApiRef" className="text-white/60 hover:text-cyan-400 transition-colors">
+          <div className="w-px h-4 bg-primary/30"></div>
+          <Link href="/ApiRef" className="text-muted-foreground hover:text-primary transition-colors">
             API Docs
           </Link>
         </div>
@@ -142,9 +142,9 @@ function HeroSection() {
         {/* Right: Sharp CTA Button */}
         <Link
           href="/simulate"
-          className="px-6 py-3 bg-transparent border border-cyan-500/50 text-cyan-400 font-mono text-xs sm:text-sm tracking-widest uppercase hover:bg-cyan-500/10 transition-all flex items-center group relative overflow-hidden shrink-0"
+          className="px-6 py-3 bg-transparent border border-primary/50 text-primary font-mono text-xs sm:text-sm tracking-widest uppercase hover:bg-primary/10 transition-all flex items-center group relative overflow-hidden shrink-0"
         >
-          <div className="absolute left-0 top-0 bottom-0 w-1 bg-cyan-400 group-hover:w-full transition-all duration-300 opacity-20 z-0"></div>
+          <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary group-hover:w-full transition-all duration-300 opacity-20 z-0"></div>
           <span className="relative z-10 flex items-center whitespace-nowrap">
             Initialize <MdArrowRightAlt className="ml-2 w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
           </span>

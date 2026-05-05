@@ -142,21 +142,21 @@ export default function ResultsDashboard({
   };
 
   return (
-    <div className="min-h-screen pt-[120px] pb-24 bg-[#050505] relative overflow-hidden">
+    <div className="min-h-screen pt-[120px] pb-24 bg-background relative overflow-hidden transition-colors duration-700">
       
       {/* --- KINETIC AMBIENT BACKGROUND --- */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-50 dark:opacity-100">
         <m.div 
           animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.15, 0.1] }}
           transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-purple-600/10 rounded-full blur-[150px]"
+          className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-purple-600/20 rounded-full blur-[150px]"
         />
         <m.div 
           animate={{ scale: [1.2, 1, 1.2], opacity: [0.1, 0.15, 0.1] }}
           transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-blue-600/10 rounded-full blur-[150px]"
+          className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-blue-600/20 rounded-full blur-[150px]"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
         <m.div 
           animate={{ y: ["0%", "100%"] }}
           transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
@@ -182,18 +182,18 @@ export default function ResultsDashboard({
       >
         {/* Header */}
         <m.div variants={itemVariants} className="text-center mb-10">
-          <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-white/5 bg-white/5 backdrop-blur-md mb-6">
+          <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-border bg-card/50 backdrop-blur-md mb-6">
             <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
             <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-blue-400/80">Diagnostic Protocol Active</span>
           </div>
           
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold font-clash tracking-tight mb-4">
-            <span className="grad-text-premium">ANALYSIS</span> <span className="text-white/90">REPORT</span>
+            <span className="grad-text-premium">ANALYSIS</span> <span className="text-foreground/90">REPORT</span>
           </h1>
           
-          <div className="flex items-center justify-center gap-4 text-gray-500 font-mono text-[10px] uppercase tracking-[0.2em]">
+          <div className="flex items-center justify-center gap-4 text-muted-foreground font-mono text-[10px] uppercase tracking-[0.2em]">
             <span>{chain} ENGINE v4.0.2</span>
-            <span className="w-1 h-1 rounded-full bg-white/20" />
+            <span className="w-1 h-1 rounded-full bg-border" />
             <span>ENCRYPTED_PAYLOAD_READY</span>
           </div>
         </m.div>
@@ -212,7 +212,7 @@ export default function ResultsDashboard({
         <div className="space-y-8">
           {/* Tab Navigation */}
           <m.div variants={itemVariants} className="flex justify-center">
-            <div className="flex p-1.5 bg-[#0a0a0a]/60 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-x-auto no-scrollbar">
+            <div className="flex p-1.5 bg-card/60 backdrop-blur-xl border border-border rounded-2xl shadow-2xl overflow-x-auto no-scrollbar">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -221,16 +221,16 @@ export default function ResultsDashboard({
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
                     className={`relative px-6 py-3 rounded-xl font-clash text-xs sm:text-sm font-semibold tracking-wide transition-all duration-300 flex items-center gap-3 whitespace-nowrap
-                      ${isActive ? 'text-white' : 'text-white/40 hover:text-white/60 hover:bg-white/5'}`}
+                      ${isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-foreground/5'}`}
                   >
                     {isActive && (
                       <m.div
                         layoutId="activeTabGlow"
-                        className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-white/10 rounded-xl"
+                        className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-border rounded-xl"
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
                       />
                     )}
-                    <Icon className={`w-4 h-4 transition-colors ${isActive ? "text-blue-400" : "text-white/20"}`} />
+                    <Icon className={`w-4 h-4 transition-colors ${isActive ? "text-primary" : "text-muted-foreground/30"}`} />
                     <span className="relative z-10">{tab.label}</span>
                   </button>
                 );
@@ -286,7 +286,7 @@ export default function ResultsDashboard({
                 {activeTab === 'honeypot' && (
                   <div className="space-y-6 max-w-7xl mx-auto">
                     <div className="text-center mb-4">
-                      <h2 className="text-xl sm:text-2xl font-bold font-clash tracking-tight text-white mb-2 uppercase">
+                      <h2 className="text-xl sm:text-2xl font-bold font-clash tracking-tight text-foreground mb-2 uppercase">
                         Honeypot & Security Analysis
                       </h2>
                     </div>

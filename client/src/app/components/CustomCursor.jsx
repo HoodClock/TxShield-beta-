@@ -46,7 +46,7 @@ export default function CustomCursor() {
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[9999] hidden md:block">
-      {/* Central Core with Blue/Purple Gradient */}
+      {/* Central Diamond Core */}
       <m.div
         style={{
           x: smoothX,
@@ -54,13 +54,21 @@ export default function CustomCursor() {
           translateX: "-50%",
           translateY: "-50%",
         }}
-        className="absolute w-2.5 h-2.5 rounded-full z-10 bg-gradient-to-br from-blue-500 to-purple-600 shadow-[0_0_15px_rgba(59,130,246,0.6)]"
+        className="absolute w-3 h-3 z-10 shadow-[0_0_15px_rgba(168,85,247,0.5)]"
         animate={{
-          scale: isMouseDown ? 0.7 : isHovered ? 1.4 : 1,
+          rotate: isHovered ? 225 : 45,
+          scale: isMouseDown ? 0.8 : isHovered ? 1.5 : 1,
+          background: isHovered 
+            ? "linear-gradient(135deg, #a855f7, #3b82f6)" 
+            : "linear-gradient(135deg, #3b82f6, #a855f7)",
+        }}
+        transition={{
+          rotate: { type: "spring", stiffness: 300, damping: 15 },
+          scale: { type: "spring", stiffness: 300, damping: 15 },
         }}
       />
 
-      {/* Rotating Segmented Ring */}
+      {/* Tactical Brackets */}
       <m.div
         style={{
           x: smoothX,
@@ -69,41 +77,54 @@ export default function CustomCursor() {
           translateY: "-50%",
         }}
         className="absolute w-12 h-12 flex items-center justify-center"
+      >
+        {[0, 90, 180, 270].map((rotation) => (
+          <m.div
+            key={rotation}
+            className="absolute w-2.5 h-2.5 border-t-[1.5px] border-l-[1.5px]"
+            style={{
+              rotate: rotation,
+            }}
+            animate={{
+              x: isHovered ? (rotation === 0 || rotation === 270 ? -18 : 18) : (rotation === 0 || rotation === 270 ? -14 : 14),
+              y: isHovered ? (rotation === 0 || rotation === 90 ? -18 : 18) : (rotation === 0 || rotation === 90 ? -14 : 14),
+              opacity: isHovered ? 1 : 0.4,
+              borderColor: isHovered ? "#3b82f6" : "var(--muted-foreground)"
+            }}
+            transition={{ type: "spring", stiffness: 250, damping: 20 }}
+          />
+        ))}
+      </m.div>
+
+      {/* Rotating Outer Ring */}
+      <m.div
+        style={{
+          x: smoothX,
+          y: smoothY,
+          translateX: "-50%",
+          translateY: "-50%",
+        }}
+        className="absolute w-16 h-16 flex items-center justify-center"
         animate={{
           rotate: isHovered ? 180 : 0,
+          scale: isHovered ? 1.2 : 1,
         }}
-        transition={{ type: "spring", stiffness: 100, damping: 15 }}
+        transition={{ duration: 0.8, ease: "circOut" }}
       >
         <m.div 
-          className="absolute inset-0 rounded-full border-2 border-transparent border-t-blue-500/40 border-b-purple-500/40"
+          className="absolute inset-0 rounded-full border border-dashed border-primary/20"
           animate={{ 
             rotate: 360,
-            scale: isHovered ? 1.2 : 1,
-            opacity: isHovered ? 0.8 : 0.4
           }}
           transition={{ 
-            rotate: { duration: 4, repeat: Infinity, ease: "linear" },
-            scale: { type: "spring", stiffness: 200, damping: 20 }
-          }}
-        />
-        
-        {/* Inner Glitch Arcs */}
-        <m.div 
-          className="absolute w-8 h-8 rounded-full border border-transparent border-l-blue-400/60 border-r-purple-400/60"
-          animate={{ 
-            rotate: -360,
-            scale: isHovered ? 0.8 : 1,
-          }}
-          transition={{ 
-            rotate: { duration: 3, repeat: Infinity, ease: "linear" },
-            scale: { type: "spring", stiffness: 200, damping: 20 }
+            duration: 15, repeat: Infinity, ease: "linear" 
           }}
         />
       </m.div>
 
-      {/* Interaction Pulse Ripple */}
+      {/* Interaction Ripple */}
       <AnimatePresence>
-        {isHovered && (
+        {isMouseDown && (
           <m.div
             style={{
               x: smoothX,
@@ -112,10 +133,10 @@ export default function CustomCursor() {
               translateY: "-50%",
             }}
             initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 2.5, opacity: [0, 0.4, 0] }}
+            animate={{ scale: 4, opacity: [0, 0.4, 0] }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeOut" }}
-            className="absolute w-8 h-8 border-2 border-blue-500/20 rounded-full"
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="absolute w-10 h-10 border border-primary/40 rounded-full"
           />
         )}
       </AnimatePresence>

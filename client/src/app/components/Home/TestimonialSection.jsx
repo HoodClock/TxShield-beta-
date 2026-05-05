@@ -87,7 +87,7 @@ const track2 = [...shuffleArray(testimonials), ...shuffleArray(testimonials)];
 
 function TestimonialSection() {
   return (
-    <section className="relative py-20 bg-black overflow-hidden flex flex-col justify-center min-h-[700px]">
+    <section className="relative py-20 bg-background overflow-hidden flex flex-col justify-center min-h-[700px] transition-colors duration-700">
       {/* CSS Variables & Keyframes for Scrolling */}
       <style jsx global>{`
         :root {
@@ -173,7 +173,7 @@ function TestimonialSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16 px-4"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-card border border-border mb-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
             <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(59,130,246,0.8)]"></div>
             <span className="text-xs text-gray-300 font-semibold tracking-wider uppercase">
               Live Intel
@@ -230,7 +230,7 @@ const ReviewCard = ({ testimonial }) => (
     <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 blur transition-all duration-500"></div>
 
     {/* Glassmorphic Card Body */}
-    <div className="relative h-full bg-[#0c0c0c]/80 backdrop-blur-xl rounded-2xl p-6 border border-white/10 flex flex-col justify-between shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] cursor-pointer hover:-translate-y-1 transition-transform duration-300 group-hover:border-white/20">
+    <div className="relative h-full bg-card/80 backdrop-blur-xl rounded-2xl p-6 border border-border flex flex-col justify-between shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] cursor-pointer hover:-translate-y-1 transition-transform duration-300 group-hover:border-primary/50">
       {/* Top row: Quote & Rating */}
       <div className="flex justify-between items-start mb-4">
         <svg
@@ -257,13 +257,13 @@ const ReviewCard = ({ testimonial }) => (
       </div>
 
       {/* Content text */}
-      <p className="text-gray-300 text-sm leading-relaxed mb-6 font-light group-hover:text-white transition-colors">
+      <p className="text-foreground/80 text-sm leading-relaxed mb-6 font-light group-hover:text-foreground transition-colors">
         "{testimonial.content}"
       </p>
 
       {/* User Info Bar */}
-      <div className="flex items-center gap-3 mt-auto pt-4 border-t border-white/10">
-        <div className="relative w-10 h-10 rounded-full overflow-hidden shrink-0 border border-white/10 group-hover:border-purple-500/50 transition-colors">
+      <div className="flex items-center gap-3 mt-auto pt-4 border-t border-border">
+        <div className="relative w-10 h-10 rounded-full overflow-hidden shrink-0 border border-border group-hover:border-primary/50 transition-colors">
           {testimonial.image ? (
             <Image
               src={testimonial.image}
@@ -286,10 +286,10 @@ const ReviewCard = ({ testimonial }) => (
         </div>
 
         <div className="flex flex-col">
-          <h4 className="font-semibold text-white text-sm tracking-tight group-hover:text-blue-400 transition-colors">
+          <h4 className="font-semibold text-foreground text-sm tracking-tight group-hover:text-primary transition-colors">
             {testimonial.name}
           </h4>
-          <p className="text-[11px] text-gray-500 uppercase tracking-widest font-mono">
+          <p className="text-[11px] text-muted-foreground uppercase tracking-widest font-mono">
             {testimonial.role}
           </p>
         </div>
@@ -299,7 +299,7 @@ const ReviewCard = ({ testimonial }) => (
             href={testimonial.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-auto flex items-center justify-center w-8 h-8 rounded-full bg-white/5 hover:bg-[#0077b5]/20 text-gray-500 hover:text-[#0077b5] border border-transparent hover:border-[#0077b5]/50 transition-all"
+            className="ml-auto flex items-center justify-center w-8 h-8 rounded-full bg-card hover:bg-primary/20 text-muted-foreground hover:text-primary border border-transparent hover:border-primary/50 transition-all"
             onClick={(e) => e.stopPropagation()}
           >
             <svg

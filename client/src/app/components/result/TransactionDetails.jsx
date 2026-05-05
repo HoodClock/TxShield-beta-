@@ -60,44 +60,41 @@ const TransactionDetails = React.memo(
     return (
       <m.div
         variants={itemVariants}
-        className="relative h-full flex flex-col p-6 rounded-3xl bg-[#0a0a0a]/40 backdrop-blur-3xl border border-white/10 overflow-hidden group"
+        className="relative h-full flex flex-col p-6 rounded-3xl bg-card/40 backdrop-blur-3xl border border-border overflow-hidden group"
       >
         <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl -z-10 group-hover:bg-blue-500/10 transition-colors duration-500" />
         
         <div className="flex items-center gap-4 mb-8">
-          <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-muted border border-border flex items-center justify-center shrink-0">
             <FiGitBranch className="w-5 h-5 text-blue-400" />
           </div>
           <div>
-            <h2 className="text-xl font-clash font-bold text-white tracking-tight">TRANSACTION SCHEMA</h2>
-            <p className="font-mono text-[9px] text-gray-500 uppercase tracking-widest">Diagnostic Payload v4.0.2</p>
+            <h2 className="text-xl font-clash font-bold text-foreground tracking-tight">TRANSACTION SCHEMA</h2>
+            <p className="font-mono text-[9px] text-muted-foreground tracking-wider">FORENSIC_GRID_V2</p>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3 flex-1 overflow-y-auto no-scrollbar pr-1">
           {transactionItems.map((item, idx) => (
-            <m.div
+            <div
               key={idx}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.05 }}
-              className="p-3 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-cyan-500/20 hover:bg-white/[0.04] transition-all duration-300 group/item"
+              className="p-3 rounded-2xl bg-muted border border-border hover:border-blue-500/20 hover:bg-card transition-all duration-300 group/item"
             >
               <div className="flex items-center gap-2 mb-1.5">
-                <div className="p-1 rounded-md bg-white/5 border border-white/10 group-hover/item:border-blue-500/30 transition-colors">
+                <div className="p-1 rounded-md bg-card border border-border group-hover/item:border-blue-500/30 transition-colors">
                   {item.icon}
                 </div>
-                <span className="font-mono text-[8px] uppercase tracking-[0.15em] text-gray-500 font-bold leading-none">{item.label}</span>
+                <span className="font-mono text-[8px] uppercase tracking-[0.15em] text-muted-foreground font-bold leading-none">{item.label}</span>
               </div>
-              <p className={`text-white font-semibold leading-tight ${item.mono ? "font-mono text-[10px] truncate" : "text-[13px]"}`}>
+              <div className={`font-mono text-[10px] md:text-xs font-semibold truncate ${item.mono ? "text-blue-500" : "text-foreground"}`}>
                 {item.value}
-              </p>
-            </m.div>
+              </div>
+            </div>
           ))}
         </div>
 
-        <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
-          <span className="font-mono text-[8px] text-white/10 uppercase tracking-[0.4em]">Reference: PROTOCOL_ALPHA_SCAN</span>
+        <div className="mt-6 pt-4 border-t border-border flex items-center justify-between">
+          <span className="font-mono text-[8px] text-muted-foreground/30 uppercase tracking-[0.4em]">Reference: PROTOCOL_ALPHA_SCAN</span>
           <div className="flex gap-1">
             <div className="w-1 h-1 rounded-full bg-blue-400/20" />
             <div className="w-1 h-1 rounded-full bg-purple-400/20" />
