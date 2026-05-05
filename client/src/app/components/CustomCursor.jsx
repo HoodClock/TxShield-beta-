@@ -1,103 +1,135 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { m, useSpring, useMotionValue } from "framer-motion";
 
-const CustomCursor = () => {
+import React, { useEffect, useState } from "react";
+import { m, useSpring, useMotionValue, AnimatePresence } from "framer-motion";
+
+export default function CustomCursor() {
   const [isHovered, setIsHovered] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isMouseDown, setIsMouseDown] = useState(false);
   
+  // Smooth spring physics for fluid movement
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // Precision Dot - Very fast, almost no lag
-  const dotSpringConfig = { damping: 20, stiffness: 800 };
-  const dotX = useSpring(mouseX, dotSpringConfig);
-  const dotY = useSpring(mouseY, dotSpringConfig);
-
-  // Outer Aura - Fluid, elastic lag
-  const auraSpringConfig = { damping: 30, stiffness: 100 };
-  const auraX = useSpring(mouseX, auraSpringConfig);
-  const auraY = useSpring(mouseY, auraSpringConfig);
+  const springConfig = { damping: 30, stiffness: 300, mass: 0.6 };
+  const smoothX = useSpring(mouseX, springConfig);
+  const smoothY = useSpring(mouseY, springConfig);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      if (!isVisible) setIsVisible(true);
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
-    };
 
-    const handleMouseOver = (e) => {
       const target = e.target;
-      const isInteractive = 
+      const isClickable = 
         target.closest("button") || 
         target.closest("a") || 
-        target.classList.contains("cursor-pointer");
-      setIsHovered(!!isInteractive);
+        target.closest('[role="button"]') ||
+        window.getComputedStyle(target).cursor === "pointer";
+      
+      setIsHovered(!!isClickable);
     };
+
+    const handleMouseDown = () => setIsMouseDown(true);
+    const handleMouseUp = () => setIsMouseDown(false);
 
     window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseover", handleMouseOver);
-    document.body.style.cursor = "none";
-    
+    window.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mouseup", handleMouseUp);
+
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseover", handleMouseOver);
-      document.body.style.cursor = "auto";
+      window.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [isVisible, mouseX, mouseY]);
-
-  if (!isVisible) return null;
+  }, [mouseX, mouseY]);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[99999]">
-      
-      {/* 1. FLUID AURA (Trailing Ring) */}
+    <div className="fixed inset-0 pointer-events-none z-[9999] hidden md:block">
+      {/* Central Core with Blue/Purple Gradient */}
       <m.div
-        className={`fixed top-0 left-0 rounded-full border transition-all duration-500 ease-out flex items-center justify-center`}
         style={{
-          x: auraX,
-          y: auraY,
+          x: smoothX,
+          y: smoothY,
           translateX: "-50%",
           translateY: "-50%",
-          width: isHovered ? 80 : 32,
-          height: isHovered ? 80 : 32,
-          borderColor: isHovered ? "rgba(168, 85, 247, 0.4)" : "rgba(255, 255, 255, 0.15)",
-          backgroundColor: isHovered ? "rgba(168, 85, 247, 0.03)" : "transparent",
         }}
+        className="absolute w-2.5 h-2.5 rounded-full z-10 bg-gradient-to-br from-blue-500 to-purple-600 shadow-[0_0_15px_rgba(59,130,246,0.6)]"
+        animate={{
+          scale: isMouseDown ? 0.7 : isHovered ? 1.4 : 1,
+        }}
+      />
+
+      {/* Rotating Segmented Ring */}
+      <m.div
+        style={{
+          x: smoothX,
+          y: smoothY,
+          translateX: "-50%",
+          translateY: "-50%",
+        }}
+        className="absolute w-12 h-12 flex items-center justify-center"
+        animate={{
+          rotate: isHovered ? 180 : 0,
+        }}
+        transition={{ type: "spring", stiffness: 100, damping: 15 }}
       >
-        {/* Subtle Gradient Glow on Hover */}
-        {isHovered && (
-          <m.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-500/10 to-purple-500/10 blur-xl"
-          />
-        )}
+        <m.div 
+          className="absolute inset-0 rounded-full border-2 border-transparent border-t-blue-500/40 border-b-purple-500/40"
+          animate={{ 
+            rotate: 360,
+            scale: isHovered ? 1.2 : 1,
+            opacity: isHovered ? 0.8 : 0.4
+          }}
+          transition={{ 
+            rotate: { duration: 4, repeat: Infinity, ease: "linear" },
+            scale: { type: "spring", stiffness: 200, damping: 20 }
+          }}
+        />
+        
+        {/* Inner Glitch Arcs */}
+        <m.div 
+          className="absolute w-8 h-8 rounded-full border border-transparent border-l-blue-400/60 border-r-purple-400/60"
+          animate={{ 
+            rotate: -360,
+            scale: isHovered ? 0.8 : 1,
+          }}
+          transition={{ 
+            rotate: { duration: 3, repeat: Infinity, ease: "linear" },
+            scale: { type: "spring", stiffness: 200, damping: 20 }
+          }}
+        />
       </m.div>
 
-      {/* 2. PRECISION DOT (Floating Point) */}
-      <m.div
-        className={`fixed top-0 left-0 w-1.5 h-1.5 rounded-full z-20 shadow-[0_0_10px_rgba(255,255,255,0.5)] ${isHovered ? 'bg-cyan-400' : 'bg-white'}`}
-        style={{
-          x: dotX,
-          y: dotY,
-          translateX: "-50%",
-          translateY: "-50%",
-        }}
-      />
+      {/* Interaction Pulse Ripple */}
+      <AnimatePresence>
+        {isHovered && (
+          <m.div
+            style={{
+              x: smoothX,
+              y: smoothY,
+              translateX: "-50%",
+              translateY: "-50%",
+            }}
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 2.5, opacity: [0, 0.4, 0] }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeOut" }}
+            className="absolute w-8 h-8 border-2 border-blue-500/20 rounded-full"
+          />
+        )}
+      </AnimatePresence>
 
-      {/* 3. AMBIENT LINGERING GLOW */}
-      <m.div
-        className="fixed top-0 left-0 w-40 h-40 bg-cyan-500/5 rounded-full blur-[100px] -z-10"
-        style={{
-          x: auraX,
-          y: auraY,
-          translateX: "-50%",
-          translateY: "-50%",
-        }}
-      />
+      <style jsx global>{`
+        * {
+          cursor: none !important;
+        }
+        @media (max-width: 768px) {
+          * {
+            cursor: auto !important;
+          }
+        }
+      `}</style>
     </div>
   );
-};
-
-export default CustomCursor;
+}
