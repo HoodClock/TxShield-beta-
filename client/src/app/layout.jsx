@@ -3,7 +3,8 @@ import localFont from "next/font/local";
 import "@solana/wallet-adapter-react-ui/styles.css";
 import "./globals.css";
 import ClientLayout from "./clientLayout";
-import ScrollProgressBar from "./components/ScrollProgressBar";
+import HamburgerMenu from "./components/HamburgerMenu";
+import TransitionOverlay from "./components/TransitionOverlay";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,7 +44,8 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${clashDisplay.variable} dark`}>
       <body className="antialiased bg-background text-foreground">
         <ClientLayout>
-          <ScrollProgressBar />
+          <HamburgerMenu />
+          <TransitionOverlay />
           {children}
         </ClientLayout>
       </body>

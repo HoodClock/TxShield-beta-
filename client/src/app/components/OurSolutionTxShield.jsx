@@ -25,7 +25,6 @@ import {
   FaTerminal
 } from 'react-icons/fa';
 
-// Reuse the existing data structure
 const SECTIONS = [
   {
     key: 'honeypot',
@@ -84,7 +83,6 @@ const SECTIONS = [
   }
 ];
 
-// Glitch/Decode Text Component for the Terminal Display
 const GlitchText = ({ text }) => {
   const [displayText, setDisplayText] = useState(text);
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
@@ -124,13 +122,11 @@ function OurSolutionTxShield() {
   const [rotation, setRotation] = useState(0);
   const [hoveredFeature, setHoveredFeature] = useState(null);
 
-  // Active section data
   const activeSection = SECTIONS[activeIndex];
 
   const handleSectionClick = (index) => {
     setActiveIndex(index);
-    setHoveredFeature(null); // Clear the display window when switching sectors
-    // Unidirectional rotation logic (always decreasing angle)
+    setHoveredFeature(null);
     const targetBase = index * -120;
     let delta = (targetBase - rotation) % 360;
     if (delta > 0) delta -= 360;
@@ -139,13 +135,13 @@ function OurSolutionTxShield() {
   };
 
   return (
-    <div className="relative py-20 px-4 sm:px-6 overflow-hidden bg-black">
-      {/* CSS Rules for Scrollbar and Sweeper */}
+    <div className="relative w-full h-full flex flex-col justify-between px-4 sm:px-6 overflow-hidden bg-[#050505]">
+      {/* CSS Rules */}
       <style jsx global>{`
         .custom-scrollbar-cyber::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar-cyber::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 4px; }
-        .custom-scrollbar-cyber::-webkit-scrollbar-thumb { background: rgba(168, 85, 247, 0.4); border-radius: 4px; }
-        .custom-scrollbar-cyber::-webkit-scrollbar-thumb:hover { background: rgba(168, 85, 247, 0.8); }
+        .custom-scrollbar-cyber::-webkit-scrollbar-thumb { background: rgba(34, 211, 238, 0.4); border-radius: 4px; }
+        .custom-scrollbar-cyber::-webkit-scrollbar-thumb:hover { background: rgba(34, 211, 238, 0.8); }
         
         @keyframes radar-sweep {
             from { transform: rotate(0deg); }
@@ -157,63 +153,102 @@ function OurSolutionTxShield() {
         
         .grid-bg-cyber {
             background-image: 
-                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 20px 20px;
+                linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 30px 30px;
         }
       `}</style>
 
       {/* Cyber Grid Background */}
       <div className="absolute inset-0 grid-bg-cyber opacity-50 pointer-events-none"></div>
 
-      <div className="max-w-7xl mx-auto relative z-10 w-full">
+      <div className="max-w-[1400px] mx-auto relative z-10 w-full flex flex-col h-full py-6 sm:py-8">
 
         {/* Header */}
-        <m.div
-          className="text-center mb-16 w-full flex flex-col items-center"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
-            <div className="w-1.5 h-1.5 bg-purple-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(168,85,247,0.8)]"></div>
-            <span className="text-xs text-gray-300 font-semibold tracking-wider uppercase">Threat Intelligence</span>
+        <div className="flex flex-col md:flex-row items-center justify-between w-full border-b border-white/10 pb-4 mb-6 shrink-0 gap-4 pr-16">
+			<div className="flex flex-col items-center md:items-start">
+				<div className="inline-flex items-center gap-2 px-3 py-1 rounded-none bg-white/5 border border-white/10 mb-2">
+					<div className="w-1.5 h-1.5 bg-cyan-500 shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div>
+					<span className="text-[10px] text-gray-300 font-mono tracking-widest uppercase">Threat Intelligence</span>
+				</div>
+				<h2 className="text-4xl sm:text-5xl lg:text-6xl font-clash font-extrabold text-white tracking-widest uppercase">
+					TxShield <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">Core</span>
+				</h2>
+			</div>
+			<div className="text-right flex items-center gap-4 bg-[#0a0a0a] border border-white/10 p-3">
+				<div className="flex flex-col text-right hidden sm:flex">
+					<span className="text-[10px] text-gray-500 uppercase tracking-widest font-mono">Active Sector</span>
+					<span className="text-lg font-mono font-bold text-white tracking-tighter"><GlitchText text={activeSection.title} /></span>
+				</div>
+				<span className="text-5xl font-clash font-bold text-white/10 hidden sm:block">0{activeIndex + 1}</span>
+			</div>
+        </div>
+
+        {/* Main Content Grid: 3 Columns */}
+        <div className="flex flex-col lg:flex-row gap-8 items-center justify-center w-full flex-1 min-h-0 pt-4 pb-8">
+
+          {/* LEFT COLUMN: Feature List */}
+          <div className="w-full lg:w-[320px] xl:w-[350px] shrink-0 h-[300px] lg:h-[480px] flex flex-col bg-[#050505] border border-white/10 relative overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] rounded-xl">
+			<div className="h-10 bg-[#0a0a0a] border-b border-white/5 flex items-center px-4 justify-between shrink-0">
+				<span className="text-[10px] font-mono text-cyan-400/80 uppercase tracking-widest">Active Filters</span>
+				<span className="text-[10px] font-mono text-gray-500">{activeSection.items.length} Modules</span>
+			</div>
+			
+			<div className="flex-1 overflow-y-auto custom-scrollbar-cyber p-2 space-y-1">
+				{activeSection.items.map((item, idx) => (
+				<m.div
+					key={idx}
+					initial={{ opacity: 0, x: -10 }}
+					animate={{ opacity: 1, x: 0 }}
+					transition={{ delay: idx * 0.03 }}
+					onMouseEnter={() => setHoveredFeature(item)}
+					className={`p-3 rounded-lg border transition-all cursor-pointer group relative overflow-hidden ${hoveredFeature === item
+					? `bg-white/5 border-white/20`
+					: 'bg-transparent border-transparent hover:bg-white/[0.02] hover:border-white/10'
+					}`}
+				>
+					{/* Active Indicator Bar */}
+					{hoveredFeature === item && (
+					<m.div layoutId="activeFeatureBar" className="absolute left-0 top-2 bottom-2 w-1 bg-cyan-400 rounded-r-full shadow-[0_0_10px_rgba(34,211,238,0.5)]" />
+					)}
+
+					<div className="flex items-center gap-3 pl-2">
+						<div className={`p-1.5 rounded-md border transition-colors ${hoveredFeature === item
+							? 'text-cyan-400 bg-cyan-400/10 border-cyan-400/30'
+							: 'text-gray-500 bg-[#0a0a0a] border-white/5 group-hover:text-gray-400 group-hover:border-white/10'
+							}`}>
+							{React.cloneElement(item.icon, { className: "text-xs" })}
+						</div>
+						<h4 className={`text-[11px] font-mono uppercase tracking-widest transition-colors ${hoveredFeature === item ? 'text-white' : 'text-gray-400 group-hover:text-gray-200'}`}>
+							{item.title}
+						</h4>
+					</div>
+				</m.div>
+				))}
+			</div>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-3 tracking-tight">
-            TxShield <span className="grad-word">Core</span>
-          </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto text-sm sm:text-base font-light tracking-wide">
-            Interactive defense systems. Select a tactical sector to engage protection layers.
-          </p>
-        </m.div>
 
-        {/* Main Content Grid */}
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-center lg:items-start justify-center w-full">
-
-          {/* LEFT COLUMN: Cyber Radar Sandbox */}
-          <div className="w-full lg:w-[450px] flex justify-center items-center relative h-[400px] sm:h-[450px] flex-shrink-0">
+          {/* CENTER COLUMN: Radar */}
+          <div className="flex-1 w-full flex justify-center items-center relative h-[350px] lg:h-[480px] shrink-0">
             {/* Radar Container */}
-            <div className="relative w-[320px] h-[320px] sm:w-[400px] sm:h-[400px]">
-
-              {/* Ambient Underglow */}
-              <div className="absolute inset-0 bg-purple-500/10 blur-[80px] rounded-full"></div>
-
-              {/* Radar Grid Lines (Concentric Circles) */}
-              <div className="absolute inset-0 rounded-full border border-white/5 shadow-[inset_0_0_50px_rgba(0,0,0,0.8)]">
-                <div className="absolute inset-[15%] rounded-full border border-white/[0.03]"></div>
-                <div className="absolute inset-[30%] rounded-full border border-white/[0.03]"></div>
-                <div className="absolute inset-[45%] rounded-full border border-white/[0.03] border-dashed"></div>
+            <div className="relative w-[300px] h-[300px] sm:w-[380px] sm:h-[380px]">
+              
+              {/* Radar Grid Lines (Concentric Circles) - Sharp Vectors */}
+              <div className="absolute inset-0 rounded-full border-2 border-white/10 shadow-[inset_0_0_80px_rgba(34,211,238,0.05)]">
+                <div className="absolute inset-[20%] rounded-full border border-white/10"></div>
+                <div className="absolute inset-[40%] rounded-full border border-white/10"></div>
+                <div className="absolute inset-[60%] rounded-full border border-white/10 border-dashed"></div>
+                <div className="absolute inset-[80%] rounded-full border border-white/5"></div>
 
                 {/* Crosshairs */}
-                <div className="absolute top-0 bottom-0 left-1/2 w-[1px] bg-white/[0.03] -translate-x-1/2"></div>
-                <div className="absolute left-0 right-0 top-1/2 h-[1px] bg-white/[0.03] -translate-y-1/2"></div>
+                <div className="absolute top-0 bottom-0 left-1/2 w-[1px] bg-white/10 -translate-x-1/2"></div>
+                <div className="absolute left-0 right-0 top-1/2 h-[1px] bg-white/10 -translate-y-1/2"></div>
               </div>
 
               {/* Sweeping Radar Line */}
-              <div className="absolute inset-[5%] rounded-full overflow-hidden pointer-events-none">
+              <div className="absolute inset-[2%] rounded-full overflow-hidden pointer-events-none">
                 <div className="w-full h-full animate-radar origin-center"
-                  style={{ background: 'conic-gradient(from 0deg, transparent 0deg, transparent 270deg, rgba(168, 85, 247, 0.4) 360deg)' }}>
+                  style={{ background: 'conic-gradient(from 0deg, transparent 0deg, transparent 270deg, rgba(34, 211, 238, 0.3) 360deg)' }}>
                 </div>
               </div>
 
@@ -236,52 +271,46 @@ function OurSolutionTxShield() {
                     >
                       {/* Interactive Node */}
                       <div
-                        className="absolute top-[3%] left-1/2 -translate-x-1/2 pointer-events-auto cursor-pointer group flex flex-col items-center"
+                        className="absolute top-[4%] left-1/2 -translate-x-1/2 pointer-events-auto cursor-pointer flex flex-col items-center"
                         onClick={() => handleSectionClick(index)}
                       >
-                        {/* Node Box - Cyber Glass */}
+                        {/* Sharp Node Box */}
                         <m.div
-                          className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center transition-all duration-300 relative overflow-hidden backdrop-blur-xl ${isActive
-                            ? `scale-110 shadow-[0_0_30px_rgba(0,0,0,0.5)] bg-[#0A0A0A] border border-white/20`
-                            : `scale-90 opacity-60 hover:opacity-100 hover:scale-100 bg-[#0A0A0A]/50 border border-white/5`
+                          className={`w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center transition-all duration-300 relative overflow-hidden ${isActive
+                            ? `scale-110 bg-cyan-950/80 border border-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.4)]`
+                            : `scale-90 opacity-50 hover:opacity-100 hover:scale-100 bg-[#0A0A0A] border border-white/20`
                             }`}
                         >
-                          {/* Active Glowing Background */}
+                          {/* Active Scanline */}
                           {isActive && (
-                            <div className={`absolute inset-0 opacity-20 bg-gradient-to-br ${section.color}`}></div>
+                            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400/20 to-transparent animate-[scan_2s_linear_infinite]"></div>
                           )}
 
                           {/* Icon */}
                           <m.div
-                            className={`relative z-10 ${isActive ? 'text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]' : 'text-gray-500'}`}
+                            className={`relative z-10 ${isActive ? 'text-cyan-400' : 'text-gray-500'}`}
                             animate={{ rotate: -(rotation + angle) }}
                             transition={{ type: "spring", stiffness: 45, damping: 25 }}
                           >
                             {section.icon}
                           </m.div>
 
-                          {/* Targeting Corners for Active Node */}
-                          {isActive && (
-                            <>
-                              <div className="absolute top-1 left-1 w-2 h-2 border-t border-l border-white/40"></div>
-                              <div className="absolute top-1 right-1 w-2 h-2 border-t border-r border-white/40"></div>
-                              <div className="absolute bottom-1 left-1 w-2 h-2 border-b border-l border-white/40"></div>
-                              <div className="absolute bottom-1 right-1 w-2 h-2 border-b border-r border-white/40"></div>
-                            </>
-                          )}
+                          {/* Tactical Corners */}
+                          <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-current opacity-50"></div>
+                          <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-current opacity-50"></div>
+                          <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-current opacity-50"></div>
+                          <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-current opacity-50"></div>
                         </m.div>
                       </div>
                     </m.div>
                   );
                 })}
-
               </m.div>
 
-              {/* STATIC CENTER HUB - Cyber Eye */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#050505] p-[1px] shadow-[0_0_40px_rgba(0,0,0,0.8)] z-20 pointer-events-none border border-white/10 flex items-center justify-center">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-black to-[#111] border border-white/5 flex items-center justify-center shadow-inner relative overflow-hidden">
-                  <div className="absolute inset-0 bg-blue-500/10 blur-sm animate-pulse"></div>
-                  <FaShieldAlt className="text-2xl sm:text-3xl text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.4)] relative z-10" />
+              {/* STATIC CENTER HUB */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 bg-[#050505] z-20 pointer-events-none border border-white/20 flex items-center justify-center rotate-45">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#0a0a0a] border border-white/10 flex items-center justify-center relative overflow-hidden -rotate-45">
+                  <FaShieldAlt className="text-2xl sm:text-3xl text-white/80 relative z-10" />
                 </div>
               </div>
 
@@ -289,146 +318,81 @@ function OurSolutionTxShield() {
           </div>
 
           {/* RIGHT COLUMN: Terminal Data Panes */}
-          <div className="w-full lg:w-[600px] flex flex-col gap-6 flex-shrink-0">
+          <div className="w-full lg:w-[320px] xl:w-[350px] shrink-0 h-[300px] lg:h-[480px] bg-[#050505] border border-white/10 flex flex-col relative overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] rounded-xl">
+			{/* Top Bar (Terminal style) */}
+			<div className="h-10 bg-[#0a0a0a] border-b border-white/5 flex items-center px-4 justify-between shrink-0">
+				<div className="flex gap-1.5">
+					<div className="w-2.5 h-2.5 bg-white/20"></div>
+					<div className="w-2.5 h-2.5 bg-white/20"></div>
+					<div className="w-2.5 h-2.5 bg-white/20"></div>
+				</div>
+				<span className="text-[9px] font-mono text-gray-500 uppercase tracking-widest">sys/analyzer/output</span>
+			</div>
 
-            {/* Section Header */}
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-white/10 pb-3">
-              <div>
-                <h3 className="text-2xl sm:text-3xl font-bold text-white mb-1 tracking-tight flex items-center gap-3">
-                  <span className="w-2 h-6 bg-gradient-to-b from-purple-500 to-cyan-500 rounded-full"></span>
-                  <GlitchText text={activeSection.title} />
-                </h3>
-                <p className="text-gray-400 font-medium text-xs sm:text-sm tracking-wide ml-5">{activeSection.shortDesc}</p>
-              </div>
-              <div className="text-right mt-2 sm:mt-0 flex items-center gap-2">
-                <span className="text-xs text-purple-500 uppercase tracking-widest font-mono">Sector</span>
-                <span className="text-4xl font-mono font-bold text-white/20 tracking-tighter">0{activeIndex + 1}</span>
-              </div>
-            </div>
+			<div className="p-5 sm:p-6 flex-grow flex flex-col relative z-10 w-full h-full overflow-y-auto custom-scrollbar-cyber">
+			<AnimatePresence mode="wait">
+				{hoveredFeature ? (
+				<m.div
+					key={hoveredFeature.title}
+					initial={{ opacity: 0, x: 10 }}
+					animate={{ opacity: 1, x: 0 }}
+					exit={{ opacity: 0, x: -10 }}
+					transition={{ duration: 0.2 }}
+					className="relative z-10 flex flex-col h-full"
+				>
+					{/* Header */}
+					<div className="flex items-center gap-4 mb-6">
+					<div className="w-12 h-12 bg-white/5 border border-white/10 flex items-center justify-center text-cyan-400 shrink-0">
+						{React.cloneElement(hoveredFeature.icon, { className: "text-2xl" })}
+					</div>
+					<h4 className="text-lg font-clash font-bold text-white uppercase tracking-wider">
+						<GlitchText text={hoveredFeature.title} />
+					</h4>
+					</div>
 
-            {/* Two-Pane Layout */}
-            <div className="flex flex-col sm:flex-row gap-4 h-auto sm:h-[400px]">
+					<div className="flex-grow">
+					<div className="border-l-2 border-cyan-500/50 pl-4 py-1">
+						<p className="text-cyan-100/70 leading-relaxed text-sm font-mono">
+						{hoveredFeature.description}
+						</p>
+					</div>
+					</div>
 
-              {/* 1. Feature List (Scrollable Terminal Window) */}
-              <div className="w-full sm:w-[45%] overflow-y-auto pr-2 custom-scrollbar-cyber rounded-2xl bg-[#0c0c0c]/80 backdrop-blur-xl border border-white/5 shadow-[inset_0_0_30px_rgba(0,0,0,0.8)] p-2 h-[250px] sm:h-full">
-                <div className="flex flex-col gap-1.5">
-                  {activeSection.items.map((item, idx) => (
-                    <m.div
-                      key={idx}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: idx * 0.03 }}
-                      onMouseEnter={() => setHoveredFeature(item)}
-                      className={`p-3 rounded-xl border transition-all cursor-pointer group relative overflow-hidden ${hoveredFeature === item
-                        ? `bg-white/10 border-white/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]`
-                        : 'bg-transparent border-transparent hover:bg-white/[0.03] hover:border-white/10'
-                        }`}
-                    >
-                      {/* Active Indicator Bar */}
-                      {hoveredFeature === item && (
-                        <m.div layoutId="activeFeatureBar" className="absolute left-0 top-1/4 bottom-1/4 w-1 bg-purple-500 rounded-r-full" />
-                      )}
-
-                      <div className="flex items-center gap-3 pl-1">
-                        <div className={`p-1.5 rounded-lg border transition-colors ${hoveredFeature === item
-                          ? 'text-purple-400 bg-purple-500/10 border-purple-500/30'
-                          : 'text-gray-500 bg-black/50 border-white/5 group-hover:text-gray-300'
-                          }`}>
-                          {React.cloneElement(item.icon, { className: "text-xs" })}
-                        </div>
-                        <div>
-                          <h4 className={`text-[11px] sm:text-xs font-semibold uppercase tracking-wider transition-colors pt-0.5 ${hoveredFeature === item ? 'text-white' : 'text-gray-400 group-hover:text-gray-200'
-                            }`}>
-                            {item.title}
-                          </h4>
-                        </div>
-                      </div>
-                    </m.div>
-                  ))}
-                </div>
-              </div>
-
-              {/* 2. Big Window (Decode Pattern Panel) */}
-              <div className="w-full sm:w-[55%] relative h-[250px] sm:h-full">
-                <div className="absolute inset-0 rounded-2xl bg-[#080808] border border-white/10 overflow-hidden flex flex-col shadow-[inset_0_0_40px_rgba(0,0,0,0.9)]">
-
-                  {/* Top Bar (Terminal style) */}
-                  <div className="h-8 bg-[#111] border-b border-white/5 flex items-center px-4 justify-between">
-                    <div className="flex gap-1.5">
-                      <div className="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
-                      <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
-                      <div className="w-2.5 h-2.5 rounded-full bg-green-500/50"></div>
-                    </div>
-                    <span className="text-[9px] font-mono text-gray-500 uppercase tracking-widest">system32/txshield/analyzer</span>
-                  </div>
-
-                  <div className="p-5 sm:p-6 flex-grow flex flex-col relative z-10 w-full h-full">
-                    <AnimatePresence mode="wait">
-                      {hoveredFeature ? (
-                        <m.div
-                          key={hoveredFeature.title}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          transition={{ duration: 0.2 }}
-                          className="relative z-10 flex flex-col h-full"
-                        >
-                          {/* Header */}
-                          <div className="flex items-center gap-3 mb-4">
-                            <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${activeSection.color} p-[1px]`}>
-                              <div className="w-full h-full bg-[#0A0A0A] rounded-[11px] flex items-center justify-center text-white">
-                                {React.cloneElement(hoveredFeature.icon, { className: "text-lg" })}
-                              </div>
-                            </div>
-                            <h4 className="text-lg sm:text-xl font-bold text-white tracking-tight">
-                              <GlitchText text={hoveredFeature.title} />
-                            </h4>
-                          </div>
-
-                          <div className="flex-grow">
-                            <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4 shadow-inner">
-                              <p className="text-gray-400 leading-relaxed text-sm font-medium font-mono">
-                                {hoveredFeature.description}
-                              </p>
-                            </div>
-                          </div>
-
-                          <div className="mt-auto pt-4">
-                            <div className="flex items-center justify-between text-[10px] uppercase tracking-widest pb-1 border-b border-white/10">
-                              <span className="text-gray-500 flex items-center gap-2"><FaTerminal className="text-purple-500" /> Module Status</span>
-                              <span className="text-green-400 font-bold flex items-center gap-1.5">
-                                <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse shadow-[0_0_5px_currentColor]"></span>
-                                ENGAGED
-                              </span>
-                            </div>
-                          </div>
-                        </m.div>
-                      ) : (
-                        <m.div
-                          key="empty"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          className="flex flex-col items-center justify-center h-full text-center relative z-10 opacity-30"
-                        >
-                          <div className="w-16 h-16 border-2 border-dashed border-white/20 rounded-full flex items-center justify-center mb-4 animate-[spin_10s_linear_infinite]">
-                            <FaSearch className="text-2xl text-white animate-[spin_10s_linear_infinite_reverse]" />
-                          </div>
-                          <p className="text-xs uppercase tracking-[0.3em] font-mono text-white">Awaiting Assignment</p>
-                          <p className="text-[10px] text-gray-500 mt-2 font-mono">Select a feature to view tactical data</p>
-                        </m.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-
-                </div>
-              </div>
-
-            </div>
-
+					<div className="mt-8 pt-4 border-t border-white/10">
+					<div className="flex flex-col gap-2">
+						<div className="flex items-center justify-between text-[10px] uppercase font-mono tracking-widest">
+							<span className="text-gray-500">Target Vector</span>
+							<span className="text-white">Smart Contract</span>
+						</div>
+						<div className="flex items-center justify-between text-[10px] uppercase font-mono tracking-widest">
+							<span className="text-gray-500 flex items-center gap-2"><FaTerminal className="text-cyan-500" /> Module Status</span>
+							<span className="text-cyan-400 font-bold flex items-center gap-1.5">
+							<span className="w-1.5 h-1.5 bg-cyan-400 animate-pulse shadow-[0_0_5px_currentColor]"></span>
+							ENGAGED
+							</span>
+						</div>
+					</div>
+					</div>
+				</m.div>
+				) : (
+				<m.div
+					key="empty"
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					exit={{ opacity: 0 }}
+					className="flex flex-col items-center justify-center h-full text-center relative z-10 opacity-50"
+				>
+					<div className="w-16 h-16 border border-dashed border-white/20 flex items-center justify-center mb-6">
+					<FaSearch className="text-2xl text-white/50" />
+					</div>
+					<p className="text-xs uppercase tracking-[0.3em] font-mono text-cyan-500/50">Standby Mode</p>
+					<p className="text-[10px] text-gray-500 mt-2 font-mono">Select a feature vector on the left to initialize analysis</p>
+				</m.div>
+				)}
+			</AnimatePresence>
+			</div>
           </div>
         </div>
-
       </div>
     </div>
   );

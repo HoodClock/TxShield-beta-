@@ -3,6 +3,7 @@ import { m, useInView, AnimatePresence } from "framer-motion";
 import CountUp from "react-countup";
 import { FiShield, FiAlertTriangle, FiZap } from 'react-icons/fi'
 import TiltedCard from '../TiltedCard'
+import ScrambleText from '../ScrambleText';
 
 // Smooth path generator using Catmull-Rom to Cubic Bezier conversion
 const generateSmoothPath = (data, width, height) => {
@@ -22,12 +23,12 @@ const generateSmoothPath = (data, width, height) => {
 	let d = `M ${points[0].x} ${points[0].y}`;
 
 	for (let i = 0; i < points.length - 1; i++) {
-		const p0 = points[i - 1] || points[i]; // clamped for start (though tripleData handles this)
+		const p0 = points[i - 1] || points[i]; // clamped for start
 		const p1 = points[i];
 		const p2 = points[i + 1];
 		const p3 = points[i + 2] || p2; // clamped for end
 
-		// Catmull-Rom tension (0.2 gives a nice curve, not too loose)
+		// Catmull-Rom tension
 		const tension = 0.2;
 
 		const cp1x = p1.x + (p2.x - p0.x) * tension;
@@ -48,115 +49,82 @@ function StatsSection() {
 	const [activeIndex, setActiveIndex] = useState(1);
 
 	const stats = [
-
 		{
-
 			id: 1,
-
-			icon: <FiShield className="w-6 h-6 text-white" />,
-
+			icon: <FiShield className="w-6 h-6 text-cyan-400" />,
 			title: 'Honeypot Scams',
-
 			value: 12.7,
-
 			suffix: 'M',
-
 			meta: '3,200+ cases',
-
-			// Volatile, spiky data for scams
-
 			data: [4, 8, 5, 9, 6, 12, 8, 15, 10, 14, 9, 11, 5, 9],
-
-			color: "#EF4444",
-
+			color: "#06b6d4", // Cyan-500
 			speed: 12,
-
 			description: "Cumulative capital lost to exit-scam contracts globally, highlighting the increasing sophistication of trap deployments."
-
 		},
-
 		{
-
 			id: 2,
-
-			icon: <FiAlertTriangle className="w-6 h-6 text-white" />,
-
+			icon: <FiAlertTriangle className="w-6 h-6 text-purple-400" />,
 			title: 'Advanced Threats',
-
 			value: 23.4,
-
 			suffix: 'M',
-
 			meta: '5,800+ cases',
-
-			// Steady upward trend with noise
-
 			data: [5, 6, 5.5, 7, 7.5, 8, 8.5, 10, 11, 10.5, 12, 13, 14, 15],
-
-			color: "#F59E0B",
-
+			color: "#a855f7", // Purple-500
 			speed: 15,
-
 			description: "Total financial impact from cross-chain phishing and sophisticated wallet-draining operations worldwide."
-
 		},
-
 		{
-
 			id: 3,
-
-			icon: <FiZap className="w-6 h-6 text-white" />,
-
+			icon: <FiZap className="w-6 h-6 text-blue-400" />,
 			title: 'Revert Transactions',
-
 			value: 8.2,
-
 			suffix: 'M',
-
 			meta: 'ongoing',
-
-			// Smooth wave-like pattern
-
 			data: [6, 7, 8, 7.5, 6.5, 6, 5.5, 6, 7, 8, 8.5, 8, 7, 6],
-
-			color: "#3B82F6",
-
+			color: "#3b82f6", // Blue-500
 			speed: 18,
-
 			description: "Aggregated loss from gas fees on failed and malicious transaction attempts across supported networks."
-
 		}
-
 	]
 
-
-
 	return (
+		<section ref={ref} className="relative w-full h-[100dvh] overflow-hidden bg-black flex flex-col justify-center items-center py-4 px-4 sm:px-8">
+			
+			{/* Cyberpunk Ambient Orbs */}
+			<div className="absolute top-1/2 left-1/4 w-[50vw] h-[50vw] bg-cyan-900/10 rounded-full blur-[150px] -translate-y-1/2 -z-10 pointer-events-none mix-blend-screen"></div>
+			<div className="absolute top-1/2 right-1/4 w-[50vw] h-[50vw] bg-purple-900/10 rounded-full blur-[150px] -translate-y-1/2 -z-10 pointer-events-none mix-blend-screen"></div>
 
-		<section ref={ref} className="relative py-12 sm:py-20 px-4 sm:px-6 overflow-hidden">
-			<div className="max-w-6xl mx-auto">
+			<div className="max-w-7xl mx-auto w-full relative z-10 flex flex-col md:flex-row items-center justify-between gap-8 lg:gap-16 h-full max-h-[600px]">
+				
+				{/* Left Column: Headers & CTA */}
 				<m.div
-					initial={{ opacity: 0, y: 12 }}
-					animate={isInView ? { opacity: 1, y: 0 } : {}}
+					initial={{ opacity: 0, x: -20 }}
+					animate={isInView ? { opacity: 1, x: 0 } : {}}
 					transition={{ duration: 0.6 }}
-					className="text-center mb-16"
+					className="flex flex-col items-center md:items-start justify-center flex-shrink-0 w-full md:w-1/3"
 				>
-					<div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-black/50 border border-white/10 mb-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] backdrop-blur-md">
-						<div className="relative flex h-2 w-2">
-							<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-							<span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 shadow-[0_0_12px_rgba(239,68,68,1)]"></span>
-						</div>
-						<span className="text-sm font-semibold tracking-wider text-gray-300 uppercase">Security Alert</span>
+					<h2 className="text-6xl sm:text-7xl lg:text-8xl font-clash font-extrabold tracking-[0.15em] opacity-90 drop-shadow-[0_0_20px_rgba(255,255,255,0.1)] uppercase text-center md:text-left leading-none text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
+						STATS
+					</h2>
+					<div className="text-[10px] sm:text-xs font-mono text-cyan-400/80 tracking-[0.3em] uppercase mt-4 mb-8 flex items-center gap-4 whitespace-nowrap">
+						<span className="w-8 h-[1px] bg-cyan-500/50 hidden md:block"></span>
+						<ScrambleText text="Global Analytics" duration={2500} />
+						<span className="w-8 h-[1px] bg-cyan-500/50"></span>
 					</div>
 
-					<h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight mb-3 px-4"><span className="grad-word">Threats</span> at a glance</h3>
-					<p className="text-gray-400 max-w-2xl mx-auto text-base sm:text-lg md:text-xl px-4 font-medium tracking-wide">Key indicators condensed into clear, actionable metrics.</p>
+					{/* Floating CTA */}
+					<a href="/simulate" className="inline-flex items-center justify-center gap-3 px-8 py-3.5 bg-black border border-white/20 hover:border-white/60 text-white font-mono text-xs tracking-[0.2em] uppercase transition-all duration-300 relative group overflow-hidden hover:bg-white/5 rounded-none w-full md:w-auto mt-4 md:mt-8">
+						<div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-[200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
+						<span className="w-1.5 h-1.5 bg-cyan-400 group-hover:bg-purple-400 transition-colors shadow-[0_0_10px_rgba(34,211,238,0.8)]"></span>
+						RUN SCAN
+						<svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path strokeLinecap="square" strokeLinejoin="miter" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+						</svg>
+					</a>
 				</m.div>
 
-
-
-				{/* 3D Carousel Container */}
-				<div className="relative h-[480px] sm:h-[450px] w-full max-w-4xl mx-auto flex items-center justify-center perspective-[1200px]">
+				{/* Right Column: 3D Carousel Container */}
+				<div className="relative h-[320px] sm:h-[380px] lg:h-[450px] w-full md:w-2/3 max-w-4xl flex items-center justify-center perspective-[1000px]">
 					<AnimatePresence>
 						{stats.map((s, index) => {
 							const isActive = activeIndex === index;
@@ -179,40 +147,37 @@ function StatsSection() {
 								zIndex = 30;
 								rotateY = 0;
 							} else if (isLeft) {
-								xPos = "-85%";
-								zPos = -250;
+								xPos = "-60%";
+								zPos = -180;
 								scale = 0.8;
-								opacity = 0.3;
+								opacity = 0.4;
 								zIndex = 20;
-								rotateY = 20;
+								rotateY = 25;
 							} else if (isRight) {
-								xPos = "85%";
-								zPos = -250;
+								xPos = "60%";
+								zPos = -180;
 								scale = 0.8;
-								opacity = 0.3;
+								opacity = 0.4;
 								zIndex = 20;
-								rotateY = -20;
+								rotateY = -25;
 							}
 
 							// For the charts - Create a perfect seamless loop
 							const cycleData = s.data;
-							const numCycles = 5; // Use 5 cycles to guarantee enough context on both sides
+							const numCycles = 5; 
 							const repeatedData = Array(numCycles).fill(cycleData).flat();
 							const cycleLen = cycleData.length;
 							const totalPoints = repeatedData.length;
 
-							const totalWidth = 2000;
-							const pathHeight = 40;
+							const totalWidth = 1500;
+							const pathHeight = 30;
 
 							const pathD = generateSmoothPath(repeatedData, totalWidth, pathHeight);
-							// Create a closed polygon for the filled area underneath the line
 							const fillPathD = `${pathD} L ${totalWidth} ${pathHeight + 20} L 0 ${pathHeight + 20} Z`;
 
-							// Translate from Cycle 2 to Cycle 3 so we have buffer rendering on both edges
 							const startPointIndex = cycleLen * 2;
 							const endPointIndex = cycleLen * 3;
 
-							// X translations scale automatically because we translate based on % of the element's total simulated width
 							const startX = -(startPointIndex / (totalPoints - 1)) * 100;
 							const endX = -(endPointIndex / (totalPoints - 1)) * 100;
 
@@ -220,7 +185,7 @@ function StatsSection() {
 								<m.div
 									key={s.id}
 									onClick={() => !isActive && setActiveIndex(index)}
-									className={`absolute w-full max-w-sm sm:max-w-md cursor-pointer ${isActive ? 'cursor-default' : ''}`}
+									className={`absolute w-full max-w-[280px] sm:max-w-xs lg:max-w-[380px] cursor-pointer ${isActive ? 'cursor-default' : ''}`}
 									initial={false}
 									animate={{
 										x: xPos,
@@ -233,39 +198,52 @@ function StatsSection() {
 									transition={{ type: "spring", stiffness: 200, damping: 25, mass: 1 }}
 									style={{ transformStyle: 'preserve-3d', WebkitFontSmoothing: 'antialiased' }}
 								>
-									<TiltedCard disabled={!isActive} className={`group h-[420px] relative transition-all duration-300`}>
+									<TiltedCard disabled={!isActive} className={`group h-[300px] lg:h-[360px] relative transition-all duration-300`}>
 										{/* Glow Layer (Active only) */}
-										<div className={`absolute inset-0 rounded-[2rem] bg-${s.color.split('#')[1]}/20 transition-all duration-500 blur-[80px] -z-10 translate-y-4 pointer-events-none ${isActive ? 'opacity-60' : 'opacity-0'}`}></div>
+										<div 
+											className={`absolute inset-0 transition-all duration-500 blur-[80px] -z-10 translate-y-4 pointer-events-none ${isActive ? 'opacity-60' : 'opacity-0'}`}
+											style={{ backgroundColor: `${s.color}33` }}
+										></div>
 
-										{/* Card Face */}
-										<div className={`relative z-10 h-full rounded-[2rem] border border-white/10 p-6 sm:p-8 flex flex-col justify-between overflow-hidden shadow-2xl transition-all duration-500 ${isActive ? 'bg-[#0a0a0a] shadow-[0_30px_60px_-12px_rgba(0,0,0,1),inset_0_1px_0_rgba(255,255,255,0.1)]' : 'bg-black/80'}`}>
-											<div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+										{/* Card Face - Cyberpunk Sharp Geometry */}
+										<div className={`relative z-10 h-full rounded-none border border-white/10 p-5 lg:p-6 flex flex-col justify-between overflow-hidden shadow-2xl transition-all duration-500 ${isActive ? 'bg-[#050505] shadow-[0_30px_60px_-12px_rgba(0,0,0,1)]' : 'bg-[#030303]'}`}>
+											
+											{/* Top Accent Line */}
+											{isActive && (
+												<div 
+													className="absolute top-0 left-0 w-full h-[2px] transition-all duration-700"
+													style={{ background: `linear-gradient(90deg, transparent, ${s.color}, transparent)` }}
+												></div>
+											)}
 
-											<div className="relative z-20 mb-6">
-												<div className="flex items-center justify-between mb-6">
-													<div className="inline-flex items-center gap-4">
-														<div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 relative shadow-inner">
+											<div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+
+											<div className="relative z-20 mb-2 lg:mb-4">
+												<div className="flex items-center justify-between mb-4">
+													<div className="inline-flex items-center gap-3">
+														<div className="w-10 h-10 rounded-none bg-black border border-white/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 relative shrink-0">
+															<div className="absolute inset-0 border border-white/5 opacity-50 m-[2px]"></div>
 															<div className="relative z-10">{s.icon}</div>
 														</div>
 														<div>
-															<div className={`text-base font-medium transition-colors ${isActive ? 'text-white' : 'text-gray-400'}`}>{s.title}</div>
-															<div className="text-xs text-gray-500 font-mono tracking-widest uppercase">{s.meta}</div>
+															<div className={`text-sm lg:text-base font-medium tracking-wide transition-colors leading-tight ${isActive ? 'text-white' : 'text-gray-400'}`}>{s.title}</div>
+															<div className="text-[10px] text-gray-500 font-mono tracking-widest uppercase mt-0.5">{s.meta}</div>
 														</div>
 													</div>
 												</div>
 
 												{/* Typed Hierarchy */}
-												<div className="flex items-baseline gap-1 mt-2">
-													<span className="text-2xl font-bold text-gray-500">$</span>
-													<div className={`text-5xl sm:text-6xl font-bold tracking-tighter text-white transition-all duration-300 drop-shadow-md font-mono leading-none ${!isActive ? 'opacity-70' : ''}`}>
+												<div className="flex items-baseline gap-1 mt-1 lg:mt-2">
+													<span className="text-xl font-bold text-gray-500 font-mono">$</span>
+													<div className={`text-4xl lg:text-5xl font-bold tracking-tighter text-white transition-all duration-300 drop-shadow-md font-mono leading-none ${!isActive ? 'opacity-70' : ''}`}>
 														<CountUp end={s.value} decimals={1} duration={2.5} />
 													</div>
-													<span className="text-2xl font-bold text-gray-500 ml-1">{s.suffix}</span>
+													<span className="text-xl font-bold text-gray-500 ml-1 font-mono">{s.suffix}</span>
 												</div>
 											</div>
 
 											{/* Scrolling Area Chart */}
-											<div className="h-20 w-full relative z-10 overflow-hidden rounded-b-xl -mx-2 px-2 -mb-2 pb-2">
+											<div className="h-12 sm:h-16 w-full relative z-10 overflow-hidden -mx-2 px-2 -mb-2 pb-2">
 												<m.div
 													className="h-full flex"
 													style={{ width: `${numCycles * 100}%`, filter: `drop-shadow(0px 4px 8px ${s.color}60)` }}
@@ -274,33 +252,29 @@ function StatsSection() {
 												>
 													<svg viewBox={`0 0 ${totalWidth} ${pathHeight + 20}`} preserveAspectRatio="none" className="w-full h-full overflow-visible preserve-3d">
 														<defs>
-															{/* Stroke Gradient */}
 															<linearGradient id={`line-grad-${s.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
 																<stop offset="0%" stopColor={s.color} stopOpacity="0" />
 																<stop offset="20%" stopColor={s.color} stopOpacity="1" />
 																<stop offset="80%" stopColor={s.color} stopOpacity="1" />
 																<stop offset="100%" stopColor={s.color} stopOpacity="0" />
 															</linearGradient>
-															{/* Fill Gradient for Area */}
 															<linearGradient id={`fill-grad-${s.id}`} x1="0%" y1="0%" x2="0%" y2="100%">
 																<stop offset="0%" stopColor={s.color} stopOpacity="0.4" />
 																<stop offset="100%" stopColor={s.color} stopOpacity="0" />
 															</linearGradient>
 														</defs>
-														{/* Body Area Fill */}
 														<path
 															d={fillPathD}
 															fill={`url(#fill-grad-${s.id})`}
 															className="transition-all duration-500"
 															style={{ opacity: isActive ? 1 : 0.3 }}
 														/>
-														{/* Glowing Top Line */}
 														<path
 															d={pathD}
 															fill="none"
 															stroke={`url(#line-grad-${s.id})`}
-															strokeWidth="3"
-															strokeLinecap="round"
+															strokeWidth="2"
+															strokeLinecap="square"
 															className="transition-all duration-500"
 															style={{ opacity: isActive ? 1 : 0.5 }}
 														/>
@@ -308,7 +282,7 @@ function StatsSection() {
 												</m.div>
 											</div>
 
-											<div className={`text-sm mt-4 font-medium leading-relaxed transition-colors relative z-20 ${isActive ? 'text-gray-300' : 'text-gray-500'}`}>
+											<div className={`text-xs mt-3 font-mono tracking-tight leading-relaxed transition-colors relative z-20 ${isActive ? 'text-gray-400' : 'text-gray-600'}`}>
 												{s.description}
 											</div>
 										</div>
@@ -317,18 +291,6 @@ function StatsSection() {
 							)
 						})}
 					</AnimatePresence>
-				</div>
-
-				{/* Floating CTA */}
-				<div className="mt-16 text-center px-4 relative z-10 flex justify-center">
-					<a href="/simulate" className="inline-flex items-center gap-2 px-10 py-4 rounded-xl bg-white/5 border border-purple-500/20 hover:border-purple-500/60 text-white font-semibold text-lg shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_10px_30px_-10px_rgba(168,85,247,0.3)] hover:bg-white/10 transition-all duration-300 backdrop-blur-md group overflow-hidden glitch-hover">
-						<span className="relative z-10 tracking-widest font-bold uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] flex items-center gap-2">
-							RUN SCAN
-							<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-							</svg>
-						</span>
-					</a>
 				</div>
 			</div>
 		</section>

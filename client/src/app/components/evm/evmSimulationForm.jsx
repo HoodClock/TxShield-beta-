@@ -65,33 +65,29 @@ export default function SimulationForm({
   return (
     <>
       <m.div
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: -50 }}
-        transition={{ duration: 0.4, ease: "easeInOut" }}
-        className="relative p-1 rounded-3xl max-w-2xl mx-auto shadow-2xl"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="relative w-full max-w-2xl mx-auto"
       >
-        <div className="relative bg-black/40 border border-white/10 backdrop-blur-2xl rounded-[32px] p-8 md:p-10 overflow-hidden shadow-[0_0_50px_-12px_rgba(0,0,0,0.8)]">
-          <DataFlowBackground className="opacity-10 z-0" />
-          {/* Ambient Background */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-600/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
-
-          {/* Blue Light Pillar Background */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/15 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-600/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
+        <div className="relative bg-[#050505]/60 border border-white/10 backdrop-blur-3xl p-8 md:p-12 overflow-hidden flex flex-col gap-8 rounded-[40px] shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
+          <DataFlowBackground className="opacity-10 z-0 pointer-events-none" />
+          {/* Ambient Minimal Glows */}
+          <div className="absolute top-0 right-0 w-[30rem] h-[30rem] bg-cyan-900/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+          <div className="absolute bottom-0 left-0 w-[30rem] h-[30rem] bg-blue-900/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
 
           {/* Top Control Bar */}
-          <div className="absolute top-5 left-5 flex items-center gap-3 z-20">
+          <div className="absolute top-6 left-6 z-20">
             {/* Go Back Button */}
             <button
               onClick={backButtonHandler}
-              className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all duration-300 group glitch-hover"
+              className="p-3 rounded-full bg-white/[0.02] hover:bg-white/10 text-gray-400 hover:text-white border border-white/5 transition-all duration-300 group"
               title="Go Back"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform"
+                className="h-4 w-4 group-hover:-translate-x-1 transition-transform"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -104,64 +100,29 @@ export default function SimulationForm({
                 />
               </svg>
             </button>
-
-            {/* Switch Chain Button */}
-            <button
-              onClick={onSwitchChain}
-              className="px-3 py-1.5 rounded-full bg-white/5 hover:bg-purple-500/20 border border-white/10 hover:border-purple-500/50 transition-all duration-300 flex items-center gap-2 group glitch-hover"
-              title="Switch to Solana Simulation"
-            >
-              <Image
-                src="https://assets.coingecko.com/coins/images/4128/small/solana.png"
-                alt="Solana"
-                width={16}
-                height={16}
-                className="w-4 h-4 rounded-full group-hover:rotate-12 transition-transform duration-300"
-              />
-              <span className="text-xs font-mono text-gray-400 group-hover:text-purple-300 transition-colors">
-                Switch to SOL
-              </span>
-            </button>
           </div>
 
           <div className="relative z-10">
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center p-3 mb-3 rounded-2xl bg-blue-500/10 border border-blue-500/20 shadow-inner shadow-blue-500/10">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-blue-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
-              </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight">
-                <ScrambleText text="EVM" className="inline-block" />{" "}
-                <span className="text-blue-500">Simulation</span>
+            <div className="text-center mb-10 flex flex-col items-center">
+              <h2 className="text-3xl md:text-5xl font-light text-white mb-3 tracking-[0.1em] uppercase">
+                <span className="font-semibold text-cyan-400">EVM</span> Target
               </h2>
-              <p className="text-gray-400 text-sm max-w-md mx-auto">
-                Securely simulate Ethereum transactions before you sign.
+              <p className="text-gray-500 text-xs md:text-sm max-w-md mx-auto font-mono tracking-widest uppercase">
+                Enter target smart contract details
               </p>
             </div>
 
             <div className="space-y-6 max-w-lg mx-auto relative">
               <div className="group/input relative z-[60]">
-                <label className="block text-blue-400 font-mono text-xs uppercase tracking-widest mb-2 ml-1 opacity-80 group-focus-within/input:opacity-100 group-focus-within/input:text-blue-300 transition-all duration-300">
+                <label className="block text-gray-400 font-medium text-[11px] uppercase tracking-[0.15em] mb-2 ml-4 group-focus-within/input:text-cyan-400 transition-colors duration-300">
                   Target Network
                 </label>
                 <div className="relative z-50">
-                  <div className="absolute inset-0 bg-black/40 rounded-xl shadow-[inset_0_2px_15px_rgba(0,0,0,0.8)] pointer-events-none transition-colors duration-300 group-focus-within/input:bg-black/60 border border-white/5 group-focus-within/input:border-blue-500/30"></div>
-                  <div className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent opacity-0 group-focus-within/input:opacity-100 transition-opacity duration-500 blur-[1px]"></div>
+                  {/* Bubbly Input Background */}
+                  <div className="absolute inset-0 bg-white/[0.02] rounded-3xl border border-white/10 group-focus-within/input:border-cyan-500/50 group-focus-within/input:bg-cyan-500/[0.05] group-hover/input:bg-white/[0.04] transition-all duration-500"></div>
 
                   <div
-                    className="relative z-10 w-full px-5 py-4 rounded-xl bg-transparent text-white cursor-pointer select-none"
+                    className="relative z-10 w-full px-6 py-4 bg-transparent text-white cursor-pointer select-none"
                     onClick={() => setDropdownOpen(!dropdownOpen)}
                   >
                     <div className="flex items-center justify-between">
@@ -204,7 +165,7 @@ export default function SimulationForm({
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -10, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute top-16 left-0 right-0 mt-2 bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.8)] z-50 overflow-hidden"
+                        className="absolute top-16 left-0 right-0 mt-2 bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.8)] z-50 overflow-hidden"
                       >
                         {CHAINS.map((chain) => (
                           <div
@@ -239,20 +200,17 @@ export default function SimulationForm({
               </div>
 
               <div className="group/input relative z-[50]">
-                <label className="block text-blue-400 font-mono text-xs uppercase tracking-widest mb-2 ml-1 opacity-80 group-focus-within/input:opacity-100 group-focus-within/input:text-blue-300 transition-all duration-300">
-                  Target Contract
+                <label className="block text-gray-400 font-medium text-[11px] uppercase tracking-[0.15em] mb-2 ml-4 group-focus-within/input:text-cyan-400 transition-colors duration-300">
+                  Target Contract Address
                 </label>
                 <div className="relative">
-                  {/* Hollow Input Background */}
-                  <div className="absolute inset-0 bg-black/40 rounded-xl shadow-[inset_0_2px_15px_rgba(0,0,0,0.8)] pointer-events-none transition-colors duration-300 group-focus-within/input:bg-black/60 border border-white/5 group-focus-within/input:border-blue-500/30"></div>
-
-                  {/* Bottom Glow Element */}
-                  <div className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent opacity-0 group-focus-within/input:opacity-100 transition-opacity duration-500 blur-[1px]"></div>
+                  {/* Bubbly Input Background */}
+                  <div className="absolute inset-0 bg-white/[0.02] rounded-3xl border border-white/10 group-focus-within/input:border-cyan-500/50 group-focus-within/input:bg-cyan-500/[0.05] group-hover/input:bg-white/[0.04] transition-all duration-500"></div>
 
                   <input
                     type="text"
                     placeholder="0x..."
-                    className="relative z-10 w-full px-5 py-4 rounded-xl bg-transparent text-white placeholder-gray-600 focus:outline-none transition-all duration-300 font-mono text-sm"
+                    className="relative z-10 w-full px-6 py-4 bg-transparent text-white placeholder-gray-500 focus:outline-none transition-all duration-300 font-mono text-sm tracking-wide"
                     value={contractAddress}
                     onChange={(e) => setContractAddress(e.target.value)}
                   />
@@ -281,20 +239,20 @@ export default function SimulationForm({
                 </div>
               </div>
 
-              <div className="pt-6 relative z-[40]">
+              <div className="pt-8 relative z-[40]">
                 <m.button
                   onClick={handleSimulate}
                   disabled={isLoading}
-                  whileHover={isLoading ? {} : { scale: 1.01, y: -2 }}
-                  whileTap={isLoading ? {} : { scale: 0.98 }}
-                  className={`w-full py-4 rounded-xl border text-white font-bold tracking-widest uppercase text-sm relative overflow-hidden group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black transition-all ${
+                  whileHover={isLoading ? {} : { scale: 1.02 }}
+                  whileTap={isLoading ? {} : { scale: 0.95 }}
+                  className={`w-full py-4 rounded-full border text-white font-medium tracking-[0.15em] uppercase text-xs sm:text-sm relative overflow-hidden group transition-all duration-500 ${
                     isLoading
-                      ? "bg-blue-600/10 border-blue-500/20 text-white/50 cursor-not-allowed"
-                      : "bg-blue-600/20 border-blue-500/50 shadow-[0_0_20px_rgba(37,99,235,0.2)] hover:shadow-[0_0_40px_rgba(37,99,235,0.4)] hover:bg-blue-600/40 glitch-hover focus:ring-blue-500 pointer-events-auto"
+                      ? "bg-white/5 border-white/10 text-white/30 cursor-not-allowed"
+                      : "bg-white/5 border-white/20 hover:border-cyan-400/50 hover:bg-cyan-500/10 hover:shadow-[0_0_30px_-5px_rgba(34,211,238,0.3)] cursor-pointer"
                   }`}
                 >
                   {!isLoading && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] transition-all"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-400/10 to-cyan-500/0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] transition-all"></div>
                   )}
                   <span className="relative z-10 flex items-center justify-center gap-3">
                     {isLoading ? (
@@ -323,6 +281,26 @@ export default function SimulationForm({
                     )}
                   </span>
                 </m.button>
+              </div>
+
+              {/* Switch Chain Button */}
+              <div className="pt-4 flex justify-center relative z-[40]">
+                <button
+                  onClick={onSwitchChain}
+                  className="px-5 py-2 rounded-full bg-white/[0.02] hover:bg-purple-500/10 border border-white/5 hover:border-purple-500/30 transition-all duration-300 flex items-center gap-2 group"
+                  title="Switch to Solana Simulation"
+                >
+                  <Image
+                    src="https://assets.coingecko.com/coins/images/4128/small/solana.png"
+                    alt="Solana"
+                    width={14}
+                    height={14}
+                    className="w-3.5 h-3.5 rounded-full group-hover:rotate-12 transition-transform duration-300"
+                  />
+                  <span className="text-[10px] font-mono text-gray-500 group-hover:text-purple-400 tracking-widest uppercase transition-colors">
+                    Switch to SOL
+                  </span>
+                </button>
               </div>
             </div>
           </div>
