@@ -93,8 +93,8 @@ const ReviewCard = ({ t, isExpanded, onExpand, onCollapse }) => (
       height: isExpanded ? "auto" : 140,
       scale: isExpanded ? 1.05 : 1,
       zIndex: isExpanded ? 100 : 1,
-      borderColor: isExpanded ? "rgba(168, 85, 247, 0.6)" : "rgba(255, 255, 255, 0.08)",
-      backgroundColor: isExpanded ? "rgba(10, 10, 10, 0.98)" : "rgba(0, 0, 0, 0.6)",
+      borderColor: isExpanded ? "var(--primary)" : "var(--border)",
+      backgroundColor: isExpanded ? "var(--card)" : "var(--muted)",
       boxShadow: isExpanded ? "0 20px 60px rgba(0,0,0,0.9), 0 0 30px rgba(168,85,247,0.15)" : "0 0 0px rgba(0,0,0,0)",
     }}
     transition={{ 
@@ -106,25 +106,25 @@ const ReviewCard = ({ t, isExpanded, onExpand, onCollapse }) => (
     style={{ willChange: "transform, height, box-shadow" }}
     className="w-[300px] shrink-0 border p-4 flex flex-col gap-3 group cursor-pointer relative overflow-hidden"
   >
-    <div className={`font-mono text-[11px] leading-relaxed transition-colors duration-500 ${isExpanded ? "text-white/90" : "text-white/50 line-clamp-3 group-hover:text-white/70"}`}>
+    <div className={`font-mono text-[11px] leading-relaxed transition-colors duration-500 ${isExpanded ? "text-foreground" : "text-muted-foreground line-clamp-3 group-hover:text-foreground/70"}`}>
       "{t.content}"
     </div>
     
-    <div className="flex items-center gap-2.5 pt-2 border-t border-white/5 mt-auto">
-      <div className="w-7 h-7 shrink-0 border border-white/10 overflow-hidden bg-gradient-to-br from-purple-900 to-blue-900 flex items-center justify-center">
+    <div className="flex items-center gap-2.5 pt-2 border-t border-border mt-auto">
+      <div className="w-7 h-7 shrink-0 border border-border overflow-hidden bg-card flex items-center justify-center">
         {t.image ? (
           <Image src={t.image} alt={t.name} width={28} height={28} className="w-full h-full object-cover" />
         ) : (
-          <span className="font-mono text-[9px] text-white/60">{t.initials}</span>
+          <span className="font-mono text-[9px] text-muted-foreground">{t.initials}</span>
         )}
       </div>
       <div>
-        <p className="font-clash text-[11px] text-white/80 font-semibold">{t.name}</p>
-        <p className="font-mono text-[9px] text-white/30 uppercase tracking-widest">{t.role}</p>
+        <p className="font-clash text-[11px] text-foreground font-semibold">{t.name}</p>
+        <p className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest">{t.role}</p>
       </div>
       {t.linkedin !== "#" && (
         <a href={t.linkedin} target="_blank" rel="noopener noreferrer"
-          className="ml-auto text-white/20 hover:text-blue-400 transition-colors"
+          className="ml-auto text-muted-foreground/40 hover:text-blue-400 transition-colors"
           onClick={(e) => e.stopPropagation()}>
           <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
             <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
@@ -134,7 +134,7 @@ const ReviewCard = ({ t, isExpanded, onExpand, onCollapse }) => (
     </div>
 
     {!isExpanded && (
-      <div className="absolute top-2 right-2 w-1 h-1 rounded-full bg-purple-500/40 group-hover:bg-purple-500 animate-pulse" />
+      <div className="absolute top-2 right-2 w-1 h-1 rounded-full bg-primary/40 group-hover:bg-primary animate-pulse" />
     )}
   </m.div>
 );
@@ -167,7 +167,7 @@ export default function ContactUs() {
   };
 
   return (
-    <div ref={pageRef} className="relative h-screen overflow-y-auto overflow-x-hidden no-scrollbar flex flex-col bg-black">
+    <div ref={pageRef} className="relative h-screen overflow-y-auto overflow-x-hidden no-scrollbar flex flex-col bg-background transition-colors duration-700">
       
       {/* Page Scroll Indicator */}
       <m.div 
@@ -217,9 +217,9 @@ export default function ContactUs() {
       `}</style>
 
       {/* Ambient glows */}
-      <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute top-1/4 left-1/4 w-[35rem] h-[35rem] bg-purple-900/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-[35rem] h-[35rem] bg-cyan-900/8 rounded-full blur-[120px]" />
+      <div className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-700 opacity-40 dark:opacity-100">
+        <div className="absolute top-1/4 left-1/4 w-[35rem] h-[35rem] bg-purple-900/5 dark:bg-purple-900/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-[35rem] h-[35rem] bg-cyan-900/5 dark:bg-cyan-900/8 rounded-full blur-[120px]" />
       </div>
 
       <div className="relative z-10 flex flex-col w-full px-6 sm:px-10 lg:px-16 pb-12" onClick={() => setExpandedId(null)}>
@@ -227,42 +227,42 @@ export default function ContactUs() {
         <div className="flex flex-col pt-8 pb-4 shrink-0 pr-16">
           <h1 className="font-clash font-extrabold uppercase leading-none tracking-tight"
             style={{ fontSize: "clamp(2.5rem, 6.5vw, 6rem)" }}>
-            <span className="text-white">GET IN </span>
+            <span className="text-foreground">GET IN </span>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">TOUCH</span>
           </h1>
           <div className="flex items-center gap-4 mt-2 mb-4">
-            <div className="h-[1px] w-10 bg-white/20" />
-            <span className="font-mono text-[10px] text-white/30 tracking-[0.3em] uppercase">Signal Transmission</span>
+            <div className="h-[1px] w-10 bg-border" />
+            <span className="font-mono text-[10px] text-muted-foreground tracking-[0.3em] uppercase">Signal Transmission</span>
           </div>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-5 shrink-0 pr-0 lg:pr-16">
           {/* LEFT: Info Panel */}
-          <div className="lg:w-[320px] xl:w-[360px] shrink-0 border border-white/10 bg-black overflow-hidden">
-            <div className="h-9 bg-purple-950/20 border-b border-white/10 flex items-center px-4">
-              <span className="font-mono text-[10px] text-purple-300/50 uppercase tracking-widest">Transmission Target</span>
+          <div className="lg:w-[320px] xl:w-[360px] shrink-0 border border-border bg-card overflow-hidden transition-colors duration-700">
+            <div className="h-9 bg-muted border-b border-border flex items-center px-4">
+              <span className="font-mono text-[10px] text-primary/50 uppercase tracking-widest">Transmission Target</span>
             </div>
             <div className="p-5 flex flex-col gap-5">
               <div>
-                <p className="font-mono text-[10px] text-white/25 uppercase tracking-widest mb-1.5">Primary Channel</p>
-                <p className="font-clash text-lg font-bold text-white/80 tracking-wide">TxShield@proton.me</p>
+                <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest mb-1.5">Primary Channel</p>
+                <p className="font-clash text-lg font-bold text-foreground tracking-wide">TxShield@proton.me</p>
               </div>
-              <div className="h-[1px] bg-white/5" />
+              <div className="h-[1px] bg-border" />
               <div>
-                <p className="font-mono text-[10px] text-white/25 uppercase tracking-widest mb-2">Response SLA</p>
+                <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest mb-2">Response SLA</p>
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 bg-cyan-400 animate-pulse shadow-[0_0_6px_rgba(34,211,238,0.6)]" />
-                  <span className="font-mono text-xs text-white/50">Within 24 hours</span>
+                  <span className="font-mono text-xs text-muted-foreground">Within 24 hours</span>
                 </div>
               </div>
-              <div className="h-[1px] bg-white/5" />
+              <div className="h-[1px] bg-border" />
               <div>
-                <p className="font-mono text-[10px] text-white/25 uppercase tracking-widest mb-2">Use Cases</p>
+                <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest mb-2">Use Cases</p>
                 <div className="flex flex-col gap-1.5">
                   {["Security integrations", "Partnership inquiries", "Bug reports", "General feedback"].map((item) => (
                     <div key={item} className="flex items-center gap-2">
-                      <span className="w-1 h-1 bg-white/20" />
-                      <span className="font-mono text-[11px] text-white/40">{item}</span>
+                      <span className="w-1 h-1 bg-border" />
+                      <span className="font-mono text-[11px] text-muted-foreground">{item}</span>
                     </div>
                   ))}
                 </div>
@@ -271,31 +271,31 @@ export default function ContactUs() {
           </div>
 
           {/* RIGHT: Form */}
-          <div className="flex-1 border border-white/10 bg-black overflow-hidden">
-            <div className="h-9 bg-blue-950/20 border-b border-white/10 flex items-center px-4 justify-between">
-              <span className="font-mono text-[10px] text-blue-300/50 uppercase tracking-widest">Compose Message</span>
-              <span className="font-mono text-[10px] text-white/20">Encrypted via TLS</span>
+          <div className="flex-1 border border-border bg-card overflow-hidden transition-colors duration-700">
+            <div className="h-9 bg-muted border-b border-border flex items-center px-4 justify-between">
+              <span className="font-mono text-[10px] text-primary/50 uppercase tracking-widest">Compose Message</span>
+              <span className="font-mono text-[10px] text-muted-foreground">Encrypted via TLS</span>
             </div>
             <form onSubmit={handleSubmit} className="p-5 flex flex-col gap-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1">
-                  <label className="font-mono text-[10px] text-white/25 uppercase tracking-widest">Identifier</label>
+                  <label className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Identifier</label>
                   <input type="text" name="name" value={formData.name} onChange={handleChange} required
-                    className="w-full px-4 py-2.5 bg-white/[0.03] border border-white/10 focus:border-purple-400/40 focus:bg-white/[0.05] text-white placeholder-white/20 font-mono text-xs transition-all outline-none"
+                    className="w-full px-4 py-2.5 bg-muted/50 border border-border focus:border-primary/40 focus:bg-muted text-foreground placeholder-muted-foreground font-mono text-xs transition-all outline-none"
                     placeholder="Full Name" />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="font-mono text-[10px] text-white/25 uppercase tracking-widest">Return Address</label>
+                  <label className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Return Address</label>
                   <input type="email" name="email" value={formData.email} onChange={handleChange} required
-                    className="w-full px-4 py-2.5 bg-white/[0.03] border border-white/10 focus:border-cyan-400/40 focus:bg-white/[0.05] text-white placeholder-white/20 font-mono text-xs transition-all outline-none"
+                    className="w-full px-4 py-2.5 bg-muted/50 border border-border focus:border-primary/40 focus:bg-muted text-foreground placeholder-muted-foreground font-mono text-xs transition-all outline-none"
                     placeholder="Email Address" />
                 </div>
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="font-mono text-[10px] text-white/25 uppercase tracking-widest">Payload</label>
+                <label className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Payload</label>
                 <textarea name="message" rows={4} value={formData.message} onChange={handleChange} required
-                  className="w-full px-4 py-2.5 bg-white/[0.03] border border-white/10 focus:border-purple-400/40 focus:bg-white/[0.05] text-white placeholder-white/20 font-mono text-xs transition-all outline-none resize-none"
+                  className="w-full px-4 py-2.5 bg-muted/50 border border-border focus:border-primary/40 focus:bg-muted text-foreground placeholder-muted-foreground font-mono text-xs transition-all outline-none resize-none"
                   placeholder="Your message..." />
               </div>
 
@@ -304,13 +304,13 @@ export default function ContactUs() {
                 whileTap={{ scale: isSubmitting ? 1 : 0.995 }}
                 className={`relative overflow-hidden w-full py-3 font-mono text-xs tracking-[0.2em] uppercase transition-all flex items-center justify-center gap-2 group focus:outline-none
                   ${isSubmitting
-                    ? "bg-white/5 border border-white/10 text-white/30 cursor-not-allowed"
-                    : "bg-white/[0.04] border border-white/20 hover:border-purple-400/50 hover:bg-purple-950/30 text-white"
+                    ? "bg-muted border border-border text-muted-foreground cursor-not-allowed"
+                    : "bg-muted border border-border hover:border-primary/50 hover:bg-primary/10 text-foreground"
                   }`}>
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                 {isSubmitting ? (
                   <>
-                    <div className="w-3 h-3 border border-white/30 border-t-white animate-spin" />
+                    <div className="w-3 h-3 border border-border border-t-primary animate-spin" />
                     Transmitting...
                   </>
                 ) : (
@@ -324,9 +324,9 @@ export default function ContactUs() {
               <AnimatePresence>
                 {submitStatus === "success" && (
                   <m.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                    className="p-3 border border-cyan-500/20 bg-cyan-950/20 flex items-center gap-2">
+                    className="p-3 border border-cyan-500/20 bg-cyan-500/10 flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-cyan-400 animate-pulse" />
-                    <span className="font-mono text-[11px] text-cyan-300/70 uppercase tracking-wider">Signal received — we'll respond within 24h</span>
+                    <span className="font-mono text-[11px] text-cyan-600 dark:text-cyan-300/70 uppercase tracking-wider">Signal received — we'll respond within 24h</span>
                   </m.div>
                 )}
               </AnimatePresence>
@@ -336,9 +336,9 @@ export default function ContactUs() {
 
         {/* ── DIVIDER ── */}
         <div className="flex items-center gap-4 py-8 pr-16">
-          <div className="h-[1px] flex-1 bg-white/5" />
-          <span className="font-mono text-[9px] text-white/20 uppercase tracking-[0.3em]">Field Reports — Community Intel</span>
-          <div className="h-[1px] flex-1 bg-white/5" />
+          <div className="h-[1px] flex-1 bg-border" />
+          <span className="font-mono text-[9px] text-muted-foreground uppercase tracking-[0.3em]">Field Reports — Community Intel</span>
+          <div className="h-[1px] flex-1 bg-border" />
         </div>
 
         {/* ── TESTIMONIALS AUTO MARQUEE ── */}
@@ -360,12 +360,12 @@ export default function ContactUs() {
 
           {/* Testimonial Scroll Indicator */}
           <div className="progress-area flex items-center gap-4 pr-16">
-            <div className="h-[1px] flex-1 bg-white/5 relative overflow-hidden">
+            <div className="h-[1px] flex-1 bg-border relative overflow-hidden">
               <div className="absolute top-0 left-0 h-full bg-gradient-to-r from-purple-500 to-cyan-400 origin-left w-full progress-bar-sync" />
             </div>
             <div className="flex items-center gap-2">
-              <span className="font-mono text-[9px] text-white/40 tracking-widest uppercase">Signal Coverage</span>
-              <div className="w-8 h-[1px] bg-white/20" />
+              <span className="font-mono text-[9px] text-muted-foreground tracking-widest uppercase">Signal Coverage</span>
+              <div className="w-8 h-[1px] bg-border" />
             </div>
           </div>
         </div>

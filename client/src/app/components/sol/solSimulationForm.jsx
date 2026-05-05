@@ -86,7 +86,7 @@ export default function SimulationForm({
         transition={{ duration: 0.4, ease: "easeOut" }}
         className="relative w-full max-w-2xl mx-auto"
       >
-        <div className="relative bg-[#050505]/60 border border-white/10 backdrop-blur-3xl p-8 md:p-12 overflow-hidden flex flex-col gap-8 rounded-[40px] shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
+        <div className="relative bg-card/60 border border-border backdrop-blur-3xl p-8 md:p-12 overflow-hidden flex flex-col gap-8 rounded-[40px] shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] transition-colors duration-700">
           <DataFlowBackground className="opacity-10 z-0 pointer-events-none" />
           {/* Ambient Minimal Glows */}
           <div className="absolute top-0 right-0 w-[30rem] h-[30rem] bg-purple-900/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
@@ -97,7 +97,7 @@ export default function SimulationForm({
             {/* Go Back Button */}
             <button
               onClick={backButtonHandler}
-              className="p-3 rounded-full bg-white/[0.02] hover:bg-white/10 text-gray-400 hover:text-white border border-white/5 transition-all duration-300 group"
+              className="p-3 rounded-full bg-card hover:bg-foreground/10 text-muted-foreground hover:text-foreground border border-border transition-all duration-300 group"
               title="Go Back"
             >
               <svg
@@ -119,7 +119,7 @@ export default function SimulationForm({
 
           <div className="relative z-10">
             <div className="text-center mb-10 flex flex-col items-center">
-              <h2 className="text-3xl md:text-5xl font-light text-white mb-3 tracking-[0.1em] uppercase">
+              <h2 className="text-3xl md:text-5xl font-light text-foreground mb-3 tracking-[0.1em] uppercase">
                 <span className="font-semibold text-purple-400">SOL</span> Target
               </h2>
               <p className="text-gray-500 text-xs md:text-sm max-w-md mx-auto font-mono tracking-widest uppercase">
@@ -138,7 +138,7 @@ export default function SimulationForm({
                   <input
                     type="text"
                     placeholder="Enter Solana address..."
-                    className="relative z-10 w-full px-6 py-4 bg-transparent text-white placeholder-gray-500 focus:outline-none transition-all duration-300 font-mono text-sm tracking-wide"
+                    className="relative z-10 w-full px-6 py-4 bg-transparent text-foreground placeholder-muted-foreground focus:outline-none transition-all duration-300 font-mono text-sm tracking-wide"
                     value={contractAddress}
                     onChange={(e) => setContractAddress(e.target.value)}
                   />
@@ -178,7 +178,7 @@ export default function SimulationForm({
                   <input
                     type="number"
                     placeholder="0.00"
-                    className={`relative z-10 w-full px-6 py-4 bg-transparent text-white placeholder-gray-500 focus:outline-none transition-all duration-300 font-mono text-sm tracking-wide ${styles.noSpinner}`}
+                    className={`relative z-10 w-full px-6 py-4 bg-transparent text-foreground placeholder-muted-foreground focus:outline-none transition-all duration-300 font-mono text-sm tracking-wide ${styles.noSpinner}`}
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                   />
@@ -210,10 +210,10 @@ export default function SimulationForm({
                   disabled={isLoading}
                   whileHover={isLoading ? {} : { scale: 1.02 }}
                   whileTap={isLoading ? {} : { scale: 0.95 }}
-                  className={`w-full py-4 rounded-full border text-white font-medium tracking-[0.15em] uppercase text-xs sm:text-sm relative overflow-hidden group transition-all duration-500 ${
+                  className={`w-full py-4 rounded-full border text-foreground font-medium tracking-[0.15em] uppercase text-xs sm:text-sm relative overflow-hidden group transition-all duration-500 ${
                     isLoading
-                      ? "bg-white/5 border-white/10 text-white/30 cursor-not-allowed"
-                      : "bg-white/5 border-white/20 hover:border-purple-400/50 hover:bg-purple-500/10 hover:shadow-[0_0_30px_-5px_rgba(168,85,247,0.3)] cursor-pointer"
+                      ? "bg-card border-border text-foreground/30 cursor-not-allowed"
+                      : "bg-card border-border hover:border-primary/50 hover:bg-primary/10 hover:shadow-[0_0_30px_-5px_rgba(168,85,247,0.3)] cursor-pointer"
                   }`}
                 >
                   {!isLoading && (
@@ -252,7 +252,7 @@ export default function SimulationForm({
               <div className="pt-4 flex justify-center relative z-[40]">
                 <button
                   onClick={onSwitchChain}
-                  className="px-5 py-2 rounded-full bg-white/[0.02] hover:bg-blue-500/10 border border-white/5 hover:border-blue-500/30 transition-all duration-300 flex items-center gap-2 group"
+                  className="px-5 py-2 rounded-full bg-card hover:bg-primary/10 border border-border hover:border-primary/30 transition-all duration-300 flex items-center gap-2 group"
                   title="Switch to EVM Simulation"
                 >
                   <Image

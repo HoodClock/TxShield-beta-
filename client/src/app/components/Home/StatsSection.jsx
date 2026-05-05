@@ -88,7 +88,7 @@ function StatsSection() {
 	]
 
 	return (
-		<section ref={ref} className="relative w-full h-[100dvh] overflow-hidden bg-black flex flex-col justify-center items-center py-4 px-4 sm:px-8">
+		<section ref={ref} className="relative w-full h-[100dvh] overflow-hidden bg-background flex flex-col justify-center items-center py-4 px-4 sm:px-8 transition-colors duration-700">
 			
 			{/* Cyberpunk Ambient Orbs */}
 			<div className="absolute top-1/2 left-1/4 w-[50vw] h-[50vw] bg-cyan-900/10 rounded-full blur-[150px] -translate-y-1/2 -z-10 pointer-events-none mix-blend-screen"></div>
@@ -113,7 +113,7 @@ function StatsSection() {
 					</div>
 
 					{/* Floating CTA */}
-					<a href="/simulate" className="inline-flex items-center justify-center gap-3 px-8 py-3.5 bg-black border border-white/20 hover:border-white/60 text-white font-mono text-xs tracking-[0.2em] uppercase transition-all duration-300 relative group overflow-hidden hover:bg-white/5 rounded-none w-full md:w-auto mt-4 md:mt-8">
+					<a href="/simulate" className="inline-flex items-center justify-center gap-3 px-8 py-3.5 bg-card border border-border hover:border-primary text-foreground font-mono text-xs tracking-[0.2em] uppercase transition-all duration-300 relative group overflow-hidden hover:bg-foreground/5 rounded-none w-full md:w-auto mt-4 md:mt-8">
 						<div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-[200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
 						<span className="w-1.5 h-1.5 bg-cyan-400 group-hover:bg-purple-400 transition-colors shadow-[0_0_10px_rgba(34,211,238,0.8)]"></span>
 						RUN SCAN
@@ -206,7 +206,7 @@ function StatsSection() {
 										></div>
 
 										{/* Card Face - Cyberpunk Sharp Geometry */}
-										<div className={`relative z-10 h-full rounded-none border border-white/10 p-5 lg:p-6 flex flex-col justify-between overflow-hidden shadow-2xl transition-all duration-500 ${isActive ? 'bg-[#050505] shadow-[0_30px_60px_-12px_rgba(0,0,0,1)]' : 'bg-[#030303]'}`}>
+										<div className={`relative z-10 h-full rounded-none border border-border p-5 lg:p-6 flex flex-col justify-between overflow-hidden shadow-2xl transition-all duration-500 ${isActive ? 'bg-card shadow-[0_30px_60px_-12px_rgba(0,0,0,1)]' : 'bg-background'}`}>
 											
 											{/* Top Accent Line */}
 											{isActive && (
@@ -221,12 +221,12 @@ function StatsSection() {
 											<div className="relative z-20 mb-2 lg:mb-4">
 												<div className="flex items-center justify-between mb-4">
 													<div className="inline-flex items-center gap-3">
-														<div className="w-10 h-10 rounded-none bg-black border border-white/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 relative shrink-0">
+														<div className="w-10 h-10 rounded-none bg-background border border-border flex items-center justify-center group-hover:scale-110 transition-transform duration-300 relative shrink-0">
 															<div className="absolute inset-0 border border-white/5 opacity-50 m-[2px]"></div>
 															<div className="relative z-10">{s.icon}</div>
 														</div>
 														<div>
-															<div className={`text-sm lg:text-base font-medium tracking-wide transition-colors leading-tight ${isActive ? 'text-white' : 'text-gray-400'}`}>{s.title}</div>
+															<div className={`text-sm lg:text-base font-medium tracking-wide transition-colors leading-tight ${isActive ? 'text-foreground' : 'text-muted-foreground'}`}>{s.title}</div>
 															<div className="text-[10px] text-gray-500 font-mono tracking-widest uppercase mt-0.5">{s.meta}</div>
 														</div>
 													</div>
@@ -235,7 +235,7 @@ function StatsSection() {
 												{/* Typed Hierarchy */}
 												<div className="flex items-baseline gap-1 mt-1 lg:mt-2">
 													<span className="text-xl font-bold text-gray-500 font-mono">$</span>
-													<div className={`text-4xl lg:text-5xl font-bold tracking-tighter text-white transition-all duration-300 drop-shadow-md font-mono leading-none ${!isActive ? 'opacity-70' : ''}`}>
+													<div className={`text-4xl lg:text-5xl font-bold tracking-tighter text-foreground transition-all duration-300 drop-shadow-md font-mono leading-none ${!isActive ? 'opacity-70' : ''}`}>
 														<CountUp end={s.value} decimals={1} duration={2.5} />
 													</div>
 													<span className="text-xl font-bold text-gray-500 ml-1 font-mono">{s.suffix}</span>

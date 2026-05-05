@@ -26,14 +26,14 @@ export default function BalanceChanges({
     <m.div
       variants={itemVariants}
       whileHover={{ y: -4, scale: 1.01 }}
-      className="relative bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-hidden mt-4"
+      className="relative bg-card border border-border rounded-2xl overflow-hidden mt-4 transition-colors duration-700"
     >
-      <div className="relative z-10 p-4 sm:p-5 w-full flex items-center justify-between border-b border-white/5">
+      <div className="relative z-10 p-4 sm:p-5 w-full flex items-center justify-between border-b border-border">
         <div className="flex items-center gap-4">
-          <div className="p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/10">
-            <FiUpload className="h-4 w-4 sm:h-5 sm:w-5 text-gray-300" />
+          <div className="p-2 sm:p-2.5 rounded-xl bg-muted border border-border">
+            <FiUpload className="h-4 w-4 sm:h-5 sm:w-5 text-foreground" />
           </div>
-          <h2 className="text-sm sm:text-base font-bold text-white tracking-widest uppercase font-mono text-left">
+          <h2 className="text-sm sm:text-base font-bold text-foreground tracking-widest uppercase font-mono text-left">
             Asset Flow Pipeline
           </h2>
         </div>
@@ -43,23 +43,23 @@ export default function BalanceChanges({
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-2 px-2 sm:px-4">
 
           {/* SENDER NODE */}
-          <div className="flex-1 w-full bg-[#111111] border border-white/10 p-4 rounded-xl flex flex-col items-center justify-center relative overflow-hidden group/node">
-            <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-1">Origin</span>
-            <span className="text-sm font-mono text-white font-semibold">Your Wallet</span>
+          <div className="flex-1 w-full bg-muted border border-border p-4 rounded-xl flex flex-col items-center justify-center relative overflow-hidden group/node">
+            <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-1">Origin</span>
+            <span className="text-sm font-mono text-foreground font-semibold">Your Wallet</span>
           </div>
 
           {/* ASSET PIPELINE ARROW */}
           <div className="flex-1 w-full flex flex-col items-center justify-center px-4 relative">
-            <div className="w-full h-px bg-white/20 relative">
+            <div className="w-full h-px bg-border relative">
               <m.div
-                className="absolute top-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full"
+                className="absolute top-1/2 -translate-y-1/2 w-2 h-2 bg-foreground rounded-full"
                 animate={{ left: ["0%", "100%"] }}
                 transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
               />
             </div>
 
             {/* Deltas Display floating above arrow */}
-            <div className="absolute top-1/2 -translate-y-2/3 -translate-x-1/2 left-1/2 flex flex-col items-center justify-center bg-black/80 px-4 py-1.5 rounded-md border border-white/10 shadow-xl backdrop-blur-md">
+            <div className="absolute top-1/2 -translate-y-2/3 -translate-x-1/2 left-1/2 flex flex-col items-center justify-center bg-card px-4 py-1.5 rounded-md border border-border shadow-xl backdrop-blur-md">
               {(ethDelta !== 0 || activeTokenDelta !== 0) ? (
                 <>
                   {ethDelta !== 0 && (
@@ -80,9 +80,9 @@ export default function BalanceChanges({
           </div>
 
           {/* DESTINATION NODE */}
-          <div className="flex-1 w-full bg-[#111111] border border-white/10 p-4 rounded-xl flex flex-col items-center justify-center relative overflow-hidden group/node">
-            <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest mb-1">Destination</span>
-            <span className="text-sm font-mono text-white font-semibold">Target Contract</span>
+          <div className="flex-1 w-full bg-muted border border-border p-4 rounded-xl flex flex-col items-center justify-center relative overflow-hidden group/node">
+            <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-1">Destination</span>
+            <span className="text-sm font-mono text-foreground font-semibold">Target Contract</span>
           </div>
 
         </div>

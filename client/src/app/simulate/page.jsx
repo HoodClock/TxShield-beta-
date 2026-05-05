@@ -11,7 +11,7 @@ import "./simulate.css";
 const SimulateHeroSection = dynamic(
   () => import("../components/SimulateHeroSection"),
   {
-    loading: () => <div className="h-auto bg-black"></div>,
+    loading: () => <div className="h-auto bg-background"></div>,
   },
 );
 const ResultsDashboard = dynamic(() => import("../components/result/index"), {
@@ -193,7 +193,7 @@ export default function App() {
   };
 
   return (
-    <div className="h-full w-full bg-black flex flex-col overflow-hidden relative">
+    <div className="h-full w-full bg-background flex flex-col overflow-hidden relative transition-colors duration-700">
       <Head>
         <title>TxShield - Secure Transaction Simulator</title>
         <link

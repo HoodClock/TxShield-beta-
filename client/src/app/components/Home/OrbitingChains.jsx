@@ -16,7 +16,7 @@ const OrbitingIcon = ({ radiusClass, duration, reverse, icon, positionClass }) =
         >
             <div className={`absolute ${positionClass} -translate-x-1/2 -translate-y-1/2`}>
                 <div 
-                    className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-black border border-white/10 flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.02)] backdrop-blur-md"
+                    className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-card border border-border flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.02)] backdrop-blur-md"
                     style={{ 
                         animation: `spin ${duration}s linear infinite ${reverse ? '' : 'reverse'}` 
                     }}
@@ -33,7 +33,7 @@ export default function OrbitingChains() {
         <div className="relative flex items-center justify-center w-full h-[400px] md:h-[500px] max-w-[500px]">
             
             {/* Center Logo / Sun - Smaller and perfectly centered */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-16 h-16 md:w-20 md:h-20 rounded-full bg-[#050505] border border-cyan-500/20 flex items-center justify-center shadow-[0_0_20px_rgba(34,211,238,0.15)]">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-16 h-16 md:w-20 md:h-20 rounded-full bg-background border border-primary/20 flex items-center justify-center shadow-[0_0_20px_rgba(34,211,238,0.15)]">
                 <Image 
                     src="/Images/logo.png" 
                     width={40} 

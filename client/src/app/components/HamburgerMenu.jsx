@@ -48,17 +48,17 @@ export default function HamburgerMenu() {
       <button
         onClick={toggleMenu}
         className={`fixed top-8 right-8 z-[100] flex justify-center items-center w-12 h-12 rounded-full transition-all duration-500 ${
-          isOpen ? "bg-white/5 border border-blue-500/20" : "bg-white/5 border border-white/10 hover:bg-white/10"
-        } backdrop-blur-md group`}
+          isOpen ? "bg-card border border-primary/20" : "bg-background/20 border border-border hover:bg-muted"
+        } backdrop-blur-md group transition-colors duration-700`}
         aria-label="Toggle Menu"
       >
         <div 
           className={`relative w-6 h-6 flex flex-col justify-center items-center transition-all duration-500 ${isOpen ? "opacity-100 scale-110" : "opacity-100"}`}
           style={isOpen ? { transform: "perspective(1000px) rotateY(-30deg) rotateX(10deg) skewX(-5deg)" } : {}}
         >
-          <span className={`absolute h-[1.5px] transition-all duration-300 ${isOpen ? "w-6 rotate-45 bg-blue-400 translate-x-[1px] shadow-[0_0_8px_rgba(59,130,246,0.4)]" : "w-5 -translate-y-1.5 bg-white"}`} />
-          <span className={`absolute h-[1.5px] bg-white transition-all duration-300 ${isOpen ? "opacity-0" : "w-3 translate-x-1"}`} />
-          <span className={`absolute h-[1.5px] transition-all duration-300 ${isOpen ? "w-6 -rotate-45 bg-purple-400 -translate-x-[1px] opacity-80 shadow-[0_0_8px_rgba(168,85,247,0.3)]" : "w-5 translate-y-1.5 bg-white"}`} />
+          <span className={`absolute h-[1.5px] transition-all duration-300 ${isOpen ? "w-6 rotate-45 bg-blue-400 translate-x-[1px] shadow-[0_0_8px_rgba(59,130,246,0.4)]" : "w-5 -translate-y-1.5 bg-foreground"}`} />
+          <span className={`absolute h-[1.5px] bg-foreground transition-all duration-300 ${isOpen ? "opacity-0" : "w-3 translate-x-1"}`} />
+          <span className={`absolute h-[1.5px] transition-all duration-300 ${isOpen ? "w-6 -rotate-45 bg-purple-400 -translate-x-[1px] opacity-80 shadow-[0_0_8px_rgba(168,85,247,0.3)]" : "w-5 translate-y-1.5 bg-foreground"}`} />
         </div>
       </button>
 
@@ -70,11 +70,11 @@ export default function HamburgerMenu() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="fixed inset-0 z-[90] bg-black flex flex-col items-center justify-center overflow-hidden"
+            className="fixed inset-0 z-[90] bg-background flex flex-col items-center justify-center overflow-hidden transition-colors duration-700"
           >
             {/* Ambient Mouse Glow */}
             <motion.div 
-              className="absolute pointer-events-none w-[600px] h-[600px] bg-purple-500/5 rounded-full blur-[120px]"
+              className="absolute pointer-events-none w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px]"
               animate={{ 
                 x: mousePos.x - 300, 
                 y: mousePos.y - 300 
@@ -82,8 +82,8 @@ export default function HamburgerMenu() {
               transition={{ type: "spring", damping: 30, stiffness: 50 }}
             />
 
-            <div className="absolute inset-0 opacity-10 pointer-events-none">
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:60px_60px]"></div>
+            <div className="absolute inset-0 opacity-5 pointer-events-none">
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[size:60px_60px]"></div>
             </div>
 
             <nav className="relative z-10 flex flex-col items-start space-y-2 md:space-y-4">
@@ -96,24 +96,25 @@ export default function HamburgerMenu() {
                     animate={{ x: 0, opacity: 1 }}
                     exit={{ x: 20, opacity: 0 }}
                     transition={{ delay: i * 0.06, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                    className="group flex items-baseline gap-6"
+                    className="group flex items-baseline gap-6 overflow-visible"
                   >
                     {/* Index Number */}
-                    <span className="font-mono text-[9px] text-white/20 tracking-widest pt-2 w-10 text-right">
+                    <span className="font-mono text-[10px] text-muted-foreground/50 tracking-widest pt-2 w-10 text-right">
                       0{i + 1} <span className="opacity-40">//</span>
                     </span>
 
                     <a
                       href={item.path}
                       onClick={(e) => handleNavigation(e, item.path)}
-                      className="relative py-1 px-4"
+                      className="relative py-1 px-4 block"
                     >
                       <motion.span
-                        whileHover={{ scale: 1.05 }}
+                        whileHover={{ x: 15 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
                         className={`block font-clash text-2xl md:text-3xl lg:text-5xl font-bold tracking-tight transition-all duration-300 ${
                           isActive 
                             ? "text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 drop-shadow-[0_0_15px_rgba(168,85,247,0.3)]" 
-                            : "text-white/40 group-hover:text-white"
+                            : "text-foreground/50 group-hover:text-foreground"
                         }`}
                       >
                         {item.name}
@@ -121,9 +122,9 @@ export default function HamburgerMenu() {
                       
                       {/* Underline Hover Effect */}
                       <motion.div 
-                        className="absolute bottom-0 left-4 h-[2px] bg-gradient-to-r from-blue-500 to-purple-500 origin-left"
+                        className="absolute bottom-0 left-4 h-[2.5px] bg-gradient-to-r from-blue-500 to-purple-500 origin-left"
                         initial={{ scaleX: 0 }}
-                        whileHover={{ scaleX: 1 }}
+                        whileHover={{ scaleX: 1, x: 15 }}
                         transition={{ duration: 0.4, ease: "circOut" }}
                         style={{ width: "calc(100% - 32px)" }}
                       />
@@ -140,17 +141,17 @@ export default function HamburgerMenu() {
               transition={{ delay: 0.8 }}
               className="absolute bottom-12 flex flex-col items-center gap-4"
             >
-              <div className="h-[1px] w-24 bg-white/10" />
+              <div className="h-[1px] w-24 bg-border" />
               <div className="flex items-center gap-3">
-                <span className="font-mono text-[9px] text-white/20 tracking-[0.4em] uppercase">Security Protocol</span>
+                <span className="font-mono text-[9px] text-muted-foreground tracking-[0.4em] uppercase">Security Protocol</span>
                 <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
               </div>
             </motion.div>
 
             {/* Side Branding */}
             <div className="absolute left-10 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-8 opacity-20">
-                <span className="font-mono text-[8px] vertical-text tracking-[1em] uppercase text-white/40">Simulation Core</span>
-                <div className="h-24 w-[1px] bg-white/20 mx-auto" />
+                <span className="font-mono text-[8px] vertical-text tracking-[1em] uppercase text-muted-foreground">Simulation Core</span>
+                <div className="h-24 w-[1px] bg-border mx-auto" />
             </div>
           </motion.div>
         )}
