@@ -7,9 +7,7 @@ import Head from "next/head";
 import "./simulate.css";
 
 // UI Components (SSR enabled)
-const Header = dynamic(() => import("../components/header"), {
-  loading: () => <div className="h-16 bg-black"></div>,
-});
+
 const SimulateHeroSection = dynamic(
   () => import("../components/SimulateHeroSection"),
   {
@@ -21,9 +19,7 @@ const ResultsDashboard = dynamic(() => import("../components/result/index"), {
     <div className="h-64 bg-gray-900 rounded-xl animate-pulse"></div>
   ),
 });
-const Footer = dynamic(() => import("../components/footer"), {
-  loading: () => <div className="h-20 bg-black"></div>,
-});
+
 const SkeletonLoader = dynamic(() => import("../components/SkeletonLoader"));
 
 // Web3 & Simulation Components (Strictly Client-Side, SSR disabled)
@@ -197,7 +193,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex flex-col">
+    <div className="h-full w-full bg-black flex flex-col overflow-hidden relative">
       <Head>
         <title>TxShield - Secure Transaction Simulator</title>
         <link
@@ -206,8 +202,6 @@ export default function App() {
         />
       </Head>
 
-      <Header />
-
       {/* Show Hero Section only when no chain is selected */}
       {!chain && !showResults && (
         <SimulateHeroSection
@@ -215,7 +209,7 @@ export default function App() {
         />
       )}
 
-      <main className="flex-grow">
+      <main className="flex-grow overflow-y-auto pb-20 scrollbar-hide">
         {/* Form Section */}
         {chain && !showResults && (
           <section className="container mx-auto px-4 py-12">
@@ -265,7 +259,6 @@ export default function App() {
         )}
       </main>
 
-      <Footer />
     </div>
   );
 }
