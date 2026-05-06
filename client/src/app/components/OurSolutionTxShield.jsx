@@ -83,6 +83,107 @@ const SECTIONS = [
   }
 ];
 
+const MempoolVisualizer = ({ activeFeature, activeIndex }) => {
+  const [particles, setParticles] = useState([]);
+  
+  useEffect(() => {
+    // Distribute particles mainly in an elliptical band
+    const newParticles = Array.from({ length: 90 }).map((_, i) => {
+      const angle = Math.random() * Math.PI * 2;
+      const radius = Math.random() * 45; // 0 to 45% radius
+      const x = 50 + radius * Math.cos(angle);
+      const y = 50 + radius * Math.sin(angle) * 0.6; // Flatten y to make it an ellipse
+
+      return {
+        id: i,
+        x,
+        y,
+        size: Math.random() * 3 + 1.5,
+        baseOpacity: Math.random() * 0.5 + 0.1,
+        isThreat: Math.random() > 0.85, 
+        delay: Math.random() * 2,
+        duration: Math.random() * 3 + 2,
+      };
+    });
+    setParticles(newParticles);
+  }, []);
+
+  const isActive = !!activeFeature;
+  const themeColors = [
+    { bg: "bg-purple-500", text: "text-purple-500", border: "border-purple-500", shadow: "shadow-[0_0_15px_#a855f7]", line: "rgba(168, 85, 247, 0.3)" },
+    { bg: "bg-red-500", text: "text-red-500", border: "border-red-500", shadow: "shadow-[0_0_15px_#ef4444]", line: "rgba(239, 68, 68, 0.3)" },
+    { bg: "bg-cyan-500", text: "text-cyan-500", border: "border-cyan-500", shadow: "shadow-[0_0_15px_#06b6d4]", line: "rgba(6, 182, 212, 0.3)" },
+  ];
+  const t = themeColors[activeIndex] || themeColors[0];
+
+  return (
+    <div className="absolute inset-0 w-full h-full overflow-hidden flex items-center justify-center pointer-events-none">
+      {/* Background Globe / Core */}
+      <div className="absolute w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] rounded-full border border-border/40 bg-card/10 shadow-[inset_0_0_50px_rgba(var(--primary),0.05)] backdrop-blur-[2px]" />
+      
+      {/* Latitude/Longitude lines */}
+      <div className="absolute w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] rounded-full border border-border/20 rotate-45 transition-transform duration-[20s] ease-linear" style={{ transform: 'rotateX(70deg) rotateZ(45deg)' }} />
+      <div className="absolute w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] rounded-full border border-border/20 -rotate-45 transition-transform duration-[20s] ease-linear" style={{ transform: 'rotateX(70deg) rotateZ(-45deg)' }} />
+
+      {/* Threat detected connections */}
+      {isActive && (
+        <svg className="absolute inset-0 w-full h-full pointer-events-none z-10">
+          {particles.filter(p => p.isThreat).map((p, i) => (
+             <m.line
+               key={i}
+               x1="50%"
+               y1="50%"
+               x2={`${p.x}%`}
+               y2={`${p.y}%`}
+               stroke={t.line}
+               strokeWidth="1"
+               initial={{ pathLength: 0, opacity: 0 }}
+               animate={{ pathLength: 1, opacity: 1 }}
+               transition={{ duration: 0.5, delay: Math.random() * 0.3 }}
+             />
+          ))}
+        </svg>
+      )}
+
+      {/* Particles */}
+      {particles.map((p) => {
+        const activeThreat = isActive && p.isThreat;
+        return (
+          <div
+            key={p.id}
+            className={`absolute rounded-full transition-all duration-300 ${
+              activeThreat 
+                ? t.bg + ' ' + t.shadow
+                : 'bg-primary/30 dark:bg-primary/40'
+            }`}
+            style={{
+              left: `${p.x}%`,
+              top: `${p.y}%`,
+              width: `${p.size}px`,
+              height: `${p.size}px`,
+              opacity: activeThreat ? 1 : p.baseOpacity,
+              transform: activeThreat ? 'scale(1.5)' : 'scale(1)',
+            }}
+          />
+        );
+      })}
+
+      {/* Scanning Rings when active (Optimized) */}
+      {isActive && (
+        <>
+          <div className={`absolute w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] rounded-full border border-dashed ${t.border}/30 animate-[spin_10s_linear_infinite] z-0`} />
+          <div className={`absolute w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] rounded-full bg-transparent border border-solid ${t.border}/40 animate-ping-radar z-0`} />
+        </>
+      )}
+
+      {/* Center Reticle */}
+      <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors duration-300 relative z-20 bg-background border ${isActive ? t.border : 'border-border'}`}>
+        <FaSearch className={`text-xl transition-colors duration-300 ${isActive ? t.text : 'text-muted-foreground'}`} />
+      </div>
+    </div>
+  );
+}
+
 const GlitchText = ({ text }) => {
   const [displayText, setDisplayText] = useState(text);
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
@@ -119,19 +220,15 @@ const GlitchText = ({ text }) => {
 
 function OurSolutionTxShield() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [rotation, setRotation] = useState(0);
   const [hoveredFeature, setHoveredFeature] = useState(null);
 
   const activeSection = SECTIONS[activeIndex];
 
   const handleSectionClick = (index) => {
-    setActiveIndex(index);
-    setHoveredFeature(null);
-    const targetBase = index * -120;
-    let delta = (targetBase - rotation) % 360;
-    if (delta > 0) delta -= 360;
-    if (delta === 0 && index !== activeIndex) delta = -360;
-    setRotation(rotation + delta);
+    if (index !== activeIndex) {
+      setActiveIndex(index);
+      setHoveredFeature(null);
+    }
   };
 
   return (
@@ -150,6 +247,14 @@ function OurSolutionTxShield() {
         .animate-radar {
             animation: radar-sweep 4s linear infinite;
         }
+
+        @keyframes ping-radar {
+            0% { transform: scale(0.1); opacity: 0.6; }
+            80%, 100% { transform: scale(1); opacity: 0; }
+        }
+        .animate-ping-radar {
+            animation: ping-radar 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
         
         .grid-bg-cyber {
             background-image: 
@@ -165,7 +270,7 @@ function OurSolutionTxShield() {
       <div className="max-w-[1400px] mx-auto relative z-10 w-full flex flex-col h-full py-6 sm:py-8 transition-colors duration-700">
 
         {/* Header */}
-        <div className="flex flex-col md:flex-row items-center justify-between w-full border-b border-border pb-4 mb-6 shrink-0 gap-4 pr-16">
+        <div className="flex flex-col md:flex-row items-center justify-between w-full border-b border-border pb-4 mb-6 shrink-0 gap-4 pr-24 lg:pr-32">
 			<div className="flex flex-col items-center md:items-start">
 				<div className="inline-flex items-center gap-2 px-3 py-1 rounded-none bg-card border border-border mb-2">
 					<div className="w-1.5 h-1.5 bg-cyan-500 shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div>
@@ -175,12 +280,11 @@ function OurSolutionTxShield() {
 					TxShield <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">Core</span>
 				</h2>
 			</div>
-			<div className="text-right flex items-center gap-4 bg-card border border-border p-3">
+			<div className="text-right flex items-center bg-card border border-border p-3 px-5">
 				<div className="flex flex-col text-right hidden sm:flex">
 					<span className="text-[10px] text-muted-foreground uppercase tracking-widest font-mono">Active Sector</span>
 					<span className="text-lg font-mono font-bold text-foreground tracking-tighter"><GlitchText text={activeSection.title} /></span>
 				</div>
-				<span className="text-5xl font-clash font-bold text-foreground/5 hidden sm:block">0{activeIndex + 1}</span>
 			</div>
         </div>
 
@@ -228,93 +332,39 @@ function OurSolutionTxShield() {
 			</div>
           </div>
 
-          {/* CENTER COLUMN: Radar */}
-          <div className="flex-1 w-full flex justify-center items-center relative h-[350px] lg:h-[480px] shrink-0">
-            {/* Radar Container */}
-            <div className="relative w-[300px] h-[300px] sm:w-[380px] sm:h-[380px]">
-              
-              {/* Radar Grid Lines (Concentric Circles) - Sharp Vectors */}
-              <div className="absolute inset-0 rounded-full border-2 border-border/40 shadow-[inset_0_0_80px_rgba(34,211,238,0.05)]">
-                <div className="absolute inset-[20%] rounded-full border border-border/20"></div>
-                <div className="absolute inset-[40%] rounded-full border border-border/20"></div>
-                <div className="absolute inset-[60%] rounded-full border border-border/20 border-dashed"></div>
-                <div className="absolute inset-[80%] rounded-full border border-border/10"></div>
-
-                {/* Crosshairs */}
-                <div className="absolute top-0 bottom-0 left-1/2 w-[1px] bg-border/20 -translate-x-1/2"></div>
-                <div className="absolute left-0 right-0 top-1/2 h-[1px] bg-border/20 -translate-y-1/2"></div>
-              </div>
-
-              {/* Sweeping Radar Line */}
-              <div className="absolute inset-[2%] rounded-full overflow-hidden pointer-events-none">
-                <div className="w-full h-full animate-radar origin-center"
-                  style={{ background: 'conic-gradient(from 0deg, transparent 0deg, transparent 270deg, rgba(34, 211, 238, 0.3) 360deg)' }}>
-                </div>
-              </div>
-
-              {/* Rotating Core (Nodes) */}
-              <m.div
-                className="w-full h-full relative"
-                animate={{ rotate: rotation }}
-                transition={{ type: "spring", stiffness: 45, damping: 25 }}
-              >
-                {/* Items */}
-                {SECTIONS.map((section, index) => {
-                  const angle = index * 120;
-                  const isActive = activeIndex === index;
-
-                  return (
-                    <m.div
-                      key={section.key}
-                      className="absolute top-0 left-0 w-full h-full pointer-events-none"
-                      style={{ rotate: angle }}
-                    >
-                      {/* Interactive Node */}
-                      <div
-                        className="absolute top-[4%] left-1/2 -translate-x-1/2 pointer-events-auto cursor-pointer flex flex-col items-center"
-                        onClick={() => handleSectionClick(index)}
+          {/* CENTER COLUMN: Mempool Visualizer (Attack Map) */}
+          <div className="flex-1 w-full flex flex-col justify-center items-center relative h-[350px] lg:h-[480px] shrink-0 bg-background border border-border rounded-xl shadow-2xl transition-colors duration-700 overflow-hidden">
+            
+            {/* Header / Tabs */}
+            <div className="absolute top-0 left-0 w-full h-10 border-b border-border bg-card/50 backdrop-blur-md flex items-center justify-between px-4 z-20">
+              <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_5px_#22c55e]"></span>
+                Live Mempool
+              </span>
+              <div className="flex gap-2 sm:gap-3 pointer-events-auto">
+                 {SECTIONS.map((section, idx) => {
+                    const isActiveTab = activeIndex === idx;
+                    let tabColor = "text-cyan-400 border-cyan-400";
+                    if (idx === 0) tabColor = "text-purple-400 border-purple-400";
+                    if (idx === 1) tabColor = "text-red-400 border-red-400";
+                    
+                    return (
+                      <button 
+                        key={section.key} 
+                        onClick={() => handleSectionClick(idx)}
+                        className={`text-[9px] sm:text-[10px] font-mono uppercase tracking-wider transition-colors px-2 py-1 border-b-2 ${isActiveTab ? `${tabColor} font-bold` : 'text-muted-foreground hover:text-foreground border-transparent'}`}
                       >
-                        {/* Sharp Node Box */}
-                        <m.div
-                          className={`w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center transition-all duration-300 relative overflow-hidden ${isActive
-                            ? `scale-110 bg-primary/10 border border-primary shadow-[0_0_20px_rgba(59,130,246,0.3)]`
-                            : `scale-90 opacity-50 hover:opacity-100 hover:scale-100 bg-card border border-border`
-                            }`}
-                        >
-                          {/* Active Scanline */}
-                          {isActive && (
-                            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400/20 to-transparent animate-[scan_2s_linear_infinite]"></div>
-                          )}
-
-                          {/* Icon */}
-                          <m.div
-                            className={`relative z-10 ${isActive ? 'text-cyan-400' : 'text-muted-foreground'}`}
-                            animate={{ rotate: -(rotation + angle) }}
-                            transition={{ type: "spring", stiffness: 45, damping: 25 }}
-                          >
-                            {section.icon}
-                          </m.div>
-
-                          {/* Tactical Corners */}
-                          <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-current opacity-50"></div>
-                          <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-current opacity-50"></div>
-                          <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-current opacity-50"></div>
-                          <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-current opacity-50"></div>
-                        </m.div>
-                      </div>
-                    </m.div>
-                  );
-                })}
-              </m.div>
-
-              {/* STATIC CENTER HUB */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 bg-background z-20 pointer-events-none border border-border flex items-center justify-center rotate-45 transition-colors duration-700">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-card border border-border flex items-center justify-center relative overflow-hidden -rotate-45">
-                  <FaShieldAlt className="text-2xl sm:text-3xl text-foreground/80 relative z-10" />
-                </div>
+                        {section.title.split(' ')[0]}
+                      </button>
+                    )
+                 })}
               </div>
-
             </div>
+
+            <MempoolVisualizer activeFeature={hoveredFeature} activeIndex={activeIndex} />
+            
+            {/* Ambient Background Glow */}
+            <div className="absolute inset-0 bg-primary/5 blur-[100px] rounded-full pointer-events-none z-0" />
           </div>
 
           {/* RIGHT COLUMN: Terminal Data Panes */}
