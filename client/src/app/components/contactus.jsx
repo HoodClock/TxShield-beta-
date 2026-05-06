@@ -93,9 +93,9 @@ const ReviewCard = ({ t, isExpanded, onExpand, onCollapse }) => (
       height: isExpanded ? "auto" : 140,
       scale: isExpanded ? 1.05 : 1,
       zIndex: isExpanded ? 100 : 1,
-      borderColor: isExpanded ? "var(--primary)" : "var(--border)",
+      borderColor: isExpanded ? "rgba(168,85,247,0.5)" : "var(--border)",
       backgroundColor: isExpanded ? "var(--card)" : "var(--muted)",
-      boxShadow: isExpanded ? "0 20px 60px rgba(0,0,0,0.9), 0 0 30px rgba(168,85,247,0.15)" : "0 0 0px rgba(0,0,0,0)",
+      boxShadow: isExpanded ? "0 20px 60px rgba(0,0,0,0.9), 0 0 30px rgba(168,85,247,0.2)" : "0 0 0px rgba(0,0,0,0)",
     }}
     transition={{ 
       type: "spring", 
@@ -104,7 +104,7 @@ const ReviewCard = ({ t, isExpanded, onExpand, onCollapse }) => (
       restDelta: 0.001
     }}
     style={{ willChange: "transform, height, box-shadow" }}
-    className="w-[300px] shrink-0 border p-4 flex flex-col gap-3 group cursor-pointer relative overflow-hidden"
+    className={`w-[300px] shrink-0 border p-4 flex flex-col gap-3 group cursor-pointer relative overflow-hidden transition-colors duration-500 ${isExpanded ? '' : 'hover:border-purple-500/30 hover:shadow-[0_0_20px_rgba(168,85,247,0.05)]'}`}
   >
     <div className={`font-mono text-[11px] leading-relaxed transition-colors duration-500 ${isExpanded ? "text-foreground" : "text-muted-foreground line-clamp-3 group-hover:text-foreground/70"}`}>
       "{t.content}"
@@ -115,11 +115,11 @@ const ReviewCard = ({ t, isExpanded, onExpand, onCollapse }) => (
         {t.image ? (
           <Image src={t.image} alt={t.name} width={28} height={28} className="w-full h-full object-cover" />
         ) : (
-          <span className="font-mono text-[9px] text-muted-foreground">{t.initials}</span>
+          <span className="font-mono text-[9px] text-purple-400/80">{t.initials}</span>
         )}
       </div>
       <div>
-        <p className="font-clash text-[11px] text-foreground font-semibold">{t.name}</p>
+        <p className="font-clash text-[11px] text-foreground font-semibold group-hover:text-purple-400 transition-colors">{t.name}</p>
         <p className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest">{t.role}</p>
       </div>
       {t.linkedin !== "#" && (
@@ -134,7 +134,7 @@ const ReviewCard = ({ t, isExpanded, onExpand, onCollapse }) => (
     </div>
 
     {!isExpanded && (
-      <div className="absolute top-2 right-2 w-1 h-1 rounded-full bg-primary/40 group-hover:bg-primary animate-pulse" />
+      <div className="absolute top-2 right-2 w-1 h-1 rounded-full bg-purple-500/40 group-hover:bg-purple-500 animate-pulse shadow-[0_0_5px_rgba(168,85,247,0.5)]" />
     )}
   </m.div>
 );
@@ -238,9 +238,9 @@ export default function ContactUs() {
 
         <div className="flex flex-col lg:flex-row gap-5 shrink-0 pr-0 lg:pr-16">
           {/* LEFT: Info Panel */}
-          <div className="lg:w-[320px] xl:w-[360px] shrink-0 border border-border bg-card overflow-hidden transition-colors duration-700">
+          <div className="lg:w-[320px] xl:w-[360px] shrink-0 border border-border border-t-2 border-t-purple-500 bg-card overflow-hidden shadow-[0_0_30px_rgba(168,85,247,0.05)] transition-colors duration-700">
             <div className="h-9 bg-muted border-b border-border flex items-center px-4">
-              <span className="font-mono text-[10px] text-primary/50 uppercase tracking-widest">Transmission Target</span>
+              <span className="font-mono text-[10px] text-purple-400 uppercase tracking-widest">Transmission Target</span>
             </div>
             <div className="p-5 flex flex-col gap-5">
               <div>
@@ -271,31 +271,34 @@ export default function ContactUs() {
           </div>
 
           {/* RIGHT: Form */}
-          <div className="flex-1 border border-border bg-card overflow-hidden transition-colors duration-700">
+          <div className="flex-1 border border-border border-t-2 border-t-cyan-500 bg-card overflow-hidden shadow-[0_0_30px_rgba(34,211,238,0.05)] transition-colors duration-700">
             <div className="h-9 bg-muted border-b border-border flex items-center px-4 justify-between">
-              <span className="font-mono text-[10px] text-primary/50 uppercase tracking-widest">Compose Message</span>
-              <span className="font-mono text-[10px] text-muted-foreground">Encrypted via TLS</span>
+              <span className="font-mono text-[10px] text-cyan-400 uppercase tracking-widest">Compose Message</span>
+              <span className="font-mono text-[10px] text-cyan-500/50 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 bg-cyan-500 rounded-full animate-pulse shadow-[0_0_5px_rgba(34,211,238,0.8)]"></span>
+                Encrypted via TLS
+              </span>
             </div>
             <form onSubmit={handleSubmit} className="p-5 flex flex-col gap-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="flex flex-col gap-1">
-                  <label className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Identifier</label>
+                <div className="flex flex-col gap-1 group">
+                  <label className="font-mono text-[10px] text-muted-foreground group-focus-within:text-cyan-400 transition-colors uppercase tracking-widest">Identifier</label>
                   <input type="text" name="name" value={formData.name} onChange={handleChange} required
-                    className="w-full px-4 py-2.5 bg-muted/50 border border-border focus:border-primary/40 focus:bg-muted text-foreground placeholder-muted-foreground font-mono text-xs transition-all outline-none"
+                    className="w-full px-4 py-2.5 bg-muted/50 border border-border focus:border-cyan-500/50 focus:shadow-[0_0_15px_rgba(34,211,238,0.1)] focus:bg-muted text-foreground placeholder-muted-foreground font-mono text-xs transition-all outline-none"
                     placeholder="Full Name" />
                 </div>
-                <div className="flex flex-col gap-1">
-                  <label className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Return Address</label>
+                <div className="flex flex-col gap-1 group">
+                  <label className="font-mono text-[10px] text-muted-foreground group-focus-within:text-cyan-400 transition-colors uppercase tracking-widest">Return Address</label>
                   <input type="email" name="email" value={formData.email} onChange={handleChange} required
-                    className="w-full px-4 py-2.5 bg-muted/50 border border-border focus:border-primary/40 focus:bg-muted text-foreground placeholder-muted-foreground font-mono text-xs transition-all outline-none"
+                    className="w-full px-4 py-2.5 bg-muted/50 border border-border focus:border-cyan-500/50 focus:shadow-[0_0_15px_rgba(34,211,238,0.1)] focus:bg-muted text-foreground placeholder-muted-foreground font-mono text-xs transition-all outline-none"
                     placeholder="Email Address" />
                 </div>
               </div>
 
-              <div className="flex flex-col gap-1">
-                <label className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Payload</label>
+              <div className="flex flex-col gap-1 group">
+                <label className="font-mono text-[10px] text-muted-foreground group-focus-within:text-cyan-400 transition-colors uppercase tracking-widest">Payload</label>
                 <textarea name="message" rows={4} value={formData.message} onChange={handleChange} required
-                  className="w-full px-4 py-2.5 bg-muted/50 border border-border focus:border-primary/40 focus:bg-muted text-foreground placeholder-muted-foreground font-mono text-xs transition-all outline-none resize-none"
+                  className="w-full px-4 py-2.5 bg-muted/50 border border-border focus:border-cyan-500/50 focus:shadow-[0_0_15px_rgba(34,211,238,0.1)] focus:bg-muted text-foreground placeholder-muted-foreground font-mono text-xs transition-all outline-none resize-none"
                   placeholder="Your message..." />
               </div>
 
@@ -305,9 +308,9 @@ export default function ContactUs() {
                 className={`relative overflow-hidden w-full py-3 font-mono text-xs tracking-[0.2em] uppercase transition-all flex items-center justify-center gap-2 group focus:outline-none
                   ${isSubmitting
                     ? "bg-muted border border-border text-muted-foreground cursor-not-allowed"
-                    : "bg-muted border border-border hover:border-primary/50 hover:bg-primary/10 text-foreground"
+                    : "bg-muted border border-border hover:border-cyan-500/50 hover:bg-cyan-500/10 hover:text-cyan-400 hover:shadow-[0_0_20px_rgba(34,211,238,0.2)] text-foreground"
                   }`}>
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                 {isSubmitting ? (
                   <>
                     <div className="w-3 h-3 border border-border border-t-primary animate-spin" />
