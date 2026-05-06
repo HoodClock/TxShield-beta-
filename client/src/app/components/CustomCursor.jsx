@@ -46,7 +46,7 @@ export default function CustomCursor() {
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[9999] hidden md:block">
-      {/* Central Diamond Core */}
+      {/* Central Core */}
       <m.div
         style={{
           x: smoothX,
@@ -54,9 +54,9 @@ export default function CustomCursor() {
           translateX: "-50%",
           translateY: "-50%",
         }}
-        className="absolute w-3 h-3 z-10 shadow-[0_0_15px_rgba(168,85,247,0.5)]"
+        className="absolute w-3 h-3 z-10 rounded-full shadow-[0_0_15px_rgba(168,85,247,0.5)]"
         animate={{
-          rotate: isHovered ? 225 : 45,
+          rotate: isHovered ? 180 : 0,
           scale: isMouseDown ? 0.8 : isHovered ? 1.5 : 1,
           background: isHovered 
             ? "linear-gradient(135deg, #a855f7, #3b82f6)" 
@@ -67,34 +67,6 @@ export default function CustomCursor() {
           scale: { type: "spring", stiffness: 300, damping: 15 },
         }}
       />
-
-      {/* Tactical Brackets */}
-      <m.div
-        style={{
-          x: smoothX,
-          y: smoothY,
-          translateX: "-50%",
-          translateY: "-50%",
-        }}
-        className="absolute w-12 h-12 flex items-center justify-center"
-      >
-        {[0, 90, 180, 270].map((rotation) => (
-          <m.div
-            key={rotation}
-            className="absolute w-2.5 h-2.5 border-t-[1.5px] border-l-[1.5px]"
-            style={{
-              rotate: rotation,
-            }}
-            animate={{
-              x: isHovered ? (rotation === 0 || rotation === 270 ? -18 : 18) : (rotation === 0 || rotation === 270 ? -14 : 14),
-              y: isHovered ? (rotation === 0 || rotation === 90 ? -18 : 18) : (rotation === 0 || rotation === 90 ? -14 : 14),
-              opacity: isHovered ? 1 : 0.4,
-              borderColor: isHovered ? "#3b82f6" : "var(--muted-foreground)"
-            }}
-            transition={{ type: "spring", stiffness: 250, damping: 20 }}
-          />
-        ))}
-      </m.div>
 
       {/* Rotating Outer Ring */}
       <m.div
