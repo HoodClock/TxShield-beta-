@@ -358,8 +358,6 @@
     font-weight: 700;
     display: inline-block;
     position: relative;
-    /* 1.3s total duration: ~1s pause (0-70%), ~0.3s glitch (70-100%) */
-    animation: hackerSlice 1.3s infinite linear;
 }
 
 @media (prefers-reduced-motion: reduce) {
