@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { m, useInView, AnimatePresence } from "framer-motion";
+import ScrambleText from "../ScrambleText";
 
 function AnalysisSection() {
     const sectionRef = useRef(null);
@@ -80,151 +81,177 @@ function AnalysisSection() {
         setActiveStep(0);
     };
 
-    const themeClasses = {
-        honeypot: {
-            bg: 'bg-red-500/10',
-            border: 'border-red-500/20',
-            text: 'text-red-400',
-            line: 'from-red-500/20 to-red-500/0',
-            activeRing: 'border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.5)]',
-            activeDot: 'bg-red-500',
-            glow: 'from-red-600/20 to-orange-600/20 border-red-500/50'
-        },
-        phishing: {
-            bg: 'bg-blue-500/10',
-            border: 'border-blue-500/20',
-            text: 'text-blue-400',
-            line: 'from-blue-500/20 to-blue-500/0',
-            activeRing: 'border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.5)]',
-            activeDot: 'bg-blue-500',
-            glow: 'from-blue-600/20 to-cyan-600/20 border-blue-500/50'
+    const getThemeClasses = (id, isSelected) => {
+        if (id === 'honeypot') {
+            return {
+                border: isSelected ? 'border-cyan-500/50' : 'border-border hover:border-cyan-500/30',
+                bgGlow: isSelected ? 'from-cyan-500/10 to-transparent' : 'group-hover:from-cyan-500/5 group-hover:to-transparent',
+                accentBar: isSelected ? 'bg-cyan-400' : 'bg-transparent group-hover:bg-cyan-400/50',
+                title: isSelected ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground',
+                subtitle: isSelected ? 'text-cyan-500/80' : 'text-muted-foreground/60 group-hover:text-cyan-500/80',
+                arrow: isSelected ? 'text-cyan-400 translate-x-1' : 'text-muted-foreground group-hover:text-cyan-400 group-hover:translate-x-1',
+                // Internal theme
+                text: 'text-cyan-400',
+                line: 'from-cyan-500/20 to-cyan-500/0',
+                activeRing: 'border-cyan-500 shadow-lg shadow-cyan-500/20',
+                activeDot: 'bg-cyan-500',
+            };
+        } else {
+            return {
+                border: isSelected ? 'border-purple-500/50' : 'border-border hover:border-purple-500/30',
+                bgGlow: isSelected ? 'from-purple-500/10 to-transparent' : 'group-hover:from-purple-500/5 group-hover:to-transparent',
+                accentBar: isSelected ? 'bg-purple-400' : 'bg-transparent group-hover:bg-purple-400/50',
+                title: isSelected ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground',
+                subtitle: isSelected ? 'text-purple-500/80' : 'text-muted-foreground/60 group-hover:text-purple-500/80',
+                arrow: isSelected ? 'text-purple-400 translate-x-1' : 'text-muted-foreground group-hover:text-purple-400 group-hover:translate-x-1',
+                // Internal theme
+                text: 'text-purple-400',
+                line: 'from-purple-500/20 to-purple-500/0',
+                activeRing: 'border-purple-500 shadow-lg shadow-purple-500/20',
+                activeDot: 'bg-purple-500',
+            };
         }
     };
-    const theme = themeClasses[selectedPlaybook.id];
+
+    const theme = getThemeClasses(selectedPlaybook.id, true);
 
     return (
-        <section ref={sectionRef} className="relative py-10 px-4 sm:px-6 overflow-hidden bg-black">
-            {/* Animated Background */}
-            <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-0 left-0 w-72 h-72 bg-red-500/5 rounded-full blur-3xl"></div>
-                <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl"></div>
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-black to-black"></div>
+        <section ref={sectionRef} className="relative w-full h-full bg-background overflow-hidden flex flex-col justify-center transition-colors duration-700">
+            {/* Ambient Background (Simulate Hero Vibe) */}
+            <div className="absolute inset-0 z-0 opacity-40 dark:opacity-100 transition-opacity duration-700">
+                <div className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] bg-blue-500/5 dark:bg-cyan-900/10 rounded-full blur-[120px] pointer-events-none"></div>
+                <div className="absolute bottom-1/4 right-1/4 w-[40rem] h-[40rem] bg-purple-500/5 dark:bg-purple-900/10 rounded-full blur-[120px] pointer-events-none"></div>
             </div>
 
-            {/* Binary Code Animation */}
-            <div className="absolute inset-0 opacity-10 overflow-hidden pointer-events-none">
-                <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(90deg,transparent_50%,rgba(255,255,255,0.03)_50%)] bg-[length:50px_50px]"></div>
-            </div>
+            <div className="max-w-6xl mx-auto relative z-10 flex flex-col h-full w-full py-6">
+                
+                {/* Sleek Header & Tab Selectors */}
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-6 px-4 sm:px-6 shrink-0 gap-6 w-full">
+                    
+                    {/* Massive Typography Header */}
+                    <m.div
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        viewport={{ once: true }}
+                        className="flex flex-col cursor-default select-none"
+                    >
+                        <h1 
+                            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-[0.1em] leading-none text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 drop-shadow-2xl"
+                            style={{ fontFamily: "var(--font-clash)" }}
+                        >
+                            PLAYBOOK
+                        </h1>
+                        <div className="mt-2 flex items-center gap-4 text-[9px] sm:text-[10px] font-mono tracking-[0.3em] uppercase text-muted-foreground">
+                            <ScrambleText text="Attack Vector Analysis" duration={2500} />
+                            <span className="w-8 md:w-16 h-px bg-gradient-to-l from-transparent to-border"></span>
+                        </div>
+                    </m.div>
 
-            <div className="max-w-6xl mx-auto relative z-10">
-                {/* Section Header */}
-                <m.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    viewport={{ once: true }}
-                    className="text-center mb-10 px-4 sm:px-6"
-                >
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
-                        <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(250,204,21,0.8)]"></div>
-                        <span className="text-xs text-gray-300 font-semibold tracking-wider">ATTACK ANALYSIS</span>
-                    </div>
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 tracking-tight">
-                        <span className="text-white drop-shadow-md">The <span className="grad-word">Scammer</span> Playbook</span>
-                    </h2>
-                    <p className="text-sm sm:text-base text-gray-400 max-w-2xl mx-auto tracking-wide">
-                        Understanding how attackers operate is the first step in building effective protection.
-                    </p>
-                </m.div>
-
-                {/* Tab Switcher */}
-                <div className="flex justify-center mb-8 px-4">
-                    <div className="bg-white/5 p-1 rounded-xl border border-white/10 flex items-center gap-1 backdrop-blur-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_10px_30px_-10px_rgba(0,0,0,0.5)]">
-                        {playbooks.map((pb) => (
-                            <button
-                                key={pb.id}
-                                onClick={() => handlePlaybookChange(pb.id)}
-                                className={`relative px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-300 glitch-hover ${selected === pb.id
-                                    ? "text-white shadow-lg"
-                                    : "text-gray-400 hover:text-white hover:bg-white/5"
-                                    }`}
-                            >
-                                {selected === pb.id && (
-                                    <m.div
-                                        layoutId="activeTab"
-                                        className={`absolute inset-0 rounded-lg bg-gradient-to-r ${themeClasses[pb.id].glow}`}
-                                        initial={false}
-                                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                                    />
-                                )}
-                                <span className="relative z-10 flex items-center gap-2">
-                                    {pb.id === 'honeypot' ? (
-                                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                        </svg>
-                                    ) : (
-                                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                                        </svg>
-                                    )}
-                                    {pb.title}
-                                </span>
-                            </button>
-                        ))}
+                    {/* Minimalist Chain Selectors (Tabs) */}
+                    <div className="flex flex-row gap-4 items-center shrink-0">
+                        {playbooks.map((pb) => {
+                            const isSelected = selected === pb.id;
+                            const classes = getThemeClasses(pb.id, isSelected);
+                            return (
+                                <m.button
+                                    key={pb.id}
+                                    onClick={() => handlePlaybookChange(pb.id)}
+                                    whileHover={{ y: -2 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    className={`group relative w-36 md:w-48 h-12 overflow-hidden bg-card border ${classes.border} rounded-none transition-all duration-500 flex items-center px-3`}
+                                >
+                                    <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-transparent ${classes.bgGlow} transition-all duration-500 pointer-events-none`}></div>
+                                    <div className={`absolute left-0 top-0 bottom-0 w-1 ${classes.accentBar} transition-all duration-300`}></div>
+                                    
+                                    <div className="relative z-10 flex items-center justify-between w-full">
+                                        <div className="flex flex-col items-start text-left">
+                                            <span className={`text-xs md:text-sm font-light tracking-widest transition-colors duration-300 ${classes.title}`}>{pb.title.split(' ')[0].toUpperCase()}</span>
+                                            <span className={`text-[7px] font-mono uppercase tracking-[0.2em] transition-colors duration-300 ${classes.subtitle}`}>{pb.id === 'honeypot' ? 'Contract Trap' : 'Social Eng.'}</span>
+                                        </div>
+                                        <span className={`font-mono text-xs transition-all duration-300 ${classes.arrow}`}>→</span>
+                                    </div>
+                                </m.button>
+                            );
+                        })}
                     </div>
                 </div>
 
                 {/* Playbook Interactive Pipeline Container */}
-                <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10 transition-all duration-500">
+                <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 relative z-10 transition-all duration-500 flex-1 min-h-0 flex flex-col pb-2">
                     <m.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={isInView ? { opacity: 1, y: 0 } : {}}
                         transition={{ duration: 0.6, delay: 0.2 }}
-                        className="rounded-3xl bg-[#0a0a0a] backdrop-blur-2xl border border-white/5 p-6 sm:p-8 shadow-[0_30px_60px_-12px_rgba(0,0,0,1)] relative overflow-hidden"
+                        className="bg-transparent relative overflow-hidden flex flex-col justify-between flex-1 min-h-0"
                     >
-                        {/* Subtly masked inner glow */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none"></div>
+                        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 relative z-10 w-full h-full pt-2">
 
-                        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 relative z-10 w-full mb-8">
+                            {/* Left Col: Interactive Timeline & Alert */}
+                            <div className="w-full lg:w-1/3 relative flex flex-col justify-between shrink-0">
+                                <div>
+                                    <h3 className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4 pb-2 border-b border-border">Execution Sequence</h3>
 
-                            {/* Left Col: Interactive Timeline */}
-                            <div className="w-full lg:w-1/3 relative">
-                                <h3 className="text-lg sm:text-xl font-bold tracking-tight text-white mb-6 border-b border-white/10 pb-3">Attack Sequence</h3>
+                                    <div className="relative">
+                                        {/* Vertical tracking line */}
+                                        <div className={`absolute left-2.5 top-2 bottom-6 w-[1px] bg-gradient-to-b ${theme.line} transition-colors duration-500`}></div>
 
-                                <div className="relative">
-                                    {/* Vertical tracking line */}
-                                    <div className={`absolute left-4 top-2 bottom-6 w-[2px] bg-gradient-to-b ${theme.line} transition-colors duration-500`}></div>
-
-                                    <div className="space-y-4 relative z-10">
-                                        {(selectedPlaybook.steps || []).map((step, i) => (
-                                            <button
-                                                key={i}
-                                                onClick={() => setActiveStep(i)}
-                                                className="relative flex items-center gap-4 w-full text-left group cursor-pointer"
-                                            >
-                                                <div className="relative shrink-0">
-                                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center border-[2px] transition-all duration-300 relative bg-[#0a0a0a] z-10 ${activeStep === i ? theme.activeRing : 'border-white/10 group-hover:border-white/30'}`}>
-                                                        <div className={`w-2 h-2 rounded-full transition-all duration-300 ${activeStep === i ? theme.activeDot : 'bg-transparent group-hover:bg-white/20'}`}></div>
+                                        <div className="space-y-4 relative z-10">
+                                            {(selectedPlaybook.steps || []).map((step, i) => (
+                                                <button
+                                                    key={i}
+                                                    onClick={() => setActiveStep(i)}
+                                                    className="relative flex items-center gap-4 w-full text-left group cursor-pointer"
+                                                >
+                                                    <div className="relative shrink-0">
+                                                        <div className={`w-5 h-5 flex items-center justify-center border transition-all duration-300 relative bg-background z-10 rounded-none ${activeStep === i ? theme.activeRing : 'border-border group-hover:border-primary/50'}`}>
+                                                            <div className={`w-1.5 h-1.5 transition-all duration-300 rounded-none ${activeStep === i ? theme.activeDot : 'bg-transparent group-hover:bg-foreground/20'}`}></div>
+                                                        </div>
                                                     </div>
-                                                </div>
 
-                                                <div className="flex-1">
-                                                    <div className={`text-[10px] font-mono tracking-wider transition-colors duration-300 font-bold uppercase mb-0.5 ${activeStep === i ? theme.text : 'text-gray-500 group-hover:text-gray-400'}`}>
-                                                        Phase 0{i + 1}
+                                                    <div className="flex-1">
+                                                        <div className={`text-[8px] font-mono tracking-[0.2em] transition-colors duration-300 uppercase ${activeStep === i ? theme.text : 'text-muted-foreground group-hover:text-foreground/60'}`}>
+                                                            Phase 0{i + 1}
+                                                        </div>
+                                                        <div className={`text-xs font-light transition-colors duration-300 tracking-wide mt-0.5 ${activeStep === i ? 'text-foreground font-bold' : 'text-muted-foreground group-hover:text-foreground'}`}>
+                                                            {step.title}
+                                                        </div>
                                                     </div>
-                                                    <div className={`text-sm font-bold transition-colors duration-300 tracking-tight leading-tight ${activeStep === i ? 'text-white drop-shadow-md' : 'text-gray-400 group-hover:text-gray-200'}`}>
-                                                        {step.title}
-                                                    </div>
-                                                </div>
-                                            </button>
-                                        ))}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Threat Level Radar Module (Sharp & Minimal) */}
+                                <div className="mt-4 rounded-none border border-red-500/20 bg-card p-4 relative overflow-hidden flex flex-col gap-1.5 group hover:border-red-500/40 transition-all duration-500 shadow-lg">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent pointer-events-none"></div>
+                                    <div className="absolute top-0 right-0 w-24 h-24 bg-red-500/10 blur-[30px] rounded-full animate-pulse group-hover:opacity-100 opacity-50 transition-opacity translate-x-1/4 -translate-y-1/4 pointer-events-none"></div>
+                                    
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <div className="relative flex h-1.5 w-1.5">
+                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-none bg-red-400 opacity-75"></span>
+                                            <span className="relative inline-flex rounded-none h-1.5 w-1.5 bg-red-500 shadow-[0_0_8px_rgba(239,68,68,1)]"></span>
+                                        </div>
+                                        <div className="text-[9px] sm:text-[10px] font-mono text-red-500 tracking-widest uppercase font-bold drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]">Alert: Threat Recognized</div>
+                                    </div>
+                                    
+                                    <div className="text-xs sm:text-sm font-light text-foreground group-hover:text-red-600 transition-colors tracking-tight leading-tight">The Inevitable Outcome</div>
+                                    <p className="text-muted-foreground text-[10px] font-mono leading-snug mb-1 uppercase tracking-wider">Deceptive vectors lead to instant capital extraction.</p>
+                                    
+                                    <div className="mt-2 pt-2 border-t border-border flex justify-between items-end relative z-10">
+                                        <div>
+                                            <div className="text-[8px] text-muted-foreground font-mono uppercase tracking-widest mb-0.5">Est. Capital Loss</div>
+                                            <div className="text-xl font-light text-foreground font-mono tracking-tighter leading-none">$12.7M</div>
+                                        </div>
+                                        <div className="text-[9px] text-red-500/80 uppercase font-mono tracking-widest">3,200+ Cases</div>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Right Col: Active Step Details & Terminal */}
-                            <div className="w-full lg:w-2/3 flex flex-col justify-start">
-                                <div className="w-full min-h-[280px] relative">
+                            <div className="w-full lg:w-2/3 flex flex-col justify-start h-full">
+                                <div className="w-full h-full relative flex-1 min-h-0">
                                     <AnimatePresence mode="wait">
                                         <m.div
                                             key={`${selected}-${activeStep}`}
@@ -232,68 +259,47 @@ function AnalysisSection() {
                                             animate={{ opacity: 1, x: 0 }}
                                             exit={{ opacity: 0, x: -10 }}
                                             transition={{ duration: 0.25, ease: "easeInOut" }}
-                                            className="h-full flex flex-col justify-start bg-[#111] border border-white/5 rounded-2xl p-5 lg:p-6 relative overflow-hidden shadow-inner"
+                                            className="h-full flex flex-col justify-start bg-card border border-border rounded-none p-5 lg:p-6 relative overflow-hidden shadow-2xl transition-colors duration-700"
                                         >
-                                            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+                                            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/5 to-transparent pointer-events-none"></div>
 
-                                            <div className="flex items-center justify-between mb-4">
-                                                <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${theme.bg} border ${theme.border} ${theme.text} text-[10px] font-mono font-bold uppercase tracking-widest shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]`}>
-                                                    System Process: {selectedPlaybook.steps[activeStep].type}
+                                            <div className="flex items-center justify-between mb-4 shrink-0">
+                                                <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-none border border-border ${theme.text} text-[9px] font-mono uppercase tracking-widest bg-background/50`}>
+                                                    Process: {selectedPlaybook.steps[activeStep].type}
                                                 </div>
                                             </div>
 
-                                            <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 leading-tight tracking-tight drop-shadow-sm">
+                                            <h3 className="text-lg sm:text-xl font-bold text-foreground mb-2 leading-tight tracking-wide shrink-0">
                                                 {selectedPlaybook.steps[activeStep].title}
                                             </h3>
 
-                                            <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-6">
+                                            <p className="text-muted-foreground text-xs sm:text-sm font-light leading-relaxed mb-6 shrink-0">
                                                 {selectedPlaybook.steps[activeStep].description}
                                             </p>
 
-                                            {/* Simulated Terminal Readout */}
-                                            <div className="mt-auto w-full bg-[#050505] border border-white/5 rounded-xl p-4 font-mono text-xs sm:text-sm text-gray-500 overflow-hidden relative shadow-[inset_0_10px_30px_-10px_rgba(0,0,0,1)]">
-                                                <div className={`absolute top-0 left-0 w-1 h-full bg-gradient-to-b ${theme.line} opacity-50`}></div>
-                                                <div className="flex items-center gap-2 opacity-50 mb-2 border-b border-white/5 pb-2">
-                                                    <div className="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
-                                                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
-                                                    <div className="w-2.5 h-2.5 rounded-full bg-green-500/50"></div>
-                                                    <span className="text-[9px] uppercase tracking-widest ml-2">Terminal Access_</span>
+                                            {/* Simulated Terminal Readout (Sharp Minimal) */}
+                                            <div className="w-full bg-[#0a0a0a] border border-border rounded-none p-5 font-mono text-[10px] sm:text-xs text-gray-500 overflow-hidden relative flex-1 min-h-0 flex flex-col">
+                                                <div className={`absolute top-0 left-0 w-0.5 h-full bg-gradient-to-b ${theme.line} opacity-50`}></div>
+                                                <div className="flex items-center gap-2 opacity-50 mb-3 border-b border-white/10 pb-2 shrink-0">
+                                                    <div className="w-1.5 h-1.5 rounded-none bg-red-500/50"></div>
+                                                    <div className="w-1.5 h-1.5 rounded-none bg-yellow-500/50"></div>
+                                                    <div className="w-1.5 h-1.5 rounded-none bg-green-500/50"></div>
+                                                    <span className="text-[8px] uppercase tracking-widest ml-2 text-white/40">Terminal_Access.exe</span>
                                                 </div>
-                                                <pre className="whitespace-pre-wrap pl-3 leading-relaxed font-bold text-gray-400">
-                                                    {terminalOutputs[selected][activeStep].split('\n').map((line, idx) => (
-                                                        <div key={idx} className="flex gap-2">
-                                                            <span className="text-gray-700 opacity-50">~%</span>
-                                                            <span className={line.includes('STATUS:') ? theme.text : ''}>{line.replace('> ', '')}</span>
-                                                        </div>
-                                                    ))}
-                                                </pre>
+                                                <div className="overflow-y-auto overflow-x-hidden flex-1 scrollbar-hide">
+                                                    <pre className="whitespace-pre-wrap pl-2 leading-relaxed font-light text-gray-300">
+                                                        {terminalOutputs[selected][activeStep].split('\n').map((line, idx) => (
+                                                            <div key={idx} className="flex gap-3 mb-1">
+                                                                <span className="text-gray-600 select-none">~%</span>
+                                                                <span className={line.includes('STATUS:') ? theme.text : ''}>{line.replace('> ', '')}</span>
+                                                            </div>
+                                                        ))}
+                                                    </pre>
+                                                </div>
                                             </div>
                                         </m.div>
                                     </AnimatePresence>
                                 </div>
-                            </div>
-                        </div>
-
-                        {/* Threat Level Radar Module */}
-                        <div className="w-full rounded-2xl border border-red-500/20 bg-gradient-to-br from-red-950/20 via-black to-red-950/20 p-5 sm:p-6 relative overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-4 group hover:border-red-500/40 transition-colors duration-500 shadow-[inset_0_1px_0_rgba(255,255,255,0.05),0_10px_30px_-10px_rgba(239,68,68,0.1)] mt-auto">
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 blur-[40px] rounded-full animate-pulse group-hover:opacity-100 opacity-50 transition-opacity translate-x-1/4 -translate-y-1/4"></div>
-
-                            <div className="relative z-10 w-full sm:w-auto text-center sm:text-left flex-1 border-r-0 sm:border-r border-white/10 pr-0 sm:pr-8">
-                                <div className="flex items-center justify-center sm:justify-start gap-2 mb-2">
-                                    <div className="relative flex h-2 w-2">
-                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 shadow-[0_0_8px_rgba(239,68,68,1)]"></span>
-                                    </div>
-                                    <div className="text-[10px] sm:text-xs font-mono text-red-500 tracking-widest uppercase font-bold drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]">Alert: Threat Recognized</div>
-                                </div>
-                                <h4 className="text-lg sm:text-xl font-bold text-white group-hover:text-red-100 transition-colors tracking-tight">The Inevitable Outcome</h4>
-                                <p className="text-gray-400 text-xs sm:text-sm mt-1 leading-relaxed font-medium">Both vectors rely on deception to force irreversible transactions. Attackers vanish with capital instantly.</p>
-                            </div>
-
-                            <div className="relative z-10 text-center sm:text-right w-full sm:w-auto pt-4 sm:pt-0 pl-0 sm:pl-8 shrink-0">
-                                <div className="text-[10px] sm:text-xs text-gray-500 font-bold uppercase tracking-widest mb-1">Estimated Capital Loss</div>
-                                <div className="text-3xl sm:text-4xl font-bold bg-gradient-to-br from-white via-red-200 to-white bg-clip-text text-transparent font-mono tracking-tighter drop-shadow-md">$12.7M</div>
-                                <div className="text-xs font-bold text-red-500/80 uppercase font-mono tracking-widest drop-shadow-[0_2px_4px_rgba(239,68,68,0.3)] mt-1">3,200+ Cases</div>
                             </div>
                         </div>
 
