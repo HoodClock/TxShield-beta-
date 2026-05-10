@@ -149,7 +149,7 @@ function AnalysisSection() {
                     </m.div>
 
                     {/* Minimalist Chain Selectors (Tabs) */}
-                    <div className="flex flex-row gap-4 items-center shrink-0">
+                    <div className="flex flex-col sm:flex-row gap-4 items-center shrink-0 w-full sm:w-auto">
                         {playbooks.map((pb) => {
                             const isSelected = selected === pb.id;
                             const classes = getThemeClasses(pb.id, isSelected);
@@ -159,7 +159,7 @@ function AnalysisSection() {
                                     onClick={() => handlePlaybookChange(pb.id)}
                                     whileHover={{ y: -2 }}
                                     whileTap={{ scale: 0.98 }}
-                                    className={`group relative w-36 md:w-48 h-12 overflow-hidden bg-card border ${classes.border} rounded-none transition-all duration-500 flex items-center px-3`}
+                                    className={`group relative w-full sm:w-48 h-12 overflow-hidden bg-card border ${classes.border} rounded-none transition-all duration-500 flex items-center px-3`}
                                 >
                                     <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-transparent ${classes.bgGlow} transition-all duration-500 pointer-events-none`}></div>
                                     <div className={`absolute left-0 top-0 bottom-0 w-1 ${classes.accentBar} transition-all duration-300`}></div>

@@ -32,13 +32,13 @@ export default function ChainTicker() {
                 transition={{ ease: "linear", duration: 30, repeat: Infinity }}
             >
                 {tickerItems.map((chain, index) => (
-                    <div key={index} className="flex items-center gap-3 px-6 sm:px-8 shrink-0">
+                    <div key={index} className="flex items-center gap-3 px-4 sm:px-8 shrink-0">
                         <span className="text-muted-foreground font-mono text-[10px] tracking-[0.2em] hidden sm:block">PROTECTING</span>
                         <div className="flex items-center gap-2">
                             {chain.icon}
                             <span className="text-foreground font-mono text-[10px] sm:text-xs tracking-[0.2em] font-bold">{chain.name}</span>
                         </div>
-                        <span className="text-cyan-500/30 ml-2 sm:ml-4 font-mono text-[10px]">///</span>
+                        <span className="text-cyan-500/30 ml-1 sm:ml-4 font-mono text-[10px]">///</span>
                     </div>
                 ))}
             </m.div>
