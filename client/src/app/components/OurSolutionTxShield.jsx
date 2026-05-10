@@ -288,11 +288,11 @@ function OurSolutionTxShield() {
 			</div>
         </div>
 
-        {/* Main Content Grid: 3 Columns */}
-        <div className="flex flex-col lg:flex-row gap-8 items-center justify-center w-full flex-1 min-h-0 pt-4 pb-8">
+        {/* Main Content Grid: 2 Columns */}
+        <div className="flex flex-col lg:flex-row gap-8 items-stretch justify-center w-full flex-1 min-h-0 pt-4 pb-8">
 
           {/* LEFT COLUMN: Feature List */}
-          <div className="w-full lg:w-[320px] xl:w-[350px] shrink-0 h-[300px] lg:h-[480px] flex flex-col bg-background border border-border relative overflow-hidden shadow-2xl rounded-xl transition-colors duration-700">
+          <div className="w-full lg:flex-1 lg:max-w-[400px] h-[300px] lg:h-[480px] flex flex-col bg-background border border-border relative overflow-hidden shadow-2xl rounded-xl transition-colors duration-700">
 			<div className="h-10 bg-card border-b border-border flex items-center px-4 justify-between shrink-0">
 				<span className="text-[10px] font-mono text-cyan-400/80 uppercase tracking-widest">Active Filters</span>
 				<span className="text-[10px] font-mono text-muted-foreground">{activeSection.items.length} Modules</span>
@@ -332,49 +332,27 @@ function OurSolutionTxShield() {
 			</div>
           </div>
 
-          {/* CENTER COLUMN: Mempool Visualizer (Attack Map) */}
-          <div className="flex-1 w-full flex flex-col justify-center items-center relative h-[350px] lg:h-[480px] shrink-0 bg-background border border-border rounded-xl shadow-2xl transition-colors duration-700 overflow-hidden">
-            
-            {/* Header / Tabs */}
-            <div className="absolute top-0 left-0 w-full h-10 border-b border-border bg-card/50 backdrop-blur-md flex items-center justify-between px-4 z-20">
-              <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_5px_#22c55e]"></span>
-                Live Mempool
-              </span>
-              <div className="flex gap-2 sm:gap-3 pointer-events-auto">
-                 {SECTIONS.map((section, idx) => {
-                    const isActiveTab = activeIndex === idx;
-                    let tabColor = "text-cyan-400 border-cyan-400";
-                    if (idx === 0) tabColor = "text-purple-400 border-purple-400";
-                    if (idx === 1) tabColor = "text-red-400 border-red-400";
-                    
-                    return (
-                      <button 
-                        key={section.key} 
-                        onClick={() => handleSectionClick(idx)}
-                        className={`text-[9px] sm:text-[10px] font-mono uppercase tracking-wider transition-colors px-2 py-1 border-b-2 ${isActiveTab ? `${tabColor} font-bold` : 'text-muted-foreground hover:text-foreground border-transparent'}`}
-                      >
-                        {section.title.split(' ')[0]}
-                      </button>
-                    )
-                 })}
-              </div>
-            </div>
-
-            <MempoolVisualizer activeFeature={hoveredFeature} activeIndex={activeIndex} />
-            
-            {/* Ambient Background Glow */}
-            <div className="absolute inset-0 bg-primary/5 blur-[100px] rounded-full pointer-events-none z-0" />
-          </div>
-
           {/* RIGHT COLUMN: Terminal Data Panes */}
-          <div className="w-full lg:w-[320px] xl:w-[350px] shrink-0 h-[300px] lg:h-[480px] bg-background border border-border flex flex-col relative overflow-hidden shadow-2xl rounded-xl transition-colors duration-700">
-			{/* Top Bar (Terminal style) */}
+          <div className="w-full lg:flex-1 lg:max-w-[400px] h-[300px] lg:h-[480px] bg-background border border-border flex flex-col relative overflow-hidden shadow-2xl rounded-xl transition-colors duration-700">
+			{/* Top Bar (Terminal style with Tabs) */}
 			<div className="h-10 bg-card border-b border-border flex items-center px-4 justify-between shrink-0">
-				<div className="flex gap-1.5">
-					<div className="w-2.5 h-2.5 bg-muted-foreground/20"></div>
-					<div className="w-2.5 h-2.5 bg-muted-foreground/20"></div>
-					<div className="w-2.5 h-2.5 bg-muted-foreground/20"></div>
+				<div className="flex gap-2 sm:gap-3 pointer-events-auto">
+					 {SECTIONS.map((section, idx) => {
+						const isActiveTab = activeIndex === idx;
+						let tabColor = "text-cyan-400 border-cyan-400";
+						if (idx === 0) tabColor = "text-purple-400 border-purple-400";
+						if (idx === 1) tabColor = "text-red-400 border-red-400";
+						
+						return (
+						  <button 
+							key={section.key} 
+							onClick={() => handleSectionClick(idx)}
+							className={`text-[9px] sm:text-[10px] font-mono uppercase tracking-wider transition-colors px-2 py-1 border-b-2 ${isActiveTab ? `${tabColor} font-bold` : 'text-muted-foreground hover:text-foreground border-transparent'}`}
+						  >
+							{section.title.split(' ')[0]}
+						  </button>
+						)
+					 })}
 				</div>
 				<span className="text-[9px] font-mono text-muted-foreground uppercase tracking-widest">sys/analyzer/output</span>
 			</div>

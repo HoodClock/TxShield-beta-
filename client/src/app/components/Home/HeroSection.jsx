@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { m, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { MdArrowRightAlt } from "react-icons/md";
 import HeroBackground from "../backgrounds/HeroBackground";
@@ -60,49 +59,39 @@ function HeroSection() {
         className="relative z-10 w-full px-8 md:px-16 flex flex-col items-center justify-center -mt-24 pointer-events-none text-center"
       >
 
-        {/* Typography */}
+        {/* Main Heading with Faint TX Behind */}
         <m.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-          style={{ translateZ: 50 }}
-          className="flex flex-col items-center gap-4 mb-4"
-        >
-          <m.div
-            whileHover={{ scale: 1.1, boxShadow: "0px 0px 40px rgba(168,85,247,0.4)" }}
-            className="relative w-12 h-12 md:w-16 md:h-16 flex items-center justify-center rounded-full bg-card border border-primary/30 shadow-[0_0_20px_rgba(168,85,247,0.15)] mb-2 cursor-pointer pointer-events-auto transition-all duration-300"
-          >
-            <Image
-              src="/Images/logo.png"
-              width={64}
-              height={64}
-              alt="Logo"
-              priority
-              className="object-contain w-8 h-8 md:w-10 md:h-10 drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]"
-            />
-          </m.div>
-          <span className="text-primary font-mono tracking-[0.3em] text-xs sm:text-sm md:text-base uppercase">TxShield Protocol</span>
-        </m.div>
-
-        <m.h1
-          className="text-[4rem] sm:text-[6rem] md:text-[8rem] lg:text-[9rem] xl:text-[10rem] font-bold tracking-tight leading-none pointer-events-auto cursor-default"
+          className="relative select-none"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           style={{ translateZ: 100 }}
-          whileHover={{ textShadow: "0px 0px 30px rgba(168,85,247,0.8)" }}
         >
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#a855f7] to-[#3b82f6]">SHIELD</span>
-        </m.h1>
+          {/* Faint TX behind SHIELD - larger and positioned behind */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <span className="text-[5rem] sm:text-[8rem] md:text-[11rem] lg:text-[13rem] xl:text-[15rem] font-bold tracking-tight leading-none text-transparent bg-clip-text bg-gradient-to-r from-[#a855f7] to-[#3b82f6] opacity-10 select-none -z-10">
+              TX
+            </span>
+          </div>
+          
+          {/* SHIELD text on top */}
+          <m.h1
+            className="text-[4rem] sm:text-[6rem] md:text-[8rem] lg:text-[9rem] xl:text-[10rem] font-bold tracking-tight leading-none pointer-events-auto cursor-default select-none relative z-10"
+            whileHover={{ textShadow: "0px 0px 30px rgba(168,85,247,0.8)" }}
+          >
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#a855f7] to-[#3b82f6]">SHIELD</span>
+          </m.h1>
+        </m.div>
 
+        {/* Tagline */}
         <m.div
-          className="text-muted-foreground text-sm sm:text-lg md:text-xl font-light tracking-[0.2em] uppercase mt-8 sm:mt-10 max-w-3xl"
+          className="text-muted-foreground text-sm sm:text-lg md:text-xl font-light tracking-[0.2em] uppercase mt-8 sm:mt-10 max-w-3xl select-none"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.5 }}
           style={{ translateZ: 30 }}
         >
-          <span>Every Transaction. Uncompromised.</span>
+          <span>Every Transaction</span>
         </m.div>
 
       </m.div>
