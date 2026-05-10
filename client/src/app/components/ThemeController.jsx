@@ -1,9 +1,27 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { FiSun, FiMoon, FiAlertTriangle, FiZap } from "react-icons/fi";
 import { useUI } from "../provider/UIProvider";
+
+const APPRECIATION_LINES = [
+  "Welcome back to the dark side! We missed you.",
+  "Grateful for your return to the void. Your eyes are safe now.",
+  "Ah, back to safety. We knew you couldn't stay away.",
+  "Thank you for returning to stealth mode. Operational efficiency restored.",
+  "The void appreciates your loyalty.",
+  "Wise choice. Your retinas owe you one.",
+];
+
+const LIGHT_MODE_LINES = [
+  "Are you sure about turning the lights on?? It may be blinding... proceed with extreme caution.",
+  "Warning: Activating flashbang mode. Protect your eyes.",
+  "Entering the blinding abyss of light mode. Are you prepared?",
+  "The light mode is a trap! But if you insist, click confirm.",
+  "Preparing to simulate the surface of the sun. Proceed?",
+  "You are about to betray the dark side. Are you absolutely certain?",
+];
 
 export default function ThemeController() {
   const { 
@@ -15,6 +33,33 @@ export default function ThemeController() {
     cancelThemeChange 
   } = useUI();
 
+  const [showToast, setShowToast] = useState(false);
+  const [toastLine, setToastLine] = useState("");
+  const [modalMessage, setModalMessage] = useState("");
+  const prevTheme = useRef(theme);
+
+  useEffect(() => {
+    if (prevTheme.current === "light" && theme === "dark") {
+      const randomIndex = Math.floor(Math.random() * APPRECIATION_LINES.length);
+      setToastLine(APPRECIATION_LINES[randomIndex]);
+      setShowToast(true);
+      
+      const timer = setTimeout(() => {
+        setShowToast(false);
+      }, 2000); // 2 seconds as requested
+      
+      return () => clearTimeout(timer);
+    }
+    prevTheme.current = theme;
+  }, [theme]);
+
+  useEffect(() => {
+    if (isThemeModalOpen && pendingTheme === "light") {
+      const randomIndex = Math.floor(Math.random() * LIGHT_MODE_LINES.length);
+      setModalMessage(LIGHT_MODE_LINES[randomIndex]);
+    }
+  }, [isThemeModalOpen, pendingTheme]);
+
   const isSwitchingToLight = pendingTheme === "light";
 
   return (
@@ -23,7 +68,7 @@ export default function ThemeController() {
       <m.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="fixed top-8 right-28 z-[100] flex items-center"
+        className="fixed top-8 right-28 z-[100] flex flex-col items-end gap-2"
       >
         <div 
           onClick={() => requestThemeChange(theme === "dark" ? "light" : "dark")}
@@ -50,6 +95,23 @@ export default function ThemeController() {
             )}
           </m.div>
         </div>
+
+        {/* Humor alert message */}
+        <AnimatePresence>
+          {showToast && (
+            <m.div
+              initial={{ opacity: 0, y: -5 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -5 }}
+              className="flex items-center gap-1.5 text-right"
+            >
+              <FiZap className="w-3 h-3 text-purple-500 animate-pulse" />
+              <span className="font-mono text-[10px] text-foreground uppercase tracking-wider max-w-[200px]">
+                {toastLine}
+              </span>
+            </m.div>
+          )}
+        </AnimatePresence>
       </m.div>
 
       {/* Confirmation Modal */}
@@ -90,7 +152,7 @@ export default function ThemeController() {
 
                 <p className="font-mono text-xs text-muted-foreground leading-relaxed mb-8 uppercase tracking-wider">
                   {isSwitchingToLight 
-                    ? "Are you sure about turning the lights on?? It may be blinding... proceed with extreme caution."
+                    ? modalMessage || "Are you sure about turning the lights on?? It may be blinding... proceed with extreme caution."
                     : "Welcome back to the dark side! Your eyes will thank you for returning to the void."
                   }
                 </p>

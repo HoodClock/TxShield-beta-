@@ -68,8 +68,9 @@ export default function HeroBackground({ className = "" }) {
                     const p2 = particles[j];
                     const dx = p.x - p2.x;
                     const dy = p.y - p2.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 180) {
+                    const distSq = dx * dx + dy * dy;
+                    if (distSq < 180 * 180) {
+                        const dist = Math.sqrt(distSq);
                         ctx.beginPath();
                         ctx.strokeStyle = `rgba(59, 130, 246, ${0.4 * (1 - dist / 180)})`; // Blue-500
                         ctx.moveTo(p.x, p.y);
@@ -81,8 +82,9 @@ export default function HeroBackground({ className = "" }) {
                 // Connect particles to mouse
                 const dxMouse = p.x - mouse.x;
                 const dyMouse = p.y - mouse.y;
-                const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
-                if (distMouse < 220) { // Increased from 150
+                const distMouseSq = dxMouse * dxMouse + dyMouse * dyMouse;
+                if (distMouseSq < 220 * 220) {
+                    const distMouse = Math.sqrt(distMouseSq);
                     ctx.beginPath();
                     ctx.strokeStyle = `rgba(168, 85, 247, ${0.6 * (1 - distMouse / 220)})`; // purple-500
                     ctx.moveTo(p.x, p.y);

@@ -71,12 +71,12 @@ export default function ApiRefClient() {
     };
 
     return (
-        <div className="bg-black text-white h-screen w-screen overflow-hidden relative flex flex-col">
+        <div className="bg-background text-foreground h-screen w-screen overflow-hidden relative flex flex-col transition-colors duration-700">
 
             {/* Ambient background glows — matches site-wide pattern */}
-            <div className="absolute inset-0 z-0 pointer-events-none">
-                <div className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] bg-cyan-900/10 rounded-full blur-[120px]"></div>
-                <div className="absolute bottom-1/4 right-1/4 w-[40rem] h-[40rem] bg-purple-900/10 rounded-full blur-[120px]"></div>
+            <div className="absolute inset-0 z-0 pointer-events-none opacity-50 dark:opacity-100">
+                <div className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] bg-cyan-900/10 dark:bg-cyan-900/20 rounded-full blur-[120px]"></div>
+                <div className="absolute bottom-1/4 right-1/4 w-[40rem] h-[40rem] bg-purple-900/10 dark:bg-purple-900/20 rounded-full blur-[120px]"></div>
             </div>
 
             <div className="relative z-10 flex flex-col h-full w-full px-6 sm:px-10 lg:px-16 pt-10 pb-8">
@@ -85,20 +85,20 @@ export default function ApiRefClient() {
                 <div className="shrink-0 mb-6 pr-16">
                     <h1 className="font-clash font-extrabold uppercase leading-none tracking-tight"
                         style={{ fontSize: "clamp(3.5rem, 9vw, 8rem)" }}>
-                        <span className="text-white">API </span>
+                        <span className="text-foreground">API </span>
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">ACCESS</span>
                     </h1>
                     <div className="flex items-center gap-4 mt-3">
-                        <div className="h-[1px] w-12 bg-white/20"></div>
-                        <span className="font-mono text-[11px] text-gray-500 tracking-[0.3em] uppercase">
+                        <div className="h-[1px] w-12 bg-border"></div>
+                        <span className="font-mono text-[11px] text-muted-foreground tracking-[0.3em] uppercase">
                             Developer Terminal
                         </span>
-                        <div className="h-[1px] flex-1 max-w-[200px] bg-white/10"></div>
+                        <div className="h-[1px] flex-1 max-w-[200px] bg-border"></div>
                         <a
                             href="https://docs.txshield.xyz/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="font-mono text-[11px] text-gray-500 hover:text-white tracking-[0.2em] uppercase transition-colors flex items-center gap-1.5 group"
+                            className="font-mono text-[11px] text-muted-foreground hover:text-foreground tracking-[0.2em] uppercase transition-colors flex items-center gap-1.5 group"
                         >
                             Read Docs
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -112,13 +112,13 @@ export default function ApiRefClient() {
                 <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0">
 
                     {/* LEFT: Access Token Panel */}
-                    <div className="lg:w-[360px] xl:w-[400px] shrink-0 flex flex-col border border-white/10 overflow-hidden bg-black">
+                    <div className="lg:w-[360px] xl:w-[400px] shrink-0 flex flex-col border border-border overflow-hidden bg-card">
 
                         {/* Panel top bar */}
-                        <div className="h-9 border-b border-white/10 bg-purple-950/20 flex items-center px-4 justify-between shrink-0">
-                            <span className="font-mono text-[10px] text-purple-300/50 uppercase tracking-widest">Access Token</span>
-                            <span className={`font-mono text-[10px] uppercase tracking-widest flex items-center gap-1.5 ${isConnected ? 'text-cyan-500' : 'text-white/20'}`}>
-                                <span className={`w-1.5 h-1.5 ${isConnected ? 'bg-cyan-500 animate-pulse' : 'bg-white/20'}`}></span>
+                        <div className="h-9 border-b border-border bg-muted/50 flex items-center px-4 justify-between shrink-0">
+                            <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Access Token</span>
+                            <span className={`font-mono text-[10px] uppercase tracking-widest flex items-center gap-1.5 ${isConnected ? 'text-cyan-500' : 'text-muted-foreground'}`}>
+                                <span className={`w-1.5 h-1.5 ${isConnected ? 'bg-cyan-500 animate-pulse' : 'bg-muted-foreground'}`}></span>
                                 {isConnected ? 'Connected' : 'Disconnected'}
                             </span>
                         </div>
@@ -127,7 +127,7 @@ export default function ApiRefClient() {
 
                             {/* Wallet Connect */}
                             <div className="flex flex-col gap-2">
-                                <span className="font-mono text-[10px] text-white/30 uppercase tracking-widest">
+                                <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">
                                     Phase 01 — Connect Wallet
                                 </span>
                                 <div className="flex justify-start">
@@ -135,18 +135,18 @@ export default function ApiRefClient() {
                                 </div>
                             </div>
 
-                            <div className="h-[1px] w-full bg-white/5"></div>
+                            <div className="h-[1px] w-full bg-border"></div>
 
                             {/* Auth & Generate */}
                             <div className="flex flex-col gap-4">
-                                <span className="font-mono text-[10px] text-white/30 uppercase tracking-widest">
+                                <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">
                                     Phase 02 — Authenticate
                                 </span>
 
                                 {/* Not connected */}
                                 {!isConnected && (
-                                    <div className="border border-white/5 p-4 flex items-start gap-3">
-                                        <span className="font-mono text-[10px] text-white/20 uppercase tracking-widest leading-relaxed">
+                                    <div className="border border-border p-4 flex items-start gap-3">
+                                        <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest leading-relaxed">
                                             Status: Awaiting wallet connection to proceed with authentication.
                                         </span>
                                     </div>
@@ -155,7 +155,7 @@ export default function ApiRefClient() {
                                 {/* Fetching */}
                                 {isConnected && fetching && (
                                     <div className="flex justify-center py-6">
-                                        <div className="w-5 h-5 border border-white/30 border-t-white animate-spin"></div>
+                                        <div className="w-5 h-5 border border-border border-t-foreground animate-spin"></div>
                                     </div>
                                 )}
 
@@ -166,13 +166,13 @@ export default function ApiRefClient() {
                                         disabled={loading}
                                         whileHover={{ scale: loading ? 1 : 1.005 }}
                                         whileTap={{ scale: loading ? 1 : 0.995 }}
-                                        className="w-full py-3.5 border border-white/20 hover:border-white/50 bg-white/[0.03] hover:bg-white/[0.06] text-white font-mono text-xs tracking-[0.2em] uppercase transition-all relative overflow-hidden group focus:outline-none"
+                                        className="w-full py-3.5 border border-border hover:border-foreground/50 bg-foreground/[0.03] hover:bg-foreground/[0.06] text-foreground font-mono text-xs tracking-[0.2em] uppercase transition-all relative overflow-hidden group focus:outline-none"
                                     >
-                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-foreground/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                                         <span className="relative z-10 flex items-center justify-center gap-2">
                                             {loading ? (
                                                 <>
-                                                    <div className="w-3 h-3 border border-white/40 border-t-white animate-spin"></div>
+                                                    <div className="w-3 h-3 border border-border border-t-foreground animate-spin"></div>
                                                     Establishing Link...
                                                 </>
                                             ) : (
@@ -191,16 +191,16 @@ export default function ApiRefClient() {
                                             className="flex flex-col gap-2"
                                         >
                                             <div className="flex items-center justify-between">
-                                                <span className="font-mono text-[10px] text-white/30 uppercase tracking-widest flex items-center gap-2">
+                                                <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest flex items-center gap-2">
                                                     <span className="w-1.5 h-1.5 bg-cyan-500 animate-pulse shadow-[0_0_6px_rgba(34,211,238,0.6)]"></span>
                                                     Active Key
                                                 </span>
                                             </div>
-                                            <div className="flex items-stretch border border-white/10">
-                                                <span className="flex-1 font-mono text-xs text-gray-400 px-4 py-3 truncate">{apiKey}</span>
+                                            <div className="flex items-stretch border border-border">
+                                                <span className="flex-1 font-mono text-xs text-foreground/80 px-4 py-3 truncate">{apiKey}</span>
                                                 <button
                                                     onClick={handleCopy}
-                                                    className="shrink-0 px-3 border-l border-white/10 hover:bg-white/5 text-white/30 hover:text-white transition-all"
+                                                    className="shrink-0 px-3 border-l border-border hover:bg-foreground/5 text-muted-foreground hover:text-foreground transition-all"
                                                     title="Copy"
                                                 >
                                                     {copied ? (
@@ -214,7 +214,7 @@ export default function ApiRefClient() {
                                                     )}
                                                 </button>
                                             </div>
-                                            <p className="font-mono text-[10px] text-white/20 tracking-wider">Header: x-api-key</p>
+                                            <p className="font-mono text-[10px] text-muted-foreground tracking-wider">Header: x-api-key</p>
                                         </m.div>
                                     </AnimatePresence>
                                 )}
@@ -226,48 +226,48 @@ export default function ApiRefClient() {
                     <div className="flex-1 flex flex-col gap-4 min-h-0 overflow-hidden">
 
                         {/* Integration Steps */}
-                        <div className="border border-white/10 shrink-0">
-                            <div className="h-9 border-b border-white/10 bg-blue-950/20 flex items-center px-4 justify-between">
-                                <span className="font-mono text-[10px] text-blue-300/50 uppercase tracking-widest">Integration Protocol</span>
-                                <span className="font-mono text-[10px] text-white/20">3 phases</span>
+                        <div className="border border-border shrink-0 bg-card">
+                            <div className="h-9 border-b border-border bg-muted/50 flex items-center px-4 justify-between">
+                                <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Integration Protocol</span>
+                                <span className="font-mono text-[10px] text-muted-foreground">3 phases</span>
                             </div>
-                            <div className="flex flex-row divide-x divide-white/5">
+                            <div className="flex flex-row divide-x divide-border">
                                 {STEPS.map((step, idx) => (
-                                    <div key={idx} className="flex-1 p-4 flex flex-col gap-2 hover:bg-white/[0.02] transition-colors group">
+                                    <div key={idx} className="flex-1 p-4 flex flex-col gap-2 hover:bg-foreground/[0.02] transition-colors group">
                                         <div className="flex items-center gap-2">
-                                            <span className="font-mono text-[10px] text-white/20 tracking-widest">{step.num}</span>
-                                            <span className="font-mono text-[10px] text-white border border-white/20 px-2 py-0.5 tracking-widest group-hover:border-cyan-500/40 group-hover:text-cyan-400 transition-colors">
+                                            <span className="font-mono text-[10px] text-muted-foreground tracking-widest">{step.num}</span>
+                                            <span className="font-mono text-[10px] text-foreground border border-border px-2 py-0.5 tracking-widest group-hover:border-cyan-500/40 group-hover:text-cyan-400 transition-colors">
                                                 {step.label}
                                             </span>
                                         </div>
-                                        <p className="font-mono text-[11px] text-white/40 leading-relaxed group-hover:text-white/60 transition-colors">{step.text}</p>
+                                        <p className="font-mono text-[11px] text-muted-foreground leading-relaxed group-hover:text-foreground transition-colors">{step.text}</p>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
                         {/* Endpoints */}
-                        <div className="border border-white/10 flex flex-col flex-1 min-h-0 overflow-hidden">
-                            <div className="h-9 border-b border-white/10 bg-purple-950/10 flex items-center px-4 justify-between shrink-0">
-                                <span className="font-mono text-[10px] text-purple-300/40 uppercase tracking-widest">Available Endpoints</span>
-                                <span className="font-mono text-[10px] text-white/20">v1.0</span>
+                        <div className="border border-border flex flex-col flex-1 min-h-0 overflow-hidden bg-card">
+                            <div className="h-9 border-b border-border bg-muted/30 flex items-center px-4 justify-between shrink-0">
+                                <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Available Endpoints</span>
+                                <span className="font-mono text-[10px] text-muted-foreground">v1.0</span>
                             </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 divide-x-0 sm:divide-x divide-white/5 border-t-0 overflow-y-auto flex-1">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 divide-x-0 sm:divide-x divide-border border-t-0 overflow-y-auto flex-1">
                                 {ENDPOINTS.map((ep, idx) => (
                                     <m.div
                                         key={idx}
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         transition={{ delay: idx * 0.06 }}
-                                        className={`p-5 flex flex-col gap-2 hover:bg-purple-950/20 transition-colors group cursor-crosshair border-b border-white/5`}
+                                        className={`p-5 flex flex-col gap-2 hover:bg-muted/50 transition-colors group cursor-crosshair border-b border-border`}
                                     >
                                         <div className="flex items-center gap-3">
-                                            <span className="font-mono text-[10px] font-bold text-white/50 border border-white/10 px-2 py-0.5 tracking-widest group-hover:border-white/30 group-hover:text-white transition-all">
+                                            <span className="font-mono text-[10px] font-bold text-muted-foreground border border-border px-2 py-0.5 tracking-widest group-hover:border-foreground group-hover:text-foreground transition-all">
                                                 {ep.method}
                                             </span>
-                                            <span className="font-mono text-xs text-white/80 group-hover:text-white transition-colors">{ep.path}</span>
+                                            <span className="font-mono text-xs text-foreground/80 group-hover:text-foreground transition-colors">{ep.path}</span>
                                         </div>
-                                        <p className="font-mono text-[11px] text-white/25 group-hover:text-white/50 transition-colors pl-[58px]">{ep.desc}</p>
+                                        <p className="font-mono text-[11px] text-muted-foreground group-hover:text-foreground/70 transition-colors pl-[58px]">{ep.desc}</p>
                                     </m.div>
                                 ))}
                             </div>
