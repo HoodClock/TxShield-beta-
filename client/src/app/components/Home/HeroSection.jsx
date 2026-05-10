@@ -69,7 +69,7 @@ function HeroSection() {
         >
           {/* Faint TX behind SHIELD - larger and positioned behind */}
           <m.div 
-            className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            className="absolute inset-0 hidden sm:flex items-center justify-center pointer-events-none"
             style={{ translateZ: -100 }}
           >
             <span className="text-[5rem] sm:text-[8rem] md:text-[11rem] lg:text-[13rem] xl:text-[15rem] font-bold tracking-tight leading-none text-transparent bg-clip-text bg-gradient-to-r from-[#a855f7] to-[#3b82f6] opacity-10 select-none -z-10">
@@ -79,7 +79,7 @@ function HeroSection() {
           
           {/* SHIELD text on top */}
           <m.h1
-            className="text-[4rem] sm:text-[6rem] md:text-[8rem] lg:text-[9rem] xl:text-[10rem] font-bold tracking-tight leading-none pointer-events-auto cursor-default select-none relative z-10"
+            className="text-[3.5rem] sm:text-[6rem] md:text-[8rem] lg:text-[9rem] xl:text-[10rem] font-bold tracking-tight leading-none pointer-events-auto cursor-default select-none relative z-10"
             whileHover={{ textShadow: "0px 0px 30px rgba(168,85,247,0.8)" }}
           >
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#a855f7] to-[#3b82f6]">SHIELD</span>
@@ -121,7 +121,7 @@ function HeroSection() {
         </div>
 
         {/* Center: Sharp Links */}
-        <div className="flex items-center justify-center gap-6 md:gap-12 text-xs sm:text-sm font-mono tracking-widest uppercase">
+        <div className="flex items-center justify-center gap-10 md:gap-12 text-xs sm:text-sm font-mono tracking-widest uppercase">
           <Link href="/playbook" className="text-muted-foreground hover:text-primary transition-colors">
             Playbook
           </Link>

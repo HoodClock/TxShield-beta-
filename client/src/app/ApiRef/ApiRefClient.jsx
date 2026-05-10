@@ -231,7 +231,7 @@ export default function ApiRefClient() {
                                 <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Integration Protocol</span>
                                 <span className="font-mono text-[10px] text-muted-foreground">3 phases</span>
                             </div>
-                            <div className="flex flex-row divide-x divide-border">
+                            <div className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-border">
                                 {STEPS.map((step, idx) => (
                                     <div key={idx} className="flex-1 p-4 flex flex-col gap-2 hover:bg-foreground/[0.02] transition-colors group">
                                         <div className="flex items-center gap-2">

@@ -69,10 +69,10 @@ export default function HeroBackground({ className = "" }) {
                     const dx = p.x - p2.x;
                     const dy = p.y - p2.y;
                     const distSq = dx * dx + dy * dy;
-                    if (distSq < 180 * 180) {
-                        const dist = Math.sqrt(distSq);
+                    const maxDistSq = 180 * 180;
+                    if (distSq < maxDistSq) {
                         ctx.beginPath();
-                        ctx.strokeStyle = `rgba(59, 130, 246, ${0.4 * (1 - dist / 180)})`; // Blue-500
+                        ctx.strokeStyle = `rgba(59, 130, 246, ${0.4 * (1 - distSq / maxDistSq)})`; // Blue-500
                         ctx.moveTo(p.x, p.y);
                         ctx.lineTo(p2.x, p2.y);
                         ctx.stroke();
@@ -83,10 +83,10 @@ export default function HeroBackground({ className = "" }) {
                 const dxMouse = p.x - mouse.x;
                 const dyMouse = p.y - mouse.y;
                 const distMouseSq = dxMouse * dxMouse + dyMouse * dyMouse;
-                if (distMouseSq < 220 * 220) {
-                    const distMouse = Math.sqrt(distMouseSq);
+                const maxMouseDistSq = 220 * 220;
+                if (distMouseSq < maxMouseDistSq) {
                     ctx.beginPath();
-                    ctx.strokeStyle = `rgba(168, 85, 247, ${0.6 * (1 - distMouse / 220)})`; // purple-500
+                    ctx.strokeStyle = `rgba(168, 85, 247, ${0.6 * (1 - distMouseSq / maxMouseDistSq)})`; // purple-500
                     ctx.moveTo(p.x, p.y);
                     ctx.lineTo(mouse.x, mouse.y);
                     ctx.stroke();
