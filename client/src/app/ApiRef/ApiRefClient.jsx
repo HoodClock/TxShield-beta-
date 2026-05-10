@@ -164,9 +164,9 @@ export default function ApiRefClient() {
                                     <m.button
                                         onClick={handleGenerateKey}
                                         disabled={loading}
-                                        whileHover={{ scale: loading ? 1 : 1.005 }}
-                                        whileTap={{ scale: loading ? 1 : 0.995 }}
-                                        className="w-full py-3.5 border border-border hover:border-foreground/50 bg-foreground/[0.03] hover:bg-foreground/[0.06] text-foreground font-mono text-xs tracking-[0.2em] uppercase transition-all relative overflow-hidden group focus:outline-none"
+                                        whileHover={{ scale: loading ? 1 : 1.01 }}
+                                        whileTap={{ scale: loading ? 1 : 0.99 }}
+                                        className="w-full py-3.5 bg-gradient-to-r from-[#a855f7] to-[#3b82f6] text-white font-mono text-xs tracking-[0.2em] uppercase transition-all relative overflow-hidden group focus:outline-none shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(168,85,247,0.5)] border-none"
                                     >
                                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-foreground/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                                         <span className="relative z-10 flex items-center justify-center gap-2">
