@@ -25,12 +25,16 @@ body {
     transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s ease;
 }
 
-.custom-cursor-active,
-.custom-cursor-active * {
-  cursor: none !important;
+/* Hide default cursor on devices with a mouse/trackpad (Laptops/PCs) */
+@media (pointer: fine) {
+  .custom-cursor-active,
+  .custom-cursor-active * {
+    cursor: none !important;
+  }
 }
 
-@media (max-width: 768px) {
+/* Fallback to restore default cursor on touch devices (Phones/Tablets) */
+@media (pointer: coarse) {
   .custom-cursor-active,
   .custom-cursor-active * {
     cursor: auto !important;
