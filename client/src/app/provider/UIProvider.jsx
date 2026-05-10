@@ -18,8 +18,17 @@ export function UIProvider({ children }) {
   }, []);
 
   const requestThemeChange = (newTheme) => {
-    setPendingTheme(newTheme);
-    setIsThemeModalOpen(true);
+    if (newTheme === "dark") {
+      setTheme("dark");
+      localStorage.setItem("theme", "dark");
+      document.documentElement.classList.remove("light", "dark");
+      document.documentElement.classList.add("dark");
+      setIsThemeModalOpen(false);
+      setPendingTheme(null);
+    } else {
+      setPendingTheme(newTheme);
+      setIsThemeModalOpen(true);
+    }
   };
 
   const confirmThemeChange = () => {

@@ -68,11 +68,14 @@ function HeroSection() {
           style={{ translateZ: 100 }}
         >
           {/* Faint TX behind SHIELD - larger and positioned behind */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <m.div 
+            className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            style={{ translateZ: -100 }}
+          >
             <span className="text-[5rem] sm:text-[8rem] md:text-[11rem] lg:text-[13rem] xl:text-[15rem] font-bold tracking-tight leading-none text-transparent bg-clip-text bg-gradient-to-r from-[#a855f7] to-[#3b82f6] opacity-10 select-none -z-10">
               TX
             </span>
-          </div>
+          </m.div>
           
           {/* SHIELD text on top */}
           <m.h1
