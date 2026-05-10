@@ -25,8 +25,16 @@ body {
     transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s ease;
 }
 
-* {
-    cursor: none !important;
+.custom-cursor-active,
+.custom-cursor-active * {
+  cursor: none !important;
+}
+
+@media (max-width: 768px) {
+  .custom-cursor-active,
+  .custom-cursor-active * {
+    cursor: auto !important;
+  }
 }
 
 h1, h2, h3, h4, h5, h6, .font-clash {
