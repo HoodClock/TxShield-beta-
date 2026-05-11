@@ -9,7 +9,6 @@ import { FiLayout, FiShield, FiCpu, FiCode } from "react-icons/fi";
 import KeyMatrics from "../keyMatrics";
 import Phishing from "../phishing";
 import HoneypotChecks from "../honeypotChecks";
-import Recommendations from "../recomendations";
 
 // Local sub-components
 import HeroStatus from "./HeroStatus";
@@ -21,7 +20,7 @@ import TransactionSummary from "./TransactionSummary";
 import BytecodeAnalysis from "./BytecodeAnalysis";
 import SolanaDetails from "./SolanaDetails";
 import SolanaLogs from "./SolanaLogs";
-import { mockSimulation, mockHoneypot, mockPhishing, mockSolSimulation, getRiskStyle, themes } from "./utils";
+import { getRiskStyle, themes } from "./utils";
 
 export default function ResultsDashboard({
   isVisible,
