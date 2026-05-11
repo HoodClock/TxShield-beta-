@@ -41,6 +41,11 @@ body {
   }
 }
 
+/* Restore cursor for modals and dialogs */
+[role="dialog"], [role="dialog"] * {
+  cursor: auto !important;
+}
+
 h1, h2, h3, h4, h5, h6, .font-clash {
     font-family: var(--font-clash), sans-serif;
 }
