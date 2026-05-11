@@ -1,12 +1,13 @@
-import React from 'react'
-import "./Tos.styles.css"
+import React from "react";
+import "./Tos.styles.css";
 
 function page() {
   return (
     <div className="bg-background min-h-screen py-10 transition-colors duration-700">
-      <div className="tos-container"
-          dangerouslySetInnerHTML={{
-              __html: `
+      <div
+        className="tos-container"
+        dangerouslySetInnerHTML={{
+          __html: `
               <style>
     [data-custom-class='body'], [data-custom-class='body'] * {
             background: var(--card) !important;
@@ -130,11 +131,12 @@ Calibri;color:#595959;mso-themecolor:text1;mso-themetint:166;"><strong><bdt clas
       }
     </style>
       </div>
-      
-            `
-    }}
-    />
-  )
+
+            `,
+        }}
+      />
+    </div>
+  );
 }
 
-export default page
+export default page;
