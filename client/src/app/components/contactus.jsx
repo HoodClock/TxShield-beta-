@@ -4,6 +4,7 @@ import { m, AnimatePresence, useScroll, useSpring } from "framer-motion";
 import { Send } from "lucide-react";
 import Image from "next/image";
 import { contactApi } from "@/api/api";
+import ScrollIndicator from "./ScrollIndicator";
 
 // ─── Testimonials Data ─────────────────────────────────────────────────────
 const testimonials = [
@@ -148,10 +149,6 @@ export default function ContactUs() {
 
   const pageRef = useRef(null);
 
-  // Page Scroll Progress
-  const { scrollYProgress } = useScroll({ container: pageRef });
-  const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
-
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
@@ -169,11 +166,7 @@ export default function ContactUs() {
   return (
     <div ref={pageRef} className="relative h-screen overflow-y-auto overflow-x-hidden no-scrollbar flex flex-col bg-background transition-colors duration-700">
       
-      {/* Page Scroll Indicator */}
-      <m.div 
-        className="fixed top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-purple-500 via-cyan-400 to-blue-500 origin-left z-[100] shadow-[0_0_8px_rgba(34,211,238,0.4)]"
-        style={{ scaleX }}
-      />
+      <ScrollIndicator containerRef={pageRef} />
 
       <style jsx global>{`
         .no-scrollbar::-webkit-scrollbar { display: none; }
