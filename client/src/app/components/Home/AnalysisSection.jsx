@@ -149,7 +149,7 @@ function AnalysisSection() {
                     </m.div>
 
                     {/* Minimalist Chain Selectors (Tabs) */}
-                    <div className="flex flex-row gap-4 items-center shrink-0">
+                    <div className="flex flex-col sm:flex-row gap-4 items-center shrink-0 w-full sm:w-auto">
                         {playbooks.map((pb) => {
                             const isSelected = selected === pb.id;
                             const classes = getThemeClasses(pb.id, isSelected);
@@ -159,7 +159,7 @@ function AnalysisSection() {
                                     onClick={() => handlePlaybookChange(pb.id)}
                                     whileHover={{ y: -2 }}
                                     whileTap={{ scale: 0.98 }}
-                                    className={`group relative w-36 md:w-48 h-12 overflow-hidden bg-card border ${classes.border} rounded-none transition-all duration-500 flex items-center px-3`}
+                                    className={`group relative w-full sm:w-48 h-12 overflow-hidden bg-card border ${classes.border} rounded-none transition-all duration-500 flex items-center px-3`}
                                 >
                                     <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-transparent ${classes.bgGlow} transition-all duration-500 pointer-events-none`}></div>
                                     <div className={`absolute left-0 top-0 bottom-0 w-1 ${classes.accentBar} transition-all duration-300`}></div>
@@ -278,19 +278,19 @@ function AnalysisSection() {
                                             </p>
 
                                             {/* Simulated Terminal Readout (Sharp Minimal) */}
-                                            <div className="w-full bg-[#0a0a0a] border border-border rounded-none p-5 font-mono text-[10px] sm:text-xs text-gray-500 overflow-hidden relative flex-1 min-h-0 flex flex-col">
+                                            <div className="w-full bg-muted border border-border rounded-none p-5 font-mono text-[10px] sm:text-xs text-muted-foreground overflow-hidden relative flex-1 min-h-0 flex flex-col transition-colors duration-700">
                                                 <div className={`absolute top-0 left-0 w-0.5 h-full bg-gradient-to-b ${theme.line} opacity-50`}></div>
-                                                <div className="flex items-center gap-2 opacity-50 mb-3 border-b border-white/10 pb-2 shrink-0">
+                                                <div className="flex items-center gap-2 opacity-50 mb-3 border-b border-border pb-2 shrink-0">
                                                     <div className="w-1.5 h-1.5 rounded-none bg-red-500/50"></div>
                                                     <div className="w-1.5 h-1.5 rounded-none bg-yellow-500/50"></div>
                                                     <div className="w-1.5 h-1.5 rounded-none bg-green-500/50"></div>
-                                                    <span className="text-[8px] uppercase tracking-widest ml-2 text-white/40">Terminal_Access.exe</span>
+                                                    <span className="text-[8px] uppercase tracking-widest ml-2 text-foreground/40">Terminal_Access.exe</span>
                                                 </div>
                                                 <div className="overflow-y-auto overflow-x-hidden flex-1 scrollbar-hide">
-                                                    <pre className="whitespace-pre-wrap pl-2 leading-relaxed font-light text-gray-300">
+                                                    <pre className="whitespace-pre-wrap pl-2 leading-relaxed font-light text-foreground">
                                                         {terminalOutputs[selected][activeStep].split('\n').map((line, idx) => (
                                                             <div key={idx} className="flex gap-3 mb-1">
-                                                                <span className="text-gray-600 select-none">~%</span>
+                                                                <span className="text-muted-foreground/60 select-none">~%</span>
                                                                 <span className={line.includes('STATUS:') ? theme.text : ''}>{line.replace('> ', '')}</span>
                                                             </div>
                                                         ))}

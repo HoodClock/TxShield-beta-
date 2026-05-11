@@ -7,6 +7,7 @@ import HamburgerMenu from "./components/HamburgerMenu";
 import TransitionOverlay from "./components/TransitionOverlay";
 import { UIProvider } from "./provider/UIProvider";
 import ThemeController from "./components/ThemeController";
+import CustomCursor from "./components/CustomCursor";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

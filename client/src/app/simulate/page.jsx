@@ -209,7 +209,7 @@ export default function App() {
         />
       )}
 
-      <main className="flex-grow overflow-y-auto pb-20 scrollbar-hide">
+      <main className="flex-grow overflow-hidden pb-0 scrollbar-hide">
         {/* Form Section */}
         {chain && !showResults && (
           <section className="container mx-auto px-4 py-12">
