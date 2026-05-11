@@ -80,7 +80,7 @@ export default function CustomCursor() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden">
+    <div className="fixed inset-0 pointer-events-none z-[999999] overflow-hidden">
       {/* Outer Rotating Dashed Ring */}
       <m.div
         style={{
