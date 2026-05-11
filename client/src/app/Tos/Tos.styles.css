@@ -7,13 +7,13 @@
 [data-custom-class='title'] * {
     font-family: Arial !important;
     font-size: 26px !important;
-    color: #000000 !important;
+    color: var(--foreground) !important;
 }
 
 [data-custom-class='subtitle'],
 [data-custom-class='subtitle'] * {
     font-family: Arial !important;
-    color: #595959 !important;
+    color: var(--muted-foreground) !important;
     font-size: 14px !important;
 }
 
@@ -21,19 +21,19 @@
 [data-custom-class='heading_1'] * {
     font-family: Arial !important;
     font-size: 19px !important;
-    color: #000000 !important;
+    color: var(--foreground) !important;
 }
 
 [data-custom-class='heading_2'],
 [data-custom-class='heading_2'] * {
     font-family: Arial !important;
     font-size: 17px !important;
-    color: #000000 !important;
+    color: var(--foreground) !important;
 }
 
 [data-custom-class='body_text'],
 [data-custom-class='body_text'] * {
-    color: #595959 !important;
+    color: var(--muted-foreground) !important;
     font-size: 14px !important;
     font-family: Arial !important;
 }
@@ -69,20 +69,21 @@ ol li {
     max-width: 900px;
     margin: 40px auto;
     padding: 40px;
-    background: #ffffff;
+    background: var(--card);
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     font-family: 'Inter', Arial, sans-serif;
     line-height: 1.7;
-    color: #333;
-  }
+    color: var(--foreground);
+    transition: background 0.7s, color 0.7s;
+}
   
   /* Headings */
   .tos-container h1 {
     font-size: 32px;
     font-weight: 700;
     margin-bottom: 20px;
-    color: #111;
+    color: var(--foreground);
     text-align: center;
   }
   
@@ -90,8 +91,8 @@ ol li {
     font-size: 22px;
     margin-top: 40px;
     margin-bottom: 15px;
-    color: #222;
-    border-bottom: 2px solid #eee;
+    color: var(--foreground);
+    border-bottom: 2px solid var(--border);
     padding-bottom: 5px;
   }
   
@@ -99,7 +100,7 @@ ol li {
     font-size: 18px;
     margin-top: 25px;
     margin-bottom: 10px;
-    color: #444;
+    color: var(--foreground);
   }
   
   /* Paragraphs */
