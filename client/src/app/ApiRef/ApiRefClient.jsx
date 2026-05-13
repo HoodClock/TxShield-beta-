@@ -5,6 +5,8 @@ import { useActiveAccount } from "thirdweb/react";
 import {
     authConnect as AuthApiConnect,
     authGetAPI as AuthFetchAPi,
+    authDeleteKey as AuthDeleteKey,
+
 } from "@/api/api";
 import { m, AnimatePresence } from "framer-motion";
 import ConnectButtonWrapper from "../components/ConnectButtonWrapper";
@@ -38,6 +40,7 @@ export default function ApiRefClient() {
             setFetching(true);
             try {
                 const res = await AuthFetchAPi(address);
+                
                 if (res.data?.apiKey) setApiKey(res.data.apiKey);
             } catch (err) {
                 console.error("Error fetching API key:", err);
@@ -70,6 +73,19 @@ export default function ApiRefClient() {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
+    const handleDeleteKey = async () => {
+        if (!isConnected || !address) return;
+        try {
+            setLoading(true);
+            await AuthDeleteKey(address);
+            setApiKey(null);
+        } catch (err) {
+            console.error("Error deleting API key:", err);
+            alert("Failed to delete API key");
+        } finally {
+            setLoading(false);
+        }
+    };  
 
     return (
         <div className="bg-background text-foreground min-h-screen w-screen overflow-y-auto relative flex flex-col transition-colors duration-700">
@@ -145,6 +161,8 @@ export default function ApiRefClient() {
                                     Phase 02 — Authenticate
                                 </span>
 
+                                
+
                                 {/* Not connected */}
                                 {!isConnected && (
                                     <div className="border border-border p-4 flex items-start gap-3">
@@ -153,6 +171,8 @@ export default function ApiRefClient() {
                                         </span>
                                     </div>
                                 )}
+                                
+                               
 
                                 {/* Fetching */}
                                 {isConnected && fetching && (
@@ -199,7 +219,7 @@ export default function ApiRefClient() {
                                                 </span>
                                             </div>
                                             <div className="flex items-stretch border border-border">
-                                                <span className="flex-1 font-mono text-xs text-foreground/80 px-4 py-3 truncate">{apiKey}</span>
+                                                <span className="flex-1 font-mono text-xs text-foreground/80 px-4 py-3 truncate">*********************</span>
                                                 <button
                                                     onClick={handleCopy}
                                                     className="shrink-0 px-3 border-l border-border hover:bg-foreground/5 text-muted-foreground hover:text-foreground transition-all"
@@ -220,9 +240,22 @@ export default function ApiRefClient() {
                                         </m.div>
                                     </AnimatePresence>
                                 )}
+                                 {/* button to delete key if exists */}
+                                {isConnected && apiKey && !fetching && (
+                                    <button
+                                        onClick={handleDeleteKey}
+                                        disabled={loading}
+                                        className="self-start px-3 py-1 bg-red-600 text-white text-xs font-mono uppercase tracking-widest hover:bg-red-700 transition-colors disabled:bg-red-400"
+                                    >
+                                        {loading ? "Deleting..." : "Delete Key"}
+                                    </button>
+                                )}  
+
                             </div>
                         </div>
                     </div>
+
+                                    
 
                     {/* RIGHT: Integration + Endpoints */}
                     <div className="flex-1 flex flex-col gap-4 min-h-0 overflow-hidden">
