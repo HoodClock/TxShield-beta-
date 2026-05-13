@@ -1,13 +1,13 @@
 import axios from "axios";
 
 // for local.
-// const rawBaseUrl = "http://localhost:5000";
+const rawBaseUrl = "http://localhost:5000";
 
 // for testing.
 // const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 // for prod-envoirnment
-const rawBaseUrl = process.env.NEXT_PUBLIC_PROD_BASE_URL || "";
+// const rawBaseUrl = process.env.NEXT_PUBLIC_PROD_BASE_URL || "";
 const BASE_URL = rawBaseUrl.endsWith("/")
   ? rawBaseUrl.slice(0, -1)
   : rawBaseUrl;
@@ -74,6 +74,7 @@ export const suggestionApi = async (formData) => {
   );
 };
 
+// wallet connection auth api's
 export const authConnect = async (formData) => {
   return await axios.post(`${BASE_URL}/auth/connect`, formData, {
     headers: {
@@ -88,6 +89,12 @@ export const authGetAPI = async (connectedAddress) => {
     withCredentials: true,
   });
 };
+ export const authDeleteKey = async (connectedAddress) => {
+  return await axios.delete(`${BASE_URL}/auth/deleteKey/${connectedAddress}`, {
+    withCredentials: true,
+  });
+};  
+
 
 // Solana api's
 export const solSimulateTx = async (formData) => {
