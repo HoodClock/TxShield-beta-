@@ -8,6 +8,7 @@ import {
 } from "@/api/api";
 import { m, AnimatePresence } from "framer-motion";
 import ConnectButtonWrapper from "../components/ConnectButtonWrapper";
+import ScrollIndicator from "../components/ScrollIndicator";
 
 const ENDPOINTS = [
     { method: "POST", path: "/v1/simulate", desc: "EVM Matrix Simulation" },
@@ -71,7 +72,8 @@ export default function ApiRefClient() {
     };
 
     return (
-        <div className="bg-background text-foreground h-screen w-screen overflow-hidden relative flex flex-col transition-colors duration-700">
+        <div className="bg-background text-foreground min-h-screen w-screen overflow-y-auto relative flex flex-col transition-colors duration-700">
+            <ScrollIndicator />
 
             {/* Ambient background glows — matches site-wide pattern */}
             <div className="absolute inset-0 z-0 pointer-events-none opacity-50 dark:opacity-100">
