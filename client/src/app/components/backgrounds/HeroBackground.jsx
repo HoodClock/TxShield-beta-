@@ -45,8 +45,8 @@ export default function HeroBackground({ className = "" }) {
             
             ctx.clearRect(0, 0, width, height);
 
-            ctx.fillStyle = "rgba(168, 85, 247, 0.8)"; // Tailwind purple-500
-            ctx.lineWidth = 1.2; // Increased from 0.5
+            ctx.fillStyle = "#a855f7"; // Purple-500
+            ctx.lineWidth = 1.2;
 
             for (let i = 0; i < particleCount; i++) {
                 const p = particles[i];
@@ -68,11 +68,11 @@ export default function HeroBackground({ className = "" }) {
                     const p2 = particles[j];
                     const dx = p.x - p2.x;
                     const dy = p.y - p2.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-
-                    if (dist < 180) { // Increased from 120
+                    const distSq = dx * dx + dy * dy;
+                    const maxDistSq = 180 * 180;
+                    if (distSq < maxDistSq) {
                         ctx.beginPath();
-                        ctx.strokeStyle = `rgba(168, 85, 247, ${0.4 * (1 - dist / 180)})`;
+                        ctx.strokeStyle = `rgba(59, 130, 246, ${0.4 * (1 - distSq / maxDistSq)})`; // Blue-500
                         ctx.moveTo(p.x, p.y);
                         ctx.lineTo(p2.x, p2.y);
                         ctx.stroke();
@@ -82,10 +82,11 @@ export default function HeroBackground({ className = "" }) {
                 // Connect particles to mouse
                 const dxMouse = p.x - mouse.x;
                 const dyMouse = p.y - mouse.y;
-                const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
-                if (distMouse < 220) { // Increased from 150
+                const distMouseSq = dxMouse * dxMouse + dyMouse * dyMouse;
+                const maxMouseDistSq = 220 * 220;
+                if (distMouseSq < maxMouseDistSq) {
                     ctx.beginPath();
-                    ctx.strokeStyle = `rgba(192, 132, 252, ${0.6 * (1 - distMouse / 220)})`; // tailwind purple-400
+                    ctx.strokeStyle = `rgba(168, 85, 247, ${0.6 * (1 - distMouseSq / maxMouseDistSq)})`; // purple-500
                     ctx.moveTo(p.x, p.y);
                     ctx.lineTo(mouse.x, mouse.y);
                     ctx.stroke();
@@ -155,26 +156,26 @@ export default function HeroBackground({ className = "" }) {
     }, []);
 
     return (
-        <div className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`}>
+        <div className={`absolute inset-0 overflow-hidden pointer-events-none transition-colors duration-700 ${className}`}>
             {/* Dynamic Canvas Node Network */}
-            <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-70 mix-blend-screen" />
+            <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-70 mix-blend-multiply dark:mix-blend-screen" />
 
             {/* Keep the ambient orbs for a premium glow */}
-            <div className="absolute inset-0 bg-transparent flex items-center justify-center">
+            <div className="absolute inset-0 bg-transparent flex items-center justify-center transition-opacity duration-700 opacity-40 dark:opacity-100">
                 {/* Top Left Deep Purple */}
                 <div
-                    className="absolute w-[30rem] h-[30rem] bg-purple-900/40 rounded-full mix-blend-screen animate-pulse"
+                    className="absolute w-[30rem] h-[30rem] bg-purple-900/10 dark:bg-purple-900/40 rounded-full mix-blend-screen animate-pulse"
                     style={{ filter: 'blur(100px)', animationDuration: '4s' }}
                 />
                 {/* Bottom Right Electric Violet */}
                 <div
-                    className="absolute w-[25rem] h-[25rem] bg-violet-600/20 rounded-full mix-blend-screen animate-pulse"
+                    className="absolute w-[25rem] h-[25rem] bg-violet-600/5 dark:bg-violet-600/20 rounded-full mix-blend-screen animate-pulse"
                     style={{ filter: 'blur(100px)', animationDuration: '5s' }}
                 />
             </div>
 
             {/* Shadow Mask to fade out the edges and highlight the center */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,black_80%)]"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,var(--background)_85%)] dark:bg-[radial-gradient(circle_at_center,transparent_0%,#000_80%)] transition-opacity duration-700"></div>
         </div>
     );
 }

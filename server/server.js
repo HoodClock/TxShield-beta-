@@ -98,10 +98,11 @@ app.use("/api/solana/simulate", authMiddleware, solSimulateRouter);
 
 app.use("/api/analyze", authMiddleware, analysisRouter);
 
+app.use("/auth", authRouter);
+
 // right now not implementing
 app.use("/api/generations/", suggestionRouter);
 app.use("/api/contact/", contactRouter);
-app.use("/auth", authRouter);
 
 // Listen Server
 app.listen(PORT, () => {

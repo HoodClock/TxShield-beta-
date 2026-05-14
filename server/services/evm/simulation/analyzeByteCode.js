@@ -1,10 +1,10 @@
 const { decideChains } = require("../../../config/provider");
 const { getAddress } = require("ethers");
 
-const analyzeBytecode = async (recipientAddress, chainId) => {
+const analyzeBytecode = async (contractAddress, chainId) => {
   try {
     const { provider } = decideChains(chainId);
-    const checksumAddress = getAddress(recipientAddress);
+    const checksumAddress = getAddress(contractAddress);
     const byteCode = await provider.getCode(checksumAddress);
 
     if (!byteCode || byteCode === "0x") {
@@ -70,7 +70,8 @@ const analyzeBytecode = async (recipientAddress, chainId) => {
     }
 
     // Determine confidence based on severity and findings count
-    const confidence = severityScore >= 10 ? "HIGH" : severityScore >= 5 ? "MEDIUM" : "LOW";
+    const confidence =
+      severityScore >= 10 ? "HIGH" : severityScore >= 5 ? "MEDIUM" : "LOW";
 
     return {
       isContract: true,
