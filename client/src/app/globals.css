@@ -1,12 +1,6 @@
-@import "@rainbow-me/rainbowkit/styles.css";
 @import "tw-animate-css";
-
 @import "tailwindcss";
-@import "./animations.css";
-@import "./components.css";
 
-/* emvSimulationForm.css*/
-/* In your global CSS file */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -17,194 +11,87 @@ input[type="number"] {
     -moz-appearance: textfield;
 }
 
-/* Ensure RainbowKit modal has proper z-index */
 [data-rk] {
     position: relative;
     z-index: 1000;
 }
 
-/* Fix for connect button */
-.rainbowkit-connect-wrapper [data-rk] ._12lbo {
-    cursor: pointer !important;
-}
-
-/* Make sure buttons are interactive */
-.rainbowkit-connect-wrapper button {
-    cursor: pointer !important;
-}
-
 body {
-    font-family: var(--font-geist-sans), sans-serif;
+    font-family: var(--font-space-grotesk), sans-serif;
+    min-height: 100vh;
+    width: 100vw;
+    overflow-x: hidden;
+    cursor: none !important;
+    transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s ease;
 }
 
-h1,
-h2,
-h3 {
+/* Hide default cursor on devices with a mouse/trackpad (Laptops/PCs) */
+@media (pointer: fine) {
+  .custom-cursor-active,
+  .custom-cursor-active * {
+    cursor: none !important;
+  }
+}
+
+/* Fallback to restore default cursor on touch devices (Phones/Tablets) */
+@media (pointer: coarse) {
+  .custom-cursor-active,
+  .custom-cursor-active * {
+    cursor: auto !important;
+  }
+}
+
+h1, h2, h3, h4, h5, h6, .font-clash {
     font-family: var(--font-clash), sans-serif;
 }
 
-* {
-    font-family: var(--font-space-grotesk), "Space Grotesk", sans-serif;
+@theme {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-border: var(--border);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    
+    --font-clash: var(--font-clash);
+    --font-grotesk: var(--font-space-grotesk);
 }
 
+/* --- THEME VARIABLES --- */
 :root {
-    --primary-black: #000000;
-    --elevated-black: #0a0a0a;
-    --surface-black: #111111;
-    --pure-white: #ffffff;
-    --text-primary: #f5f5f5;
-    --text-secondary: #a3a3a3;
-    --accent-glow: rgba(255, 255, 255, 0.1);
-}
-
-/* Custom scrollbar styles */
-.overflow-x-auto::-webkit-scrollbar {
-    height: 8px;
-}
-
-.overflow-x-auto::-webkit-scrollbar-track {
-    background: #2d2d2d;
-    border-radius: 10px;
-}
-
-.overflow-x-auto::-webkit-scrollbar-thumb {
-    background-color: #555;
-    border-radius: 10px;
-    border: 2px solid #2d2d2d;
-}
-
-.overflow-x-auto {
-    scrollbar-width: thin;
-    scrollbar-color: #555 #2d2d2d;
-}
-
-/* connect wallet component styles */
-.custom-rainbow-wrapper [data-testid="rk-connect-button"] {
-    background: white !important;
-    color: black !important;
-    border: none !important;
-    border-radius: 8px !important;
-    padding: 10px 20px !important;
-    font-weight: 600 !important;
-    position: relative !important;
-    overflow: hidden !important;
-    transition: all 0.3s ease !important;
-}
-
-.custom-rainbow-wrapper [data-testid="rk-connect-button"]:hover {
-    background: #f0f0f0 !important;
-    transform: translateY(-1px) !important;
-}
-
-/* Loading animation */
-.custom-rainbow-wrapper [data-testid="rk-connect-button"]::after {
-    content: "" !important;
-    position: absolute !important;
-    top: 0 !important;
-    left: -100% !important;
-    width: 100% !important;
-    height: 100% !important;
-    background: linear-gradient(90deg,
-            transparent,
-            rgba(255, 255, 255, 0.4),
-            transparent) !important;
-    animation: loadingFlash 1.5s infinite !important;
-}
-
-@keyframes loadingFlash {
-    0% {
-        left: -100%;
-    }
-
-    100% {
-        left: 100%;
-    }
-}
-
-/* NOTE: scroll-behavior: smooth removed to avoid conflicts with GSAP ScrollSmoother
-   GSAP handles all smooth scrolling */
-
-/* Account button when connected */
-.custom-rainbow-wrapper [data-testid="rk-account-button"] {
-    background: white !important;
-    color: black !important;
-    border: none !important;
-    border-radius: 8px !important;
-}
-
-.custom-rainbow-wrapper [data-testid="rk-account-button"]:hover {
-    background: #f0f0f0 !important;
-}
-
-:root {
-    --radius: 0.625rem;
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.13 0.028 261.692);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.13 0.028 261.692);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.13 0.028 261.692);
-    --primary: oklch(0.21 0.034 264.665);
-    --primary-foreground: oklch(0.985 0.002 247.839);
-    --secondary: oklch(0.967 0.003 264.542);
-    --secondary-foreground: oklch(0.21 0.034 264.665);
-    --muted: oklch(0.967 0.003 264.542);
-    --muted-foreground: oklch(0.551 0.027 264.364);
-    --accent: oklch(0.967 0.003 264.542);
-    --accent-foreground: oklch(0.21 0.034 264.665);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.928 0.006 264.531);
-    --input: oklch(0.928 0.006 264.531);
-    --ring: oklch(0.707 0.022 261.325);
-    --chart-1: oklch(0.646 0.222 41.116);
-    --chart-2: oklch(0.6 0.118 184.704);
-    --chart-3: oklch(0.398 0.07 227.392);
-    --chart-4: oklch(0.828 0.189 84.429);
-    --chart-5: oklch(0.769 0.188 70.08);
-    --sidebar: oklch(0.985 0.002 247.839);
-    --sidebar-foreground: oklch(0.13 0.028 261.692);
-    --sidebar-primary: oklch(0.21 0.034 264.665);
-    --sidebar-primary-foreground: oklch(0.985 0.002 247.839);
-    --sidebar-accent: oklch(0.967 0.003 264.542);
-    --sidebar-accent-foreground: oklch(0.21 0.034 264.665);
-    --sidebar-border: oklch(0.928 0.006 264.531);
-    --sidebar-ring: oklch(0.707 0.022 261.325);
+    --background: #f8f7f5; /* Soft warm neutral background - easy on eyes */
+    --foreground: #2d3436; /* Softer dark gray instead of pure black/dark blue */
+    --card: #fefdfb; /* Soft off-white with warm undertone */
+    --card-foreground: #2d3436;
+    --primary: #6366f1; /* Softer indigo */
+    --accent: #8b5cf6; /* Softer purple */
+    --border: rgba(45, 52, 54, 0.12); /* More visible but still subtle */
+    --muted: #f0eeeb; /* Soft warm gray */
+    --muted-foreground: #71787d; /* Softer neutral gray */
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .dark {
-    /* Use near-black values to avoid blue tints in dark mode */
     --background: #000000;
-    --foreground: #e6eef6;
-    /* light text */
-    --card: #000000;
-    --card-foreground: #e6eef6;
-    --popover: #000000;
-    --popover-foreground: #e6eef6;
-    --primary: #0ea5a5;
-    --primary-foreground: #001219;
-    --secondary: #1f2937;
-    --secondary-foreground: #e6eef6;
-    --muted: #0f1724;
-    --muted-foreground: #94a3b8;
-    --accent: #0891b2;
-    --accent-foreground: #e6eef6;
-    --destructive: #b91c1c;
-    --border: rgba(255, 255, 255, 0.04);
-    --input: rgba(255, 255, 255, 0.03);
-    --ring: rgba(255, 255, 255, 0.06);
-    --chart-1: #7c3aed;
-    --chart-2: #06b6d4;
-    --chart-3: #10b981;
-    --chart-4: #f59e0b;
-    --chart-5: #ef4444;
-    --sidebar: #021017;
-    --sidebar-foreground: #e6eef6;
-    --sidebar-primary: #0ea5a5;
-    --sidebar-primary-foreground: #001219;
-    --sidebar-accent: #0891b2;
-    --sidebar-accent-foreground: #e6eef6;
-    --sidebar-border: rgba(255, 255, 255, 0.04);
-    --sidebar-ring: rgba(255, 255, 255, 0.06);
+    --foreground: #f5f5f5;
+    --card: #0a0a0a;
+    --card-foreground: #f5f5f5;
+    --primary: #3b82f6;
+    --accent: #a855f7;
+    --border: rgba(255, 255, 255, 0.1);
+    --muted: #0a0a0a;
+    --muted-foreground: #a3a3a3;
+    --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+    
+    /* Text variables for compatibility */
+    --text-primary: #f5f5f5;
+    --text-secondary: #a3a3a3;
+    --text-tertiary: #737373;
 }
 
 @layer base {
@@ -212,9 +99,182 @@ h3 {
         border-color: var(--border);
         outline: none;
     }
-
     body {
         background: var(--background);
         color: var(--foreground);
     }
+}
+
+/* Glass Morphism Utility */
+.glass-morphism {
+    background: var(--card);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+}
+
+.dark .glass-morphism {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+/* Light mode specific enhancements */
+:root:not(.dark) .glass-morphism {
+    background: rgba(254, 253, 251, 0.8);
+    box-shadow: 0 4px 12px rgba(45, 52, 54, 0.08);
+}
+
+:root:not(.dark) input,
+:root:not(.dark) textarea,
+:root:not(.dark) select {
+    background-color: rgba(240, 238, 235, 0.6);
+    color: var(--foreground);
+    border-color: rgba(45, 52, 54, 0.15);
+    transition: all 0.3s ease;
+}
+
+:root:not(.dark) input:focus,
+:root:not(.dark) textarea:focus,
+:root:not(.dark) select:focus {
+    background-color: rgba(254, 253, 251, 0.9);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+:root:not(.dark) button,
+:root:not(.dark) [role="button"] {
+    transition: all 0.3s ease;
+}
+
+:root:not(.dark) button:hover,
+:root:not(.dark) [role="button"]:hover {
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+}
+
+/* Light mode text refinements */
+:root:not(.dark) {
+    --text-primary: #2d3436;
+    --text-secondary: #71787d;
+    --text-tertiary: #9ca3af;
+}
+
+:root:not(.dark) h1, :root:not(.dark) h2, :root:not(.dark) h3, :root:not(.dark) h4, :root:not(.dark) h5, :root:not(.dark) h6 {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+:root:not(.dark) p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+:root:not(.dark) a {
+    color: var(--primary);
+    transition: color 0.3s ease;
+}
+
+:root:not(.dark) a:hover {
+    color: var(--accent);
+}
+
+/* Light mode placeholder and form refinements */
+:root:not(.dark) ::placeholder {
+    color: rgba(45, 52, 54, 0.45);
+}
+
+:root:not(.dark) input::placeholder,
+:root:not(.dark) textarea::placeholder {
+    color: rgba(45, 52, 54, 0.45);
+}
+
+/* Light mode link underlines - subtle */
+:root:not(.dark) a {
+    position: relative;
+}
+
+/* Ensure good contrast for light mode links */
+:root:not(.dark) .text-primary {
+    color: var(--primary);
+}
+
+:root:not(.dark) .text-muted-foreground {
+    color: var(--muted-foreground);
+}
+
+/* Light mode code blocks and pre */
+:root:not(.dark) code {
+    background-color: rgba(240, 238, 235, 0.8);
+    color: var(--primary);
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+:root:not(.dark) pre {
+    background-color: rgba(240, 238, 235, 0.6);
+    border: 1px solid rgba(45, 52, 54, 0.1);
+    color: var(--foreground);
+}
+
+/* Subtle borders for light mode cards */
+:root:not(.dark) .border {
+    border-color: rgba(45, 52, 54, 0.12);
+}
+
+/* Better contrast for badges and small elements */
+:root:not(.dark) .badge,
+:root:not(.dark) [role="status"] {
+    background-color: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.dark .glass-morphism {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.theme-shadow {
+    shadow: var(--shadow);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--muted-foreground);
+}
+
+/* Light mode scrollbar enhancements */
+:root::-webkit-scrollbar-thumb {
+    background: rgba(45, 52, 54, 0.3);
+}
+
+:root::-webkit-scrollbar-thumb:hover {
+    background: rgba(45, 52, 54, 0.5);
+}
+
+/* Animations */
+@keyframes scan {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.animate-scan {
+    animation: scan 4s linear infinite;
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
 }

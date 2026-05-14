@@ -3,16 +3,22 @@ import localFont from "next/font/local";
 import "@solana/wallet-adapter-react-ui/styles.css";
 import "./globals.css";
 import ClientLayout from "./clientLayout";
-import ScrollProgressBar from "./components/ScrollProgressBar";
+import HamburgerMenu from "./components/HamburgerMenu";
+import TransitionOverlay from "./components/TransitionOverlay";
+import { UIProvider } from "./provider/UIProvider";
+import ThemeController from "./components/ThemeController";
+import CustomCursor from "./components/CustomCursor";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap"
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap"
 });
 
 const spaceGrotesk = Space_Grotesk({
@@ -37,13 +43,16 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    // Add the `dark` class so the CSS custom properties default to the dark theme
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${clashDisplay.variable} dark`}>
-      <body className="antialiased bg-background text-foreground" suppressHydrationWarning>
-        <ClientLayout>
-          <ScrollProgressBar />
-          {children}
-        </ClientLayout>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${clashDisplay.variable}`}>
+      <body className="antialiased bg-background text-foreground">
+        <UIProvider>
+          <ClientLayout>
+            <HamburgerMenu />
+            <ThemeController />
+            <TransitionOverlay />
+            {children}
+          </ClientLayout>
+        </UIProvider>
       </body>
     </html>
   );

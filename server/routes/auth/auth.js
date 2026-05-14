@@ -1,80 +1,120 @@
-/**
- *  for Devs:
- * What this router file does: generates & reterives api keys
- * @deprecated: the current code was not compatible with our new POSTGRE_SQL so i remove it
- * @description: middleware to authticate request for api_key and store in database
- * @todo update to use POSTGRE_SQL
- * @async
- * @param {wallet, signature} = req.body
- * -> check if wallet & signature exists in req.body otherwise throw error right away
- * -> verify signature against wallet address
- *      => const message = "They can't exploit you if you are the exploit"
- * -> check if wallet already have a apiKey exists in database if not throw error right away || if exists [Key already exists]
- * -> if apiKey does not exist, insert it into the database
- * @generator -> const apikey = 'txs' + crypto.randomBytes(32).toString("hex");
- * -> after generating apikey apply query to insert into database (right now no payment so all apiKeys are free for every user)
- *
- * THEN MAKE ANOTHER ROUTE
- * @router GET /apikey/:wallet
- * -> check if wallet exists in database and return apiKey if not throw error right away
- * -> otherwise select apiKey from database and return it
- */
-
 const express = require("express");
 const { ethers } = require("ethers");
 const crypto = require("crypto");
 const pool = require("../../config/db");
 const router = express.Router();
-const authMiddleware = require("../../middlewares/auth.middleware");
 
+const SIGNATURE_MESSAGE = "They can't exploit you if you are the exploit";
 
-router.post("/generate", async (req, res) => {
+// POST /auth/connect — Generate API Key (one-time only)
+router.post("/connect", async (req, res) => {
   try {
     const { wallet, signature } = req.body;
-
     if (!wallet || !signature) {
-      return res.status(400).json({ error: "Wallet and signature are required" });
+      return res
+        .status(400)
+        .json({ error: "Wallet address and signature are required" });
     }
 
-    const message = "They can't exploit you if you are the exploit";
-
-    const signerAddress = ethers.verifyMessage(message, signature);
-
-    if (signerAddress.toLowerCase() !== wallet.toLowerCase()) {
+    const recoveredAddress = ethers.verifyMessage(SIGNATURE_MESSAGE, signature);
+    if (recoveredAddress.toLowerCase() !== wallet.toLowerCase()) {
       return res.status(401).json({ error: "Invalid signature" });
     }
 
-    const existingKey = await pool.query("SELECT api_key FROM api_keys WHERE wallet = $1", [wallet]);
+    const checkResult = await pool.query(
+      "SELECT api_key FROM api_keys WHERE wallet = $1",
+      [wallet]
+    );
 
-    if (existingKey.rows.length > 0) {
-      return res.status(400).json({ error: "API key already exists for this wallet" });
+    if (checkResult.rows.length > 0) {
+      return res.status(400).json({
+        error:
+          "API key already exists for this wallet. Delete the existing key first to generate a new one.",
+      });
     }
 
-    const apiKey = "txs" + crypto.randomBytes(32).toString("hex");
+    const apiKey = "txs_" + crypto.randomBytes(32).toString("hex");
+    await pool.query(
+      "INSERT INTO api_keys (api_key, wallet, tier) VALUES ($1, $2, $3)",
+      [apiKey, wallet, "free"]
+    );
 
-    await pool.query("INSERT INTO api_keys (wallet, api_key) VALUES ($1, $2)", [wallet, apiKey]);
-
-    res.json({ apiKey });
-
-} catch (error) {
+    return res.status(201).json({
+      apiKey,
+      message: "API key generated successfully.",
+      warning:
+        "Save this key now — it will NOT be shown again. Store it somewhere safe.",
+    });
+  } catch (error) {
     console.error("Error generating API key:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
-router.get("/apikey/:wallet", authMiddleware,async (req, res) => {
+// GET /auth/apikey/:wallet — Check key status (returns masked key, NOT the full key)
+router.get("/apikey/:wallet", async (req, res) => {
   try {
     const { wallet } = req.params;
-
-    const result = await pool.query("SELECT api_key FROM api_keys WHERE wallet = $1", [wallet]);
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "API key not found for this wallet" });
+    if (!wallet) {
+      return res.status(400).json({ error: "Wallet parameter is required" });
     }
 
-    res.json({ apiKey: result.rows[0].api_key });
-    } catch (error) {
-    console.error("Error retrieving API key:", error);
-    res.status(500).json({ error: "Internal server error" });
+    const result = await pool.query(
+      "SELECT api_key, tier, created_at, last_used FROM api_keys WHERE wallet = $1",
+      [wallet]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ hasKey: false });
+    }
+
+    const { api_key, tier, created_at, last_used } = result.rows[0];
+    const maskedKey =
+      api_key.slice(0, 7) + "****************************" + api_key.slice(-4);
+
+    return res.status(200).json({
+      hasKey: true,
+      maskedKey,
+      tier,
+      created_at,
+      last_used,
+    });
+  } catch (error) {
+    console.error("Error fetching API key:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// DELETE /auth/apikey/:wallet — Delete API Key (requires signature verification)
+router.delete("/apikey/:wallet", async (req, res) => {
+  try {
+    const { wallet } = req.params;
+    const { signature } = req.body;
+
+    if (!wallet || !signature) {
+      return res
+        .status(400)
+        .json({ error: "Wallet and signature are required" });
+    }
+
+    const recoveredAddress = ethers.verifyMessage(SIGNATURE_MESSAGE, signature);
+    if (recoveredAddress.toLowerCase() !== wallet.toLowerCase()) {
+      return res.status(401).json({ error: "Invalid signature" });
+    }
+
+    const result = await pool.query(
+      "DELETE FROM api_keys WHERE wallet = $1 RETURNING api_key",
+      [wallet]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "No API key found for this wallet" });
+    }
+
+    return res.status(200).json({ message: "API key deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting API key:", error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 

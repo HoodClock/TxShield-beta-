@@ -1,5 +1,6 @@
 const redisClient = require("../../../config/redisClient");
 const { generateChacheKey } = require("../../../utils/cache");
+const { detectPhishing } = require("./phishingService");
 
 const EXPIRY_SECONDS = process.env.REDIS_EXPIRY_SECONDS || 3600;
 

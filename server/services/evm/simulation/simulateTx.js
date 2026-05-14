@@ -77,7 +77,7 @@ const _runSimulation = async (
     from: checksumAddress,
     to: txTo,
     value: value,
-    gas: "0xF4240",
+    gas: "0x1312D00",
     gasPrice: "0x0",
   };
 
@@ -124,7 +124,7 @@ const _runSimulation = async (
         to: PHANTOM_ADDRESS,
         data: phantomCallData,
         value: value,
-        gas: "0xF4240",
+        gas: "0x1312D00",
       },
       "latest",
       {
