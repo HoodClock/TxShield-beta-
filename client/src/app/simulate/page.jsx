@@ -183,15 +183,6 @@ export default function App() {
     }
   }, [simulationData, honeypotData]);
 
-  const handleSimulationComplete = () => {
-    setIsLoading(false);
-    setShowResults(true);
-  };
-
-  const handleSimulateAgain = () => {
-    setShowResults(false);
-  };
-
   return (
     <div className="h-full w-full bg-background flex flex-col overflow-hidden relative transition-colors duration-700">
       <Head>

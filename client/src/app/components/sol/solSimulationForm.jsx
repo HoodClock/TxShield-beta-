@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { m } from "framer-motion";
 import { useWallet } from "@solana/wallet-adapter-react";
-import Image from "next/image";
 import ScrambleText from "../ScrambleText";
 import DataFlowBackground from "../DataFlowBackground";
 import styles from "./solSimulationForm.module.css";
