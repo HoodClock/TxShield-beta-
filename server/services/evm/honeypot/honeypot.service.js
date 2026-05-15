@@ -19,7 +19,7 @@ const SIMULATOR_ABI = [
 ];
 const iface = new ethers.Interface(SIMULATOR_ABI);
 
-const _runHoneypotCheck = async (contractAddress, chainId = 1) => {
+const _runHoneypotCheck = async (contractAddress, chainId) => {
   try {
     const { provider } = decideChains(chainId);
     const dexRouterAddress = ROUTERS[chainId];
