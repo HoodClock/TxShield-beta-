@@ -77,7 +77,9 @@ export default function ApiRefClient() {
         if (!isConnected || !address) return;
         try {
             setLoading(true);
-            await AuthDeleteKey(address);
+            const message = "They can't exploit you if you are the exploit";
+            const signature = await account.signMessage({ message });
+            await AuthDeleteKey(address, signature);
             setApiKey(null);
         } catch (err) {
             console.error("Error deleting API key:", err);
@@ -245,7 +247,7 @@ export default function ApiRefClient() {
                                     <button
                                         onClick={handleDeleteKey}
                                         disabled={loading}
-                                        className="self-start px-3 py-1 bg-red-600 text-white text-xs font-mono uppercase tracking-widest hover:bg-red-700 transition-colors disabled:bg-red-400"
+                                        className="self-start px-3 py-1.5 border border-red-500/30 text-red-400 font-mono text-[10px] uppercase tracking-widest hover:bg-red-500/10 hover:border-red-500/50 hover:text-red-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         {loading ? "Deleting..." : "Delete Key"}
                                     </button>

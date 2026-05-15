@@ -89,8 +89,9 @@ export const authGetAPI = async (connectedAddress) => {
     withCredentials: true,
   });
 };
- export const authDeleteKey = async (connectedAddress) => {
-  return await axios.delete(`${BASE_URL}/auth/deleteKey/${connectedAddress}`, {
+export const authDeleteKey = async (connectedAddress, signature) => {
+  return await axios.delete(`${BASE_URL}/auth/apikey/${connectedAddress}`, {
+    data: { signature },
     withCredentials: true,
   });
 };  
