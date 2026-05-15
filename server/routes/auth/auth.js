@@ -74,7 +74,6 @@ router.get("/apikey/:wallet", async (req, res) => {
 
     return res.status(200).json({
       hasKey: true,
-      maskedKey,
       apiKey: maskedKey,
       tier,
       created_at,
