@@ -20,11 +20,16 @@ export default function CustomCursor() {
   const smoothY = useSpring(mouseY, springConfig);
 
   useEffect(() => {
+    let currentIsVisible = false;
+
     const handleMouseMove = (e) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
       
-      if (!isVisible) setIsVisible(true);
+      if (!currentIsVisible) {
+        currentIsVisible = true;
+        setIsVisible(true);
+      }
 
       // Update coordinates text directly to avoid React re-renders on every mouse move
       if (coordRef.current) {
@@ -38,7 +43,9 @@ export default function CustomCursor() {
         target.closest("button") || 
         target.closest("a") || 
         target.closest('[role="button"]') ||
-        window.getComputedStyle(target).cursor === "pointer";
+        target.closest("input") ||
+        target.closest("select") ||
+        target.closest("textarea");
       
       setIsHovering(!!isClickable);
       
@@ -53,8 +60,14 @@ export default function CustomCursor() {
     const handleMouseDown = () => setIsMouseDown(true);
     const handleMouseUp = () => setIsMouseDown(false);
     
-    const handleMouseLeave = () => setIsVisible(false);
-    const handleMouseEnter = () => setIsVisible(true);
+    const handleMouseLeave = () => {
+      currentIsVisible = false;
+      setIsVisible(false);
+    };
+    const handleMouseEnter = () => {
+      currentIsVisible = true;
+      setIsVisible(true);
+    };
 
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mouseover", handleMouseOver);
@@ -75,7 +88,7 @@ export default function CustomCursor() {
       document.removeEventListener("mouseenter", handleMouseEnter);
       document.documentElement.classList.remove("custom-cursor-active");
     };
-  }, [isVisible, mouseX, mouseY]);
+  }, [mouseX, mouseY]);
 
   if (!isVisible) return null;
 
