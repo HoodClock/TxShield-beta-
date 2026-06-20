@@ -26,7 +26,7 @@ If you've noticed a bug or have a feature request, make sure to check our [Issue
    ```bash
    # Terminal 1 - Server
    cd server
-   npm run dev
+   npm start
 
    # Terminal 2 - Client
    cd client
