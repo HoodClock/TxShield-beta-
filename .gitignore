@@ -21,10 +21,8 @@ client/.next/
 dist/
 build/
 
-# Foundry dependencies - never commit these
-protocols/lib/
-protocols/out/
-protocols/cache/
+# Foundry / Protocols Directory - completely private
+protocols/
 
 # Cache and temporary files
 .cache/
