@@ -1,15 +1,14 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Link from "next/link";
 import { m, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { MdArrowRightAlt } from "react-icons/md";
 import HeroBackground from "../backgrounds/HeroBackground";
 import ChainTicker from "./ChainTicker";
+import LiveCounter from "./LiveCounter";
 
 function HeroSection() {
-  const [scannedCount, setScannedCount] = useState(14204912);
-
   // Parallax Setup
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -22,17 +21,12 @@ function HeroSection() {
   const rotateX = useTransform(springY, [-1, 1], [12, -12]);
   const rotateY = useTransform(springX, [-1, 1], [-12, 12]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setScannedCount(prev => prev + Math.floor(Math.random() * 5) + 1);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
+
 
   const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width;
-    const y = (e.clientY - rect.top) / rect.height;
+    if (typeof window === "undefined") return;
+    const x = e.clientX / window.innerWidth;
+    const y = e.clientY / window.innerHeight;
 
     // Normalize from -1 to 1 (center is 0,0)
     mouseX.set(x * 2 - 1);
@@ -115,9 +109,7 @@ function HeroSection() {
             <div className="w-2 h-2 rounded-none bg-primary animate-pulse shadow-[0_0_10px_rgba(59,130,246,0.8)]"></div>
             <span className="text-primary text-[10px] sm:text-xs font-mono font-bold tracking-widest uppercase">System Online</span>
           </div>
-          <p className="text-muted-foreground text-[9px] sm:text-[10px] font-mono uppercase tracking-widest">
-            {scannedCount.toLocaleString()} Scanned
-          </p>
+          <LiveCounter />
         </div>
 
         {/* Center: Sharp Links */}

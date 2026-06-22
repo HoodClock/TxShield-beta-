@@ -1,309 +1,90 @@
-<!--My CODE here -->
+# TxShield
 
+TxShield is an EVM transaction simulation and analysis platform. It helps users preview and simulate Ethereum (and other EVM-compatible) transactions before broadcasting them to the network, estimating gas costs, token transfers, and potential warnings (like insufficient funds or transfers to zero addresses).
 
+## Features
+- **EVM Transaction Simulation:** Preview transactions securely.
+- **Gas Estimation:** Real-time gas cost estimation in ETH and USD.
+- **Token Transfer Support:** Simulates both native ETH and ERC-20 token transfers.
+- **Phishing & Honeypot Detection:** AI and heuristic-based risk analysis for smart contracts.
+- **Caching:** Redis-powered caching for rapid simulation responses.
 
-// MY-CODE
-// async function fetchPrices(ids = ["ethereum"], vs = ["usd"]) {
-//   if (!coinkGeckoUsd) throw new Error("COINGECKO_API_USD is missing!");
-//   const resp = await axios.get(coinkGeckoUsd, {
-//     params: { ids: ids.join(","), vs_currencies: vs.join(",") },
-//   });
-//   return resp.data;
-// }
+## Tech Stack
+- **Frontend:** React, Next.js, Tailwind CSS
+- **Backend:** Node.js, Express.js
+- **Database / Cache:** SQLite, Redis
+- **Blockchain:** Ethers.js, Alchemy API
 
-// const fmt = (val, decimals = 6) => {
-//   if (typeof val === "bigint") val = val.toString();
-//   const num = parseFloat(val);
-//   if (isNaN(num)) return val.toString();
-//   if (num === 0) return "0";
-//   if (num < 0.000001) return "< 0.000001";
-//   return Number(num.toFixed(decimals)).toLocaleString();
-// };
+## Getting Started
 
-// const safeJson = (obj) =>
-//   JSON.parse(
-//     JSON.stringify(obj, (_, v) => (typeof v === "bigint" ? v.toString() : v)),
-//   );
+### Prerequisites
+- Node.js (v18 or higher)
+- Redis (running locally or via a cloud provider)
+- An RPC Provider API Key (e.g., Alchemy or Infura)
 
-// const _runSimulation = async (
-//   userAddress,
-//   recipientAddress,
-//   amount,
-//   currency,
-// ) => {
-//   try {
-//     const provider = decideChains(currency);
+### Installation
 
-//     const settings = {
-//       apikey: process.env.PROVIDER_API_KEY,
-//       network: provider.getNetwork,
-//     };
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/YourOrg/TxShield.git
+   cd TxShield
+   ```
 
-//     const alchemy = new Alchemy(settings);
+2. **Install Server Dependencies:**
+   ```bash
+   cd server
+   npm install
+   ```
 
-//     if (!ethers.isAddress(userAddress)) throw new Error("Invalid user address");
-//     if (!ethers.isAddress(recipientAddress))
-//       throw new Error("Invalid recipient address");
-//     if (isNaN(parseFloat(amount))) throw new Error("Invalid amount");
+3. **Install Client Dependencies:**
+   ```bash
+   cd ../client
+   npm install
+   ```
 
-//     let transferType = "eth";
-//     let tokenContract = null;
-//     let decimals = 18;
-//     let tokenId = "ethereum";
+### Configuration
 
-//     if (currency && currency !== "ETH") {
-//       tokenContract = new ethers.Contract(
-//         currency,
-//         [
-//           "function balanceOf(address) view returns (uint256)",
-//           "function symbol() view returns (string)",
-//           "function decimals() view returns (uint8)",
-//           "function transfer(address,uint256) returns (bool)",
-//         ],
-//         provider,
-//       );
-//       const meta = await getTokenMeta(currency);
-//       decimals = Number(meta.decimals);
-//       tokenId = meta.symbol.toLowerCase();
-//       transferType = "erc20";
-//     }
+You need to set up your environment variables. Never commit these files to version control!
 
-//     const recipientIsContract = await isContract(recipientAddress, currency);
-//     if (!tokenContract && recipientIsContract && currency !== "ETH") {
-//       tokenContract = new ethers.Contract(
-//         recipientAddress,
-//         [
-//           "function balanceOf(address) view returns (uint256)",
-//           "function symbol() view returns (string)",
-//           "function decimals() view returns (uint8)",
-//           "function transfer(address,uint256) returns (bool)",
-//         ],
-//         provider,
-//       );
-//       const meta = await getTokenMeta(recipientAddress);
-//       decimals = Number(meta.decimals);
-//       tokenId = meta.symbol.toLowerCase();
-//       transferType = "erc20";
-//     }
+1. **Server `.env`:**
+   Create a `.env` file in the `/server` directory and add the following keys (adjust as needed for your specific setup):
+   ```env
+   PORT=5000
+   PROVIDER_API_KEY=your_alchemy_or_infura_key
+   REDIS_URL=redis://localhost:6379
+   EXPIRY_SECONDS=3600
+   ```
 
-//     const value = ethers.parseUnits(amount, decimals);
+2. **Client `.env`:**
+   Create a `.env.local` file in the `/client` directory with your Next.js public variables.
 
-//     const tx = {
-//       from: userAddress,
-//       to: recipientAddress,
-//       value: transferType === "eth" ? value : 0n,
-//       data:
-//         transferType === "erc20"
-//           ? tokenContract.interface.encodeFunctionData("transfer", [
-//               recipientAddress,
-//               value,
-//             ])
-//           : "0x",
-//     };
+### Running Locally
 
-//     const [gasEstimate, feeData, senderBalance, recipientBalance] =
-//       await Promise.all([
-//         provider
-//           .estimateGas(tx)
-//           .catch(() => (transferType === "eth" ? 21000n : 100000n)),
-//         provider.getFeeData(),
-//         provider.getBalance(userAddress),
-//         provider.getBalance(recipientAddress),
-//       ]);
+You will need two terminal windows to run both the frontend and the backend simultaneously.
 
-//     const gasPrice = feeData.gasPrice || feeData.maxFeePerGas || 0n;
-//     const gasCost = gasEstimate * gasPrice;
+**Terminal 1: Start the Server**
+```bash
+cd server
+npm run dev
+# The server usually runs on http://localhost:5000
+```
 
-//     const sufficientEth =
-//       senderBalance >= (transferType === "eth" ? value + gasCost : gasCost);
-//     const tokenBalance =
-//       transferType === "erc20"
-//         ? await tokenContract.balanceOf(userAddress)
-//         : 0n;
-//     const recipientTokenBalance =
-//       transferType === "erc20"
-//         ? await tokenContract.balanceOf(recipientAddress)
-//         : 0n;
-//     const sufficientTokens = transferType !== "erc20" || tokenBalance >= value;
+**Terminal 2: Start the Client**
+```bash
+cd client
+npm run dev
+# The client will run on http://localhost:3000
+```
 
-//     const ids = ["ethereum"];
-//     if (tokenId !== "ethereum") ids.push(tokenId);
-//     const prices = await fetchPrices(ids, ["usd"]);
+## Contributing
 
-//     const ethUsd = prices["ethereum"]?.usd ?? 0;
-//     const tokenUsd = tokenId !== "ethereum" ? (prices[tokenId]?.usd ?? 0) : 0;
+We welcome contributions from the community! Please see our [CONTRIBUTING.md](./CONTRIBUTING.md) for details on how to get started, set up your environment, and submit Pull Requests.
 
-//     const result = {
-//       success: sufficientEth && sufficientTokens,
-//       transferType,
-//       from: userAddress,
-//       to: recipientAddress,
-//       amount: `${fmt(ethers.formatUnits(value, decimals))} ${transferType === "erc20" ? tokenId.toUpperCase() : "ETH"}`,
-//       gas: {
-//         estimated: fmt(gasEstimate),
-//         priceGwei: fmt(ethers.formatUnits(gasPrice, "gwei")),
-//         costEth: fmt(ethers.formatUnits(gasCost, "ether")),
-//         costUsd: fmt(Number(ethers.formatUnits(gasCost, "ether")) * ethUsd),
-//       },
-//       balances: {
-//         sender: {
-//           before: {
-//             eth: fmt(ethers.formatEther(senderBalance)),
-//             ethUsd: fmt(parseFloat(ethers.formatEther(senderBalance)) * ethUsd),
-//             token:
-//               transferType === "erc20"
-//                 ? fmt(ethers.formatUnits(tokenBalance, decimals))
-//                 : null,
-//             tokenUsd:
-//               transferType === "erc20"
-//                 ? fmt(
-//                     parseFloat(ethers.formatUnits(tokenBalance, decimals)) *
-//                       tokenUsd,
-//                   )
-//                 : null,
-//           },
-//           after: {
-//             eth: fmt(
-//               ethers.formatEther(
-//                 senderBalance -
-//                   (transferType === "eth" ? value + gasCost : gasCost),
-//               ),
-//             ),
-//             ethUsd: fmt(
-//               parseFloat(
-//                 ethers.formatEther(
-//                   senderBalance -
-//                     (transferType === "eth" ? value + gasCost : gasCost),
-//                 ),
-//               ) * ethUsd,
-//             ),
-//             token:
-//               transferType === "erc20"
-//                 ? fmt(ethers.formatUnits(tokenBalance - value, decimals))
-//                 : null,
-//             tokenUsd:
-//               transferType === "erc20"
-//                 ? fmt(
-//                     parseFloat(
-//                       ethers.formatUnits(tokenBalance - value, decimals),
-//                     ) * tokenUsd,
-//                   )
-//                 : null,
-//           },
-//         },
-//         recipient: {
-//           before: {
-//             eth: fmt(ethers.formatEther(recipientBalance)),
-//             ethUsd: fmt(
-//               parseFloat(ethers.formatEther(recipientBalance)) * ethUsd,
-//             ),
-//             token:
-//               transferType === "erc20"
-//                 ? fmt(ethers.formatUnits(recipientTokenBalance, decimals))
-//                 : null,
-//             tokenUsd:
-//               transferType === "erc20"
-//                 ? fmt(
-//                     parseFloat(
-//                       ethers.formatUnits(recipientTokenBalance, decimals),
-//                     ) * tokenUsd,
-//                   )
-//                 : null,
-//           },
-//           after: {
-//             eth: fmt(
-//               ethers.formatEther(
-//                 recipientBalance + (transferType === "eth" ? value : 0n),
-//               ),
-//             ),
-//             ethUsd: fmt(
-//               parseFloat(
-//                 ethers.formatEther(
-//                   recipientBalance + (transferType === "eth" ? value : 0n),
-//                 ),
-//               ) * ethUsd,
-//             ),
-//             token:
-//               transferType === "erc20"
-//                 ? fmt(
-//                     ethers.formatUnits(recipientTokenBalance + value, decimals),
-//                   )
-//                 : null,
-//             tokenUsd:
-//               transferType === "erc20"
-//                 ? fmt(
-//                     parseFloat(
-//                       ethers.formatUnits(
-//                         recipientTokenBalance + value,
-//                         decimals,
-//                       ),
-//                     ) * tokenUsd,
-//                   )
-//                 : null,
-//           },
-//         },
-//       },
-//       warnings: [],
-//     };
+## Code of Conduct
 
-//     if (!sufficientEth)
-//       result.warnings.push("Insufficient ETH for gas + transfer");
-//     if (!sufficientTokens) result.warnings.push("Insufficient token balance");
-//     if (recipientAddress === ethers.ZeroAddress)
-//       result.warnings.push("Transfer to zero address");
+Please note that this project is released with a [Contributor Code of Conduct](./CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
 
-//     return safeJson(result);
-//   } catch (error) {
-//     return {
-//       success: false,
-//       error: error.message,
-//       reason:
-//         error.code === "INSUFFICIENT_FUNDS"
-//           ? "insufficient_balance"
-//           : error.message.includes("revert")
-//             ? "contract_reverted"
-//             : "simulation_error",
-//     };
-//   }
-// };
+## License
 
-// // exporting function with cached response
-// const getSimulate = async (userAddress, recipientAddress, amount, currency) => {
-//   // make the cache key
-//   const cachePayload = {
-//     userAddress: userAddress.toLowerCase(),
-//     recoverAddress: recipientAddress.toLowerCase(),
-//     amount: amount,
-//     currency: currency.toUpperCase(),
-//   };
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
 
-//   // calling the cache function
-//   const cacheKey = generateChacheKey(cachePayload);
-
-//   // crossCheck cache key from redisClient
-//   const cachedData = await redisClient.get(cacheKey);
-//   if (cachedData) {
-//     return JSON.parse(cachedData);
-//   }
-
-//   // In case of !cache
-//   const simResult = await _runSimulation(
-//     userAddress,
-//     recipientAddress,
-//     amount,
-//     currency,
-//   );
-
-//   // setting cache only if successful
-//   if (simResult && simResult.success) {
-//     await redisClient.set(cacheKey, JSON.stringify(simResult), {
-//       EX: parseInt(EXPIRY_SECONDS),
-//     });
-//   }
-
-//   return simResult;
-// };
-
-// // now when controller calls this redis-cached based simulation of evm
-// module.exports = getSimulate;
-//

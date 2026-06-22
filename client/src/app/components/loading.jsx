@@ -2,7 +2,7 @@
 
 import { m } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { LuLoader2 } from "react-icons/lu";
 
 export default function PhishingLoader({ isLoading }) {
   const [progress, setProgress] = useState(0);
@@ -68,7 +68,7 @@ export default function PhishingLoader({ isLoading }) {
               ease: "linear"
             }}
           >
-            <Loader2 className="w-8 h-8 text-blue-400 animate-spin" />
+            <LuLoader2 className="w-8 h-8 text-blue-400 animate-spin" />
           </m.div>
         </m.div>
 

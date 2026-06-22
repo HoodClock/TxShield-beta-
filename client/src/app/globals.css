@@ -9,6 +9,7 @@ input::-webkit-inner-spin-button {
 
 input[type="number"] {
     -moz-appearance: textfield;
+    appearance: textfield;
 }
 
 [data-rk] {
@@ -232,7 +233,7 @@ h1, h2, h3, h4, h5, h6, .font-clash {
 }
 
 .theme-shadow {
-    shadow: var(--shadow);
+    box-shadow: var(--shadow);
 }
 
 /* Custom Scrollbar */

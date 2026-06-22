@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef } from "react";
 import { m, AnimatePresence, useScroll, useSpring } from "framer-motion";
-import { Send } from "lucide-react";
+import { LuSend } from "react-icons/lu";
 import Image from "next/image";
 import { contactApi } from "@/api/api";
 import ScrollIndicator from "./ScrollIndicator";
@@ -311,7 +311,7 @@ export default function ContactUs() {
                   </>
                 ) : (
                   <>
-                    <Send className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                    <LuSend className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                     Transmit Signal
                   </>
                 )}
