@@ -8,6 +8,7 @@
 # Environment files (do NOT commit secrets)
 .env
 .env.*
+!.env.example
 
 # Next.js build output
 /.next/
