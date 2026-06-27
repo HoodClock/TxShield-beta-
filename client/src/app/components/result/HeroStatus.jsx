@@ -57,7 +57,7 @@ export default function HeroStatus({
         </div>
 
         {/* --- SECONDARY TELEMETRY MODULES --- */}
-        <div className="lg:col-span-6 grid grid-cols-2 gap-6">
+        <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
           
           {/* Network Load / Gas */}
           <div className="relative group p-6 rounded-3xl bg-card/40 backdrop-blur-3xl border border-border flex flex-col justify-between overflow-hidden">

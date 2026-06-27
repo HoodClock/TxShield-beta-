@@ -74,7 +74,7 @@ const TransactionDetails = React.memo(
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 flex-1 overflow-y-auto no-scrollbar pr-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1 overflow-y-auto no-scrollbar pr-1">
           {transactionItems.map((item, idx) => (
             <div
               key={idx}
