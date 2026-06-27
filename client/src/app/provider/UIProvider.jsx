@@ -8,37 +8,14 @@ export function UIProvider({ children }) {
   const [theme, setTheme] = useState("dark");
   const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
   const [pendingTheme, setPendingTheme] = useState(null);
-  const [isCustomCursorEnabled, setIsCustomCursorEnabled] = useState(true);
 
-  // Initialize from localStorage
+  // Initialize theme from localStorage
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "dark";
     setTheme(savedTheme);
     document.documentElement.classList.remove("light", "dark");
     document.documentElement.classList.add(savedTheme);
-
-    const savedCursorPref = localStorage.getItem("customCursor");
-    const isCursorEnabled = savedCursorPref !== "false"; // Default true
-    setIsCustomCursorEnabled(isCursorEnabled);
-    if (isCursorEnabled) {
-      document.body.classList.add("use-custom-cursor");
-    } else {
-      document.body.classList.remove("use-custom-cursor");
-    }
   }, []);
-
-  const toggleCustomCursor = () => {
-    setIsCustomCursorEnabled(prev => {
-      const newVal = !prev;
-      localStorage.setItem("customCursor", String(newVal));
-      if (newVal) {
-        document.body.classList.add("use-custom-cursor");
-      } else {
-        document.body.classList.remove("use-custom-cursor");
-      }
-      return newVal;
-    });
-  };
 
   const requestThemeChange = (newTheme) => {
     if (newTheme === "dark") {
@@ -79,8 +56,6 @@ export function UIProvider({ children }) {
       theme, 
       isThemeModalOpen, 
       pendingTheme,
-      isCustomCursorEnabled,
-      toggleCustomCursor,
       requestThemeChange, 
       confirmThemeChange, 
       cancelThemeChange 

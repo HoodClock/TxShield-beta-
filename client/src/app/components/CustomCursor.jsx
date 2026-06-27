@@ -2,15 +2,13 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { m, useMotionValue, useSpring } from "framer-motion";
-import { useUI } from "../provider/UIProvider";
 
 export default function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const [targetText, setTargetText] = useState("SYSTEM.IDLE");
   const [isTouchDevice, setIsTouchDevice] = useState(false);
-
-  const { isCustomCursorEnabled } = useUI();
 
   const coordRef = useRef(null);
 
@@ -34,9 +32,16 @@ export default function CustomCursor() {
       return; // Do not attach mouse listeners if on a touch device
     }
 
+    let currentIsVisible = false;
+
     const handleMouseMove = (e) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
+      
+      if (!currentIsVisible) {
+        currentIsVisible = true;
+        setIsVisible(true);
+      }
 
       // Update coordinates text directly to avoid React re-renders on every mouse move
       if (coordRef.current) {
@@ -66,26 +71,38 @@ export default function CustomCursor() {
 
     const handleMouseDown = () => setIsMouseDown(true);
     const handleMouseUp = () => setIsMouseDown(false);
+    
+    const handleMouseLeave = () => {
+      currentIsVisible = false;
+      setIsVisible(false);
+    };
+    const handleMouseEnter = () => {
+      currentIsVisible = true;
+      setIsVisible(true);
+    };
 
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mouseover", handleMouseOver);
     window.addEventListener("mousedown", handleMouseDown);
     window.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener("mouseleave", handleMouseLeave);
+    document.addEventListener("mouseenter", handleMouseEnter);
 
-    if (isCustomCursorEnabled && !isTouchDevice) {
-      document.documentElement.classList.add("custom-cursor-active");
-    }
+    // Add class to hide default cursor
+    document.documentElement.classList.add("custom-cursor-active");
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseover", handleMouseOver);
       window.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("mouseleave", handleMouseLeave);
+      document.removeEventListener("mouseenter", handleMouseEnter);
       document.documentElement.classList.remove("custom-cursor-active");
     };
-  }, [mouseX, mouseY, isCustomCursorEnabled, isTouchDevice]);
+  }, [mouseX, mouseY]);
 
-  if (isTouchDevice || !isCustomCursorEnabled) return null;
+  if (!isVisible || isTouchDevice) return null;
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[999999] overflow-hidden">
@@ -100,13 +117,13 @@ export default function CustomCursor() {
         animate={{
           scale: isHovering ? 1.5 : 1,
           rotate: [0, 360],
-          borderColor: isHovering ? "rgba(34, 211, 238, 0.9)" : "rgba(168, 85, 247, 0.8)",
+          borderColor: isHovering ? "rgba(34, 211, 238, 0.8)" : "rgba(168, 85, 247, 0.5)",
         }}
         transition={{
           rotate: { duration: 10, repeat: Infinity, ease: "linear" },
           scale: { type: "spring", stiffness: 300, damping: 20 },
         }}
-        className="absolute w-10 h-10 rounded-full border border-dashed border-purple-500/80 shadow-[0_0_15px_rgba(168,85,247,0.4)] backdrop-blur-sm"
+        className="absolute w-10 h-10 rounded-full border border-dashed border-purple-500/50"
       />
 
       {/* Target Crosshair Corners (appears on hover) */}
@@ -141,7 +158,7 @@ export default function CustomCursor() {
           scale: isMouseDown ? 0.5 : isHovering ? 1.2 : 1,
           backgroundColor: isHovering ? "#22d3ee" : "#a855f7",
         }}
-        className="absolute w-2.5 h-2.5 rounded-full bg-purple-500 shadow-[0_0_12px_rgba(168,85,247,0.8),inset_0_0_4px_rgba(255,255,255,0.8)] border border-white/20"
+        className="absolute w-2 h-2 rounded-full bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.5)]"
       />
 
       {/* Live Data HUD (Coordinates & Status) */}
@@ -166,7 +183,7 @@ export default function CustomCursor() {
         </span>
         
         {/* Status */}
-        <span className={`font-mono text-[8px] tracking-wider ${isHovering ? "text-cyan-400 drop-shadow-[0_0_3px_rgba(34,211,238,0.8)]" : "text-purple-400 drop-shadow-[0_0_3px_rgba(168,85,247,0.8)]"}`}>
+        <span className={`font-mono text-[8px] tracking-wider ${isHovering ? "text-cyan-400" : "text-purple-400"}`}>
           {targetText}
         </span>
       </m.div>

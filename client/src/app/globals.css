@@ -22,25 +22,22 @@ body {
     min-height: 100vh;
     width: 100vw;
     overflow-x: hidden;
-    transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s ease;
-}
-
-body.use-custom-cursor {
     cursor: none !important;
+    transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s ease;
 }
 
 /* Hide default cursor on devices with a mouse/trackpad (Laptops/PCs) */
 @media (pointer: fine) {
-  body.use-custom-cursor,
-  body.use-custom-cursor * {
+  .custom-cursor-active,
+  .custom-cursor-active * {
     cursor: none !important;
   }
 }
 
 /* Fallback to restore default cursor on touch devices (Phones/Tablets) */
 @media (pointer: coarse) {
-  body.use-custom-cursor,
-  body.use-custom-cursor * {
+  .custom-cursor-active,
+  .custom-cursor-active * {
     cursor: auto !important;
   }
 }
