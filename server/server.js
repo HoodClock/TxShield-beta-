@@ -8,13 +8,13 @@ const cors = require("cors");
 require("dotenv").config();
 const setupDb = require("./config/setupDb");
 
-// // Initialize the database
-// setupDb().then(() => {
-//   console.log("Database setup successfully.");
-// }).catch((err) => {
-//   console.error("Database setup failed:", err);
-//   process.exit(1); // Exit the process if the database setup fails
-// });
+// Initialize the database
+setupDb().then(() => {
+  console.log("Database setup successfully.");
+}).catch((err) => {
+  console.error("Database setup failed:", err);
+  process.exit(1); // Exit the process if the database setup fails
+});
 
 // middlewares
 const authMiddleware = require("./middlewares/auth.middleware");

@@ -85,7 +85,7 @@ export const authConnect = async (formData) => {
 };
 
 export const authGetAPI = async (connectedAddress) => {
-  return await axios.get(`${BASE_URL}/auth/apiKey/${connectedAddress}`, {
+  return await axios.get(`${BASE_URL}/auth/apikey/${connectedAddress}`, {
     withCredentials: true,
   });
 };
