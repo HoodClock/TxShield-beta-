@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { m, useMotionValue, useSpring } from "framer-motion";
+import { useUI } from "../provider/UIProvider";
 
 export default function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
@@ -9,6 +10,8 @@ export default function CustomCursor() {
   const [isVisible, setIsVisible] = useState(false);
   const [targetText, setTargetText] = useState("SYSTEM.IDLE");
   const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  const { isCustomCursorEnabled } = useUI();
 
   const coordRef = useRef(null);
 
@@ -102,7 +105,7 @@ export default function CustomCursor() {
     };
   }, [mouseX, mouseY]);
 
-  if (!isVisible || isTouchDevice) return null;
+  if (!isVisible || isTouchDevice || !isCustomCursorEnabled) return null;
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[999999] overflow-hidden">

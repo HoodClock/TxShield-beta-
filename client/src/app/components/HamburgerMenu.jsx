@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { useUI } from "../provider/UIProvider";
+import { FiMousePointer } from "react-icons/fi";
 
 const navItems = [
   { name: "Home", path: "/" },
@@ -18,6 +20,7 @@ export default function HamburgerMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const pathname = usePathname();
+  const { isCustomCursorEnabled, toggleCustomCursor } = useUI();
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
@@ -134,17 +137,29 @@ export default function HamburgerMenu() {
               })}
             </nav>
 
-            {/* Bottom Status Branding */}
+            {/* Bottom Status Branding & Settings */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
-              className="absolute bottom-12 flex flex-col items-center gap-4"
+              className="absolute bottom-12 flex flex-col items-center gap-6"
             >
-              <div className="h-[1px] w-24 bg-border" />
-              <div className="flex items-center gap-3">
-                <span className="font-mono text-[9px] text-muted-foreground tracking-[0.4em] uppercase">Security Protocol</span>
-                <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
+              <button
+                onClick={toggleCustomCursor}
+                className="flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-card/50 hover:bg-muted transition-colors"
+              >
+                <FiMousePointer className="w-4 h-4 text-muted-foreground" />
+                <span className="font-mono text-[10px] text-muted-foreground tracking-widest uppercase">
+                  Custom Cursor: {isCustomCursorEnabled ? "ON" : "OFF"}
+                </span>
+              </button>
+
+              <div className="flex flex-col items-center gap-4">
+                <div className="h-[1px] w-24 bg-border" />
+                <div className="flex items-center gap-3">
+                  <span className="font-mono text-[9px] text-muted-foreground tracking-[0.4em] uppercase">Security Protocol</span>
+                  <div className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
+                </div>
               </div>
             </motion.div>
 
