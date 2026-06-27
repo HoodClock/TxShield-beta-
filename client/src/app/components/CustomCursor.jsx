@@ -8,6 +8,7 @@ export default function CustomCursor() {
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [targetText, setTargetText] = useState("SYSTEM.IDLE");
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   const coordRef = useRef(null);
 
@@ -20,6 +21,17 @@ export default function CustomCursor() {
   const smoothY = useSpring(mouseY, springConfig);
 
   useEffect(() => {
+    // Detect if this is a touch screen device
+    const isTouch = 
+      "ontouchstart" in window ||
+      navigator.maxTouchPoints > 0 ||
+      window.matchMedia("(pointer: coarse)").matches;
+
+    if (isTouch) {
+      setIsTouchDevice(true);
+      return; // Do not attach mouse listeners if on a touch device
+    }
+
     let currentIsVisible = false;
 
     const handleMouseMove = (e) => {
@@ -90,7 +102,7 @@ export default function CustomCursor() {
     };
   }, [mouseX, mouseY]);
 
-  if (!isVisible) return null;
+  if (!isVisible || isTouchDevice) return null;
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[999999] overflow-hidden">
