@@ -90,9 +90,8 @@ function StatsSection() {
 	return (
 		<section ref={ref} className="relative w-full h-[100dvh] overflow-hidden bg-background flex flex-col justify-center items-center py-4 px-4 sm:px-8 transition-colors duration-700">
 			
-			{/* Cyberpunk Ambient Orbs */}
-			<div className="absolute top-1/2 left-1/4 w-[50vw] h-[50vw] bg-cyan-900/10 rounded-full blur-[150px] -translate-y-1/2 -z-10 pointer-events-none mix-blend-screen"></div>
-			<div className="absolute top-1/2 right-1/4 w-[50vw] h-[50vw] bg-purple-900/10 rounded-full blur-[150px] -translate-y-1/2 -z-10 pointer-events-none mix-blend-screen"></div>
+			<div className="absolute top-1/2 left-1/4 w-[50vw] h-[50vw] bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-cyan-900/10 to-transparent rounded-full -translate-y-1/2 -z-10 pointer-events-none mix-blend-screen"></div>
+			<div className="absolute top-1/2 right-1/4 w-[50vw] h-[50vw] bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-purple-900/10 to-transparent rounded-full -translate-y-1/2 -z-10 pointer-events-none mix-blend-screen"></div>
 
 			<div className="max-w-7xl mx-auto w-full relative z-10 flex flex-col md:flex-row items-center justify-between gap-8 lg:gap-16 h-full max-h-[600px]">
 				

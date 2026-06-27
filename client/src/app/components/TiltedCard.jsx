@@ -36,6 +36,7 @@ const TiltedCard = ({ children, className = "" }) => {
     >
       <div
         ref={cardRef}
+        className="motion-reduce:transform-none motion-reduce:transition-none"
         style={{
           transformStyle: 'preserve-3d',
           transition: 'transform 0.1s ease-out',

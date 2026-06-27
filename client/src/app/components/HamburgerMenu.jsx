@@ -74,7 +74,7 @@ export default function HamburgerMenu() {
           >
             {/* Ambient Mouse Glow */}
             <motion.div 
-              className="absolute pointer-events-none w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px]"
+              className="absolute pointer-events-none w-[600px] h-[600px] bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-primary/5 to-transparent rounded-full"
               animate={{ 
                 x: mousePos.x - 300, 
                 y: mousePos.y - 300 

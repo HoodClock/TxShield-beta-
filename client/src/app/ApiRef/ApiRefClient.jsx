@@ -95,8 +95,8 @@ export default function ApiRefClient() {
 
             {/* Ambient background glows — matches site-wide pattern */}
             <div className="absolute inset-0 z-0 pointer-events-none opacity-50 dark:opacity-100">
-                <div className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] bg-cyan-900/10 dark:bg-cyan-900/20 rounded-full blur-[120px]"></div>
-                <div className="absolute bottom-1/4 right-1/4 w-[40rem] h-[40rem] bg-purple-900/10 dark:bg-purple-900/20 rounded-full blur-[120px]"></div>
+                <div className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-cyan-900/10 dark:from-cyan-900/20 to-transparent rounded-full"></div>
+                <div className="absolute bottom-1/4 right-1/4 w-[40rem] h-[40rem] bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-purple-900/10 dark:from-purple-900/20 to-transparent rounded-full"></div>
             </div>
 
             <div className="relative z-10 flex flex-col h-full w-full px-6 sm:px-10 lg:px-16 pt-10 pb-8">

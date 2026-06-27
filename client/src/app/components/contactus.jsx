@@ -211,8 +211,8 @@ export default function ContactUs() {
 
       {/* Ambient glows */}
       <div className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-700 opacity-40 dark:opacity-100">
-        <div className="absolute top-1/4 left-1/4 w-[35rem] h-[35rem] bg-purple-900/5 dark:bg-purple-900/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-[35rem] h-[35rem] bg-cyan-900/5 dark:bg-cyan-900/8 rounded-full blur-[120px]" />
+        <div className="absolute top-1/4 left-1/4 w-[35rem] h-[35rem] bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-purple-900/5 dark:from-purple-900/10 to-transparent rounded-full" />
+        <div className="absolute bottom-1/4 right-1/4 w-[35rem] h-[35rem] bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-cyan-900/5 dark:from-cyan-900/8 to-transparent rounded-full" />
       </div>
 
       <div className="relative z-10 flex flex-col w-full px-6 sm:px-10 lg:px-16 pb-12" onClick={() => setExpandedId(null)}>

@@ -135,7 +135,7 @@ export default function ThemeController() {
               className="relative w-full max-w-md p-8 rounded-3xl bg-card border border-border shadow-2xl overflow-hidden"
             >
               {/* Decorative Glow */}
-              <div className={`absolute top-0 right-0 w-32 h-32 blur-[80px] -z-10 opacity-20 ${isSwitchingToLight ? 'bg-yellow-400' : 'bg-purple-600'}`} />
+              <div className={`absolute top-0 right-0 w-32 h-32 -z-10 opacity-20 bg-[radial-gradient(circle,_var(--tw-gradient-stops))] ${isSwitchingToLight ? 'from-yellow-400 to-transparent' : 'from-purple-600 to-transparent'}`} />
 
               <div className="flex flex-col items-center text-center">
                 <div className={`w-16 h-16 rounded-2xl mb-6 flex items-center justify-center ${isSwitchingToLight ? 'bg-yellow-500/10' : 'bg-purple-500/10'}`}>

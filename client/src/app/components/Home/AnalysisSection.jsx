@@ -119,8 +119,8 @@ function AnalysisSection() {
         <section ref={sectionRef} className="relative w-full h-full bg-background overflow-hidden flex flex-col justify-center transition-colors duration-700">
             {/* Ambient Background (Simulate Hero Vibe) */}
             <div className="absolute inset-0 z-0 opacity-40 dark:opacity-100 transition-opacity duration-700">
-                <div className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] bg-blue-500/5 dark:bg-cyan-900/10 rounded-full blur-[120px] pointer-events-none"></div>
-                <div className="absolute bottom-1/4 right-1/4 w-[40rem] h-[40rem] bg-purple-500/5 dark:bg-purple-900/10 rounded-full blur-[120px] pointer-events-none"></div>
+                <div className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-blue-500/5 dark:from-cyan-900/10 to-transparent rounded-full pointer-events-none"></div>
+                <div className="absolute bottom-1/4 right-1/4 w-[40rem] h-[40rem] bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-purple-500/5 dark:from-purple-900/10 to-transparent rounded-full pointer-events-none"></div>
             </div>
 
             <div className="max-w-6xl mx-auto relative z-10 flex flex-col h-full w-full py-6">
