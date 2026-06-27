@@ -89,8 +89,8 @@ export default function SimulationForm({
         <div className="relative bg-card/60 border border-border backdrop-blur-3xl p-8 md:p-12 overflow-hidden flex flex-col gap-8 rounded-[40px] shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] transition-colors duration-700">
           <DataFlowBackground className="opacity-10 z-0 pointer-events-none" />
           {/* Ambient Minimal Glows */}
-          <div className="absolute top-0 right-0 w-[30rem] h-[30rem] bg-purple-900/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-          <div className="absolute bottom-0 left-0 w-[30rem] h-[30rem] bg-pink-900/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
+          <div className="absolute top-0 right-0 w-[30rem] h-[30rem] bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-purple-900/10 to-transparent rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+          <div className="absolute bottom-0 left-0 w-[30rem] h-[30rem] bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-pink-900/10 to-transparent rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
 
           {/* Top Control Bar */}
           <div className="absolute top-6 left-6 z-20">

@@ -44,7 +44,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${clashDisplay.variable}`}>
-      <body className="antialiased bg-background text-foreground">
+      <body className="antialiased bg-background text-foreground overflow-x-hidden">
         <UIProvider>
           <ClientLayout>
             <HamburgerMenu />

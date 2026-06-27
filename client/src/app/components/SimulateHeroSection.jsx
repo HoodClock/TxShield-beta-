@@ -10,8 +10,8 @@ function SimulateHeroSection({ onChainSelect }) {
     <section className="relative h-full min-h-screen w-full bg-background overflow-hidden flex flex-col justify-center items-center transition-colors duration-700">
       {/* Absolute Ambient Background to tie into the SPA feel */}
       <div className="absolute inset-0 z-0 transition-opacity duration-700 opacity-40 dark:opacity-100">
-        <div className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] bg-cyan-900/5 dark:bg-cyan-900/10 rounded-full blur-[120px] pointer-events-none"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-[40rem] h-[40rem] bg-purple-900/5 dark:bg-purple-900/10 rounded-full blur-[120px] pointer-events-none"></div>
+        <div className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-cyan-900/5 dark:from-cyan-900/10 to-transparent rounded-full pointer-events-none"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-[40rem] h-[40rem] bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-purple-900/5 dark:from-purple-900/10 to-transparent rounded-full pointer-events-none"></div>
       </div>
 
       <m.div

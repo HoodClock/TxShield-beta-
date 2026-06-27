@@ -171,8 +171,8 @@ const MempoolVisualizer = ({ activeFeature, activeIndex }) => {
       {/* Scanning Rings when active (Optimized) */}
       {isActive && (
         <>
-          <div className={`absolute w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] rounded-full border border-dashed ${t.border}/30 animate-[spin_10s_linear_infinite] z-0`} />
-          <div className={`absolute w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] rounded-full bg-transparent border border-solid ${t.border}/40 animate-ping-radar z-0`} />
+          <div className={`absolute w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] rounded-full border border-dashed ${t.border}/30 animate-[spin_10s_linear_infinite] transform-gpu will-change-transform z-0`} />
+          <div className={`absolute w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] rounded-full bg-transparent border border-solid ${t.border}/40 animate-ping-radar transform-gpu will-change-transform z-0`} />
         </>
       )}
 
