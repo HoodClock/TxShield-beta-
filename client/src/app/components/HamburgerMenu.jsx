@@ -135,30 +135,30 @@ export default function HamburgerMenu() {
                   </motion.div>
                 );
               })}
-
-              {/* Cursor Toggle Settings */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: navItems.length * 0.06 + 0.2, duration: 0.6 }}
-                className="pt-6 md:pt-8 w-full flex justify-start pl-[64px]"
-              >
-                <button
-                  onClick={toggleCustomCursor}
-                  className="group flex items-center gap-3 px-5 py-2.5 rounded-full border border-border/50 bg-background/50 hover:bg-muted/50 hover:border-border transition-all duration-300"
-                >
-                  <div className="relative flex items-center justify-center">
-                    <FiMousePointer className={`w-3.5 h-3.5 transition-colors duration-300 ${isCustomCursorEnabled ? 'text-blue-400' : 'text-muted-foreground'}`} />
-                    {isCustomCursorEnabled && (
-                      <span className="absolute inset-0 bg-blue-400/20 blur-sm rounded-full animate-pulse" />
-                    )}
-                  </div>
-                  <span className="font-mono text-[10px] text-muted-foreground group-hover:text-foreground tracking-[0.2em] uppercase transition-colors">
-                    Custom Cursor: <span className={isCustomCursorEnabled ? 'text-blue-400' : 'text-muted-foreground'}>{isCustomCursorEnabled ? "ON" : "OFF"}</span>
-                  </span>
-                </button>
-              </motion.div>
             </nav>
+
+            {/* Top Left Settings (Cursor Toggle) */}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="absolute top-8 left-8 z-[100]"
+            >
+              <button
+                onClick={toggleCustomCursor}
+                className="group flex items-center gap-3 px-4 py-2 rounded-full border border-border/50 bg-card/50 hover:bg-muted/50 transition-all duration-300 backdrop-blur-md"
+              >
+                <div className="relative flex items-center justify-center">
+                  <FiMousePointer className={`w-3.5 h-3.5 transition-colors duration-300 ${isCustomCursorEnabled ? 'text-blue-400' : 'text-muted-foreground'}`} />
+                  {isCustomCursorEnabled && (
+                    <span className="absolute inset-0 bg-blue-400/20 blur-sm rounded-full animate-pulse" />
+                  )}
+                </div>
+                <span className="font-mono text-[10px] text-muted-foreground group-hover:text-foreground tracking-[0.2em] uppercase transition-colors hidden sm:inline">
+                  Custom Cursor: <span className={isCustomCursorEnabled ? 'text-blue-400' : 'text-muted-foreground'}>{isCustomCursorEnabled ? "ON" : "OFF"}</span>
+                </span>
+              </button>
+            </motion.div>
 
             {/* Bottom Status Branding */}
             <motion.div
