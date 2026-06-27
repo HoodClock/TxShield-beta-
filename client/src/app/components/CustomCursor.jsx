@@ -91,8 +91,9 @@ export default function CustomCursor() {
     document.addEventListener("mouseleave", handleMouseLeave);
     document.addEventListener("mouseenter", handleMouseEnter);
 
-    // Add class to hide default cursor
-    document.documentElement.classList.add("custom-cursor-active");
+    if (isCustomCursorEnabled && !isTouchDevice) {
+      document.documentElement.classList.add("custom-cursor-active");
+    }
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
@@ -103,7 +104,7 @@ export default function CustomCursor() {
       document.removeEventListener("mouseenter", handleMouseEnter);
       document.documentElement.classList.remove("custom-cursor-active");
     };
-  }, [mouseX, mouseY]);
+  }, [mouseX, mouseY, isCustomCursorEnabled, isTouchDevice]);
 
   if (!isVisible || isTouchDevice || !isCustomCursorEnabled) return null;
 
