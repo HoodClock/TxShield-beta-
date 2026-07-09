@@ -2,6 +2,7 @@
 
 import { m } from "framer-motion";
 import { useState } from "react";
+import Tooltip from "./Tooltip";
 
 export default function HoneypotChecks({ isVisible, data, chain = "EVM" }) {
   if (!isVisible || !data) return null;
@@ -96,6 +97,20 @@ export default function HoneypotChecks({ isVisible, data, chain = "EVM" }) {
       </div>
     );
   }
+
+
+  const RISK_HELP = {
+    blackList: "A blacklist lets the contract owner freeze specific wallets so they cannot transfer tokens.",
+    mintAccess: "Unauthorized minting means someone can create new tokens, diluting holders.",
+    tradingControl: "Trading controls can pause buys/sells or restrict who can trade.",
+    highTax: "Extreme buy/sell taxes can trap value or make selling impractical.",
+    timeHoneypot: "A time-based honeypot may allow buys early, then block sells after a delay.",
+    honeypotBuySell: "A honeypot allows you to buy the token, but prevents you from ever selling it.",
+    disableTransfer: "Transfers can be disabled so tokens cannot leave the wallet.",
+    fakeBalance: "The contract may show a fake balance that cannot be withdrawn or sold.",
+    gasTrap: "A gas trap makes sell transactions fail by consuming more gas than available.",
+    hiddenOwner: "Ownership may be obfuscated, hiding who can change critical permissions.",
+  };
 
   const TITLES = {
     blackList: "Blacklist Check",
