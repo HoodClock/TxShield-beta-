@@ -39,7 +39,7 @@ If you've noticed a bug or have a feature request, make sure to check our [Issue
 2. **Make your changes**: Write clean, readable code and include comments where necessary.
 3. **Test your changes**: Ensure your changes don't break existing functionality and run any existing tests.
 4. **Commit your changes**: Write clear, descriptive commit messages.
-5. **Push to your fork** and submit a **Pull Request** against the `main` branch.
+5. **Push to your fork** and submit a **Pull Request** against the `master` branch.
 6. A maintainer will review your code. You might be asked to make some changes before it can be merged.
 
 ## Coding Standards
