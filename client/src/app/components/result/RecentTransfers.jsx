@@ -13,7 +13,7 @@ export default function RecentTransfers({
   return (
     <m.div
       variants={itemVariants}
-      className="relative bg-card border border-border rounded-2xl overflow-hidden mt-4 transition-colors duration-700"
+      className="relative bg-card border border-border rounded-2xl overflow-hidden mt-4 transition-colors duration-700 max-w-full"
     >
       <div className="relative z-10 p-4 sm:p-5 w-full flex items-center justify-between border-b border-border">
         <div className="flex items-center gap-4">
@@ -26,9 +26,9 @@ export default function RecentTransfers({
         </div>
       </div>
 
-      <div className="relative z-10 px-4 sm:px-5 pb-5 pt-4 overflow-x-auto no-scrollbar">
+      <div className="relative z-10 px-2 sm:px-5 pb-5 pt-4 overflow-x-auto no-scrollbar max-w-full">
         <div className="bg-muted/50 rounded-xl border border-border p-1 overflow-hidden">
-          <table className="w-full text-[10px] sm:text-xs font-mono">
+          <table className="w-full min-w-[520px] sm:min-w-0 text-[10px] sm:text-xs font-mono">
             <thead>
               <tr className="border-b border-border text-muted-foreground uppercase tracking-widest bg-card">
                 {[
@@ -61,12 +61,9 @@ export default function RecentTransfers({
                   className="border-b border-border hover:bg-primary/10 transition-all duration-200 group/row last:border-0"
                 >
                   <td className="py-2.5 px-3 sm:px-4">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-blue-400 group-hover/row:text-blue-300 transition-colors break-all">
-                        {(tx.hash || "").substring(0, 8)}...
-                      </span>
-                      <CopyButton text={tx.hash} label="Copy transaction hash" />
-                    </div>
+                    <span className="text-blue-400 group-hover/row:text-blue-300 transition-colors break-all">
+                      {(tx.hash || "").substring(0, 8)}...
+                    </span>
                   </td>
                   <td className="py-2.5 px-3 sm:px-4">
                     <div className="flex items-center gap-1.5">

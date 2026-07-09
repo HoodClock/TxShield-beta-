@@ -61,7 +61,7 @@ const TransactionDetails = React.memo(
     return (
       <m.div
         variants={itemVariants}
-        className="relative h-full flex flex-col p-6 rounded-3xl bg-card/40 backdrop-blur-3xl border border-border overflow-hidden group"
+        className="relative h-full flex flex-col p-4 sm:p-6 rounded-3xl bg-card/40 backdrop-blur-3xl border border-border overflow-hidden group min-w-0"
       >
         <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl -z-10 group-hover:bg-blue-500/10 transition-colors duration-500" />
         
