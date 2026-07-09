@@ -14,6 +14,7 @@ import {
   FiActivity,
   FiAlertCircle
 } from "react-icons/fi";
+import CopyButton from "../CopyButton";
 
 const TransactionDetails = React.memo(
   ({
