@@ -141,7 +141,7 @@ export default function ResultsDashboard({
   };
 
   return (
-    <div className="min-h-screen pt-[120px] pb-24 bg-background relative overflow-hidden transition-colors duration-700">
+    <div className="min-h-screen pt-[100px] sm:pt-[120px] pb-16 sm:pb-24 px-3 sm:px-6 bg-background relative overflow-x-hidden transition-colors duration-700">
       
       {/* --- KINETIC AMBIENT BACKGROUND --- */}
       <div className="fixed inset-0 z-0 pointer-events-none opacity-50 dark:opacity-100">
@@ -251,8 +251,8 @@ export default function ResultsDashboard({
                 {/* --- SIMULATION TAB --- */}
                 {activeTab === 'simulation' && (
                   <div>
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                      <div className="lg:col-span-2 space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                      <div className="md:col-span-2 lg:col-span-2 space-y-4 sm:space-y-6 min-w-0">
                         <TransactionDetails
                           itemVariants={itemVariants}
                           simulateData={simulateData}
@@ -266,7 +266,7 @@ export default function ResultsDashboard({
                           simulateData={simulateData}
                         />
                       </div>
-                      <div className="space-y-6">
+                      <div className="space-y-4 sm:space-y-6 min-w-0">
                         <TransactionSummary
                           itemVariants={itemVariants}
                           txHistoryData={txHistoryData}
