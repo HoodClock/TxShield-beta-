@@ -2,6 +2,7 @@
 
 import { m } from "framer-motion";
 import { FiRadio, FiExternalLink, FiHash, FiArrowRight, FiArrowLeft, FiDollarSign, FiCalendar, FiLink } from "react-icons/fi";
+import CopyButton from "../CopyButton";
 
 export default function RecentTransfers({
   itemVariants,
@@ -65,14 +66,20 @@ export default function RecentTransfers({
                     </span>
                   </td>
                   <td className="py-2.5 px-3 sm:px-4">
-                    <span className="text-muted-foreground group-hover/row:text-foreground transition-colors">
-                      {(tx.from || "").substring(0, 6)}...
-                    </span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-muted-foreground group-hover/row:text-foreground transition-colors break-all">
+                        {(tx.from || "").substring(0, 6)}...
+                      </span>
+                      <CopyButton text={tx.from} label="Copy from address" />
+                    </div>
                   </td>
                   <td className="py-2.5 px-3 sm:px-4">
-                    <span className="text-muted-foreground group-hover/row:text-foreground transition-colors">
-                      {(tx.to || "").substring(0, 6)}...
-                    </span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-muted-foreground group-hover/row:text-foreground transition-colors break-all">
+                        {(tx.to || "").substring(0, 6)}...
+                      </span>
+                      <CopyButton text={tx.to} label="Copy to address" />
+                    </div>
                   </td>
                   <td className="py-2.5 px-3 sm:px-4">
                     <span className="text-foreground font-semibold group-hover/row:text-primary transition-colors">
