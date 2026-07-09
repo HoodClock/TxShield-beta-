@@ -47,6 +47,8 @@ const SolSimulationForm = dynamic(
   },
 );
 
+import useRecentScans from "@/hooks/useRecentScans";
+import RecentScans from "../components/RecentScans";
 import {
   honeypotChecks as runHoneypotChecks,
   simulateTx as runSimulateTx,
@@ -67,6 +69,7 @@ export default function App() {
 
   // setting chain for wallet providers
   const [chain, setChain] = useState(null);
+  const { recentScans, addScan, clearScans } = useRecentScans();
 
   const abortControllerRef = useRef(null);
   const mounted = useRef(true);
@@ -107,6 +110,7 @@ export default function App() {
         setHoneypotData(honeypotRes.data);
         setPhishingData(phishingRes.data);
         setShowResults(true);
+        addScan({ ..._evmPayload, chain: "EVM" });
       }
     } catch (err) {
       if (err.name !== "AbortError") {
@@ -143,6 +147,13 @@ export default function App() {
         if (mounted.current) {
           setSolSimulationData(solSimulationRes.data);
           setShowResults(true);
+          if (solData?.contractAddress || solData?.address) {
+            addScan({
+              contractAddress: solData.contractAddress || solData.address,
+              chain: "SOL",
+              chainId: null,
+            });
+          }
         }
       } catch (err) {
         if (err.name !== "AbortError") {
@@ -208,13 +219,27 @@ export default function App() {
               <div className="flex justify-center my-6"></div>
               <AnimatePresence mode="wait">
                 {chain === "EVM" && (
-                  <EvmSimulationForm
-                    key="evm-form"
-                    onSimulateAll={handleSimulateAll}
-                    backButtonHandler={() => setChain(null)}
-                    onSwitchChain={() => setChain("SOL")}
-                    isLoading={isLoading}
-                  />
+                  <>
+                    <EvmSimulationForm
+                      key="evm-form"
+                      onSimulateAll={handleSimulateAll}
+                      backButtonHandler={() => setChain(null)}
+                      onSwitchChain={() => setChain("SOL")}
+                      isLoading={isLoading}
+                      initialAddress={null}
+                      recentScanAddress={null}
+                    />
+                    <RecentScans
+                      scans={recentScans.filter((s) => (s.chain || "EVM") === "EVM")}
+                      onClear={clearScans}
+                      onSelect={(scan) => {
+                        handleSimulateAll({
+                          contractAddress: scan.contractAddress,
+                          chainId: scan.chainId,
+                        });
+                      }}
+                    />
+                  </>
                 )}
                 {chain === "SOL" && (
                   <SolSimulationForm
