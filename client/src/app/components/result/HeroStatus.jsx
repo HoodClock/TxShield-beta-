@@ -22,7 +22,7 @@ export default function HeroStatus({
         <div className="lg:col-span-6 relative group">
           <div className={`absolute -inset-[1px] rounded-3xl bg-gradient-to-r ${executionSuccess ? 'from-emerald-500/20 via-cyan-500/20 to-emerald-500/20' : 'from-red-500/20 via-orange-500/20 to-red-500/20'} blur-sm opacity-50`} />
           
-          <div className="relative h-full p-8 rounded-3xl bg-card/40 backdrop-blur-3xl border border-border flex flex-col justify-center overflow-hidden">
+          <div className="relative h-full p-5 sm:p-8 rounded-3xl bg-card/40 backdrop-blur-3xl border border-border flex flex-col justify-center overflow-hidden min-w-0">
             <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(255,255,255,0.02)_50%,transparent_100%)] bg-[length:100%_4px] animate-[scan_4s_linear_infinite] pointer-events-none opacity-20" />
             
             <div className="relative z-10 flex items-center gap-6">
@@ -45,7 +45,7 @@ export default function HeroStatus({
                   </span>
                   <div className={`w-1.5 h-1.5 rounded-full ${executionSuccess ? 'bg-emerald-400' : 'bg-red-400'} animate-pulse`} />
                 </div>
-                <h2 className="text-3xl sm:text-4xl font-clash font-bold tracking-tight text-foreground mb-1 uppercase">
+                <h2 className="text-2xl sm:text-4xl font-clash font-bold tracking-tight text-foreground mb-1 uppercase break-words">
                   {executionSuccess ? "SAFE PASSAGE" : "CRITICAL ALERT"}
                 </h2>
                 <p className="font-mono text-[11px] text-muted-foreground leading-tight uppercase opacity-60">
