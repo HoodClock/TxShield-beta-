@@ -2,6 +2,7 @@ require("module-alias/register");
 const {
   generalLimiter,
   analysisLimiter,
+  simulationLimiter,
 } = require("./middlewares/rateLimiter.middleware");
 const express = require("express");
 const cors = require("cors");
@@ -17,7 +18,7 @@ setupDb().then(() => {
 });
 
 // middlewares
-const authMiddleware = require("./middlewares/auth.middleware");
+const { authMiddleware, optionalAuthMiddleware } = require("./middlewares/auth.middleware");
 
 // all routes path
 const simulateRouter = require("./routes/simulation/simulation.routes");
@@ -88,13 +89,13 @@ app.use((req, res, next) => {
 app.use(generalLimiter);
 
 // Routes middlewares goes in routes(auth_middleware, analysisLimiter middleware)
-app.use("/api/simulate", authMiddleware,simulateRouter);
+app.use("/api/simulate", optionalAuthMiddleware, simulationLimiter, simulateRouter);
 
 app.use("/api/honeypot", authMiddleware, honeypotRouter);
 
 app.use("/api/phishing", authMiddleware, phishingRouter);
 
-app.use("/api/solana/simulate", authMiddleware, solSimulateRouter);
+app.use("/api/solana/simulate", optionalAuthMiddleware, simulationLimiter, solSimulateRouter);
 
 app.use("/api/analyze", authMiddleware, analysisRouter);
 
